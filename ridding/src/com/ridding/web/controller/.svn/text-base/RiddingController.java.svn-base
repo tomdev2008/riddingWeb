@@ -1,0 +1,476 @@
+package com.ridding.web.controller;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.ServletRequestUtils;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.ridding.constant.RiddingQuitConstant;
+import com.ridding.constant.SourceType;
+import com.ridding.constant.returnCodeConstance;
+import com.ridding.meta.ApnsDevice;
+import com.ridding.meta.IMap;
+import com.ridding.meta.Photo;
+import com.ridding.meta.Profile;
+import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingPicture;
+import com.ridding.meta.RiddingUser;
+import com.ridding.meta.SourceAccount;
+import com.ridding.meta.vo.ProfileSourceFeed;
+import com.ridding.security.MyUser;
+import com.ridding.service.IOSApnsService;
+import com.ridding.service.ImageUploadService;
+import com.ridding.service.MapService;
+import com.ridding.service.PhotoService;
+import com.ridding.service.ProfileService;
+import com.ridding.service.RiddingService;
+import com.ridding.service.transaction.TransactionService;
+import com.ridding.util.http.HttpJsonUtil;
+import com.ridding.util.http.HttpServletUtil;
+
+/**
+ * @author zhengyisheng E-mail:zhengyisheng@gmail.com
+ * @version CreateTime 2012-3-5 11:27:43 Class Description
+ */
+@Controller("riddingController")
+public class RiddingController extends AbstractBaseController {
+
+	private static final Logger logger = Logger.getLogger(RiddingController.class);
+
+	@Resource
+	private RiddingService riddingService;
+
+	@Resource
+	private MapService mapService;
+
+	@Resource
+	private ProfileService profileService;
+	@Resource
+	private PhotoService photoService;
+	@Resource
+	private IOSApnsService iosApnsService;
+	@Resource
+	private TransactionService transactionService;
+	@Resource
+	private ImageUploadService imageUploadService;
+
+	/**
+	 * 得到骑行用户信息，返回骑行数据
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView showRiddingView(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		logger.info(jsonString);
+		long ridingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		JSONObject returnObject = new JSONObject();
+		ModelAndView mv = new ModelAndView("return");
+		RiddingUser user = riddingService.getRiddingUser(ridingId, userId);
+		if (user == null || !user.isTeamer()) {
+			returnObject.put("code", returnCodeConstance.NOTRIDINGUSER);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		RiddingUser riddingUser = null;
+		try {
+			riddingUser = HttpServletUtil.parseToRidding4RiddingView(jsonString);
+		} catch (Exception e) {
+			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
+			e.printStackTrace();
+		}
+		long time = new Date().getTime();
+		riddingUser.setUserId(userId);
+		riddingUser.setRiddingId(ridingId);
+		riddingUser.setCacheTime(time);
+
+		List<RiddingUser> ridingUserList = riddingService.getAllRiddingUserList(riddingUser);
+		HttpJsonUtil.setShowRiddingView(returnObject, ridingUserList);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 插入骑行编译前地址
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView setRidingMapLocation(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		logger.info(jsonString);
+		long ridingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		JSONObject returnObject = new JSONObject();
+		ModelAndView mv = new ModelAndView("return");
+		RiddingUser riddingUser = riddingService.getRiddingUser(ridingId, userId);
+		if (riddingUser == null || !riddingUser.isTeamer()) {
+			returnObject.put("code", returnCodeConstance.NOTRIDINGUSER);
+			return mv;
+		}
+		IMap iMap = null;
+		try {
+			iMap = HttpServletUtil.parseTosetRidingMapLocation(jsonString);
+		} catch (Exception e) {
+			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
+			e.printStackTrace();
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		IMap oldMap = mapService.getMapById(iMap.getId(), IMap.Using);
+		if (StringUtils.isEmpty(oldMap.getMapPoint())) {
+			oldMap.setMapPoint(iMap.getMapPoint());
+			mapService.updateRiddingMap(oldMap);
+		}
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 删除骑行或者结束骑行
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView renameOrEndRidding(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		long ridingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		int type = ServletRequestUtils.getIntParameter(request, "type", -1);
+		JSONObject returnObject = new JSONObject();
+		ModelAndView mv = new ModelAndView("return");
+		boolean success = false;
+		switch (type) {
+		case 1:
+			// 暂时没有这个功能
+			// String name = ServletRequestUtils.getStringParameter(request,
+			// "name", null);
+			// success = riddingService.updateRiddingName(ridingId, userId,
+			// name);
+			break;
+		case 2:
+			success = riddingService.endRiddingByLeader(ridingId, userId);
+			break;
+		default:
+			break;
+		}
+		if (!success) {
+			returnObject.put("code", returnCodeConstance.FAILED);
+			return mv;
+		}
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 添加骑行用户,同时删除用户
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView addRiddingUsers(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		logger.info(jsonString);
+		long ridingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		int sourceType = ServletRequestUtils.getIntParameter(request, "sourceType", -1);
+		JSONObject returnObject = new JSONObject();
+		ModelAndView mv = new ModelAndView("return");
+		RiddingUser riddingUser = riddingService.getRiddingUser(ridingId, userId);
+		if (riddingUser == null || !riddingUser.isLeader()) {
+			returnObject.put("code", returnCodeConstance.NOTRIDINGLEADER);
+			return mv;
+		}
+		List<Profile> profileList;
+		try {
+			profileList = HttpServletUtil.parseToAddAccount(jsonString);
+		} catch (Exception e) {
+			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		riddingService.insertRiddingUsers(profileList, ridingId, sourceType);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 删除骑行用户
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView deleteRiddingUsers(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		logger.info(jsonString);
+		long ridingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		JSONObject returnObject = new JSONObject();
+		ModelAndView mv = new ModelAndView("return");
+		RiddingUser riddingUser = riddingService.getRiddingUser(ridingId, userId);
+		if (riddingUser == null || !riddingUser.isLeader()) {
+			returnObject.put("code", returnCodeConstance.NOTRIDINGLEADER);
+			return mv;
+		}
+		List<Long> deleteList;
+		try {
+			deleteList = HttpServletUtil.parseToDeleteAccount(jsonString);
+		} catch (Exception e) {
+			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		riddingService.deleteRiddingUsers(deleteList, ridingId);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 退出某个骑行活动
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView quitRidding(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		long ridingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		JSONObject returnObject = new JSONObject();
+		ModelAndView mv = new ModelAndView("return");
+		RiddingUser riddingUser = riddingService.getRiddingUser(ridingId, userId);
+		if (riddingUser == null) {
+			returnObject.put("code", returnCodeConstance.NOTRIDINGUSER);
+			return mv;
+		}
+		RiddingQuitConstant constant = riddingService.quitRidding(userId, ridingId);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		if (constant == RiddingQuitConstant.Leader) {
+			returnObject.put("code", returnCodeConstance.RIDDINGLEADER);
+		} else if (constant == RiddingQuitConstant.Failed) {
+			returnObject.put("code", returnCodeConstance.FAILED);
+		}
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 通过userid和对应开放平台得到对应用户信息
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView getUserPublicMessage(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		logger.info(jsonString);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		JSONObject returnObject = new JSONObject();
+		ModelAndView mv = new ModelAndView("return");
+		ProfileSourceFeed profileSourceFeed;
+		try {
+			profileSourceFeed = HttpServletUtil.parseToProfileSourceFeed(jsonString);
+		} catch (Exception e) {
+			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		List<SourceAccount> sourceAccounts = profileService.getSourceAccountByUserIdsSourceType(profileSourceFeed.getUserIdList(), profileSourceFeed
+				.getSourceType());
+		HttpJsonUtil.setSourceAccount(returnObject, sourceAccounts);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		System.out.println(returnObject.toString());
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 退出登陆接口
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws ServletRequestBindingException
+	 */
+	public ModelAndView quit(HttpServletRequest request, HttpServletResponse response) throws ServletRequestBindingException {
+		response.setContentType("text/html;charset=UTF-8");
+		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+		ModelAndView mv = new ModelAndView("return");
+		JSONObject returnObject = new JSONObject();
+		if (myUser == null) {
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		Long userId = ServletRequestUtils.getLongParameter(request, "userId");
+		Integer sourceType = ServletRequestUtils.getIntParameter(request, "sourceType");
+		SourceAccount sourceAccount = profileService.getSourceAccountByUserIdsSourceType(userId, sourceType);
+		if (sourceAccount == null) {
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		return mv;
+	}
+
+	/**
+	 * 第一次登陆推荐
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView firstRecom(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+		ModelAndView mv = new ModelAndView("return");
+		JSONObject returnObject = new JSONObject();
+		if (myUser == null) {
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		String cityName = ServletRequestUtils.getStringParameter(request, "cityname", null);
+		List<IMap> recomMaps = mapService.getRecomMaps(cityName);
+		return mv;
+	}
+
+	/**
+	 * 添加iphone token
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView addApnsToken(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		ModelAndView mv = new ModelAndView("return");
+		JSONObject returnObject = new JSONObject();
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		String token = ServletRequestUtils.getStringParameter(request, "token", null);
+		ApnsDevice apnsDevice = new ApnsDevice();
+		apnsDevice.setUserId(userId);
+		apnsDevice.setToken(token);
+		long time = new Date().getTime();
+		apnsDevice.setCreateTime(time);
+		apnsDevice.setLastUpdateTime(time);
+		apnsDevice.setStatus(ApnsDevice.VALID);
+		if (iosApnsService.addIosApns(apnsDevice)) {
+			returnObject.put("code", returnCodeConstance.SUCCESS);
+		} else {
+			returnObject.put("code", returnCodeConstance.FAILED);
+		}
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 上传骑行图片
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView uploadRiddingPhotos(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		ModelAndView mv = new ModelAndView("return");
+		JSONObject returnObject = new JSONObject();
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
+		RiddingPicture riddingPicture;
+		try {
+			riddingPicture = HttpServletUtil.parseToRiddingPicture(jsonString);
+		} catch (Exception e) {
+			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		riddingPicture.setUserId(userId);
+		riddingPicture.setRiddingId(riddingId);
+		if (riddingService.addRiddingPicture(riddingPicture) <= 0) {
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+		}
+		return mv;
+	}
+
+	/**
+	 * 插入骑行编译前地址
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView addRiddingMap(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		logger.info(jsonString);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		JSONObject returnObject = new JSONObject();
+		ModelAndView mv = new ModelAndView("return");
+		IMap iMap = null;
+		Ridding ridding = new Ridding();
+		try {
+
+			iMap = HttpServletUtil.parseFromMap(jsonString, ridding);
+			iMap.setUserId(userId);
+			ridding.setLeaderUserId(userId);
+		} catch (Exception e) {
+			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
+			e.printStackTrace();
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		iMap.setStatus(IMap.Using);
+		iMap.setObjectType(SourceType.WebApi.getValue());
+		iMap.setObjectId(0);
+		iMap.setCreateTime(new Date().getTime());
+		Photo photo = new Photo();
+		photo.setOriginalPath(iMap.getUrlKey());
+		if (photoService.addPhoto(photo) < 0) {
+			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		iMap.setAvatorPic(photo.getId());
+		if (!transactionService.insertANewRidding(iMap, ridding)) {
+			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+}

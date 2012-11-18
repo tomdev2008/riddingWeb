@@ -1,0 +1,114 @@
+/**
+** 创建活动-地图左侧
+**/
+.main-bar .left-bar {
+	width: 22%;
+	height: 100%;
+	border: 1px solid #E0E0E0;
+	float: left;
+	background-color: white;
+	min-height: 800px;
+}
+
+.main-bar .left-bar .to-path {
+	margin-top: 5px;
+	float: left;
+	padding-left: 10px;
+}
+
+.main-bar .left-bar .to-path1 {
+	margin-top: 10px;
+	float: left;
+	width: 100%;
+}
+
+.main-bar .left-bar .checkImg {
+	width: 20px;
+	height: 20px;
+	position: relative;
+	top: 7px;
+	left: 2px;
+}
+
+.main-bar .left-bar .to-path2,.main-bar .left-bar .to-path3 {
+	margin: 10px 0;
+	float: left;
+	width: 100%;
+}
+
+.main-bar .left-bar .position {
+	width: 200px;
+}
+
+.main-bar .left-bar .to-path1_1 {
+	float: left;
+}
+
+.main-bar .left-bar .to-path3 .to-path3_1 {
+	margin-left: 5px;
+}
+
+.main-bar .left-bar .to-path3 .to-path3_2 {
+	float: right;
+}
+
+.main-bar .left-bar .submit,.main-bar .left-bar .genMap,.main-bar .searchBar .searchFinish,.main-bar .searchBar .doSearch
+	{
+	border: 0 none;
+	border-top: 1 px solid #4fc4f9;
+	border-bottom: 1 px solid #009dee;
+	background: #00a3f2; /* old browsers */
+	background: -webkit-gradient (                       linear, 0% 0%, 0%
+		100%, from (       
+		    
+            #00a8f7 ), to (            
+            #009dee ) ); /* Safari 4-5, Chrome 1-9 */
+	background: -webkit-linear-gradient (                       top, #00a8f7,
+		#009dee );
+	/* Safari 5.1, Chrome 10+ */
+	background: -moz-linear-gradient (                       top, #00a8f7,
+		#009dee );
+	/* Firefox 3.6+ */
+	background: -ms-linear-gradient (                       top, #00a8f7,
+		#009dee );
+	/* IE 10 */
+	background: -o-linear-gradient (                       top, #00a8f7,
+		#009dee );
+	/* Opera 11.10+ */
+	color: #feffff;
+	cursor: pointer;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	width: 210px;
+	display: block;
+	margin: auto;
+}
+
+.main-bar .right-bar {
+	width: 77%;
+	height: 800px;
+	float: right;
+}
+
+.main-bar .right-bar .right-bar1 {
+	width: 100%;
+	height: 100%;
+}
+
+/** 地图的右键浮层**/
+.map-right-ul {
+	border: 1px solid #E0E0E0;
+	width: 75px;
+	background-color: white;
+	padding: 5px 0;
+}
+
+.map-right-ul li {
+	text-align: center;
+	margin: 0pt 0pt 5px;
+}
+
+.map-right-ul li a {
+	color: #666666;
+}

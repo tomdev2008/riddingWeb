@@ -1,0 +1,195 @@
+package com.ridding.meta;
+
+import java.io.Serializable;
+
+/**
+ * @author zhengyisheng E-mail:zhengyisheng@gmail.com
+ * @version CreateTime 2012-3-19 12:32:25 Class Description 骑行meta
+ */
+public class Ridding implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4179942070890520349L;
+	/**
+	 * id
+	 */
+	private long id;
+	/**
+	 * 队长用户id
+	 */
+	private long leaderUserId;
+	/**
+	 * 地图id
+	 */
+	private long mapId;
+	/**
+	 * 骑行的默认名称
+	 */
+	private String name = "";
+	/**
+	 * 骑行类型
+	 */
+	private int riddingType;
+	/**
+	 * 创建时间
+	 */
+	private long createTime;
+	/**
+	 * 骑行状态
+	 */
+	private int riddingStatus;
+	/**
+	 * 最近更新时间
+	 */
+	private long lastUpdateTime;
+	/**
+	 * 用户数量
+	 */
+	private int userCount;
+	/**
+	 * 限制，-1表示全部
+	 */
+	private int limit = -1;
+
+	private boolean isLarger;
+
+	/**
+	 *骑行状态
+	 * 
+	 * @author apple
+	 * 
+	 */
+	public enum RiddingStatus {
+		/**
+		 * 还没开始
+		 */
+		NotBeginning {
+			public int getValue() {
+				return 0;
+			}
+		},
+		/**
+		 * 正在进行
+		 */
+		Beginning {
+			public int getValue() {
+				return 10;
+			}
+		},
+		/**
+		 * 已经完成
+		 */
+		Finished {
+			public int getValue() {
+				return 20;
+			}
+		},
+		/**
+		 * 已删除
+		 */
+		Deleted {
+			public int getValue() {
+				return 30;
+			}
+		};
+		public abstract int getValue();
+
+		public static RiddingStatus genRiddingStatus(int t) {
+			for (RiddingStatus status : RiddingStatus.values()) {
+				if (status.getValue() == t)
+					return status;
+			}
+			return null;
+		}
+	}
+
+	public int getRiddingStatus() {
+		return riddingStatus;
+	}
+
+	public void setRiddingStatus(int riddingStatus) {
+		this.riddingStatus = riddingStatus;
+	}
+
+	public int getUserCount() {
+		return userCount;
+	}
+
+	public void setUserCount(int userCount) {
+		this.userCount = userCount;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public long getLeaderUserId() {
+		return leaderUserId;
+	}
+
+	public void setLeaderUserId(long leaderUserId) {
+		this.leaderUserId = leaderUserId;
+	}
+
+	public long getMapId() {
+		return mapId;
+	}
+
+	public void setMapId(long mapId) {
+		this.mapId = mapId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getRiddingType() {
+		return riddingType;
+	}
+
+	public void setRiddingType(int riddingType) {
+		this.riddingType = riddingType;
+	}
+
+	public long getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(long createTime) {
+		this.createTime = createTime;
+	}
+
+	public long getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+
+	public void setLastUpdateTime(long lastUpdateTime) {
+		this.lastUpdateTime = lastUpdateTime;
+	}
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+
+	public boolean isLarger() {
+		return isLarger;
+	}
+
+	public void setLarger(boolean isLarger) {
+		this.isLarger = isLarger;
+	}
+
+}

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ridding.mapper.MapFixMapper">
+
+	<resultMap type="MapFix" id="mapFixMap">
+		<id property="id" column="id" />
+		<result property="latitude" column="latitude" />
+		<result property="longtitude" column="longtitude" />
+		<result property="offsetx" column="offsetx" />
+		<result property="offsety" column="offsety" />
+		<result property="toLatitude" column="toLatitude" />
+		<result property="toLongtitude" column="toLongtitude" />
+	</resultMap>
+
+
+	<insert id="addMapFix" parameterType="MapFix">
+		INSERT INTO TB_MapFix(
+		latitude,
+		longtitude,
+		offsetx,
+		offsety,
+		toLatitude,
+		toLongtitude
+		)VALUES(
+		#{latitude},
+		#{longtitude},
+		#{offsetx},
+		#{offsety},
+		#{toLatitude},
+		#{toLongtitude}
+		)
+		<selectKey keyProperty="id" resultType="long">
+			SELECT
+			LAST_INSERT_ID() AS VALUE
+		</selectKey>
+	</insert>
+	
+	
+	<select id="getMapFixByLatLng" resultMap="mapFixMap"
+		parameterType="hashmap">
+		SELECT * from TB_MapFix where
+		latitude =#{latitude} and longtitude =#{longtitude}
+	</select>
+</mapper>

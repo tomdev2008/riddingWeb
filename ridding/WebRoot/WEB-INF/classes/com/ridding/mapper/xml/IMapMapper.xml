@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ridding.mapper.IMapMapper">
+
+	<resultMap type="IMap" id="imapMap">
+		<id property="id" column="id" />
+		<result property="createTime" column="createTime" />
+		<result property="mapTaps" column="MapTaps" />
+		<result property="mapUrl" column="MapUrl" />
+		<result property="mapPoint" column="mapPoint" />
+		<result property="objectId" column="objectId" />
+		<result property="objectType" column="objectType" />
+		<result property="userId" column="userId" />
+		<result property="status" column="status" />
+		<result property="distance" column="distance" />
+		<result property="beginLocation" column="beginLocation" />
+		<result property="endLocation" column="endLocation" />
+		<result property="midLocation" column="midLocation" />
+		<result property="cityId" column="cityId" />
+		<result property="avatorPic" column="avatorPic" />
+	</resultMap>
+
+	<insert id="addRiddingMap" parameterType="IMap">
+		INSERT INTO TB_Map(
+		createTime,
+		MapTaps,
+		MapUrl,
+		MapPoint,
+		objectId,
+		objectType,
+		userId,
+		status,
+		distance,
+		beginLocation,
+		endLocation,
+		midLocation,
+		cityId,
+		avatorPic
+		)VALUES(
+		#{createTime},
+		#{mapTaps},
+		#{mapUrl},
+		#{mapPoint},
+		#{objectId},
+		#{objectType},
+		#{userId},
+		#{status},
+		#{distance},
+		#{beginLocation},
+		#{endLocation},
+		#{midLocation},
+		#{cityId},
+		#{avatorPic}
+		)
+		<selectKey keyProperty="id" resultType="long">
+			SELECT
+			LAST_INSERT_ID() AS VALUE
+		</selectKey>
+	</insert>
+
+	<update id="updateRiddingMap" parameterType="IMap" flushCache="true"
+		statementType="PREPARED">
+		update TB_Map set 
+		MapTaps = #{mapTaps},
+		MapUrl = #{mapUrl},
+		MapPoint = #{mapPoint},
+		objectId = #{objectId},
+		objectType = #{objectType},
+		userId = #{userId},
+		status = #{status},
+		distance= #{distance},
+		beginLocation= #{beginLocation},
+		endLocation=#{endLocation},
+		midLocation=#{midLocation},
+		cityId=#{cityId},
+		avatorPic=#{avatorPic}
+		where Id = #{id};
+	</update>
+	
+	<select id="getRiddingMapListByStatus" resultMap="imapMap"
+		parameterType="hashmap">
+		SELECT * from TB_Map
+		where status=#{status} order by createTime desc 
+		limit #{limit} 
+		offset #{offset};
+	</select>
+
+	<delete id="deleteRiddingMap" parameterType="long">
+		delete from TB_Map where Id=#{id} 
+	</delete>
+	<select id="getRiddingMap" resultMap="imapMap">
+	SELECT * from
+	TB_Map where id=#{id} ; 
+	</select>
+	<!-- 查询地图列表列表-->
+	<select id="getIMaplist" resultMap="imapMap">
+		SELECT * from TB_Map where 
+		 id in 
+		<foreach item="item" collection="list" index="index" open="(" separator="," close=")" >
+			 #{item} 
+	</foreach>;
+	</select>
+	
+	<select id="getImapByObject" resultMap="imapMap" parameterType="hashmap">
+		SELECT * from TB_Map
+		where objectType=#{objectType} and ( objectId in
+	    <foreach item="item" collection="objectIdList" index="index" open="(" separator="," close=")" >
+	      #{item}
+	    </foreach>
+	    ) order by createTime desc 
+	    <if test="limit>0">
+		limit #{limit} 
+		offset #{offset};
+		</if>
+	</select>
+	
+	
+	<select id="getImapsByUserIdCityId" resultMap="imapMap" parameterType="hashmap">
+		SELECT * from TB_Map
+		where userId=#{userId} and cityId=#{cityId} order by createTime desc 
+	    <if test="limit>0">
+		limit #{limit} 
+		offset #{offset};
+		</if>
+	</select>
+	
+	<select id="getAll" resultMap="imapMap" >
+		SELECT * from TB_Map;
+	</select>
+</mapper>

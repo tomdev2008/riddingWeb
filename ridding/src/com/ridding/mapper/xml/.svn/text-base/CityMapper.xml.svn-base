@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ridding.mapper.CityMapper">
+
+	<resultMap type="City" id="cityMap">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="pid" column="pid" />
+		<result property="tree" column="tree" />
+	</resultMap>
+
+	<select id="getCitybyName" parameterType="String" resultMap="cityMap">
+	
+		SELECT * from TB_City where name like #{name} ;
+	</select>
+	
+	
+</mapper>

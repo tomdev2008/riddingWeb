@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ridding.mapper.ProfileMapper">
+
+	<resultMap type="Profile" id="profileMap">
+		<id property="userId" column="userId" />
+		<result property="userName" column="userName" />
+		<result property="nickName" column="nickName" />
+		<result property="sAvatorUrl" column="sAvatorUrl" />
+		<result property="bAvatorUrl" column="bAvatorUrl" />
+		<result property="totalDistance" column="totalDistance" />
+		<result property="createTime" column="createTime" />
+		<result property="lastUpdateTime" column="lastUpdateTime" />
+	</resultMap>
+	<insert id="addProfile" parameterType="Profile" >
+		INSERT INTO TB_Profile(
+		userName,
+		nickName,
+		totalDistance,
+		createTime,
+		lastUpdateTime,
+		sAvatorUrl,
+		bAvatorUrl
+		)VALUES(
+		#{userName},
+		#{nickName},
+		#{totalDistance},
+		#{createTime},
+		#{lastUpdateTime},
+		#{sAvatorUrl},
+		#{bAvatorUrl}
+		)
+		<selectKey keyProperty="userId" resultType="long">
+			SELECT
+			LAST_INSERT_ID() AS VALUE
+		</selectKey>
+	</insert>
+
+	<select id="getProfile" resultMap="profileMap">
+		SELECT * from
+		TB_Profile where
+		userId=#{userId} ; 
+	</select>
+
+	<update id="updateProfile" parameterType="Profile" flushCache="true"
+		statementType="PREPARED">
+		update TB_Profile set totalDistance = #{totalDistance},
+		userName = #{userName},
+		nickName = #{nickName},
+		lastUpdateTime = #{lastUpdateTime},
+		sAvatorUrl = #{sAvatorUrl},
+		bAvatorUrl = #{bAvatorUrl}
+		where userId = #{userId};
+	</update>
+	
+	<update id="incUserTotalDistance" parameterType="hashMap" flushCache="true"
+		statementType="PREPARED">
+		update TB_Profile set totalDistance = totalDistance + #{totalDistance}
+		where userId = #{userId} ;
+	</update>
+	
+	<select id="getProfileList" resultMap="profileMap">
+		SELECT * from TB_Profile where 
+		 userId in 
+		<foreach item="item" collection="list" index="index" 
+			open="(" separator="," close=")" >
+			 #{item} 
+	</foreach>;
+	</select>
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="Ridding"
+  id="myeclipse.1330917447740"
+  context-root="/Ridding"
+  j2ee-spec="5.0"
+  archive="Ridding.war">
+  <attributes>
+    <attribute name="webrootdir" value="/WebRoot" />
+  </attributes>
+</project-module>
+

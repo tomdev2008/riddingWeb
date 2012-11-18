@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ridding.mapper.PhotoMapper">
+
+	<resultMap type="Photo" id="photoMap">
+		<id property="id" column="id" />
+		<result property="originalPath" column="originalPath" />
+		<result property="smallPath" column="smallPath" />
+		<result property="midPath" column="midPath" />
+		<result property="bigPath" column="bigPath" />
+		<result property="squarePath" column="squarePath" />
+	</resultMap>
+
+	<insert id="addPhoto" parameterType="Photo">
+		INSERT INTO TB_PHOTO(
+		originalPath,
+		smallPath,
+		midPath,
+		bigPath,
+		squarePath
+		)VALUES(
+		#{originalPath},
+		#{smallPath},
+		#{midPath},
+		#{bigPath},
+		#{squarePath}
+		)
+		<selectKey keyProperty="id" resultType="long">
+			SELECT
+			LAST_INSERT_ID() AS VALUE
+		</selectKey>
+	</insert>
+
+
+	<update id="updatePhoto" flushCache="true" parameterType="IMap" statementType="PREPARED">
+		update TB_PHOTO set 
+		originalPath = #{originalPath},
+		smallPath = #{smallPath},
+		midPath = #{midPath},
+		bigPath = #{bigPath},
+		squarePath = #{squarePath}
+		where Id = #{id};
+	</update>
+
+	<delete id="deletePhoto" parameterType="long">
+		delete from TB_PHOTO where id=#{id} 
+	</delete>
+	
+		<!-- 查询地图列表列表-->
+	<select id="getPhotoList" resultMap="photoMap">
+		SELECT * from TB_PHOTO where 
+		 id in 
+		<foreach item="item" collection="list" index="index" open="(" separator="," close=")" >
+			 #{item} 
+	    </foreach>;
+	</select>
+	
+	<select id="getPhotoById" resultMap="photoMap">
+		SELECT * from TB_PHOTO where id =#{id}
+	</select>
+	
+	
+</mapper>

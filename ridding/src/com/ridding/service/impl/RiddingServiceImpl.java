@@ -1,0 +1,593 @@
+package com.ridding.service.impl;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
+
+import com.ridding.constant.RiddingQuitConstant;
+import com.ridding.mapper.IMapMapper;
+import com.ridding.mapper.MapFixMapper;
+import com.ridding.mapper.PhotoMapper;
+import com.ridding.mapper.ProfileMapper;
+import com.ridding.mapper.RiddingMapper;
+import com.ridding.mapper.RiddingPictureMapper;
+import com.ridding.mapper.RiddingUserMapper;
+import com.ridding.mapper.SourceAccountMapper;
+import com.ridding.meta.IMap;
+import com.ridding.meta.MapFix;
+import com.ridding.meta.Photo;
+import com.ridding.meta.Profile;
+import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingPicture;
+import com.ridding.meta.RiddingUser;
+import com.ridding.meta.Ridding.RiddingStatus;
+import com.ridding.meta.RiddingUser.RiddingUserRoleType;
+import com.ridding.meta.RiddingUser.SelfRiddingStatus;
+import com.ridding.meta.vo.ProfileVO;
+import com.ridding.service.ImageUploadService;
+import com.ridding.service.RiddingService;
+import com.ridding.service.transaction.TransactionService;
+import com.ridding.util.HashMapMaker;
+import com.ridding.util.ListUtils;
+import com.ridding.util.TimeUtil;
+import com.ridding.util.http.RiddingUserCache;
+
+/**
+ * @author zhengyisheng E-mail:zhengyisheng@corp.netease.com
+ * @version CreateTime 2012-3-5 11:56:30 Class Description
+ */
+@Service("riddingService")
+public class RiddingServiceImpl implements RiddingService {
+
+	@Resource
+	private IMapMapper mapMapper;
+
+	@Resource
+	private RiddingMapper riddingMapper;
+
+	@Resource
+	private RiddingUserMapper riddingUserMapper;
+
+	@Resource
+	private ProfileMapper profileMapper;
+
+	@Resource
+	private SourceAccountMapper sourceAccountMapper;
+
+	@Resource
+	private MapFixMapper mapFixMapper;
+
+	@Resource
+	private PhotoMapper photoMapper;
+
+	@Resource
+	private TransactionService transactionService;
+
+	@Resource
+	private ImageUploadService imageUploadService;
+
+	@Resource
+	private RiddingPictureMapper riddingPictureMapper;
+
+	private static final Logger logger = Logger.getLogger(RiddingServiceImpl.class);
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getAllRiddingUserList(long,
+	 * com.ridding.meta.RiddingUser)
+	 */
+	public List<RiddingUser> getAllRiddingUserList(RiddingUser riddingUser) {
+		if (riddingUser == null) {
+			return null;
+		}
+		Profile profile = profileMapper.getProfile(riddingUser.getUserId());
+		riddingUser.setProfile(profile);
+		this.updateUserInCache(riddingUser);
+
+		List<RiddingUser> riddingUserList = new ArrayList<RiddingUser>();
+		if (!riddingUser.isShowTeamer()) {
+			riddingUser.setTimeBefore(TimeUtil.getTimeago(riddingUser.getCacheTime(), false));
+			riddingUserList.add(riddingUser);
+			return riddingUserList;
+		} else {
+			ConcurrentHashMap<String, RiddingUser> map = RiddingUserCache.getRiddingMap(riddingUser.getRiddingId());
+			if (MapUtils.isEmpty(map)) {
+				return null;
+			}
+			Iterator<RiddingUser> iterator = map.values().iterator();
+			while (iterator.hasNext()) {
+				RiddingUser user = (RiddingUser) iterator.next();
+				user.setTimeBefore(TimeUtil.getTimeago(user.getCacheTime(), false));
+				user.setState();
+				riddingUserList.add(user);
+			}
+		}
+		return riddingUserList;
+	}
+
+	/**
+	 * 更新用户当前骑行状态到缓存中
+	 * 
+	 * @param riddingId
+	 * @param riddingUser
+	 */
+	private void updateUserInCache(RiddingUser riddingUser) {
+		if (riddingUser == null) {
+			return;
+		}
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("latitude", MapFix.getLatPrefix(riddingUser.getLatitude()));
+		hashMap.put("longtitude", MapFix.getLngPrefix(riddingUser.getLongtitude()));
+		MapFix mapFix = mapFixMapper.getMapFixByLatLng(hashMap);
+		if (mapFix != null) {
+			mapFix.setRealLat(riddingUser.getLatitude());
+			mapFix.setRealLng(riddingUser.getLongtitude());
+			riddingUser.setLatitude(mapFix.getLatitude());
+			riddingUser.setLongtitude(mapFix.getLongtitude());
+		}
+		String userKey = RiddingUserCache.createUserKey(riddingUser.getRiddingId(), riddingUser.getUserId());
+		RiddingUserCache.set(riddingUser.getRiddingId(), userKey, riddingUser);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getRiddingUser(long, long)
+	 */
+	public RiddingUser getRiddingUser(long riddingId, long userId) {
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("riddingId", riddingId);
+		hashMap.put("userId", userId);
+		hashMap.put("userRole", RiddingUserRoleType.User.intValue());
+		return riddingUserMapper.getRiddingUser(hashMap);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#updateRiddingName(long, long,
+	 * java.lang.String)
+	 */
+	public boolean updateRiddingName(long ridingId, long userId, String name) {
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("userId", userId);
+		hashMap.put("riddingId", ridingId);
+		hashMap.put("name", name);
+		return riddingUserMapper.updateRiddingName(hashMap) > 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#endRidding(long, long)
+	 */
+	public boolean endRidding(long ridingId, long userId) {
+		Ridding ridding = riddingMapper.getRidding(ridingId);
+		if (ridding == null) {
+			return false;
+		}
+		IMap iMap = mapMapper.getRiddingMap(ridding.getMapId());
+		if (iMap == null) {
+			return false;
+		}
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("userId", userId);
+		hashMap.put("ridding", ridingId);
+		hashMap.put("status", SelfRiddingStatus.Finished);
+		hashMap.put("totalDistance", iMap.getDistance());
+		if (riddingUserMapper.updateRiddingStatus(hashMap) > 0) {
+			profileMapper.incUserTotalDistance(hashMap);
+			return true;
+		}
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getRidding(long)
+	 */
+	public Ridding getRidding(long id) {
+		return riddingMapper.getRidding(id);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getRiddingList(long, int, long)
+	 */
+	public List<RiddingUser> getRiddingUserList(long userId, int limit, long createTime, boolean isLarger) {
+		if (createTime < 0) {
+			createTime = new Date().getTime();
+		}
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("userId", userId);
+		// 改用最后更新时间
+		hashMap.put("lastUpdateTime", createTime);
+		hashMap.put("limit", limit);
+		hashMap.put("userRole", RiddingUserRoleType.User.intValue());
+		hashMap.put("isLarger", isLarger ? 1 : 0);
+		return riddingUserMapper.getSelfRiddingList(hashMap);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getRiddingList(long, int, long)
+	 */
+	public List<RiddingUser> getSelfRiddingUserList(long userId, int limit, long createTime, boolean isLarger) {
+		List<RiddingUser> riddingUsers = this.getRiddingUserList(userId, limit, createTime, isLarger);
+		if (ListUtils.isEmptyList(riddingUsers)) {
+			return null;
+		}
+		List<Long> ids = new ArrayList<Long>(riddingUsers.size());
+		for (RiddingUser riddingUser : riddingUsers) {
+			ids.add(riddingUser.getRiddingId());
+		}
+		List<Ridding> riddingList = riddingMapper.getRiddingList(ids);
+		if (ListUtils.isEmptyList(riddingList)) {
+			return null;
+		}
+		this.insertMessage(riddingList, riddingUsers);
+		return riddingUsers;
+	}
+
+	private void test() {
+		List<IMap> list = mapMapper.getAll();
+		if (!ListUtils.isEmptyList(list)) {
+			for (IMap iMap : list) {
+				Photo photo = photoMapper.getPhotoById(iMap.getAvatorPic());
+				photo.setOriginalPath("/img/original" + photo.getOriginalPath().substring(18));
+				photoMapper.updatePhoto(photo);
+			}
+		}
+	}
+
+	/**
+	 * 插入骑行的地图信息,骑行信息
+	 * 
+	 * @param riddingList
+	 */
+	private void insertMessage(List<Ridding> riddingList, List<RiddingUser> riddingUsers) {
+		// this.test();
+
+		List<Long> mapIds = new ArrayList<Long>(riddingList.size());
+		List<Long> leaderUserIds = new ArrayList<Long>(riddingList.size());
+		for (Ridding ridding : riddingList) {
+			mapIds.add(ridding.getMapId());
+			leaderUserIds.add(ridding.getLeaderUserId());
+		}
+		List<Profile> leaderProfileList = profileMapper.getProfileList(leaderUserIds);
+		List<IMap> iMapList = mapMapper.getIMaplist(mapIds);
+		List<Long> photoIds = new ArrayList<Long>(riddingList.size());
+		List<Photo> photoList = new ArrayList<Photo>();
+		if (!ListUtils.isEmptyList(iMapList)) {
+			for (IMap iMap : iMapList) {
+				photoIds.add(iMap.getAvatorPic());
+			}
+			photoList = photoMapper.getPhotoList(photoIds);
+		}
+		Map<Long, Photo> photoMap = HashMapMaker.listToMap(photoList, "getId", Photo.class);
+		Map<Long, IMap> iMapMap = HashMapMaker.listToMap(iMapList, "getId", IMap.class);
+		Map<Long, Ridding> riddingMap = HashMapMaker.listToMap(riddingList, "getId", Ridding.class);
+		Map<Long, Profile> profileMap = HashMapMaker.listToMap(leaderProfileList, "getUserId", Profile.class);
+		for (RiddingUser riddingUser : riddingUsers) {
+			Ridding ridding = riddingMap.get(riddingUser.getRiddingId());
+			if (ridding != null) {
+				riddingUser.setUserCount(ridding.getUserCount());
+				riddingUser.setStatus(ridding.getRiddingStatus());
+				riddingUser.setSelfName(ridding.getName());
+				riddingUser.setRiddingCreateTime(ridding.getCreateTime());
+				IMap iMap = iMapMap.get(ridding.getMapId());
+				if (iMap != null) {
+					Photo photo = photoMap.get(iMap.getAvatorPic());
+					if (photo != null) {
+						riddingUser.genAvatorPic(photo.getOriginalPath());
+					}
+					if (StringUtils.isEmpty(riddingUser.getAvatorPicUrl())) {
+						riddingUser.setAvatorPicUrl(iMap.getStaticImgSrc());
+					}
+					riddingUser.setStaticImgSrc(iMap.getStaticImgSrc());
+					riddingUser.setDistance(iMap.getDistance());
+					riddingUser.setBeginLocation(iMap.getBeginLocation());
+					riddingUser.setEndLocation(iMap.getEndLocation());
+				}
+				Profile profile = profileMap.get(ridding.getLeaderUserId());
+				if (profile != null) {
+					riddingUser.setLeaderProfile(profile);
+				}
+			} else {
+				riddingUser.setStatus(RiddingStatus.Deleted.getValue());
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getRiddingUserList(long, int,
+	 * int)
+	 */
+	public List<ProfileVO> getRiddingUserListToProfile(long riddingId, int limit, int createTime) {
+		List<ProfileVO> profileVOs = new ArrayList<ProfileVO>();
+		List<Long> userIdList = this.getProfileByRiddingUserList(riddingId, limit, createTime, profileVOs);
+		List<Profile> profileList = profileMapper.getProfileList(userIdList);
+		if (ListUtils.isEmptyList(profileList)) {
+			return null;
+		}
+		Map<Long, Profile> profileMap = HashMapMaker.listToMap(profileList, "getUserId", Profile.class);
+		for (ProfileVO profileVO : profileVOs) {
+			Profile profile = profileMap.get(profileVO.getUserId());
+			if (profile != null) {
+				profileVO.setbAvatorUrl(profile.getbAvatorUrl());
+				profileVO.setsAvatorUrl(profile.getsAvatorUrl());
+				profileVO.setNickName(profile.getNickName());
+			}
+		}
+		return profileVOs;
+	}
+
+	/**
+	 * 得到骑行用户的信息
+	 * 
+	 * @param riddingId
+	 * @param limit
+	 * @param createTime
+	 * @return
+	 */
+	private List<Long> getProfileByRiddingUserList(long riddingId, int limit, int createTime, List<ProfileVO> profileVOs) {
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("riddingId", riddingId);
+		hashMap.put("userRole", RiddingUserRoleType.User.intValue());
+		hashMap.put("createTime", createTime);
+		hashMap.put("limit", limit);
+		List<RiddingUser> riddingUserList = riddingUserMapper.getRiddingUserListByRiddingId(hashMap);
+		if (ListUtils.isEmptyList(riddingUserList)) {
+			return null;
+		}
+		List<Long> userIdList = new ArrayList<Long>(riddingUserList.size());
+		for (RiddingUser riddingUser : riddingUserList) {
+			ProfileVO profileVO = new ProfileVO();
+			profileVO.setUserRole(riddingUser.getUserRole());
+			profileVO.setUserId(riddingUser.getUserId());
+			profileVOs.add(profileVO);
+			userIdList.add(riddingUser.getUserId());
+		}
+		return userIdList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ridding.service.RiddingService#updateRiddingUsers(java.util.List,
+	 * long)
+	 */
+	public boolean insertRiddingUsers(List<Profile> profileList, long riddingId, int sourceType) {
+		if (ListUtils.isEmptyList(profileList)) {
+			return true;
+		}
+		Ridding ridding = riddingMapper.getRidding(riddingId);
+		if (ridding == null) {
+			return false;
+		}
+		int succCount = 0;
+		for (Profile profile : profileList) {
+			try {
+				if (transactionService.insertRiddingUser(ridding, profile, sourceType)) {
+					succCount++;
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				logger.error("insertRiddingUsers error where sinaId=" + profile.getAccessUserId());
+			}
+		}
+		logger.info("insertRiddingUsers successCount=" + succCount + " and initCount=" + profileList.size());
+		return succCount > 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ridding.service.RiddingService#deleteRiddingUsers(java.util.List,
+	 * long)
+	 */
+	public boolean deleteRiddingUsers(List<Long> userIdList, long riddingId) {
+		if (ListUtils.isEmptyList(userIdList)) {
+			logger.info("deleteRiddingUsers no sinaUseridList");
+			return false;
+		}
+		Ridding ridding = riddingMapper.getRidding(riddingId);
+		if (ridding == null) {
+			return false;
+		}
+		int succCount = 0;
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		for (Long userid : userIdList) {
+			hashMap.put("userId", userid);
+			hashMap.put("riddingId", riddingId);
+			hashMap.put("userRole", RiddingUserRoleType.Nothing.intValue());
+			if (riddingUserMapper.updateRiddingUserRole(hashMap) > 0) {
+				hashMap.put("id", riddingId);
+				hashMap.put("count", -1);
+				riddingMapper.increaseUserCount(hashMap);
+				succCount++;
+			}
+		}
+		logger.info("deleteRiddingUsers successCount=" + succCount + " and initCount=" + userIdList.size());
+		return succCount > 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#quitRidding(long, long)
+	 */
+	public RiddingQuitConstant quitRidding(long userId, long riddingId) {
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("userId", userId);
+		hashMap.put("riddingId", riddingId);
+		hashMap.put("userRole", RiddingUserRoleType.User.intValue());
+
+		RiddingUser riddingUser = riddingUserMapper.getRiddingUser(hashMap);
+		if (riddingUser == null) {
+			return RiddingQuitConstant.Failed;
+		}
+		hashMap.put("id", riddingId);
+		if (riddingUser.isJustATeamer()) {
+			hashMap.put("userRole", RiddingUserRoleType.Nothing.intValue());
+			hashMap.put("count", -1);
+			riddingMapper.increaseUserCount(hashMap);
+			if (riddingUserMapper.updateRiddingUserRole(hashMap) > 0) {
+				return RiddingQuitConstant.Success;
+			}
+		}
+		if (riddingUser.isLeader()) {
+			Ridding ridding = riddingMapper.getRidding(riddingId);
+			if (ridding != null) {
+				int count = ridding.getUserCount();
+				if (count != 1) {
+					return RiddingQuitConstant.Leader;
+				}
+				// 队长自身在ridding_User中退出，就是删除
+				//hashMap.put("userRole", RiddingUserRoleType.Nothing.intValue());
+				hashMap.put("riddingStatus", RiddingStatus.Deleted.getValue());
+				hashMap.put("count", -1);
+				riddingMapper.increaseUserCount(hashMap);
+				if (riddingUserMapper.updateRiddingStatus(hashMap) < 0) {
+					return RiddingQuitConstant.Failed;
+				}
+				// 在ridding 表中退出
+				if (riddingMapper.updateRiddingStatus(hashMap) > 0) {
+					return RiddingQuitConstant.Success;
+				}
+			}
+		}
+		return RiddingQuitConstant.Failed;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#endRiddingByLeader(long, long)
+	 */
+	@Override
+	public boolean endRiddingByLeader(long riddingId, long userId) {
+		Ridding ridding = riddingMapper.getRidding(riddingId);
+		if (ridding == null || ridding.getLeaderUserId() != userId) {
+			return false;
+		}
+		IMap iMap = mapMapper.getRiddingMap(ridding.getMapId());
+		if (iMap == null) {
+			return false;
+		}
+		try {
+			return transactionService.updateEndRiddingByLeader(riddingId, iMap.getDistance());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getRiddingCount(long)
+	 */
+	@Override
+	public int getRiddingCount(long userId) {
+		return riddingUserMapper.getRiddingCount(userId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getRiddingListbyUserId(long, int,
+	 * int)
+	 */
+	@Override
+	public List<RiddingUser> getRiddingListbyUserId(long userId, int limit, int offset) {
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("userId", userId);
+		hashMap.put("offset", offset);
+		hashMap.put("limit", limit);
+		hashMap.put("userRole", RiddingUserRoleType.User.intValue());
+		List<RiddingUser> riddingUsers = riddingUserMapper.getRiddingListByUserId(hashMap);
+		if (ListUtils.isEmptyList(riddingUsers)) {
+			return null;
+		}
+		List<Long> ids = new ArrayList<Long>(riddingUsers.size());
+		for (RiddingUser riddingUser : riddingUsers) {
+			ids.add(riddingUser.getRiddingId());
+		}
+		List<Ridding> riddingList = riddingMapper.getRiddingList(ids);
+		if (ListUtils.isEmptyList(riddingList)) {
+			return null;
+		}
+		this.insertMessage(riddingList, riddingUsers);
+		return riddingUsers;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ridding.service.RiddingService#addRidding(com.ridding.meta.Ridding)
+	 */
+	@Override
+	public Ridding addRidding(Ridding ridding) {
+		if (riddingMapper.addRidding(ridding) > 0) {
+			RiddingUser riddingUser = new RiddingUser();
+			riddingUser.setRiddingId(ridding.getId());
+			riddingUser.setCreateTime(ridding.getCreateTime());
+			riddingUser.setLastUpdateTime(ridding.getCreateTime());
+			riddingUser.setUserId(ridding.getLeaderUserId());
+			riddingUser.setUserRole(RiddingUserRoleType.Leader.intValue());
+			riddingUser.setSelfName(ridding.getName());
+			riddingUser.setRiddingStatus(SelfRiddingStatus.Beginning.getValue());
+			riddingUserMapper.addRiddingUser(riddingUser);
+			return ridding;
+		}
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ridding.service.RiddingService#addRiddingPicture(com.ridding.meta
+	 * .RiddingPicture)
+	 */
+	@Override
+	public int addRiddingPicture(RiddingPicture riddingPicture) {
+		return riddingPictureMapper.addRiddingPicture(riddingPicture);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ridding.service.RiddingService#getRiddingPictureByUserIdRiddingId
+	 * (long, long)
+	 */
+	@Override
+	public List<RiddingPicture> getRiddingPictureByUserIdRiddingId(long riddingId, long userid) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userid);
+		map.put("riddingId", riddingId);
+		return riddingPictureMapper.getRiddingPicturesByUserId(map);
+	}
+}

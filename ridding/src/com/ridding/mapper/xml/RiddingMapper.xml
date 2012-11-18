@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ridding.mapper.RiddingMapper">
+
+	<resultMap type="Ridding" id="riddingMap">
+		<id property="id" column="id" />
+		<result property="leaderUserId" column="leaderUserId" />
+		<result property="mapId" column="mapId" />
+		<result property="name" column="name" />
+		<result property="riddingType" column="riddingType" />
+		<result property="createTime" column="createTime" />
+		<result property="lastUpdateTime" column="lastUpdateTime" />
+		<result property="userCount" column="userCount" />
+		<result property="riddingStatus" column="riddingStatus" />
+	</resultMap>
+	<insert id="addRidding" parameterType="Ridding">
+		INSERT INTO TB_Ridding(
+		leaderUserId,
+		mapId,
+		name,
+		riddingType,
+		createTime,
+		lastUpdateTime,
+		userCount,
+		riddingStatus
+		)VALUES(
+		#{leaderUserId},
+		#{mapId},
+		#{name},
+		#{riddingType},
+		#{createTime},
+		#{lastUpdateTime},
+		#{userCount},
+		#{riddingStatus}
+		)
+		<selectKey keyProperty="id" resultType="long">
+			SELECT
+			LAST_INSERT_ID() AS VALUE
+		</selectKey>
+	</insert>
+
+
+	<!-- 查询Ridding -->
+	<select id="getRidding" resultMap="riddingMap">
+		SELECT * from TB_Ridding where
+		id=#{id};
+	</select>
+
+	<update id="increaseUserCount" parameterType="hashMap"
+		flushCache="true" statementType="PREPARED">
+		update TB_Ridding set userCount =
+		userCount + #{count}
+		where id = #{id} ;
+	</update>
+
+	<select id="getRiddingList" resultMap="riddingMap">
+		SELECT * from TB_Ridding where
+		id in
+		<foreach item="item" collection="list" index="index" open="("
+			separator="," close=")">
+			#{item} 
+	     </foreach>
+	     and  30 > riddingStatus order by createTime desc;
+	</select>
+
+	<update id="updateRiddingStatus" parameterType="hashMap"
+		flushCache="true" statementType="PREPARED">
+		update TB_Ridding set riddingStatus =
+		#{riddingStatus}
+		where id = #{id} ;
+	</update>
+	
+	
+</mapper>

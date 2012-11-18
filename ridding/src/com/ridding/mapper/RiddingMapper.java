@@ -1,0 +1,61 @@
+package com.ridding.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import com.ridding.meta.Ridding;
+
+/**
+ * @author zhengyisheng E-mail:zhengyisheng@gmail.com
+ * @version CreateTime 2012-3-19 12:50:39 Class Description
+ */
+public interface RiddingMapper {
+	/**
+	 * 添加骑行活动
+	 * 
+	 * @param ridding
+	 * @return
+	 */
+	public int addRidding(Ridding ridding);
+
+	/**
+	 * 得到骑行活动
+	 * 
+	 * @param riddingId
+	 * @return
+	 */
+	public Ridding getRidding(long riddingId);
+
+	/**
+	 * 增加用户数
+	 * 
+	 * @param hashMap
+	 * @return
+	 */
+	public int increaseUserCount(Map<String, Object> hashMap);
+
+	/**
+	 * 得到骑行列表,已删除的不算
+	 * 
+	 * @param hashMap
+	 * @return
+	 */
+	public List<Ridding> getRiddingList(List<Long> ids);
+
+	/**
+	 * 删除骑行
+	 * 
+	 * @param riddingId
+	 * @return
+	 */
+	public boolean deleteRidding(long riddingId);
+
+	/**
+	 * 更新骑行状态
+	 * 
+	 * @param hashMap
+	 * @return
+	 */
+	public int updateRiddingStatus(Map<String, Object> hashMap);
+
+}

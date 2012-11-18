@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ridding.mapper.AccountMapper">
+   
+	<resultMap type="Account" id="accountMap">
+		<id property="userId" column="userId" />
+		<result property="userName" column="userName" />
+		<result property="passWord" column="passWord" />
+		<result property="createTime" column="createTime" />
+	</resultMap>
+
+	<insert id="addAccount" parameterType="Account">
+		INSERT INTO TB_Account(
+		userId,
+		userName,
+		passWord,
+		createTime
+		)VALUES(
+		#{userId},
+		#{userName},
+		#{passWord},
+		#{createTime}
+		)
+	</insert>
+
+	<select id="getAccountByUserName" resultMap="accountMap"
+		parameterType="String">
+		SELECT * from
+		TB_Account where
+		userName=#{userName} ;
+	</select>
+</mapper>

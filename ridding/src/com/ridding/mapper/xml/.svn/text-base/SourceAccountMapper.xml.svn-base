@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ridding.mapper.SourceAccountMapper">
+
+	<resultMap type="SourceAccount" id="sourceAccountMap">
+		<id property="id" column="id" />
+		<result property="userId" column="userId" />
+		<result property="accessUserId" column="accessUserId" />
+		<result property="accessToken" column="accessToken" />
+		<result property="sourceType" column="sourceType" />
+		<result property="createTime" column="createTime" />
+	</resultMap>
+
+	<insert id="addSourceAccount" parameterType="SourceAccount">
+		INSERT INTO TB_Source_Account(
+		userId,
+		accessUserId,
+		accessToken,
+		sourceType,
+		createTime
+		)VALUES(
+		#{userId},
+		#{accessUserId},
+		#{accessToken},
+		#{sourceType},
+		#{createTime}
+		)
+		<selectKey keyProperty="id" resultType="long">
+			SELECT
+			LAST_INSERT_ID() AS VALUE
+		</selectKey>
+	</insert>
+
+	<select id="getSourceAccountByAccessUserId" parameterType="hashMap"
+		resultMap="sourceAccountMap">
+		SELECT * from
+		TB_Source_Account where
+		accessUserId=#{accessUserId} and sourceType=#{sourceType}; 
+	</select>
+
+	<update id="updateSourceAccount" parameterType="SourceAccount"
+		flushCache="true" statementType="PREPARED">
+		update TB_Source_Account set
+		accessToken = #{accessToken},
+		sourceType = #{sourceType}
+		where userId =
+		#{userId} ;
+	</update>
+	<!--
+		<select id="getSourceAccounts" resultMap="sourceAccountMap"
+		parameterType="hashMap"> SELECT * from TB_SourceAccount order by
+		createTime desc limit #{limit} offset #{offset} ; </select> <delete
+		id="deleteAccount" parameterType="long"> delete from TB_Account where
+		userId=#{userId} </delete>
+	-->
+	<select id="getSourceAccountsByAccessUserIds" resultMap="sourceAccountMap">
+		SELECT * from TB_Source_Account where sourceType=#{sourceType} and
+		accessUserId in
+		<foreach item="item" collection="sourceUserids" index="index" open="("
+			separator="," close=")">
+			#{item} 
+	</foreach>
+		;
+	</select>
+	<select id="getSourceAccountByUserIdsSourceType" resultMap="sourceAccountMap">
+		SELECT * from TB_Source_Account where sourceType=#{sourceType} and
+		userId in
+		<foreach item="item" collection="userIds" index="index" open="("
+			separator="," close=")">
+			#{item} 
+	    </foreach>
+		;
+	</select>
+</mapper>

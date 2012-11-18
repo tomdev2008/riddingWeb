@@ -1,0 +1,165 @@
+package com.ridding.meta;
+
+/**
+ * @author zhengyisheng E-mail:zhengyisheng@gmail.com
+ * @version CreateTime：2012-9-17 上午12:11:29 Class Description
+ */
+public class RiddingPicture {
+	/**
+	 * id
+	 */
+	private long id;
+	/**
+	 * 骑行id
+	 */
+	private long riddingId;
+	/**
+	 * 图片url
+	 */
+	private String photoUrl;
+	/**
+	 * 本地的文件名称
+	 */
+	private String localName;
+	/**
+	 * 用户id
+	 */
+	private long userId;
+	/**
+	 * 创建时间
+	 */
+	private long createTime;
+	/**
+	 * 最后更新时间
+	 */
+	private long lastUpdateTime;
+	/**
+	 * 照片状态
+	 */
+	private int status;
+	/**
+	 * 拍照的经度
+	 */
+	private double latitude;
+	/**
+	 * 拍照的纬度
+	 */
+	private double longtitude;
+	/**
+	 * 修正后的经度
+	 */
+	private double fixedLatitude;
+	/**
+	 * 修正后的纬度
+	 */
+	private double fixedLongtitude;
+	/**
+	 * 描述
+	 */
+	private String description;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public long getRiddingId() {
+		return riddingId;
+	}
+
+	public void setRiddingId(long riddingId) {
+		this.riddingId = riddingId;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+	public long getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(long createTime) {
+		this.createTime = createTime;
+	}
+
+	public long getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+
+	public void setLastUpdateTime(long lastUpdateTime) {
+		this.lastUpdateTime = lastUpdateTime;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLongtitude() {
+		return longtitude;
+	}
+
+	public void setLongtitude(double longtitude) {
+		this.longtitude = longtitude;
+	}
+
+	public double getFixedLatitude() {
+		return fixedLatitude;
+	}
+
+	public void setFixedLatitude(double fixedLatitude) {
+		this.fixedLatitude = fixedLatitude;
+	}
+
+	public double getFixedLongtitude() {
+		return fixedLongtitude;
+	}
+
+	public void setFixedLongtitude(double fixedLongtitude) {
+		this.fixedLongtitude = fixedLongtitude;
+	}
+
+	public String getPhotoUrl() {
+		return photoUrl;
+	}
+
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
+	}
+
+	public String getLocalName() {
+		return localName;
+	}
+
+	public void setLocalName(String localName) {
+		this.localName = localName;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+}
