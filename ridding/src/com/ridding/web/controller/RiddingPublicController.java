@@ -225,4 +225,6 @@ public class RiddingPublicController extends AbstractBaseController {
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}
+	
+
 }

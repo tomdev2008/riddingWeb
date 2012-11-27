@@ -105,14 +105,14 @@ has-props
 
 applicationContext-riddingcore-service.xml
 file
-409
+424
 
 
 
-2012-11-10T10:37:51.000000Z
-b0e52efe3a9fe2d7eaf87e2d81648757
-2012-11-10T10:53:10.270853Z
-409
+2012-11-20T16:43:43.000000Z
+5b4c311aa474c8f2ce027a6c90f78840
+2012-11-23T03:02:47.817723Z
+424
 zyslovely
 has-props
 
@@ -135,21 +135,55 @@ has-props
 
 
 
-5661
+5663
+
+aps_product_identity.p12
+file
+424
+
+
+
+2012-11-22T16:45:44.000000Z
+3200cdfcbbcac12af077b05cc786057a
+2012-11-23T03:02:47.817723Z
+424
+zyslovely
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3124
 
 deploy
 dir
 
 developerApns.p12
 file
+424
 
 
 
-
-2012-10-17T16:38:07.000000Z
-bd4d302a0d8a3c28ebdb1994cda0c036
-2012-10-20T10:14:27.909091Z
-375
+2012-11-21T16:12:12.000000Z
+459cf49754fa852c6d9c05f6f00903c4
+2012-11-23T03:02:47.817723Z
+424
 zyslovely
 has-props
 
@@ -172,7 +206,7 @@ has-props
 
 
 
-3171
+3122
 
 local
 dir
@@ -312,6 +346,40 @@ has-props
 
 
 375
+
+productionApns.p12
+file
+424
+
+
+
+2012-11-22T14:33:20.000000Z
+c3bc781fdb22711b5cde6b07c91e8f1b
+2012-11-23T03:02:47.817723Z
+424
+zyslovely
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3155
 
 view
 dir

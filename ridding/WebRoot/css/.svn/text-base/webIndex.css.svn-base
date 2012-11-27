@@ -3,6 +3,11 @@
 		no-repeat scroll transparent;
 }
 
+.appbreakimg {
+	background: url('http://qiqunar.com.cn/image/index/appBreak.png?v=20120818')
+		no-repeat scroll transparent;
+}
+
 .iosimg1 {
 	background-position: -7px -13px;
 }

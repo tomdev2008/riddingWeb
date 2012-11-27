@@ -249,12 +249,12 @@ public class TransactionServiceImpl implements TransactionService {
 		hashMap.put("userRole", RiddingUserRoleType.User.intValue());
 		hashMap.put("createTime", 0);
 		hashMap.put("limit", -1);
-		riddingUserMapper.updateRiddingStatus(hashMap);
 		List<RiddingUser> riddingUsers = riddingUserMapper.getRiddingUserListByRiddingId(hashMap);
 		if (!ListUtils.isEmptyList(riddingUsers)) {
 			for (RiddingUser riddingUser : riddingUsers) {
 				hashMap.put("totalDistance", distance);
 				hashMap.put("userId", riddingUser.getUserId());
+				riddingUserMapper.updateRiddingStatus(hashMap);
 				if (profileMapper.incUserTotalDistance(hashMap) < 0) {
 					throw new TransactionException("endRiddingByLeader incUserTotalDistance error ! where userId=" + riddingUser.getUserId()
 							+ " riddingId=" + riddingId);

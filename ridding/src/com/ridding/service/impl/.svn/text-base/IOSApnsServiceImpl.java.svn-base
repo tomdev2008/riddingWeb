@@ -2,13 +2,12 @@ package com.ridding.service.impl;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import javax.annotation.Resource;
 
 import javapns.Push;
 import javapns.notification.PushNotificationPayload;
+
+import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -19,6 +18,7 @@ import org.springframework.util.ResourceUtils;
 import com.ridding.mapper.IosApnsMapper;
 import com.ridding.meta.ApnsDevice;
 import com.ridding.service.IOSApnsService;
+import com.ridding.util.ListUtils;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -28,8 +28,8 @@ import com.ridding.service.IOSApnsService;
 public class IOSApnsServiceImpl implements IOSApnsService {
 
 	private static final String PASSWORD = "13823381398";
-
-	private static final String FILENAME = "developerApns.p12";
+	// developerApns.p12
+	private static final String FILENAME = "aps_product_identity.p12";
 
 	private static final int THREAD = 10;
 
@@ -40,8 +40,16 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 	@Resource
 	private IosApnsMapper iosApnsMapper;
 
-	public void quartz() {
-		
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.IOSApnsService#sendApns(java.lang.String)
+	 */
+	public void sendApns(String text) {
+		List<ApnsDevice> list = iosApnsMapper.getAllApnsDevice();
+		if (!ListUtils.isEmptyList(list)) {
+			this.sendOneMessage(list, "message", text, "message");
+		}
 	}
 
 	/**
@@ -65,22 +73,25 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 		} catch (JSONException e2) {
 			logger.info("sendOneMessage get totalCount error where totalCount=" + totalCount);
 		}
-		PushNotificationPayload payload = PushNotificationPayload.complex();
-		try {
-			payload.addCustomAlertBody(title);
-			payload.addBadge(totalCount);
-			payload.addCustomAlertActionLocKey("查看");
-			File resourceFile = ResourceUtils.getFile("classpath:" + FILENAME);
-			payload.addCustomDictionary(messageName, message);
-			Push.alert("123", (Object) resourceFile, PASSWORD, false, devices.get(0));
-			// List<PushedNotification> notifications = Push.payload(payload,
-			// (Object) resourceFile, PASSWORD, true, THREAD, devices);
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+		for (ApnsDevice device : devices) {
+			PushNotificationPayload payload = PushNotificationPayload.complex();
+			try {
+				payload.addCustomAlertBody(title);
+				payload.addBadge(totalCount);
+				payload.addCustomAlertActionLocKey("查看");
+				File resourceFile = ResourceUtils.getFile("classpath:" + FILENAME);
+				payload.addCustomDictionary(messageName, message);
+				// true表示在production环境
+				Push.alert(message, (Object) resourceFile, PASSWORD, true, device);
+				logger.info("success send apsn where userid=" + device.getUserId());
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		return 0; // 还没做异常处理
+
+		return devices.size(); // 还没做异常处理
 	}
 
 	/*

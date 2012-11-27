@@ -83,7 +83,7 @@
 		<if test="isLarger==0">
 			and #{lastUpdateTime} > lastUpdateTime 
 		</if>
-		and userRole >= #{userRole} order by lastUpdateTime desc
+		and userRole >= #{userRole} and 30 > riddingStatus order by lastUpdateTime desc
 		<if test="limit>0">
 			limit #{limit}
 		</if>
@@ -95,7 +95,7 @@
 		SELECT * from TB_Ridding_User where
 		riddingId= #{riddingId} and
 		createTime >
-		#{createTime} and userRole >= #{userRole} order by
+		#{createTime} and userRole >= #{userRole} and 30 > riddingStatus order by
 		createTime desc
 		<if test="limit>0">
 			limit #{limit}
@@ -106,14 +106,14 @@
     <!-- 查询用户的骑行数量Ridding -->
 	<select id="getRiddingCount" resultType="int" parameterType="long">
 		SELECT count(*) from TB_Ridding_User where
-		userId=#{userId} and userRole >=10;
+		userId=#{userId} and userRole >=10 and 30 > riddingStatus;
 	</select>
 	
 	 <!-- 查询用户的骑行数量Ridding -->
 	<select id="getRiddingListByUserId" resultMap="riddingUserMap"
 		parameterType="hashMap">
 		SELECT * from TB_Ridding_User where
-		userId= #{userId} and userRole >= #{userRole} order by createTime desc 
+		userId= #{userId} and userRole >= #{userRole} and 30 > riddingStatus order by createTime desc 
 		<if test="limit>0">
 			limit #{limit} offset #{offset}
 		</if>

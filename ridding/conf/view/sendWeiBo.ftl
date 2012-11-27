@@ -55,6 +55,12 @@ body{font-size:83%;}
     </div>
 </div>
 
+<div>
+    <p>发送iphone推送信息</p>
+    <input type="text" id="apnsValue" style="width:200px;"/>
+    <input type="button" id="sendApns" value="发送"/>
+</div>
+
 <#if weiboList?exists>
 <#list weiboList as weibo>
 <tr id="${weibo.id!0}">

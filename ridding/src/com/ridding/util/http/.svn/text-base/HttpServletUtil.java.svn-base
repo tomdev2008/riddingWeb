@@ -313,7 +313,7 @@ public final class HttpServletUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static IMap parseFromMap(String jsonString,Ridding ridding) throws Exception {
+	public static IMap parseFromMap(String jsonString, Ridding ridding) throws Exception {
 		JSONObject jsonObject = JSONObject.fromObject(jsonString);
 		if (jsonObject == null) {
 			throw new RequestBodyIsNullException();
@@ -327,16 +327,31 @@ public final class HttpServletUtil {
 			mapTaps = mapTaps.substring(1, mapTaps.length() - 1);
 			iMap.setMapTaps(mapTaps);
 			String midLocations = jsonObject.getString("midlocations");
-			midLocations=midLocations.substring(1, midLocations.length() - 1);
+			midLocations = midLocations.substring(1, midLocations.length() - 1);
 			iMap.setMidLocation(midLocations);
-			iMap.setBeginLocation(jsonObject.getString("beginlocation"));
-			iMap.setEndLocation(jsonObject.getString("endlocation"));
+			String beginLocation = jsonObject.getString("beginlocation");
+			if (beginLocation.length() > 20) {
+				beginLocation = beginLocation.substring(0, 20);
+			}
+			iMap.setBeginLocation(beginLocation);
+			String endLocation = jsonObject.getString("endlocation");
+			if (endLocation.length() > 20) {
+				endLocation = endLocation.substring(0, 20);
+			}
+			iMap.setEndLocation(endLocation);
 			iMap.setDistance(jsonObject.getInt("distance"));
 			ridding.setName(jsonObject.getString("riddingname"));
-			iMap.setUrlKey(jsonObject.getString("urlkey"));
-			iMap.setCityName(jsonObject.getString("cityname"));
+			if (jsonObject.getString("urlkey") != null) {
+				iMap.setUrlKey(jsonObject.getString("urlkey"));
+			}
+			if (jsonObject.getString("cityname") != null) {
+				iMap.setCityName(jsonObject.getString("cityname"));
+			}
+
 		} catch (Exception e) {
+			logger.error("info=" + jsonString);
 			throw new RequestBodyIsNullException();
+
 		}
 		return iMap;
 	}

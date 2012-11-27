@@ -19,11 +19,9 @@
 				<key>bundle-identifier</key>
 				<string>com.qiqunar.qiqunar</string>
 				<key>bundle-version</key>
-				<string>1.0</string>
+				<string>1.1</string>
 				<key>kind</key>
 				<string>software</string>
-				<key>subtitle</key>
-				<string>骑行者</string>
 				<key>title</key>
 				<string>骑行者</string>
 			</dict>

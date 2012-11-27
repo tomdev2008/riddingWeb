@@ -1,5 +1,7 @@
 package com.ridding.mapper;
 
+import java.util.List;
+
 import com.ridding.meta.ApnsDevice;
 
 /**
@@ -25,8 +27,11 @@ public interface IosApnsMapper {
 
 	/**
 	 * 更新apns
+	 * 
 	 * @param apnsDevice
 	 * @return
 	 */
 	public int updateApns(ApnsDevice apnsDevice);
+
+	public List<ApnsDevice> getAllApnsDevice();
 }

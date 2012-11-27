@@ -44,3 +44,13 @@ function submitWeiBoCB(_flag){
 		location.href=location.href;
 	}
 };
+
+
+$("#sendApns").click(function(){
+	__text=$("#apnsValue").val();
+	if(__text==''){
+		alert('发送内容');
+		return;
+	}
+	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'sendApns',__text,submitWeiBoCB);
+});

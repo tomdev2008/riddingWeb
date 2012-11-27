@@ -41,6 +41,11 @@
 		userId=#{userId} ; 
 	</select>
 	
+	<select id="getAllApnsDevice" resultMap="apnsMap">
+		SELECT * from
+		TB_IosApns  ; 
+	</select>
+	
 	
 	
 </mapper>

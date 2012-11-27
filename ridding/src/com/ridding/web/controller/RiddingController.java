@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.constant.SourceType;
+import com.ridding.constant.SystemConst;
 import com.ridding.constant.returnCodeConstance;
 import com.ridding.meta.ApnsDevice;
 import com.ridding.meta.IMap;
@@ -463,14 +464,18 @@ public class RiddingController extends AbstractBaseController {
 			return mv;
 		}
 		iMap.setAvatorPic(photo.getId());
+		if (iMap.getMapUrl() == null) {
+			imageUploadService.saveImageFromUrl(iMap.getStaticImgSrc(), photo.getId());
+		}
 		if (!transactionService.insertANewRidding(iMap, ridding)) {
 			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
+		returnObject.put("riddingId", ridding.getId());
+		returnObject.put("imageUrl", SystemConst.getValue("IMAGEHOST") + iMap.getUrlKey());
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}
-
 }

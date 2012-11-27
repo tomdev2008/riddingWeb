@@ -7,11 +7,15 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ridding.meta.IMap;
 import com.ridding.meta.Source;
 import com.ridding.meta.WeiBo;
+import com.ridding.security.MyUser;
+import com.ridding.service.IOSApnsService;
 import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
 import com.ridding.service.transaction.TransactionService;
@@ -31,6 +35,8 @@ public class DwrBackendBean {
 
 	@Resource
 	private SinaWeiBoService sinaWeiBoService;
+	@Resource
+	private IOSApnsService iosApnsService;
 
 	/**
 	 * 更新非法的新浪微博
@@ -95,5 +101,18 @@ public class DwrBackendBean {
 		weiBo.setCreateTime(new Date().getTime());
 		weiBo.setRiddingId(riddingId);
 		return sinaWeiBoService.addWeiBo(weiBo);
+	}
+
+	/**
+	 * 发送apns小新
+	 * 
+	 * @param text
+	 * @return
+	 */
+	public void sendApns(String text) {
+		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+		if (myUser.getUserId() == 54) {
+			iosApnsService.sendApns(text);
+		}
 	}
 }

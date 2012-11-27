@@ -91,7 +91,7 @@
 		<property name="cronExpression" value="0 0/1 * * * ?" />
 	</bean>
 	<!-- 消息推送任务 -->
-	<!-- 将google url转为标点 -->
+	<!-- 将google url转为标点 
 	<bean id="apnsDetail"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
@@ -110,6 +110,7 @@
 		</property>
 		<property name="cronExpression" value="0 0/1 * * * ?" />
 	</bean>
+	-->
 	<!-- 定时发送微博 -->
 	<bean id="sendWeiBoDetail"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

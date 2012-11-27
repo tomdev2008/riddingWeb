@@ -465,8 +465,8 @@ public class RiddingServiceImpl implements RiddingService {
 				// 队长自身在ridding_User中退出，就是删除
 				//hashMap.put("userRole", RiddingUserRoleType.Nothing.intValue());
 				hashMap.put("riddingStatus", RiddingStatus.Deleted.getValue());
-				hashMap.put("count", -1);
-				riddingMapper.increaseUserCount(hashMap);
+//				hashMap.put("count", -1);
+//				riddingMapper.increaseUserCount(hashMap);
 				if (riddingUserMapper.updateRiddingStatus(hashMap) < 0) {
 					return RiddingQuitConstant.Failed;
 				}
