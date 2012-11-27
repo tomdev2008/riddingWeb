@@ -14,6 +14,9 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 
+import weibo4j.Account;
+import weibo4j.Weibo;
+
 import com.ridding.constant.SystemConst;
 import com.ridding.constant.returnCodeConstance;
 import com.ridding.mapper.MapFixMapper;
@@ -63,11 +66,23 @@ public class RiddingPublicController extends AbstractBaseController {
 		ModelAndView mv = new ModelAndView("return");
 		Long userId = ServletRequestUtils.getLongParameter(request, "userId");
 		Integer sourceType = ServletRequestUtils.getIntParameter(request, "sourceType");
+
 		JSONObject returnObject = new JSONObject();
 		Profile profile = profileService.getProfile(userId);
 		SourceAccount sourceAccount = profileService.getSourceAccountByUserIdsSourceType(userId, sourceType);
 		if (profile == null || sourceAccount == null) {
 			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		try {
+			Weibo weibo = new Weibo();
+			weibo.setToken(sourceAccount.getAccessToken());
+			Account am = new Account();
+			weibo4j.org.json.JSONObject uid = am.getUid();
+		} catch (Exception e) {
+			returnObject.put("code", returnCodeConstance.TOKENEXPIRED);
+			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
 		returnObject.put("userid", profile.getUserId());
@@ -225,6 +240,5 @@ public class RiddingPublicController extends AbstractBaseController {
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}
-	
 
 }

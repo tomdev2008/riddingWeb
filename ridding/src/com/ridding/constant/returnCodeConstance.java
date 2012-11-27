@@ -34,5 +34,9 @@ public class returnCodeConstance {
 	 * 骑行活动不存在
 	 */
 	public static final int RIDDINGNOTEXISTED = -301;
+	/**
+	 * token失败
+	 */
+	public static final int TOKENEXPIRED = -444;
 
 }
