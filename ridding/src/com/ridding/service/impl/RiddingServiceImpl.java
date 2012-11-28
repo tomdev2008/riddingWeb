@@ -323,6 +323,9 @@ public class RiddingServiceImpl implements RiddingService {
 	public List<ProfileVO> getRiddingUserListToProfile(long riddingId, int limit, int createTime) {
 		List<ProfileVO> profileVOs = new ArrayList<ProfileVO>();
 		List<Long> userIdList = this.getProfileByRiddingUserList(riddingId, limit, createTime, profileVOs);
+		if(ListUtils.isEmptyList(userIdList)){
+			return null;
+		}
 		List<Profile> profileList = profileMapper.getProfileList(userIdList);
 		if (ListUtils.isEmptyList(profileList)) {
 			return null;
