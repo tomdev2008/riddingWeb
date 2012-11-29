@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -459,6 +461,9 @@ public class RiddingController extends AbstractBaseController {
 		Photo photo = new Photo();
 		photo.setOriginalPath(iMap.getUrlKey());
 		if (photoService.addPhoto(photo) < 0) {
+			logger.error("photoService.addPhoto error where imap=" + ToStringBuilder.reflectionToString(iMap));
+			logger.error("transactionService.insertANewRidding error where ridding=" + ToStringBuilder.reflectionToString(ridding));
+			logger.error("transactionService.insertANewRidding error where photo=" + ToStringBuilder.reflectionToString(photo));
 			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
@@ -468,6 +473,9 @@ public class RiddingController extends AbstractBaseController {
 			imageUploadService.saveImageFromUrl(iMap.getStaticImgSrc(), photo.getId());
 		}
 		if (!transactionService.insertANewRidding(iMap, ridding)) {
+			logger.error("transactionService.insertANewRidding error where imap=" + ToStringBuilder.reflectionToString(iMap));
+			logger.error("transactionService.insertANewRidding error where ridding=" + ToStringBuilder.reflectionToString(ridding));
+			logger.error("transactionService.insertANewRidding error where photo=" + ToStringBuilder.reflectionToString(photo));
 			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
