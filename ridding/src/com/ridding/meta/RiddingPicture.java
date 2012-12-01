@@ -57,6 +57,26 @@ public class RiddingPicture {
 	 * 描述
 	 */
 	private String description;
+	/**
+	 * 拍照日期
+	 */
+	private long takePicDate;
+	/**
+	 * 拍照位置
+	 */
+	private String takePicLocation;
+	/**
+	 * 宽度
+	 */
+	private int width;
+	/**
+	 * 高度
+	 */
+	private int height;
+	/**
+	 * 对应userid的小头像
+	 */
+	private String sAvatorUrl;
 
 	public long getId() {
 		return id;
@@ -160,6 +180,46 @@ public class RiddingPicture {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public long getTakePicDate() {
+		return takePicDate;
+	}
+
+	public void setTakePicDate(long takePicDate) {
+		this.takePicDate = takePicDate;
+	}
+
+	public String getTakePicLocation() {
+		return takePicLocation;
+	}
+
+	public void setTakePicLocation(String takePicLocation) {
+		this.takePicLocation = takePicLocation;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public String getsAvatorUrl() {
+		return sAvatorUrl;
+	}
+
+	public void setsAvatorUrl(String sAvatorUrl) {
+		this.sAvatorUrl = sAvatorUrl;
 	}
 
 }

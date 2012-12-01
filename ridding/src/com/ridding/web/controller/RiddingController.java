@@ -444,7 +444,7 @@ public class RiddingController extends AbstractBaseController {
 		IMap iMap = null;
 		Ridding ridding = new Ridding();
 		try {
-
+			logger.info("addRiddingMap json=" + jsonString + " userId=" + userId);
 			iMap = HttpServletUtil.parseFromMap(jsonString, ridding);
 			iMap.setUserId(userId);
 			ridding.setLeaderUserId(userId);

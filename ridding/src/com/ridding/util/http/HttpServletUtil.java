@@ -293,9 +293,14 @@ public final class HttpServletUtil {
 		RiddingPicture riddingPicture = new RiddingPicture();
 		try {
 			riddingPicture.setLocalName(jsonObject.getString("localName"));
-			riddingPicture.setPhotoUrl(jsonObject.getString("photoUrl"));
+			riddingPicture.setPhotoUrl(jsonObject.getString("photoKey"));
 			riddingPicture.setLatitude(jsonObject.getDouble("latitude"));
 			riddingPicture.setLongtitude(jsonObject.getDouble("longtitude"));
+			riddingPicture.setTakePicDate(jsonObject.getLong("takepicdate"));
+			riddingPicture.setTakePicLocation(jsonObject.getString("takepiclocation"));
+			riddingPicture.setDescription(jsonObject.getString("description"));
+			riddingPicture.setWidth(jsonObject.getInt("width"));
+			riddingPicture.setHeight(jsonObject.getInt("height"));
 			long nowTime = new Date().getTime();
 			riddingPicture.setCreateTime(nowTime);
 			riddingPicture.setLastUpdateTime(nowTime);

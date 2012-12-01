@@ -199,11 +199,16 @@ RiddingId bigint(20) NOT NULL DEFAULT '0' COMMENT '\'c6\'ef\'d0\'d0\'d6\'f7\'b1\
 photoUrl varchar(255) NOT NULL DEFAULT '' COMMENT '\'d5\'d5\'c6\'acurl',\
 localName varchar(255) NOT NULL DEFAULT '' COMMENT '\'d5\'d5\'c6\'ac\'d4\'da\'b1\'be\'b5\'d8\'b5\'c4\'c3\'fb\'b3\'c6',\
 UserId bigint(20) NOT NULL DEFAULT '0' COMMENT '\'c5\'c4\'d5\'d5\'b5\'c4\'d3\'c3\'bb\'a7id',\
-latitude double(11,2) NOT NULL DEFAULT '0' COMMENT '\'be\'ad\'b6\'c8',\
-longtitude double(11,2) NOT NULL DEFAULT '0' COMMENT '\'ce\'b3\'b6\'c8',\
+latitude double(11,5) NOT NULL DEFAULT '0' COMMENT '\'be\'ad\'b6\'c8',\
+longtitude double(11,5) NOT NULL DEFAULT '0' COMMENT '\'ce\'b3\'b6\'c8',\
 CreateTime bigint(20) NOT NULL default '0' COMMENT '\'bc\'cd\'c2\'bc\'b4\'b4\'bd\'a8\'ca\'b1\'bc\'e4',\
 LastUpdateTime bigint(20) NOT NULL default '0' COMMENT '\'c9\'cf\'b4\'ce\'b8\'fc\'d0\'c2\'ca\'b1\'bc\'e4',\
+takePicDate bigint(20) NOT NULL default '0' COMMENT '\'c5\'c4\'c9\'e3\'ca\'b1\'bc\'e4',\
+takePicLocation varchar(63) DEFAULT '' COMMENT '\'c5\'c4\'c9\'e3\'ce\'bb\'d6\'c3',\
 Status tinyint(4) NOT NULL DEFAULT '0' COMMENT '\'d5\'d5\'c6\'ac\'d7\'b4\'cc\'ac,0\'b9\'ab\'bf\'aa,1\'cb\'bd\'c8\'cb,20\'d2\'d1\'c9\'be\'b3\'fd',\
+description varchar(512) DEFAULT '' COMMENT '\'c3\'e8\'ca\'f6',\
+width int(11) DEFAULT 0  COMMENT '\'bf\'ed\'b6\'c8',\
+height int(11) DEFAULT 0 COMMENT '\'b8\'df\'b6\'c8',\
 PRIMARY KEY  (`Id`)\
 )   DEFAULT CHARSET=UTF8 COMMENT '\'c6\'ef\'d0\'d0\'d5\'d5\'c6\'ac\'b1\'ed';\
 \

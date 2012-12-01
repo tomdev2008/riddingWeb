@@ -14,6 +14,10 @@
 		<result property="latitude" column="latitude" />
 		<result property="longtitude" column="longtitude" />
 		<result property="description" column="description" />
+		<result property="takePicDate" column="takePicDate" />
+		<result property="takePicLocation" column="takePicLocation" />
+		<result property="width" column="width" />
+		<result property="height" column="height" />
 	</resultMap>
 
 	<insert id="addRiddingPicture" parameterType="RiddingPicture">
@@ -27,7 +31,11 @@
 		status,
 		latitude,
 		longtitude,
-		description
+		description,
+		takePicDate,
+		takePicLocation,
+		width,
+		height
 		)VALUES(
 		#{riddingId},
 		#{photoUrl},
@@ -38,7 +46,11 @@
 		#{status},
 		#{latitude},
 		#{longtitude},
-		#{description}
+		#{description},
+		#{takePicDate},
+		#{takePicLocation},
+		#{width},
+		#{height}
 		)
 		<selectKey keyProperty="id" resultType="long">
 			SELECT

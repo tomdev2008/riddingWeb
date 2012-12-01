@@ -14,7 +14,10 @@ return false;
 };
 
 
-
+$("#urlBtn").click(function(){
+	$("#image").attr("src",$("#urlText").val());
+	$("#image").show();
+});
 
 
 $("#submitWeiBo").click(function(){
@@ -27,14 +30,18 @@ if(__weiboType==1){
 	__riddingId=$("#mapId").val();	
 }
 if(_photoUrl==''){
-		alert('请先上传图片');
-}else if(__text==''){
+	_photoUrl=$("#urlText").val();
+	if(_photoUrl==''){
+       alert('请先上传图片');
+       return;
+	}
+}
+if(__text==''){
 alert('请输入微博内容');
 }else if(__sendTime==''){
 alert('请输入发送时间');
 }else{
 	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'updateWeiBo',__text,__sendTime,_photoUrl,__sourceType,__weiboType,__riddingId,submitWeiBoCB);
-
 }
 });
 

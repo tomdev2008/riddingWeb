@@ -30,6 +30,7 @@ body{font-size:83%;}
          <input type="file" value="浏览" name="file" size="37" class="t file l "/>
          <input type="submit" value="上传图片"/>
     </form>
+    <span>url:</span><input type="text" id="urlText"/><input type="button" value="确定" id="urlBtn"/>
     <div>
         <img style="width: 100px; height: 100px;display:none;" src=""  id="image"/>
     </div>
@@ -55,7 +56,7 @@ body{font-size:83%;}
     </div>
 </div>
 
-<div>
+<div style="display:none;">
     <p>发送iphone推送信息</p>
     <input type="text" id="apnsValue" style="width:200px;"/>
     <input type="button" id="sendApns" value="发送"/>

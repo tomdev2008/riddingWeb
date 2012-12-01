@@ -1,5 +1,6 @@
 package com.ridding.util.http;
 
+import java.sql.Date;
 import java.util.List;
 
 import net.sf.json.JSONArray;
@@ -7,6 +8,7 @@ import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.ridding.constant.SystemConst;
 import com.ridding.meta.IMap;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
@@ -15,6 +17,7 @@ import com.ridding.meta.Ridding.RiddingStatus;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.util.ListUtils;
 import com.ridding.util.ObjectUtil;
+import com.ridding.util.TimeUtil;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -160,9 +163,15 @@ public class HttpJsonUtil {
 		for (RiddingPicture riddingPicture : riddingPictures) {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("fileName", riddingPicture.getLocalName());
-			jsonObject.put("photoUrl", riddingPicture.getPhotoUrl());
+			jsonObject.put("photoUrl", SystemConst.getValue("IMAGEHOST") + riddingPicture.getPhotoUrl());
 			jsonObject.put("latitude", riddingPicture.getLatitude());
 			jsonObject.put("longtitude", riddingPicture.getLongtitude());
+			jsonObject.put("takepiclocation", riddingPicture.getTakePicLocation());
+			jsonObject.put("takepicdate", riddingPicture.getTakePicDate());
+			jsonObject.put("description", riddingPicture.getDescription());
+			jsonObject.put("width", riddingPicture.getWidth());
+			jsonObject.put("height", riddingPicture.getHeight());
+			jsonObject.put("savatorurl", riddingPicture.getsAvatorUrl());
 			jsonArray.add(jsonObject);
 		}
 		object.put("riddingPictures", jsonArray);

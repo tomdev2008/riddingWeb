@@ -1,7 +1,9 @@
 package com.ridding.web.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +33,8 @@ import com.ridding.meta.vo.ProfileVO;
 import com.ridding.service.MapService;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingService;
+import com.ridding.util.HashMapMaker;
+import com.ridding.util.ListUtils;
 import com.ridding.util.http.HttpJsonUtil;
 import com.ridding.util.http.HttpServletUtil;
 
@@ -235,10 +239,23 @@ public class RiddingPublicController extends AbstractBaseController {
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
 		List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByUserIdRiddingId(riddingId, userId);
+		if (!ListUtils.isEmptyList(riddingPictures)) {
+			List<Long> userids = new ArrayList<Long>(riddingPictures.size());
+			for (RiddingPicture riddingPicture : riddingPictures) {
+				userids.add(riddingPicture.getUserId());
+			}
+			List<Profile> profileList = profileService.getProfileList(userids);
+			Map<Long, Profile> profileMap = HashMapMaker.listToMap(profileList, "getUserId", Profile.class);
+			for (RiddingPicture riddingPicture : riddingPictures) {
+				Profile profile = profileMap.get(riddingPicture.getUserId());
+				if (profile != null) {
+					riddingPicture.setsAvatorUrl(profile.getsAvatorUrl());
+				}
+			}
+		}
 		HttpJsonUtil.setupLoadedRiddingPicture(returnObject, riddingPictures);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}
-
 }
