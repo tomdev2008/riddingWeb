@@ -58,9 +58,18 @@
 		</selectKey>
 	</insert>
 
-	<select id="getRiddingPicturesByUserId" resultMap="riddingPictureMap" parameterType="hashMap">
-		SELECT * from TB_Ridding_Picture where riddingId=#{riddingId} and userId=#{userId} order by
+	<select id="getRiddingPicturesByUserId" resultMap="riddingPictureMap"
+		parameterType="hashMap">
+		SELECT * from TB_Ridding_Picture where
+		riddingId=#{riddingId} and userId=#{userId} order by
 		createTime desc ;
+	</select>
+
+	<select id="getRiddingPicturesByRiddingId" resultMap="riddingPictureMap"
+		parameterType="hashMap">
+		SELECT * from TB_Ridding_Picture where
+		riddingId=#{riddingId} order by
+		createTime desc limit #{limit};
 	</select>
 
 </mapper>

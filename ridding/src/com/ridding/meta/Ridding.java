@@ -53,6 +53,31 @@ public class Ridding implements Serializable {
 	private int limit = -1;
 
 	private boolean isLarger;
+	/**
+	 * 是否是推荐
+	 */
+	public int isRecom;
+	/**
+	 * 是否是公开
+	 */
+	public int isPublic;
+
+	/**
+	 * 非公开或者非推荐
+	 */
+	public static int notPublicOrRecom = 0;
+	/**
+	 * 公开或者推荐
+	 */
+	public static int PublicOrRecom = 1;
+	/**
+	 * 第一张图的url
+	 */
+	public String firstPicUrl;
+	/**
+	 * 距离
+	 */
+	public int distance;
 
 	/**
 	 *骑行状态
@@ -190,6 +215,38 @@ public class Ridding implements Serializable {
 
 	public void setLarger(boolean isLarger) {
 		this.isLarger = isLarger;
+	}
+
+	public int getIsRecom() {
+		return isRecom;
+	}
+
+	public void setIsRecom(int isRecom) {
+		this.isRecom = isRecom;
+	}
+
+	public int getIsPublic() {
+		return isPublic;
+	}
+
+	public void setIsPublic(int isPublic) {
+		this.isPublic = isPublic;
+	}
+
+	public String getFirstPicUrl() {
+		return firstPicUrl;
+	}
+
+	public void setFirstPicUrl(String firstPicUrl) {
+		this.firstPicUrl = firstPicUrl;
+	}
+
+	public int getDistance() {
+		return distance;
+	}
+
+	public void setDistance(int distance) {
+		this.distance = distance;
 	}
 
 }

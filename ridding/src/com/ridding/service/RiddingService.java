@@ -7,6 +7,7 @@ import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
+import com.ridding.meta.Ridding.RiddingStatus;
 import com.ridding.meta.vo.ProfileVO;
 
 /**
@@ -156,4 +157,13 @@ public interface RiddingService {
 	 * @return
 	 */
 	public List<RiddingPicture> getRiddingPictureByUserIdRiddingId(long riddingId, long userid);
+
+	/**
+	 * 根据最后
+	 * 
+	 * @param lastUpdateTime
+	 * @param limit
+	 * @return
+	 */
+	public List<Ridding> getRiddingListByLastUpdateTime(long lastUpdateTime, int limit, RiddingStatus riddingstatus, Boolean isLarger,int isRecom);
 }

@@ -360,4 +360,28 @@ public final class HttpServletUtil {
 		}
 		return iMap;
 	}
+	
+	
+	public static Ridding parseToRiddingByLastUpdateTime(String jsonString) throws Exception {
+		JSONObject jsonObject = JSONObject.fromObject(jsonString);
+		if (jsonObject == null) {
+			throw new RequestBodyIsNullException();
+		}
+		Ridding ridding = new Ridding();
+		try {
+			long time = jsonObject.getLong("lastupdatetime");
+			if (time <= 0) {
+				ridding.setLastUpdateTime(new Date().getTime());
+			} else {
+				ridding.setLastUpdateTime(time);
+			}
+			ridding.setLimit(jsonObject.getInt("limit"));
+			ridding.setLarger(jsonObject.getInt("larger") == 1 ? true : false);
+			//0表示进行中,1表示推荐
+		    ridding.setIsRecom(jsonObject.getInt("type"));
+		} catch (Exception e) {
+			throw new RequestBodyIsNullException();
+		}
+		return ridding;
+	}
 }

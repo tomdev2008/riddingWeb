@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.ridding.constant.RiddingQuitConstant;
+import com.ridding.constant.SystemConst;
 import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.MapFixMapper;
 import com.ridding.mapper.PhotoMapper;
@@ -244,17 +245,6 @@ public class RiddingServiceImpl implements RiddingService {
 		return riddingUsers;
 	}
 
-	private void test() {
-		List<IMap> list = mapMapper.getAll();
-		if (!ListUtils.isEmptyList(list)) {
-			for (IMap iMap : list) {
-				Photo photo = photoMapper.getPhotoById(iMap.getAvatorPic());
-				photo.setOriginalPath("/img/original" + photo.getOriginalPath().substring(18));
-				photoMapper.updatePhoto(photo);
-			}
-		}
-	}
-
 	/**
 	 * 插入骑行的地图信息,骑行信息
 	 * 
@@ -323,7 +313,7 @@ public class RiddingServiceImpl implements RiddingService {
 	public List<ProfileVO> getRiddingUserListToProfile(long riddingId, int limit, int createTime) {
 		List<ProfileVO> profileVOs = new ArrayList<ProfileVO>();
 		List<Long> userIdList = this.getProfileByRiddingUserList(riddingId, limit, createTime, profileVOs);
-		if(ListUtils.isEmptyList(userIdList)){
+		if (ListUtils.isEmptyList(userIdList)) {
 			return null;
 		}
 		List<Profile> profileList = profileMapper.getProfileList(userIdList);
@@ -466,10 +456,11 @@ public class RiddingServiceImpl implements RiddingService {
 					return RiddingQuitConstant.Leader;
 				}
 				// 队长自身在ridding_User中退出，就是删除
-				//hashMap.put("userRole", RiddingUserRoleType.Nothing.intValue());
+				// hashMap.put("userRole",
+				// RiddingUserRoleType.Nothing.intValue());
 				hashMap.put("riddingStatus", RiddingStatus.Deleted.getValue());
-//				hashMap.put("count", -1);
-//				riddingMapper.increaseUserCount(hashMap);
+				// hashMap.put("count", -1);
+				// riddingMapper.increaseUserCount(hashMap);
 				if (riddingUserMapper.updateRiddingStatus(hashMap) < 0) {
 					return RiddingQuitConstant.Failed;
 				}
@@ -592,5 +583,53 @@ public class RiddingServiceImpl implements RiddingService {
 		map.put("userId", userid);
 		map.put("riddingId", riddingId);
 		return riddingPictureMapper.getRiddingPicturesByUserId(map);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ridding.service.RiddingService#getRiddingListByLastUpdateTime(long,
+	 * int, com.ridding.meta.Ridding.RiddingStatus)
+	 */
+	@Override
+	public List<Ridding> getRiddingListByLastUpdateTime(long lastUpdateTime, int limit, RiddingStatus riddingstatus, Boolean isLarger, int isRecom) {
+		// 是否是获取推荐的
+		if (isRecom == Ridding.PublicOrRecom) {
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("lastUpdateTime", lastUpdateTime);
+		map.put("limit", limit);
+		map.put("isLarger", isLarger ? 1 : 0);
+		List<Ridding> riddingList = riddingMapper.getRiddingListByLastUpdateTime(map);
+		List<Long> mapIds = new ArrayList<Long>(riddingList.size());
+		for (Ridding ridding : riddingList) {
+			mapIds.add(ridding.getMapId());
+		}
+		List<IMap> iMapList = mapMapper.getIMaplist(mapIds);
+		Map<Long, IMap> iMapMap = HashMapMaker.listToMap(iMapList, "getId", IMap.class);
+		if (!ListUtils.isEmptyList(riddingList)) {
+			for (Ridding ridding : riddingList) {
+				map.put("riddingId", ridding.getId());
+				map.put("limit", 1);
+				IMap iMap = iMapMap.get(ridding.getMapId());
+				if (iMap != null) {
+					ridding.setDistance(iMap.getDistance());
+				}
+				RiddingPicture riddingPicture = riddingPictureMapper.getRiddingPicturesByRiddingId(map);
+				if (riddingPicture != null) {
+					ridding.setFirstPicUrl(SystemConst.getValue("IMAGEHOST") + riddingPicture.getPhotoUrl());
+				} else if (iMap != null) {
+					Photo photo = photoMapper.getPhotoById(iMap.getAvatorPic());
+					if (photo != null) {
+						ridding.setFirstPicUrl(SystemConst.getValue("IMAGEHOST") + photo.getOriginalPath());
+					} else {
+						ridding.setFirstPicUrl(iMap.getStaticImgSrc());
+					}
+				}
+			}
+		}
+		return riddingList;
 	}
 }

@@ -68,16 +68,16 @@
 				<beans:value>/**/login.do*</beans:value>
 				<beans:value>/**/logout.do*</beans:value>
 				<beans:value>/**/dwr/call/plaincall/RiddingPubBean.riddingUserList.dwr*</beans:value>
-				
+				<!--  测试 -->
+				<beans:value>/**/ridding.do*</beans:value>
+				<beans:value>/**/backend.do*</beans:value>
+				<beans:value>/**/riddingWeb.do*</beans:value>
+				<beans:value>/**/upload.do*</beans:value>
+				<beans:value>/**/*.dwr</beans:value>
 			</beans:list>
 		</beans:property>
 		<beans:property name="noAdminURIConfig">
 			<beans:list>
-				<beans:value>/**/ridding.do*</beans:value>
-				<beans:value>/**/backend.do*</beans:value>
-				<beans:value>/**/*.dwr</beans:value>
-				<beans:value>/**/riddingWeb.do*</beans:value>
-				<beans:value>/**/upload.do*</beans:value>
 			</beans:list>
 		</beans:property>
 	</beans:bean>

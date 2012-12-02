@@ -29,6 +29,7 @@ import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
+import com.ridding.meta.Ridding.RiddingStatus;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.service.MapService;
 import com.ridding.service.ProfileService;
@@ -254,6 +255,35 @@ public class RiddingPublicController extends AbstractBaseController {
 			}
 		}
 		HttpJsonUtil.setupLoadedRiddingPicture(returnObject, riddingPictures);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 得到进行中的骑行活动，根据时间排序
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView getGoingRiddings(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		JSONObject returnObject = new JSONObject();
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		logger.info(jsonString);
+		ModelAndView mv = new ModelAndView("return");
+		Ridding ridding = null;
+		try {
+			ridding = HttpServletUtil.parseToRiddingByLastUpdateTime(jsonString);
+		} catch (Exception e) {
+			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
+			e.printStackTrace();
+			return mv;
+		}
+		List<Ridding> riddingList = riddingService.getRiddingListByLastUpdateTime(ridding.getLastUpdateTime(), ridding.getLimit(),
+				RiddingStatus.Beginning, ridding.isLarger(),ridding.isRecom);
+		HttpJsonUtil.setRiddingByLastUpdateTime(returnObject, riddingList);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;

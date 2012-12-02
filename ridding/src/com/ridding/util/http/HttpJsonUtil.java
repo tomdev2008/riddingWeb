@@ -1,6 +1,5 @@
 package com.ridding.util.http;
 
-import java.sql.Date;
 import java.util.List;
 
 import net.sf.json.JSONArray;
@@ -10,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.ridding.constant.SystemConst;
 import com.ridding.meta.IMap;
+import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
@@ -88,7 +88,8 @@ public class HttpJsonUtil {
 				jsonObject.put("status", riddingUser.getStatus());
 				jsonObject.put("id", riddingUser.getRiddingId());
 				jsonObject.put("distance", riddingUser.getDistance());
-				jsonObject.put("createtime", TimeUtil.getFormatTime(riddingUser.getCreateTime()));
+				jsonObject.put("createtime", riddingUser.getCreateTime());
+				jsonObject.put("createtimestr", TimeUtil.getFormatTime(riddingUser.getCreateTime()));
 				jsonObject.put("beginLocation", riddingUser.getBeginLocation());
 				jsonObject.put("endLocation", riddingUser.getEndLocation());
 				jsonObject.put("userRole", riddingUser.getUserRole());
@@ -177,4 +178,29 @@ public class HttpJsonUtil {
 		object.put("riddingPictures", jsonArray);
 	}
 
+	/**
+	 * 插入骑行信息
+	 * 
+	 * @param object
+	 * @param riddingPictures
+	 */
+	public static void setRiddingByLastUpdateTime(JSONObject object, List<Ridding> riddingList) {
+		if (ListUtils.isEmptyList(riddingList)) {
+			return;
+		}
+		JSONArray jsonArray = new JSONArray();
+		for (Ridding ridding : riddingList) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("name", ridding.getName());
+			jsonObject.put("status", ridding.getRiddingStatus());
+			jsonObject.put("id", ridding.getId());
+			jsonObject.put("distance", ridding.getDistance());
+			jsonObject.put("createtime", TimeUtil.getFormatTime(ridding.getCreateTime()));
+			jsonObject.put("lastUpdateTime", TimeUtil.getFormatTime(ridding.getLastUpdateTime()));
+			jsonObject.put("leaderUserId", ridding.getLeaderUserId());
+			jsonObject.put("firstpicurl", ridding.getFirstPicUrl());
+			jsonArray.add(jsonObject);
+		}
+		object.put("riddingpubliclist", jsonArray);
+	}
 }

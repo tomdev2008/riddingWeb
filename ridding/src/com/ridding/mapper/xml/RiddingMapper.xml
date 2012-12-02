@@ -22,7 +22,9 @@
 		createTime,
 		lastUpdateTime,
 		userCount,
-		riddingStatus
+		riddingStatus,
+		isRecom,
+		isPublic
 		)VALUES(
 		#{leaderUserId},
 		#{mapId},
@@ -31,7 +33,9 @@
 		#{createTime},
 		#{lastUpdateTime},
 		#{userCount},
-		#{riddingStatus}
+		#{riddingStatus},
+		#{isRecom},
+		#{isPublic}
 		)
 		<selectKey keyProperty="id" resultType="long">
 			SELECT
@@ -70,5 +74,29 @@
 		where id = #{id} ;
 	</update>
 	
+	<update id="updateRecomStatus" parameterType="hashMap"
+		flushCache="true" statementType="PREPARED">
+		update TB_Ridding set isRecom =
+		#{isRecom}
+		where id = #{id} ;
+	</update>
 	
+	<update id="updatePublicStatus" parameterType="hashMap"
+		flushCache="true" statementType="PREPARED">
+		update TB_Ridding set isPublic =
+		#{isPublic}
+		where id = #{id} ;
+	</update>
+	
+	<select id="getRiddingListByLastUpdateTime" resultMap="riddingMap">
+		SELECT * from TB_Ridding where isPublic = 0
+		<if test="isLarger==1">
+			and lastUpdateTime > #{lastUpdateTime} 
+		</if>
+		<if test="isLarger==0">
+			and #{lastUpdateTime} > lastUpdateTime 
+		</if>
+		
+		order by lastUpdateTime desc limit #{limit};
+	</select>
 </mapper>

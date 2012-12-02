@@ -28,10 +28,18 @@ public interface RiddingPictureMapper {
 	public int deleteRiddingPicture(long id);
 
 	/**
-	 * 得到骑行图片R
+	 * 得到骑行图片
 	 * 
 	 * @param map
 	 * @return
 	 */
 	public List<RiddingPicture> getRiddingPicturesByUserId(Map<String, Object> map);
+
+	/**
+	 * 得到第一张图片
+	 * 
+	 * @param riddingId
+	 * @return
+	 */
+	public RiddingPicture getRiddingPicturesByRiddingId(Map<String, Object> map);
 }

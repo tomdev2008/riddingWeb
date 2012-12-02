@@ -58,4 +58,27 @@ public interface RiddingMapper {
 	 */
 	public int updateRiddingStatus(Map<String, Object> hashMap);
 
+	/**
+	 * 更新公开状态
+	 * 
+	 * @param hashMap
+	 * @return
+	 */
+	public int updatePublicStatus(Map<String, Object> hashMap);
+
+	/**
+	 * 更新推荐状态
+	 * 
+	 * @param hashMap
+	 * @return
+	 */
+	public int updateRecomStatus(Map<String, Object> hashMap);
+
+	/**
+	 * 通过更新时间得到骑行列表
+	 * 
+	 * @param hashMap
+	 * @return
+	 */
+	public List<Ridding> getRiddingListByLastUpdateTime(Map<String, Object> hashMap);
 }

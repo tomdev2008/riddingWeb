@@ -482,7 +482,9 @@ public class RiddingController extends AbstractBaseController {
 		}
 		returnObject.put("riddingId", ridding.getId());
 		returnObject.put("imageUrl", SystemConst.getValue("IMAGEHOST") + iMap.getUrlKey());
+		//由于以前的bug，这里code 用200, 一直到v1.2以下版本才做更新
 		returnObject.put("code", 200);
+		returnObject.put("code1",returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}
