@@ -88,7 +88,7 @@ public class HttpJsonUtil {
 				jsonObject.put("status", riddingUser.getStatus());
 				jsonObject.put("id", riddingUser.getRiddingId());
 				jsonObject.put("distance", riddingUser.getDistance());
-				jsonObject.put("createtime", riddingUser.getCreateTime());
+				jsonObject.put("createtime", TimeUtil.getFormatTime(riddingUser.getCreateTime()));
 				jsonObject.put("beginLocation", riddingUser.getBeginLocation());
 				jsonObject.put("endLocation", riddingUser.getEndLocation());
 				jsonObject.put("userRole", riddingUser.getUserRole());
