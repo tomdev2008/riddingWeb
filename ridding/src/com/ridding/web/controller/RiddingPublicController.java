@@ -256,7 +256,6 @@ public class RiddingPublicController extends AbstractBaseController {
 	public ModelAndView getuploadedPhotos(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
 		int limit = ServletRequestUtils.getIntParameter(request, "limit", -1);
 		long lastUpdateTime = ServletRequestUtils.getLongParameter(request, "lastupdatetime", -1);
 		if (lastUpdateTime < 0) {
@@ -264,7 +263,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		}
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
-		List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByUserIdRiddingId(riddingId, userId, limit, lastUpdateTime);
+		List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, limit, lastUpdateTime);
 		if (!ListUtils.isEmptyList(riddingPictures)) {
 			List<Long> userids = new ArrayList<Long>(riddingPictures.size());
 			for (RiddingPicture riddingPicture : riddingPictures) {

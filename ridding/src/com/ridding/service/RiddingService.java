@@ -156,7 +156,7 @@ public interface RiddingService {
 	 * @param userid
 	 * @return
 	 */
-	public List<RiddingPicture> getRiddingPictureByUserIdRiddingId(long riddingId, long userid, int limit, long lastUpdateTime);
+	public List<RiddingPicture> getRiddingPictureByRiddingId(long riddingId, int limit, long lastUpdateTime);
 
 	/**
 	 * 根据最近更新的骑行活动

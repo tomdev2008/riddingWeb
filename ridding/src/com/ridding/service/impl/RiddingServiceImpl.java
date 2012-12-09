@@ -594,9 +594,8 @@ public class RiddingServiceImpl implements RiddingService {
 	 * (long, long)
 	 */
 	@Override
-	public List<RiddingPicture> getRiddingPictureByUserIdRiddingId(long riddingId, long userid, int limit, long lastUpdateTime) {
+	public List<RiddingPicture> getRiddingPictureByRiddingId(long riddingId, int limit, long lastUpdateTime) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", userid);
 		map.put("riddingId", riddingId);
 		map.put("createTime", lastUpdateTime);
 		map.put("limit", limit);

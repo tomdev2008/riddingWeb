@@ -61,7 +61,7 @@
 	<select id="getRiddingPicturesByUserId" resultMap="riddingPictureMap"
 		parameterType="hashMap">
 		SELECT * from TB_Ridding_Picture where
-		riddingId=#{riddingId} and userId=#{userId} and #{createTime} > createTime  order by
+		riddingId=#{riddingId}  and #{createTime} > createTime  order by
 		createTime desc  limit #{limit};
 	</select>
 
