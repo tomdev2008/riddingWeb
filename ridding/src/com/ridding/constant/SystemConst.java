@@ -66,4 +66,14 @@ public class SystemConst {
 			}
 		}
 	}
+
+	/**
+	 * 得到图片地址
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public static String returnPhotoUrl(String key) {
+		return SystemConst.getValue("IMAGEHOST") + key;
+	}
 }

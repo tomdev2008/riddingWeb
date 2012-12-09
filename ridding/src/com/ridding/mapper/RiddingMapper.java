@@ -81,4 +81,28 @@ public interface RiddingMapper {
 	 * @return
 	 */
 	public List<Ridding> getRiddingListByLastUpdateTime(Map<String, Object> hashMap);
+
+	/**
+	 * 喜欢数
+	 * 
+	 * @param riddingId
+	 * @return
+	 */
+	public int incLikeCount(long riddingId);
+
+	/**
+	 * 喜欢数
+	 * 
+	 * @param riddingId
+	 * @return
+	 */
+	public int incCareCount(long riddingId);
+
+	/**
+	 * 喜欢数
+	 * 
+	 * @param riddingId
+	 * @return
+	 */
+	public int incUseCount(long riddingId);
 }

@@ -30,4 +30,12 @@ public interface PhotoService {
 	 * @return
 	 */
 	public int deletePhoto(long id);
+
+	/**
+	 * 得到图片
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Photo getPhoto(long id);
 }

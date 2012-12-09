@@ -1,5 +1,6 @@
 package com.ridding.meta.vo;
 
+import com.ridding.meta.SourceAccount;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -32,6 +33,16 @@ public class ProfileVO {
 	private long accessUserId;
 
 	private String nickName;
+
+	private SourceAccount sourceAccount;
+
+	public SourceAccount getSourceAccount() {
+		return sourceAccount;
+	}
+
+	public void setSourceAccount(SourceAccount sourceAccount) {
+		this.sourceAccount = sourceAccount;
+	}
 
 	public String getNickName() {
 		return nickName;

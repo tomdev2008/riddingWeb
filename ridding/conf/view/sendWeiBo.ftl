@@ -9,6 +9,22 @@ body{font-size:83%;}
 </style>
 
 <body>
+
+<div style="">
+    <p style="font-size: 20px;color: red;">添加推荐信息</p>
+    <span>骑行Id</span><input type="text" id="recom_riddingId" style="width:50px;"/>
+    <span>用户Id</span><input type="text" id="recom_userId" style="width:50px;"/>
+    <span>权重</span><input type="text" id="recom_weight" style="width:50px;"/>
+    <form id="recom_uploadFrame" action="/user/${visitUserId}/photoUpload/" target="uploadFrame" method="post" enctype="multipart/form-data" size="37" class="t" onsubmit="return saveRecomReport();">
+         <input type="file" value="浏览" name="file" size="37" class="t file l "/>
+         <input type="submit" value="上传图片"/>
+    </form>
+    <div>
+        <img style="width: 100px; height: 100px;display:none;" src=""  id="recom_image"/>
+    </div>
+    <input type="button" id="recom" value="确定"/>
+</div>
+<h3 style="font-size: 20px;color: red;">发微博功能</h3>
 <div>
 <span>总数为:</span>
 </div>
@@ -16,7 +32,7 @@ body{font-size:83%;}
 <thead>
 <tr><td>id</td><td>内容</td><td>图片</td><td>发送源</td><td>发送时间</td><td>状态</td><td>操作</td></tr>
 </thead>
-<tbody>
+</table>
 <div style="height:300px;">
     <h3>新建一条记录</h3> 
     <div>
@@ -56,11 +72,16 @@ body{font-size:83%;}
     </div>
 </div>
 
+
 <div style="display:none;">
-    <p>发送iphone推送信息</p>
+    <p style="font-size: 20px;color: red;">发送iphone推送信息</p>
     <input type="text" id="apnsValue" style="width:200px;"/>
     <input type="button" id="sendApns" value="发送"/>
 </div>
+
+
+
+
 
 <#if weiboList?exists>
 <#list weiboList as weibo>

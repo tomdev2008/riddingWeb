@@ -322,7 +322,7 @@ public class MapServiceImpl implements MapService {
 	 * 
 	 * @see com.ridding.service.MapService#getMapFix(float, float)
 	 */
-	public MapFix getMapFix(float latitude, float longtitude) {
+	public MapFix getMapFix(double latitude, double longtitude) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("latitude", MapFix.getLatPrefix(latitude));
 		hashMap.put("longtitude", MapFix.getLngPrefix(longtitude));

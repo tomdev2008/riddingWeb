@@ -16,11 +16,13 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.ridding.constant.RiddingQuitConstant;
+import com.ridding.constant.SourceType;
 import com.ridding.constant.SystemConst;
 import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.MapFixMapper;
 import com.ridding.mapper.PhotoMapper;
 import com.ridding.mapper.ProfileMapper;
+import com.ridding.mapper.RiddingActionMapper;
 import com.ridding.mapper.RiddingMapper;
 import com.ridding.mapper.RiddingPictureMapper;
 import com.ridding.mapper.RiddingUserMapper;
@@ -29,14 +31,19 @@ import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
 import com.ridding.meta.Photo;
 import com.ridding.meta.Profile;
+import com.ridding.meta.Public;
 import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingAction;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
+import com.ridding.meta.SourceAccount;
+import com.ridding.meta.Public.PublicType;
 import com.ridding.meta.Ridding.RiddingStatus;
+import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.RiddingUser.RiddingUserRoleType;
 import com.ridding.meta.RiddingUser.SelfRiddingStatus;
 import com.ridding.meta.vo.ProfileVO;
-import com.ridding.service.ImageUploadService;
+import com.ridding.service.PublicService;
 import com.ridding.service.RiddingService;
 import com.ridding.service.transaction.TransactionService;
 import com.ridding.util.HashMapMaker;
@@ -64,9 +71,6 @@ public class RiddingServiceImpl implements RiddingService {
 	private ProfileMapper profileMapper;
 
 	@Resource
-	private SourceAccountMapper sourceAccountMapper;
-
-	@Resource
 	private MapFixMapper mapFixMapper;
 
 	@Resource
@@ -76,11 +80,15 @@ public class RiddingServiceImpl implements RiddingService {
 	private TransactionService transactionService;
 
 	@Resource
-	private ImageUploadService imageUploadService;
-
-	@Resource
 	private RiddingPictureMapper riddingPictureMapper;
 
+	@Resource
+	private PublicService publicService;
+	@Resource
+	private SourceAccountMapper sourceAccountMapper;
+
+	@Resource
+	private RiddingActionMapper riddingActionMapper;
 	private static final Logger logger = Logger.getLogger(RiddingServiceImpl.class);
 
 	/*
@@ -320,6 +328,11 @@ public class RiddingServiceImpl implements RiddingService {
 		if (ListUtils.isEmptyList(profileList)) {
 			return null;
 		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("sourceType", SourceType.SINAWEIBO.getValue());
+		map.put("userIds", userIdList);
+		List<SourceAccount> sourceAccounts = sourceAccountMapper.getSourceAccountByUserIdsSourceType(map);
+		Map<Long, SourceAccount> sourceAccountMap = HashMapMaker.listToMap(sourceAccounts, "getUserId", SourceAccount.class);
 		Map<Long, Profile> profileMap = HashMapMaker.listToMap(profileList, "getUserId", Profile.class);
 		for (ProfileVO profileVO : profileVOs) {
 			Profile profile = profileMap.get(profileVO.getUserId());
@@ -327,6 +340,10 @@ public class RiddingServiceImpl implements RiddingService {
 				profileVO.setbAvatorUrl(profile.getbAvatorUrl());
 				profileVO.setsAvatorUrl(profile.getsAvatorUrl());
 				profileVO.setNickName(profile.getNickName());
+			}
+			SourceAccount sourceAccount = sourceAccountMap.get(profileVO.getUserId());
+			if (sourceAccount != null) {
+				profileVO.setSourceAccount(sourceAccount);
 			}
 		}
 		return profileVOs;
@@ -578,11 +595,36 @@ public class RiddingServiceImpl implements RiddingService {
 	 * (long, long)
 	 */
 	@Override
-	public List<RiddingPicture> getRiddingPictureByUserIdRiddingId(long riddingId, long userid) {
+	public List<RiddingPicture> getRiddingPictureByUserIdRiddingId(long riddingId, long userid, int limit, long lastUpdateTime) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userid);
 		map.put("riddingId", riddingId);
+		map.put("createTime", lastUpdateTime);
+		map.put("limit", limit);
 		return riddingPictureMapper.getRiddingPicturesByUserId(map);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getRecomRiddingList(int, int,
+	 * java.lang.Boolean)
+	 */
+	public List<Ridding> getRecomRiddingList(int weight, int limit, Boolean isLarger) {
+		List<Public> publicList = publicService.getPublicListByType(PublicType.PublicRecom.getValue(), limit, weight, isLarger);
+		List<Ridding> riddingList = new ArrayList<Ridding>(publicList.size());
+		if (!ListUtils.isEmptyList(publicList)) {
+			for (Public public1 : publicList) {
+				Ridding ridding = PublicType.PublicRecom.getRidding(public1.getJson());
+				Ridding newRidding = riddingMapper.getRidding(ridding.getId());
+				newRidding.setFirstPicUrl(ridding.getFirstPicUrl());
+				newRidding.setWeight(public1.getWeight());
+				riddingList.add(newRidding);
+			}
+			this.insertRiddingInfo(riddingList);
+		}
+
+		return riddingList;
 	}
 
 	/*
@@ -593,16 +635,22 @@ public class RiddingServiceImpl implements RiddingService {
 	 * int, com.ridding.meta.Ridding.RiddingStatus)
 	 */
 	@Override
-	public List<Ridding> getRiddingListByLastUpdateTime(long lastUpdateTime, int limit, RiddingStatus riddingstatus, Boolean isLarger, int isRecom) {
-		// 是否是获取推荐的
-		if (isRecom == Ridding.PublicOrRecom) {
-		}
-
+	public List<Ridding> getRiddingListByLastUpdateTime(long lastUpdateTime, int limit, Boolean isLarger, int isRecom) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("lastUpdateTime", lastUpdateTime);
 		map.put("limit", limit);
 		map.put("isLarger", isLarger ? 1 : 0);
 		List<Ridding> riddingList = riddingMapper.getRiddingListByLastUpdateTime(map);
+		this.insertRiddingInfo(riddingList);
+		return riddingList;
+	}
+
+	/**
+	 * 
+	 * @param riddingList
+	 */
+	private void insertRiddingInfo(List<Ridding> riddingList) {
+		Map<String, Object> map = new HashMap<String, Object>();
 		List<Long> mapIds = new ArrayList<Long>(riddingList.size());
 		for (Ridding ridding : riddingList) {
 			mapIds.add(ridding.getMapId());
@@ -617,19 +665,72 @@ public class RiddingServiceImpl implements RiddingService {
 				if (iMap != null) {
 					ridding.setDistance(iMap.getDistance());
 				}
-				RiddingPicture riddingPicture = riddingPictureMapper.getRiddingPicturesByRiddingId(map);
-				if (riddingPicture != null) {
-					ridding.setFirstPicUrl(SystemConst.getValue("IMAGEHOST") + riddingPicture.getPhotoUrl());
-				} else if (iMap != null) {
-					Photo photo = photoMapper.getPhotoById(iMap.getAvatorPic());
-					if (photo != null) {
-						ridding.setFirstPicUrl(SystemConst.getValue("IMAGEHOST") + photo.getOriginalPath());
-					} else {
-						ridding.setFirstPicUrl(iMap.getStaticImgSrc());
+				if(ridding.getFirstPicUrl()==null){
+					RiddingPicture riddingPicture = riddingPictureMapper.getRiddingPicturesByRiddingId(map);
+					if (riddingPicture != null) {
+						ridding.setFirstPicUrl(SystemConst.getValue("IMAGEHOST") + riddingPicture.getPhotoUrl());
+					} else if (iMap != null) {
+						Photo photo = photoMapper.getPhotoById(iMap.getAvatorPic());
+						if (photo != null) {
+							ridding.setFirstPicUrl(SystemConst.getValue("IMAGEHOST") + photo.getOriginalPath());
+						} else {
+							ridding.setFirstPicUrl(iMap.getStaticImgSrc());
+						}
 					}
 				}
 			}
 		}
-		return riddingList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#incRiddingLike(long)
+	 */
+	@Override
+	public boolean incRiddingLike(long riddingId, long userId) {
+		this.addRiddingAction(riddingId, userId, RiddingActions.Like.getValue());
+		return riddingMapper.incLikeCount(riddingId) > 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#incRiddingUse(long, long)
+	 */
+	@Override
+	public boolean incRiddingUse(long riddingId, long userId) {
+		this.addRiddingAction(riddingId, userId, RiddingActions.Use.getValue());
+		return riddingMapper.incUseCount(riddingId) > 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#incRiddingCare(long, long)
+	 */
+	@Override
+	public boolean incRiddingCare(long riddingId, long userId) {
+		this.addRiddingAction(riddingId, userId, RiddingActions.Care.getValue());
+		return riddingMapper.incCareCount(riddingId) > 0;
+	}
+
+	/**
+	 * 添加操作记录
+	 * 
+	 * @param riddingId
+	 * @param userId
+	 * @param type
+	 * @return
+	 */
+	private boolean addRiddingAction(long riddingId, long userId, int type) {
+		RiddingAction riddingAction = new RiddingAction();
+		riddingAction.setUserId(userId);
+		riddingAction.setRiddingId(riddingId);
+		riddingAction.setType(type);
+		long nowTime = new Date().getTime();
+		riddingAction.setCreateTime(nowTime);
+		riddingAction.setLastUpdateTime(nowTime);
+		return riddingActionMapper.addRiddingAction(riddingAction) > 0;
 	}
 }

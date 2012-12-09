@@ -2,6 +2,7 @@ package com.ridding.web.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.springframework.stereotype.Controller;
@@ -26,18 +28,20 @@ import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
-import com.ridding.meta.Ridding.RiddingStatus;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.service.MapService;
 import com.ridding.service.ProfileService;
+import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
 import com.ridding.util.HashMapMaker;
 import com.ridding.util.ListUtils;
 import com.ridding.util.http.HttpJsonUtil;
 import com.ridding.util.http.HttpServletUtil;
+import com.ridding.util.http.HttpServletUtil2;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -57,6 +61,9 @@ public class RiddingPublicController extends AbstractBaseController {
 
 	@Resource
 	private MapService mapService;
+
+	@Resource
+	private RiddingCommentService riddingCommentService;
 
 	/**
 	 * 得到用户信息
@@ -90,6 +97,7 @@ public class RiddingPublicController extends AbstractBaseController {
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
+
 		returnObject.put("userid", profile.getUserId());
 		returnObject.put("username", profile.getUserName());
 		returnObject.put("nickname", profile.getNickName());
@@ -99,10 +107,13 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		if (sourceAccount != null) {
 			returnObject.put("sourceid", sourceAccount.getAccessUserId());
+			returnObject.put("accesstoken", sourceAccount.getAccessToken());
 			returnObject.put("accessToken", sourceAccount.getAccessToken());
 		}
 		int count = riddingService.getRiddingCount(userId);
 		returnObject.put("riddingCount", count);
+		JSONObject dataObject = HttpServletUtil2.parseGetUserProfile(profile, sourceAccount, count);
+		returnObject.put("data", dataObject);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}
@@ -132,6 +143,9 @@ public class RiddingPublicController extends AbstractBaseController {
 		List<RiddingUser> riddingUserList = riddingService.getSelfRiddingUserList(userId, ridding.getLimit(), ridding.getCreateTime(), ridding
 				.isLarger());
 		HttpJsonUtil.setRiddingList(returnObject, riddingUserList);
+
+		JSONArray jsonArray = HttpServletUtil2.parseGetRiddingList(riddingUserList);
+		returnObject.put("data", jsonArray.toString());
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
@@ -154,6 +168,8 @@ public class RiddingPublicController extends AbstractBaseController {
 		}
 		IMap iMap = mapService.getMapByRiddingId(ridingId);
 		HttpJsonUtil.setRiddingMapOrTaps(returnObject, iMap);
+		JSONObject dataObject = HttpServletUtil2.parseGetRidingMapOrLocation(iMap);
+		returnObject.put("data", dataObject.toString());
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
@@ -168,12 +184,14 @@ public class RiddingPublicController extends AbstractBaseController {
 		response.setContentType("text/html;charset=UTF-8");
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
-		float latitude = ServletRequestUtils.getFloatParameter(request, "latitude", -1);
-		float longtitude = ServletRequestUtils.getFloatParameter(request, "longtitude", -1);
+		double latitude = ServletRequestUtils.getDoubleParameter(request, "latitude", -1);
+		double longtitude = ServletRequestUtils.getDoubleParameter(request, "longtitude", -1);
 		MapFix mapFix = mapService.getMapFix(latitude, longtitude);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		returnObject.put("realLatitude", mapFix.getLatitude());
 		returnObject.put("realLongtitude", mapFix.getLongtitude());
+		JSONObject dataObject = HttpServletUtil2.parseGetFixedCoordinate(mapFix, latitude, longtitude);
+		returnObject.put("data", dataObject.toString());
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}
@@ -211,6 +229,8 @@ public class RiddingPublicController extends AbstractBaseController {
 		List<ProfileVO> profileVOs = riddingService.getRiddingUserListToProfile(ridingId, -1, 0);
 		HttpJsonUtil.setProfileList(returnObject, profileVOs);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
+		JSONArray dataArray = HttpServletUtil2.parseGetRiddingUserList(profileVOs);
+		returnObject.put("data", dataArray);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}
@@ -237,9 +257,14 @@ public class RiddingPublicController extends AbstractBaseController {
 		response.setContentType("text/html;charset=UTF-8");
 		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
 		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		int limit = ServletRequestUtils.getIntParameter(request, "limit", -1);
+		long lastUpdateTime = ServletRequestUtils.getLongParameter(request, "lastupdatetime", -1);
+		if (lastUpdateTime < 0) {
+			lastUpdateTime = new Date().getTime();
+		}
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
-		List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByUserIdRiddingId(riddingId, userId);
+		List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByUserIdRiddingId(riddingId, userId, limit, lastUpdateTime);
 		if (!ListUtils.isEmptyList(riddingPictures)) {
 			List<Long> userids = new ArrayList<Long>(riddingPictures.size());
 			for (RiddingPicture riddingPicture : riddingPictures) {
@@ -255,13 +280,16 @@ public class RiddingPublicController extends AbstractBaseController {
 			}
 		}
 		HttpJsonUtil.setupLoadedRiddingPicture(returnObject, riddingPictures);
+
+		JSONArray dataArray = HttpServletUtil2.parseGetuploadedPhotos(riddingPictures);
+		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}
 
 	/**
-	 * 得到进行中的骑行活动，根据时间排序
+	 * 得到进行中的骑行活动，根据时间排序，或者推荐的
 	 * 
 	 * @param request
 	 * @param response
@@ -281,9 +309,46 @@ public class RiddingPublicController extends AbstractBaseController {
 			e.printStackTrace();
 			return mv;
 		}
-		List<Ridding> riddingList = riddingService.getRiddingListByLastUpdateTime(ridding.getLastUpdateTime(), ridding.getLimit(),
-				RiddingStatus.Beginning, ridding.isLarger(),ridding.isRecom);
+		List<Ridding> riddingList = null;
+		if (ridding.isRecom == 1) {
+			riddingList = riddingService.getRecomRiddingList(ridding.getWeight(), ridding.getLimit(), ridding.isLarger());
+		} else {
+			riddingList = riddingService.getRiddingListByLastUpdateTime(ridding.getLastUpdateTime(), ridding.getLimit(), ridding.isLarger(),
+					ridding.isRecom);
+		}
 		HttpJsonUtil.setRiddingByLastUpdateTime(returnObject, riddingList);
+		JSONArray dataArray = HttpServletUtil2.parseGetGoingRiddings(riddingList);
+		returnObject.put("data", dataArray);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 得到骑行评论
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView getRiddingComments(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		JSONObject returnObject = new JSONObject();
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		logger.info(jsonString);
+		ModelAndView mv = new ModelAndView("return");
+		RiddingComment riddingComment = null;
+		try {
+			riddingComment = HttpServletUtil.parseToCommentByLastCreateTime(jsonString);
+		} catch (Exception e) {
+			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
+			e.printStackTrace();
+			return mv;
+		}
+		List<RiddingComment> riddingComments = riddingCommentService.getRiddingComments(riddingComment.getLastCreateTime(),
+				riddingComment.getLimit(), riddingComment.isLarger());
+		JSONArray dataArray = HttpServletUtil2.parseRiddingComment(riddingComments);
+		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;

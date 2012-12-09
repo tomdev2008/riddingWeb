@@ -39,6 +39,7 @@ public class HttpJsonUtil {
 		for (RiddingUser riddingUser : riddingUsers) {
 			JSONObject object = new JSONObject();
 			object.put("userId", riddingUser.getUserId());
+			object.put("userid", riddingUser.getUserId());
 			object.put("speed", riddingUser.getSpeed());
 			object.put("status", riddingUser.getUserStatus());
 			object.put("latitude", riddingUser.getLatitude());
@@ -88,8 +89,10 @@ public class HttpJsonUtil {
 				jsonObject.put("status", riddingUser.getStatus());
 				jsonObject.put("id", riddingUser.getRiddingId());
 				jsonObject.put("distance", riddingUser.getDistance());
+				// v1.2以下版本
 				jsonObject.put("createtime", riddingUser.getCreateTime());
 				jsonObject.put("createtimestr", TimeUtil.getFormatTime(riddingUser.getCreateTime()));
+				// 老版本中返回字符会出现大写，新版本都用小写
 				jsonObject.put("beginLocation", riddingUser.getBeginLocation());
 				jsonObject.put("endLocation", riddingUser.getEndLocation());
 				jsonObject.put("userRole", riddingUser.getUserRole());
@@ -121,9 +124,12 @@ public class HttpJsonUtil {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("userid", profileVO.getUserId());
 			jsonObject.put("userRole", profileVO.getUserRole());
+			jsonObject.put("userrole", profileVO.getUserRole());
 			jsonObject.put("nickname", profileVO.getNickName());
 			jsonObject.put("bavatorUrl", profileVO.getbAvatorUrl());
 			jsonObject.put("savatorUrl", profileVO.getsAvatorUrl());
+			jsonObject.put("bavatorurl", profileVO.getbAvatorUrl());
+			jsonObject.put("savatorurl", profileVO.getsAvatorUrl());
 			jsonArray.add(jsonObject);
 		}
 		object.put("userlist", jsonArray);
@@ -163,11 +169,12 @@ public class HttpJsonUtil {
 		JSONArray jsonArray = new JSONArray();
 		for (RiddingPicture riddingPicture : riddingPictures) {
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("fileName", riddingPicture.getLocalName());
-			jsonObject.put("photoUrl", SystemConst.getValue("IMAGEHOST") + riddingPicture.getPhotoUrl());
+			jsonObject.put("filename", riddingPicture.getLocalName());
+			jsonObject.put("photourl", SystemConst.getValue("IMAGEHOST") + riddingPicture.getPhotoUrl());
 			jsonObject.put("latitude", riddingPicture.getLatitude());
 			jsonObject.put("longtitude", riddingPicture.getLongtitude());
 			jsonObject.put("takepiclocation", riddingPicture.getTakePicLocation());
+			jsonObject.put("createtime", riddingPicture.getCreateTime());
 			jsonObject.put("takepicdate", riddingPicture.getTakePicDate());
 			jsonObject.put("description", riddingPicture.getDescription());
 			jsonObject.put("width", riddingPicture.getWidth());
@@ -175,7 +182,7 @@ public class HttpJsonUtil {
 			jsonObject.put("savatorurl", riddingPicture.getsAvatorUrl());
 			jsonArray.add(jsonObject);
 		}
-		object.put("riddingPictures", jsonArray);
+		object.put("riddingpictures", jsonArray);
 	}
 
 	/**
@@ -185,21 +192,26 @@ public class HttpJsonUtil {
 	 * @param riddingPictures
 	 */
 	public static void setRiddingByLastUpdateTime(JSONObject object, List<Ridding> riddingList) {
-		if (ListUtils.isEmptyList(riddingList)) {
-			return;
-		}
 		JSONArray jsonArray = new JSONArray();
-		for (Ridding ridding : riddingList) {
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("name", ridding.getName());
-			jsonObject.put("status", ridding.getRiddingStatus());
-			jsonObject.put("id", ridding.getId());
-			jsonObject.put("distance", ridding.getDistance());
-			jsonObject.put("createtime", TimeUtil.getFormatTime(ridding.getCreateTime()));
-			jsonObject.put("lastUpdateTime", TimeUtil.getFormatTime(ridding.getLastUpdateTime()));
-			jsonObject.put("leaderUserId", ridding.getLeaderUserId());
-			jsonObject.put("firstpicurl", ridding.getFirstPicUrl());
-			jsonArray.add(jsonObject);
+		if (!ListUtils.isEmptyList(riddingList)) {
+			for (Ridding ridding : riddingList) {
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("name", ridding.getName());
+				jsonObject.put("status", ridding.getRiddingStatus());
+				jsonObject.put("id", ridding.getId());
+				jsonObject.put("distance", ridding.getDistance());
+				jsonObject.put("createtimestr", TimeUtil.getFormatTime(ridding.getCreateTime()));
+				jsonObject.put("createtime", ridding.getCreateTime());
+				// 老版本
+				jsonObject.put("lastUpdateTime", TimeUtil.getFormatTime(ridding.getLastUpdateTime()));
+				jsonObject.put("leaderUserId", ridding.getLeaderUserId());
+				// 新版本
+				jsonObject.put("lastupdatetime", TimeUtil.getFormatTime(ridding.getLastUpdateTime()));
+				jsonObject.put("leaderuserid", ridding.getLeaderUserId());
+				jsonObject.put("firstpicurl", ridding.getFirstPicUrl());
+				jsonObject.put("weight", ridding.getWeight());
+				jsonArray.add(jsonObject);
+			}
 		}
 		object.put("riddingpubliclist", jsonArray);
 	}

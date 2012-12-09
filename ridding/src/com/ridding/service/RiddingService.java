@@ -7,7 +7,6 @@ import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
-import com.ridding.meta.Ridding.RiddingStatus;
 import com.ridding.meta.vo.ProfileVO;
 
 /**
@@ -156,14 +155,50 @@ public interface RiddingService {
 	 * @param userid
 	 * @return
 	 */
-	public List<RiddingPicture> getRiddingPictureByUserIdRiddingId(long riddingId, long userid);
+	public List<RiddingPicture> getRiddingPictureByUserIdRiddingId(long riddingId, long userid, int limit, long lastUpdateTime);
 
 	/**
-	 * 根据最后
+	 * 根据最近更新的骑行活动
 	 * 
 	 * @param lastUpdateTime
 	 * @param limit
 	 * @return
 	 */
-	public List<Ridding> getRiddingListByLastUpdateTime(long lastUpdateTime, int limit, RiddingStatus riddingstatus, Boolean isLarger,int isRecom);
+	public List<Ridding> getRiddingListByLastUpdateTime(long lastUpdateTime, int limit, Boolean isLarger, int isRecom);
+
+	/**
+	 * 得到推荐的骑行活动
+	 * 
+	 * @param weight
+	 * @param limit
+	 * @param isLarger
+	 * @return
+	 */
+	public List<Ridding> getRecomRiddingList(int weight, int limit, Boolean isLarger);
+
+	/**
+	 * 增加喜欢
+	 * 
+	 * @param riddingId
+	 * @return
+	 */
+	public boolean incRiddingLike(long riddingId, long userId);
+
+	/**
+	 * 增加收藏
+	 * 
+	 * @param riddingId
+	 * @param userId
+	 * @return
+	 */
+	public boolean incRiddingUse(long riddingId, long userId);
+
+	/**
+	 * 增加关注
+	 * 
+	 * @param riddingId
+	 * @param userId
+	 * @return
+	 */
+	public boolean incRiddingCare(long riddingId, long userId);
 }

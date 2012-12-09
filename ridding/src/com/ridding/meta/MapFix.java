@@ -10,11 +10,11 @@ public class MapFix {
 	/**
 	 * 经度
 	 */
-	private float latitude;
+	private double latitude;
 	/**
 	 * 纬度
 	 */
-	private float longtitude;
+	private double longtitude;
 	/**
 	 * x像素偏移
 	 */
@@ -26,11 +26,11 @@ public class MapFix {
 	/**
 	 * 偏移精度
 	 */
-	private float toLatitude;
+	private double toLatitude;
 	/**
 	 * 偏移纬度
 	 */
-	private float toLongtitude;
+	private double toLongtitude;
 
 	public long getId() {
 		return id;
@@ -40,19 +40,19 @@ public class MapFix {
 		this.id = id;
 	}
 
-	public float getLatitude() {
+	public double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(float latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 
-	public float getLongtitude() {
+	public double getLongtitude() {
 		return longtitude;
 	}
 
-	public void setLongtitude(float longtitude) {
+	public void setLongtitude(double longtitude) {
 		this.longtitude = longtitude;
 	}
 
@@ -72,19 +72,19 @@ public class MapFix {
 		this.offsety = offsety;
 	}
 
-	public float getToLatitude() {
+	public double getToLatitude() {
 		return toLatitude;
 	}
 
-	public void setToLatitude(float toLatitude) {
+	public void setToLatitude(double toLatitude) {
 		this.toLatitude = toLatitude;
 	}
 
-	public float getToLongtitude() {
+	public double getToLongtitude() {
 		return toLongtitude;
 	}
 
-	public void setToLongtitude(float toLongtitude) {
+	public void setToLongtitude(double toLongtitude) {
 		this.toLongtitude = toLongtitude;
 	}
 

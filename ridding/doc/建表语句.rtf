@@ -18,8 +18,52 @@ CreateTime bigint(20) NOT NULL DEFAULT '0' COMMENT '\'bc\'cd\'c2\'bc\'b4\'b4\'bd
 LastUpdateTime bigint(20) NOT NULL DEFAULT '0' COMMENT '\'c9\'cf\'b4\'ce\'b8\'fc\'d0\'c2\'ca\'b1\'bc\'e4',\
 UserCount  int(11) NOT NULL DEFAULT '0' COMMENT '\'b6\'d3\'d4\'b1\'ca\'fd\'c1\'bf',\
 riddingStatus tinyint(4) NOT NULL DEFAULT '0' COMMENT '\'c6\'ef\'d0\'d0\'d7\'b4\'cc\'ac',\
-PRIMARY KEY  (`Id`)\
+\pard\pardeftab720
+\cf0 isRecom tinyint(4) NOT NULL DEFAULT '0' COMMENT '\'ca\'c7\'b7\'f1\'ca\'c7\'cd\'c6\'bc\'f6',\
+isPublic tinyint(4) NOT NULL DEFAULT '0' COMMENT '\'ca\'c7\'b7\'f1\'ca\'c7\'b9\'ab\'bf\'aa',\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 likeCount int(11) NOT NULL DEFAULT 0 COMMENT '\'cf\'b2\'bb\'b6\'ca\'fd\'c1\'bf',\
+\pard\pardeftab720
+\cf0 commentCount int(11) NOT NULL DEFAULT 0 COMMENT '\'c6\'c0\'c2\'db\'ca\'fd\'c1\'bf',\
+useCount  int(11) NOT NULL DEFAULT 0 COMMENT '\'ca\'d5\'b2\'d8\'ca\'fd\'c1\'bf',\
+careCount  int(11) NOT NULL DEFAULT 0 COMMENT '\'b9\'d8\'d7\'a2\'ca\'fd\'c1\'bf',\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 PRIMARY KEY  (`Id`)\
 )   DEFAULT CHARSET=UTF8 COMMENT '\'c6\'ef\'d0\'d0\'d6\'f7\'b1\'ed';\
+\
+\
+//\'c6\'ef\'d0\'d0\'c6\'c0\'c2\'db\'b1\'ed\
+CREATE TABLE TB_Ridding_Comment
+\f1\fs36 \expnd0\expndtw0\kerning0
+ 
+\f0\fs38 \kerning1\expnd0\expndtw0 (\
+Id bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id\'a3\'ac\'d7\'d4\'d4\'f6\'b3\'a4',\
+riddingId bigint(20) NOT NULL DEFAULT '0' COMMENT '\'bb\'ee\'b6\'afid',\
+UserId bigint(20) NOT NULL DEFAULT '0' COMMENT '\'c6\'c0\'c2\'db\'c8\'cb\'b5\'c4userid',\
+toUserId bigint(20) NOT NULL DEFAULT 0 COMMENT '\'c6\'c0\'c2\'db\'b8\'f8\'c4\'b3\'c8\'cb\'b5\'c4id',\
+text varchar(512)  NOT NULL DEFAULT '' COMMENT '\'c4\'da\'c8\'dd',\
+usePicUrl varchar(256)  NOT NULL DEFAULT '' COMMENT '\'c6\'c0\'c2\'db\'d2\'fd\'d3\'c3\'b5\'c4\'d5\'d5\'c6\'acid',\
+commentType  tinyint(4) NOT NULL DEFAULT '0' COMMENT '\'c6\'c0\'c2\'db\'c0\'e0\'d0\'cd,0\'b1\'ed\'ca\'be\'c6\'c0\'c2\'db,1\'b1\'ed\'ca\'be\'c6\'c0\'c2\'db\'bb\'d8\'b8\'b4',\
+replyId bigint(20) NOT NULL DEFAULT '0' COMMENT '\'bb\'d8\'b8\'b4\'b5\'c4\'c6\'c0\'c2\'db\'b5\'c4id',\
+CreateTime bigint(20) NOT NULL DEFAULT '0' COMMENT '\'bc\'cd\'c2\'bc\'b4\'b4\'bd\'a8\'ca\'b1\'bc\'e4',\
+LastUpdateTime bigint(20) NOT NULL DEFAULT '0' COMMENT '\'c9\'cf\'b4\'ce\'b8\'fc\'d0\'c2\'ca\'b1\'bc\'e4',\
+PRIMARY KEY  (`Id`)\
+)   DEFAULT CHARSET=UTF8 COMMENT '\'c6\'ef\'d0\'d0\'c6\'c0\'c2\'db\'b1\'ed';\
+\
+\
+//\'c6\'ef\'d0\'d0\'cf\'b2\'bb\'b6\'b1\'edTB_Ridding_Action\
+CREATE TABLE TB_Ridding_Action
+\f1\fs36 \expnd0\expndtw0\kerning0
+ 
+\f0\fs38 \kerning1\expnd0\expndtw0 (\
+Id bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id\'a3\'ac\'d7\'d4\'d4\'f6\'b3\'a4',\
+userId bigint(20) NOT NULL DEFAULT '0' COMMENT '\'d3\'c3\'bb\'a7id',\
+RiddingId bigint(20) NOT NULL DEFAULT 0 COMMENT '\'bb\'ee\'b6\'afid',\
+type  tinyint(4) NOT NULL DEFAULT '0' COMMENT '\'b2\'d9\'d7\'f7\'c0\'e0\'d0\'cd',\
+CreateTime bigint(20) NOT NULL DEFAULT '0' COMMENT '\'bc\'cd\'c2\'bc\'b4\'b4\'bd\'a8\'ca\'b1\'bc\'e4',\
+LastUpdateTime bigint(20) NOT NULL DEFAULT '0' COMMENT '\'c9\'cf\'b4\'ce\'b8\'fc\'d0\'c2\'ca\'b1\'bc\'e4',\
+PRIMARY KEY  (`Id`)\
+)   DEFAULT CHARSET=UTF8 COMMENT '';\
 \
 \
 //\'c6\'ef\'d0\'d0\'b5\'d8\'cd\'bc\'b1\'edTB_Map\
@@ -35,7 +79,7 @@ objectId bigint(20) NOT NULL DEFAULT '0' COMMENT '\'bb\'f1\'c8\'a1\'bc\'cd\'c2\'
 objectType tinyint(4) NOT NULL DEFAULT '0' COMMENT '\'bc\'c7\'c2\'bc\'b5\'c4\'c0\'b4\'d4\'b4,0\'d0\'c2\'c0\'cb\'ce\'a2\'b2\'a9',\
 userId bigint(20) NOT NULL DEFAULT '0' COMMENT '\'b4\'ab\'b5\'d8\'cd\'bc\'b5\'c4\'d3\'c3\'bb\'a7Id',\
 Status tinyint(4) NOT NULL DEFAULT '0' COMMENT '\'b5\'d8\'cd\'bc\'b5\'b1\'c7\'b0\'d7\'b4\'cc\'ac0\'ce\'aa\'b2\'bb\'bf\'c9\'ca\'b9\'d3\'c3,1\'ce\'aa\'bf\'c9\'d2\'d4\'ca\'b9\'d3\'c3',\
-MapPoint varchar(10000) NOT NULL DEFAULT '' COMMENT '\'be\'ad\'b9\'fd\'b1\'e0\'d2\'eb\'ba\'f3\'b5\'c4\'b5\'d8\'d6\'b7',\
+MapPoint text NOT NULL DEFAULT '' COMMENT '\'be\'ad\'b9\'fd\'b1\'e0\'d2\'eb\'ba\'f3\'b5\'c4\'b5\'d8\'d6\'b7',\
 Distance int(11) NOT NULL DEFAULT '0' COMMENT '\'d0\'d0\'b3\'cc\'be\'e0\'c0\'eb',\
 BeginLocation varchar(63) NOT NULL DEFAULT '' COMMENT '\'c6\'f0\'ca\'bc\'ce\'bb\'d6\'c3\'c3\'fb\'b3\'c6',\
 EndLocation varchar(63) NOT NULL DEFAULT '' COMMENT '\'d6\'d5\'b5\'e3\'ce\'bb\'d6\'c3\'c3\'fb\'b3\'c6',\
@@ -145,6 +189,33 @@ Type tinyint(4) NOT NULL DEFAULT '0' COMMENT '0\'b1\'ed\'ca\'be\'cd\'c6\'bc\'f6\
 CreateTime bigint(20) NOT NULL DEFAULT '0' COMMENT '\'bc\'cd\'c2\'bc\'b4\'b4\'bd\'a8\'ca\'b1\'bc\'e4',\
 PRIMARY KEY  (`id`)\
 )DEFAULT CHARSET=UTF8 COMMENT  '\'b8\'f6\'c8\'cb\'cd\'c6\'bc\'f6\'b1\'ed';\
+\
+\
+\
+CREATE TABLE TB_Recom
+\f1\fs36 \expnd0\expndtw0\kerning0
+ 
+\f0\fs38 \kerning1\expnd0\expndtw0 (\
+Id bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id,\'d7\'d4\'d4\'f6\'b3\'a4',\
+Userid bigint(20) NOT NULL DEFAULT '0' COMMENT '\'cd\'c6\'bc\'f6\'c8\'cbuserid',\
+ToUserid bigint(20) NOT NULL DEFAULT '0' COMMENT '\'cd\'c6\'bc\'f6\'b8\'f8\'c4\'b3\'c8\'cb\'b5\'c4userid',\
+SourceId bigint(20) NOT NULL DEFAULT '0' COMMENT '\'b6\'d4\'d3\'a6\'d7\'ca\'d4\'b4\'b5\'c4id',\
+Type tinyint(4) NOT NULL DEFAULT '0' COMMENT '0\'b1\'ed\'ca\'be\'cd\'c6\'bc\'f6\'b5\'d8\'cd\'bc',\
+CreateTime bigint(20) NOT NULL DEFAULT '0' COMMENT '\'bc\'cd\'c2\'bc\'b4\'b4\'bd\'a8\'ca\'b1\'bc\'e4',\
+PRIMARY KEY  (`id`)\
+)DEFAULT CHARSET=UTF8 COMMENT  '\'b8\'f6\'c8\'cb\'cd\'c6\'bc\'f6\'b1\'ed';\
+\
+\
+//'\'b9\'e3\'b3\'a1\'b9\'e3\'b8\'e6\'b1\'ed'\
+CREATE TABLE TB_Public (\
+  Id bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id,\'d7\'d4\'d4\'f6\'b3\'a4',\
+  type int(11) NOT NULL DEFAULT '0' COMMENT '\'b9\'e3\'b8\'e6\'c0\'e0\'d0\'cd',\
+  Json varchar(512) NOT NULL DEFAULT '0' COMMENT 'json\'c4\'da\'c8\'dd',\
+  CreateTime bigint(20) NOT NULL DEFAULT '0' COMMENT '\'bc\'cd\'c2\'bc\'b4\'b4\'bd\'a8\'ca\'b1\'bc\'e4',\
+  LastUpdateTime bigint(20) NOT NULL DEFAULT '0' COMMENT '\'b8\'fc\'d0\'c2\'ca\'b1\'bc\'e4',\
+  weight int(11) NOT NULL DEFAULT '0' COMMENT '\'c8\'a8\'d6\'d8\'d6\'b5',\
+  PRIMARY KEY (`Id`)\
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='\'b9\'e3\'b3\'a1\'b9\'e3\'b8\'e6\'b1\'ed';\
 \
 //\'b5\'d8\'cd\'bc\'d0\'de\'b8\'b4\'b1\'ed\
 CREATE TABLE TB_MapFix

@@ -89,5 +89,5 @@ public interface MapService {
 	 * @param longtitude
 	 * @return
 	 */
-	public MapFix getMapFix(float latitude, float longtitude);
+	public MapFix getMapFix(double latitude, double longtitude);
 }

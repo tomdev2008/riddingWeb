@@ -3,22 +3,33 @@ package com.ridding.bean.dwr;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.Resource;
 
+import net.sf.json.JSONObject;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.ridding.constant.SystemConst;
 import com.ridding.meta.IMap;
+import com.ridding.meta.Photo;
+import com.ridding.meta.Ridding;
 import com.ridding.meta.Source;
 import com.ridding.meta.WeiBo;
+import com.ridding.meta.Public.PublicType;
 import com.ridding.security.MyUser;
 import com.ridding.service.IOSApnsService;
+import com.ridding.service.MapService;
+import com.ridding.service.PhotoService;
+import com.ridding.service.PublicService;
+import com.ridding.service.RiddingService;
 import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
 import com.ridding.service.transaction.TransactionService;
+import com.sun.xml.internal.ws.api.PropertySet.Property;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -37,6 +48,15 @@ public class DwrBackendBean {
 	private SinaWeiBoService sinaWeiBoService;
 	@Resource
 	private IOSApnsService iosApnsService;
+	@Resource
+	private PublicService publicService;
+	@Resource
+	private RiddingService riddingService;
+	@Resource
+	private MapService mapService;
+
+	@Resource
+	private PhotoService photoService;
 
 	/**
 	 * 更新非法的新浪微博
@@ -114,5 +134,28 @@ public class DwrBackendBean {
 		if (myUser.getUserId() == 54) {
 			iosApnsService.sendApns(text);
 		}
+	}
+
+	/**
+	 * 添加推荐
+	 * 
+	 * @param riddingId
+	 * @param userId
+	 */
+	public boolean addPublicRecom(long riddingId, long userId, int weight, String firstPicUrl) {
+		if (StringUtils.isEmpty(firstPicUrl)) {
+			Ridding ridding = riddingService.getRidding(riddingId);
+			if (ridding != null) {
+				IMap iMap = mapService.getMapById(ridding.getMapId(), IMap.Using);
+				if (iMap != null) {
+					Photo photo = photoService.getPhoto(iMap.getAvatorPic());
+					if (photo != null) {
+						firstPicUrl = photo.getOriginalPath();
+					}
+				}
+			}
+		}
+		String json = PublicType.PublicRecom.setJson(userId, riddingId, firstPicUrl);
+		return publicService.addPublic(PublicType.PublicRecom.getValue(), json, weight);
 	}
 }

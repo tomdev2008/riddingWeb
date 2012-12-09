@@ -52,4 +52,14 @@ public class PhotoServiceImpl implements PhotoService {
 		}
 		return photoMapper.updatePhoto(photo);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.PhotoService#getPhoto(long)
+	 */
+	@Override
+	public Photo getPhoto(long id) {
+		return photoMapper.getPhotoById(id);
+	}
 }

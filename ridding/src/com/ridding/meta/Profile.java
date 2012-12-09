@@ -1,6 +1,9 @@
 package com.ridding.meta;
 
 import java.io.Serializable;
+import sun.tools.tree.ThisExpression;
+
+import net.sf.json.JSONObject;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -47,6 +50,18 @@ public class Profile implements Serializable {
 	 * 资源用户id，不存数据库
 	 */
 	private long accessUserId;
+	/**
+	 * 对应的sourceaccount
+	 */
+	private SourceAccount sourceAccount;
+
+	public SourceAccount getSourceAccount() {
+		return sourceAccount;
+	}
+
+	public void setSourceAccount(SourceAccount sourceAccount) {
+		this.sourceAccount = sourceAccount;
+	}
 
 	public long getAccessUserId() {
 		return accessUserId;
@@ -119,5 +134,4 @@ public class Profile implements Serializable {
 	public void setLastUpdateTime(long lastUpdateTime) {
 		this.lastUpdateTime = lastUpdateTime;
 	}
-
 }

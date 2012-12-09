@@ -7,11 +7,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ridding.bean.dwr.DwrRiddingShareBean;
 import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.constant.SourceType;
 import com.ridding.constant.SystemConst;
@@ -29,9 +29,11 @@ import com.ridding.meta.IMap;
 import com.ridding.meta.Photo;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
+import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ProfileSourceFeed;
 import com.ridding.security.MyUser;
 import com.ridding.service.IOSApnsService;
@@ -39,10 +41,12 @@ import com.ridding.service.ImageUploadService;
 import com.ridding.service.MapService;
 import com.ridding.service.PhotoService;
 import com.ridding.service.ProfileService;
+import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
 import com.ridding.service.transaction.TransactionService;
 import com.ridding.util.http.HttpJsonUtil;
 import com.ridding.util.http.HttpServletUtil;
+import com.ridding.util.http.HttpServletUtil2;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -69,6 +73,10 @@ public class RiddingController extends AbstractBaseController {
 	private TransactionService transactionService;
 	@Resource
 	private ImageUploadService imageUploadService;
+	@Resource
+	private DwrRiddingShareBean dwrRiddingShareBean;
+	@Resource
+	private RiddingCommentService riddingCommentService;
 
 	/**
 	 * 得到骑行用户信息，返回骑行数据
@@ -105,6 +113,9 @@ public class RiddingController extends AbstractBaseController {
 
 		List<RiddingUser> ridingUserList = riddingService.getAllRiddingUserList(riddingUser);
 		HttpJsonUtil.setShowRiddingView(returnObject, ridingUserList);
+
+		JSONArray dataArray = HttpServletUtil2.parseShowRiddingView(ridingUserList);
+		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
@@ -156,24 +167,29 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView renameOrEndRidding(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView RiddingAction(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
-		long ridingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
+		long riddingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
 		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
 		int type = ServletRequestUtils.getIntParameter(request, "type", -1);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
 		boolean success = false;
-		switch (type) {
-		case 1:
-			// 暂时没有这个功能
-			// String name = ServletRequestUtils.getStringParameter(request,
-			// "name", null);
-			// success = riddingService.updateRiddingName(ridingId, userId,
-			// name);
+		switch (RiddingActions.genRiddingAction(type)) {
+		case Like:
+			success = riddingService.incRiddingLike(riddingId, userId);
 			break;
-		case 2:
-			success = riddingService.endRiddingByLeader(ridingId, userId);
+		case Care:
+			success = riddingService.incRiddingCare(riddingId, userId);
+			break;
+		case Finished:
+			success = riddingService.endRiddingByLeader(riddingId, userId);
+			break;
+		case Use:
+			success = dwrRiddingShareBean.useOthersRidding(riddingId, userId);
+			if (success) {
+				riddingService.incRiddingUse(riddingId, userId);
+			}
 			break;
 		default:
 			break;
@@ -310,8 +326,9 @@ public class RiddingController extends AbstractBaseController {
 		List<SourceAccount> sourceAccounts = profileService.getSourceAccountByUserIdsSourceType(profileSourceFeed.getUserIdList(), profileSourceFeed
 				.getSourceType());
 		HttpJsonUtil.setSourceAccount(returnObject, sourceAccounts);
+		JSONArray dataArray = HttpServletUtil2.parseGetUserPublicMessage(sourceAccounts);
+		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
-		System.out.println(returnObject.toString());
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}
@@ -461,9 +478,6 @@ public class RiddingController extends AbstractBaseController {
 		Photo photo = new Photo();
 		photo.setOriginalPath(iMap.getUrlKey());
 		if (photoService.addPhoto(photo) < 0) {
-			logger.error("photoService.addPhoto error where imap=" + ToStringBuilder.reflectionToString(iMap));
-			logger.error("transactionService.insertANewRidding error where ridding=" + ToStringBuilder.reflectionToString(ridding));
-			logger.error("transactionService.insertANewRidding error where photo=" + ToStringBuilder.reflectionToString(photo));
 			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
@@ -473,18 +487,56 @@ public class RiddingController extends AbstractBaseController {
 			imageUploadService.saveImageFromUrl(iMap.getStaticImgSrc(), photo.getId());
 		}
 		if (!transactionService.insertANewRidding(iMap, ridding)) {
-			logger.error("transactionService.insertANewRidding error where imap=" + ToStringBuilder.reflectionToString(iMap));
-			logger.error("transactionService.insertANewRidding error where ridding=" + ToStringBuilder.reflectionToString(ridding));
-			logger.error("transactionService.insertANewRidding error where photo=" + ToStringBuilder.reflectionToString(photo));
 			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
 		returnObject.put("riddingId", ridding.getId());
 		returnObject.put("imageUrl", SystemConst.getValue("IMAGEHOST") + iMap.getUrlKey());
-		//由于以前的bug，这里code 用200, 一直到v1.2以下版本才做更新
+
+		JSONObject dataObject = HttpServletUtil2.parseAddRiddingMap(ridding, SystemConst.getValue("IMAGEHOST") + iMap.getUrlKey());
+		returnObject.put("data", dataObject);
+		// 由于以前的bug，这里code 用200, 一直到v1.2以下版本才做更新
 		returnObject.put("code", 200);
-		returnObject.put("code1",returnCodeConstance.SUCCESS);
+		returnObject.put("code1", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView addRiddingComment(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		logger.info(jsonString);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
+		JSONObject returnObject = new JSONObject();
+		ModelAndView mv = new ModelAndView("return");
+		RiddingComment riddingComment = null;
+		try {
+			riddingComment = HttpServletUtil.parseToRiddingComment(jsonString);
+			riddingComment.setUserId(userId);
+			riddingComment.setRiddingId(riddingId);
+		} catch (Exception e) {
+			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
+			e.printStackTrace();
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		boolean succ = riddingCommentService.addRiddingComment(riddingComment);
+		if (!succ) {
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		JSONObject dataObject = HttpServletUtil2.parseAddRiddingComment(riddingComment);
+		returnObject.put("data", dataObject);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}

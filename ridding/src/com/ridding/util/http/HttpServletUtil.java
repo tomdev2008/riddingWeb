@@ -21,6 +21,7 @@ import com.ridding.meta.Account;
 import com.ridding.meta.IMap;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.vo.ProfileSourceFeed;
@@ -360,8 +361,7 @@ public final class HttpServletUtil {
 		}
 		return iMap;
 	}
-	
-	
+
 	public static Ridding parseToRiddingByLastUpdateTime(String jsonString) throws Exception {
 		JSONObject jsonObject = JSONObject.fromObject(jsonString);
 		if (jsonObject == null) {
@@ -369,19 +369,86 @@ public final class HttpServletUtil {
 		}
 		Ridding ridding = new Ridding();
 		try {
-			long time = jsonObject.getLong("lastupdatetime");
-			if (time <= 0) {
-				ridding.setLastUpdateTime(new Date().getTime());
+			// 0表示进行中,1表示推荐
+			ridding.setIsRecom(jsonObject.getInt("type"));
+			if (ridding.getIsRecom() == 1) {
+				int weight = jsonObject.getInt("weight");
+				if (weight < 0) {
+					ridding.setWeight(9999);
+				} else {
+					ridding.setWeight(weight);
+				}
 			} else {
-				ridding.setLastUpdateTime(time);
+				long time = jsonObject.getLong("lastupdatetime");
+				if (time < 0) {
+					ridding.setLastUpdateTime(new Date().getTime());
+				} else {
+					ridding.setLastUpdateTime(time);
+				}
 			}
 			ridding.setLimit(jsonObject.getInt("limit"));
 			ridding.setLarger(jsonObject.getInt("larger") == 1 ? true : false);
-			//0表示进行中,1表示推荐
-		    ridding.setIsRecom(jsonObject.getInt("type"));
+
 		} catch (Exception e) {
 			throw new RequestBodyIsNullException();
 		}
 		return ridding;
+	}
+
+	/**
+	 * 添加评论
+	 * 
+	 * @param jsonString
+	 * @return
+	 * @throws Exception
+	 */
+	public static RiddingComment parseToRiddingComment(String jsonString) throws Exception {
+		JSONObject jsonObject = JSONObject.fromObject(jsonString);
+		if (jsonObject == null) {
+			throw new RequestBodyIsNullException();
+		}
+		RiddingComment riddingComment = new RiddingComment();
+		try {
+			riddingComment.setText(jsonObject.getString("text"));
+			riddingComment.setToUserId(jsonObject.getLong("touserid"));
+			riddingComment.setUsePicUrl(jsonObject.getString("usepicurl"));
+			riddingComment.setCommentType(jsonObject.getInt("commenttype"));
+			riddingComment.setReplyId(jsonObject.getLong("replyid"));
+			long nowTime = new Date().getTime();
+			riddingComment.setCreateTime(nowTime);
+			riddingComment.setLastUpdateTime(nowTime);
+		} catch (Exception e) {
+			throw new RequestBodyIsNullException();
+		}
+		return riddingComment;
+	}
+
+	/**
+	 * 得到评论
+	 * 
+	 * @param jsonString
+	 * @return
+	 * @throws Exception
+	 */
+	public static RiddingComment parseToCommentByLastCreateTime(String jsonString) throws Exception {
+		JSONObject jsonObject = JSONObject.fromObject(jsonString);
+		if (jsonObject == null) {
+			throw new RequestBodyIsNullException();
+		}
+		RiddingComment riddingComment = new RiddingComment();
+		try {
+			long time = jsonObject.getLong("lastcreatetime");
+			if (time < 0) {
+				riddingComment.setLastCreateTime(new Date().getTime());
+			} else {
+				riddingComment.setLastCreateTime(time);
+			}
+			riddingComment.setLimit(jsonObject.getInt("limit"));
+			riddingComment.setLarger(jsonObject.getInt("larger") == 1 ? true : false);
+
+		} catch (Exception e) {
+			throw new RequestBodyIsNullException();
+		}
+		return riddingComment;
 	}
 }

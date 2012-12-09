@@ -17,6 +17,9 @@
 		<typeAlias alias="RiddingPicture" type="com.ridding.meta.RiddingPicture" />
 		<typeAlias alias="WeiBo" type="com.ridding.meta.WeiBo" />
 		<typeAlias alias="RepostMap" type="com.ridding.meta.RepostMap" />
+		<typeAlias alias="Public" type="com.ridding.meta.Public" />
+		<typeAlias alias="RiddingAction" type="com.ridding.meta.RiddingAction" />
+		<typeAlias alias="RiddingComment" type="com.ridding.meta.RiddingComment" />
 	</typeAliases>
 	<mappers>
 		<mapper resource="com/ridding/mapper/xml/AccountMapper.xml" />
@@ -35,6 +38,9 @@
 		<mapper resource="com/ridding/mapper/xml/WeiBoMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/WeiBoMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/RepostMapWeiBoMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/PublicMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/RiddingActionMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/RiddingCommentMapper.xml" />
 	</mappers>
 </configuration>
 			

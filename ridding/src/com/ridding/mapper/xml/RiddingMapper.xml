@@ -12,6 +12,12 @@
 		<result property="lastUpdateTime" column="lastUpdateTime" />
 		<result property="userCount" column="userCount" />
 		<result property="riddingStatus" column="riddingStatus" />
+		<result property="isRecom" column="isRecom" />
+		<result property="isPublic" column="isPublic" />
+		<result property="likeCount" column="likeCount" />
+		<result property="commentCount" column="commentCount" />
+		<result property="useCount" column="useCount" />
+		<result property="careCount" column="careCount" />
 	</resultMap>
 	<insert id="addRidding" parameterType="Ridding">
 		INSERT INTO TB_Ridding(
@@ -24,7 +30,11 @@
 		userCount,
 		riddingStatus,
 		isRecom,
-		isPublic
+		isPublic,
+		likeCount,
+		commentCount,
+		careCount,
+		useCount
 		)VALUES(
 		#{leaderUserId},
 		#{mapId},
@@ -35,7 +45,11 @@
 		#{userCount},
 		#{riddingStatus},
 		#{isRecom},
-		#{isPublic}
+		#{isPublic},
+		#{likeCount},
+		#{commentCount},
+		#{careCount},
+		#{useCount}
 		)
 		<selectKey keyProperty="id" resultType="long">
 			SELECT
@@ -64,7 +78,7 @@
 			separator="," close=")">
 			#{item} 
 	     </foreach>
-	     and  30 > riddingStatus order by createTime desc;
+		and 30 > riddingStatus order by createTime desc;
 	</select>
 
 	<update id="updateRiddingStatus" parameterType="hashMap"
@@ -73,21 +87,21 @@
 		#{riddingStatus}
 		where id = #{id} ;
 	</update>
-	
+
 	<update id="updateRecomStatus" parameterType="hashMap"
 		flushCache="true" statementType="PREPARED">
 		update TB_Ridding set isRecom =
 		#{isRecom}
 		where id = #{id} ;
 	</update>
-	
+
 	<update id="updatePublicStatus" parameterType="hashMap"
 		flushCache="true" statementType="PREPARED">
 		update TB_Ridding set isPublic =
 		#{isPublic}
 		where id = #{id} ;
 	</update>
-	
+
 	<select id="getRiddingListByLastUpdateTime" resultMap="riddingMap">
 		SELECT * from TB_Ridding where isPublic = 0
 		<if test="isLarger==1">
@@ -96,7 +110,25 @@
 		<if test="isLarger==0">
 			and #{lastUpdateTime} > lastUpdateTime 
 		</if>
-		
 		order by lastUpdateTime desc limit #{limit};
 	</select>
+
+	<update id="incLikeCount" parameterType="long" flushCache="true"
+		statementType="PREPARED">
+		update TB_Ridding set likeCount = likeCount + 1
+		where id
+		= #{riddingId} ;
+	</update>
+	<update id="incCareCount" parameterType="long" flushCache="true"
+		statementType="PREPARED">
+		update TB_Ridding set careCount = careCount + 1
+		where id
+		= #{riddingId} ;
+	</update>
+	<update id="incUseCount" parameterType="long" flushCache="true"
+		statementType="PREPARED">
+		update TB_Ridding set useCount = useCount + 1
+		where id
+		= #{riddingId} ;
+	</update>
 </mapper>

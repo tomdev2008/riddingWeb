@@ -48,6 +48,23 @@ public class Ridding implements Serializable {
 	 */
 	private int userCount;
 	/**
+	 * 喜欢数量
+	 */
+	private int likeCount;
+	/**
+	 * 评论数
+	 */
+	private int commentCount;
+	/**
+	 * 使用数
+	 */
+	private int useCount;
+	/**
+	 * 关注数
+	 */
+	private int careCount;
+
+	/**
 	 * 限制，-1表示全部
 	 */
 	private int limit = -1;
@@ -56,11 +73,11 @@ public class Ridding implements Serializable {
 	/**
 	 * 是否是推荐
 	 */
-	public int isRecom;
+	public int isRecom=0;
 	/**
 	 * 是否是公开
 	 */
-	public int isPublic;
+	public int isPublic=0;
 
 	/**
 	 * 非公开或者非推荐
@@ -78,6 +95,10 @@ public class Ridding implements Serializable {
 	 * 距离
 	 */
 	public int distance;
+	/**
+	 * 权重，不存数据库
+	 */
+	private int weight;
 
 	/**
 	 *骑行状态
@@ -247,6 +268,46 @@ public class Ridding implements Serializable {
 
 	public void setDistance(int distance) {
 		this.distance = distance;
+	}
+
+	public int getWeight() {
+		return weight;
+	}
+
+	public void setWeight(int weight) {
+		this.weight = weight;
+	}
+
+	public int getLikeCount() {
+		return likeCount;
+	}
+
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}
+
+	public int getCommentCount() {
+		return commentCount;
+	}
+
+	public void setCommentCount(int commentCount) {
+		this.commentCount = commentCount;
+	}
+
+	public int getUseCount() {
+		return useCount;
+	}
+
+	public void setUseCount(int useCount) {
+		this.useCount = useCount;
+	}
+
+	public int getCareCount() {
+		return careCount;
+	}
+
+	public void setCareCount(int careCount) {
+		this.careCount = careCount;
 	}
 
 }

@@ -250,6 +250,9 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 		logger.info("sendWeiBoQuartz begin!");
 		SourceAccount sourceAccount = profileService.getSourceAccountByAccessUserId(Long.valueOf(SystemConst.getValue("ADMINUSERSINAID")),
 				SourceType.SINAWEIBO.getValue());
+		if(sourceAccount==null){
+			return;
+		}
 		Weibo weibo = new Weibo();
 		weibo.setToken(sourceAccount.getAccessToken());
 		long time = new Date().getTime();
@@ -360,6 +363,9 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 		}
 		SourceAccount sourceAccount = profileService.getSourceAccountByAccessUserId(Long.valueOf(SystemConst.getValue("ADMINUSERSINAID")),
 				SourceType.SINAWEIBO.getValue());
+		if (sourceAccount == null) {
+			return null;
+		}
 		StringBuilder sb = new StringBuilder(SystemConst.getValue("SINAHOST") + "/statuses/repost_timeline.json");
 		sb.append("?access_token=" + sourceAccount.getAccessToken());
 		sb.append("&id=" + weiboId);

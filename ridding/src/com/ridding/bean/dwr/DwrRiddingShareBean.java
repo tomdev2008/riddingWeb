@@ -29,18 +29,14 @@ public class DwrRiddingShareBean {
 	 * @param riddingId
 	 * @return
 	 */
-	public boolean useOthersRidding(long riddingId) {
-		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
-		if (myUser == null) {
-			return false;
-		}
+	public boolean useOthersRidding(long riddingId,long userId) {
 		Ridding ridding = riddingService.getRidding(riddingId);
 		if (ridding == null) {
 			return false;
 		}
 		Ridding newRidding = new Ridding();
 		long nowTime = new Date().getTime();
-		newRidding.setLeaderUserId(myUser.getUserId());
+		newRidding.setLeaderUserId(userId);
 		newRidding.setCreateTime(nowTime);
 		newRidding.setLastUpdateTime(nowTime);
 		newRidding.setMapId(ridding.getMapId());
