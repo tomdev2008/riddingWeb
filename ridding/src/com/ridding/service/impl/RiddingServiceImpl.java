@@ -668,11 +668,11 @@ public class RiddingServiceImpl implements RiddingService {
 				if(ridding.getFirstPicUrl()==null){
 					RiddingPicture riddingPicture = riddingPictureMapper.getRiddingPicturesByRiddingId(map);
 					if (riddingPicture != null) {
-						ridding.setFirstPicUrl(SystemConst.getValue("IMAGEHOST") + riddingPicture.getPhotoUrl());
+						ridding.setFirstPicUrl( riddingPicture.getPhotoUrl());
 					} else if (iMap != null) {
 						Photo photo = photoMapper.getPhotoById(iMap.getAvatorPic());
 						if (photo != null) {
-							ridding.setFirstPicUrl(SystemConst.getValue("IMAGEHOST") + photo.getOriginalPath());
+							ridding.setFirstPicUrl(photo.getOriginalPath());
 						} else {
 							ridding.setFirstPicUrl(iMap.getStaticImgSrc());
 						}

@@ -74,6 +74,9 @@ public class SystemConst {
 	 * @return
 	 */
 	public static String returnPhotoUrl(String key) {
+		if(key.contains(SystemConst.getValue("IMAGEHOST"))){
+			return key;
+		}
 		return SystemConst.getValue("IMAGEHOST") + key;
 	}
 }
