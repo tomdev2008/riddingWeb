@@ -6,14 +6,11 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.ridding.constant.SystemConst;
 import com.ridding.meta.IMap;
 import com.ridding.meta.Photo;
 import com.ridding.meta.Ridding;
@@ -29,7 +26,6 @@ import com.ridding.service.RiddingService;
 import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
 import com.ridding.service.transaction.TransactionService;
-import com.sun.xml.internal.ws.api.PropertySet.Property;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
