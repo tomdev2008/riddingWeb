@@ -353,7 +353,12 @@ public final class HttpServletUtil {
 			if (jsonObject.getString("cityname") != null) {
 				iMap.setCityName(jsonObject.getString("cityname"));
 			}
-
+			if(jsonObject.get("ispublic")!=null){
+				if (jsonObject.getInt("ispublic") > 0) {
+					ridding.isPublic = 1;
+				}
+			}
+			
 		} catch (Exception e) {
 			logger.error("info=" + jsonString);
 			throw new RequestBodyIsNullException();

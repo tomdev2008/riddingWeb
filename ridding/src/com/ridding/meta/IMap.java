@@ -94,6 +94,10 @@ public class IMap implements Serializable {
 	 */
 	private long avatorPic;
 	/**
+	 * 头图url
+	 */
+	private String avatorPicUrl;
+	/**
 	 * 没有使用
 	 */
 	public static int NotUsing = 0;
@@ -361,6 +365,14 @@ public class IMap implements Serializable {
 
 	public void setUrlKey(String urlKey) {
 		this.urlKey = urlKey;
+	}
+
+	public String getAvatorPicUrl() {
+		return avatorPicUrl;
+	}
+
+	public void setAvatorPicUrl(String avatorPicUrl) {
+		this.avatorPicUrl = avatorPicUrl;
 	}
 
 }

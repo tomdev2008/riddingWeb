@@ -82,38 +82,7 @@ public class RiddingUser implements Serializable {
 	 * 是否显示骑行用户，不存数据库
 	 */
 	private boolean showTeamer;
-	/**
-	 * 距离，不存数据库
-	 */
-	private int distance;
-	/**
-	 * 起始位置,不存数据库
-	 */
-	private String beginLocation;
-	/**
-	 * 终点位置,不存数据库
-	 */
-	private String endLocation;
-	/**
-	 * 静态地图的地址
-	 */
-	private String staticImgSrc;
-	/**
-	 * 骑行创建的时间
-	 */
-	private long riddingCreateTime;
-	/**
-	 * 封面图片的地址,不存数据库
-	 */
-	private String avatorPicUrl;
-	/**
-	 * 队长的profile，不存数据库
-	 */
-	private Profile leaderProfile;
-	/**
-	 * 队员数量
-	 */
-	private int userCount;
+
 
 	/**
 	 * 插入用户当前的骑行状态
@@ -248,15 +217,6 @@ public class RiddingUser implements Serializable {
 			return null;
 		}
 	}
-
-	public int getDistance() {
-		return distance;
-	}
-
-	public void setDistance(int distance) {
-		this.distance = distance;
-	}
-
 	public long getCacheTime() {
 		return cacheTime;
 	}
@@ -384,69 +344,7 @@ public class RiddingUser implements Serializable {
 	public void setShowTeamer(boolean showTeamer) {
 		this.showTeamer = showTeamer;
 	}
-
-	public String getBeginLocation() {
-		return beginLocation;
-	}
-
-	public void setBeginLocation(String beginLocation) {
-		this.beginLocation = beginLocation;
-	}
-
-	public String getStaticImgSrc() {
-		return staticImgSrc;
-	}
-
-	public void setStaticImgSrc(String staticImgSrc) {
-		this.staticImgSrc = staticImgSrc;
-	}
-
-	public String getEndLocation() {
-		return endLocation;
-	}
-
-	public void setEndLocation(String endLocation) {
-		this.endLocation = endLocation;
-	}
-
-	public long getRiddingCreateTime() {
-		return riddingCreateTime;
-	}
-
-	public void setRiddingCreateTime(long riddingCreateTime) {
-		this.riddingCreateTime = riddingCreateTime;
-	}
-
-	public String getAvatorPicUrl() {
-		return avatorPicUrl;
-	}
-
-	public void setAvatorPicUrl(String avatorPicUrl) {
-		this.avatorPicUrl = avatorPicUrl;
-	}
-
-	/**
-	 * 生成封面url
-	 */
-	public void genAvatorPic(String path) {
-		this.avatorPicUrl = SystemConst.getValue("IMAGEHOST") + path;
-	}
-
-	public Profile getLeaderProfile() {
-		return leaderProfile;
-	}
-
-	public void setLeaderProfile(Profile leaderProfile) {
-		this.leaderProfile = leaderProfile;
-	}
-
-	public int getUserCount() {
-		return userCount;
-	}
-
-	public void setUserCount(int userCount) {
-		this.userCount = userCount;
-	}
+	
 
 	public int getUserStatus() {
 		return userStatus;

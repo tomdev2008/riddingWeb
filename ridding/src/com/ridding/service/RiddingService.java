@@ -7,6 +7,7 @@ import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
+import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 
 /**
@@ -76,7 +77,7 @@ public interface RiddingService {
 	 * @param createTime
 	 * @return
 	 */
-	public List<RiddingUser> getSelfRiddingUserList(long userId, int limit, long createTime, boolean isLarger);
+	public List<ActivityRidding> getSelfRiddingUserList(long userId, int limit, long createTime, boolean isLarger);
 
 	/**
 	 * 通过骑行id得到所有用户信息
@@ -130,7 +131,7 @@ public interface RiddingService {
 	 * @param offset
 	 * @return
 	 */
-	public List<RiddingUser> getRiddingListbyUserId(long userId, int limit, int offset);
+	public List<ActivityRidding> getRiddingListbyUserId(long userId, int limit, int offset);
 
 	/**
 	 * 添加骑行活动

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.constant.SourceType;
-import com.ridding.constant.SystemConst;
 import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.MapFixMapper;
 import com.ridding.mapper.PhotoMapper;
@@ -42,6 +41,7 @@ import com.ridding.meta.Ridding.RiddingStatus;
 import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.RiddingUser.RiddingUserRoleType;
 import com.ridding.meta.RiddingUser.SelfRiddingStatus;
+import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.service.PublicService;
 import com.ridding.service.RiddingService;
@@ -236,21 +236,25 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @see com.ridding.service.RiddingService#getRiddingList(long, int, long)
 	 */
-	public List<RiddingUser> getSelfRiddingUserList(long userId, int limit, long createTime, boolean isLarger) {
+	public List<ActivityRidding> getSelfRiddingUserList(long userId, int limit, long createTime, boolean isLarger) {
 		List<RiddingUser> riddingUsers = this.getRiddingUserList(userId, limit, createTime, isLarger);
 		if (ListUtils.isEmptyList(riddingUsers)) {
 			return null;
 		}
 		List<Long> ids = new ArrayList<Long>(riddingUsers.size());
+		List<ActivityRidding> activityList = new ArrayList<ActivityRidding>(riddingUsers.size());
 		for (RiddingUser riddingUser : riddingUsers) {
 			ids.add(riddingUser.getRiddingId());
+			ActivityRidding activityRidding = new ActivityRidding();
+			activityRidding.setRiddingUser(riddingUser);
+			activityList.add(activityRidding);
 		}
 		List<Ridding> riddingList = riddingMapper.getRiddingList(ids);
 		if (ListUtils.isEmptyList(riddingList)) {
 			return null;
 		}
-		this.insertMessage(riddingList, riddingUsers);
-		return riddingUsers;
+		this.insertMessage(riddingList, activityList);
+		return activityList;
 	}
 
 	/**
@@ -258,8 +262,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @param riddingList
 	 */
-	private void insertMessage(List<Ridding> riddingList, List<RiddingUser> riddingUsers) {
-		// this.test();
+	private void insertMessage(List<Ridding> riddingList, List<ActivityRidding> activityRiddings) {
 
 		List<Long> mapIds = new ArrayList<Long>(riddingList.size());
 		List<Long> leaderUserIds = new ArrayList<Long>(riddingList.size());
@@ -281,34 +284,26 @@ public class RiddingServiceImpl implements RiddingService {
 		Map<Long, IMap> iMapMap = HashMapMaker.listToMap(iMapList, "getId", IMap.class);
 		Map<Long, Ridding> riddingMap = HashMapMaker.listToMap(riddingList, "getId", Ridding.class);
 		Map<Long, Profile> profileMap = HashMapMaker.listToMap(leaderProfileList, "getUserId", Profile.class);
-		for (RiddingUser riddingUser : riddingUsers) {
-			Ridding ridding = riddingMap.get(riddingUser.getRiddingId());
+		for (ActivityRidding activityRidding : activityRiddings) {
+			Ridding ridding = riddingMap.get(activityRidding.getRiddingUser().getRiddingId());
 			if (ridding != null) {
-				riddingUser.setUserCount(ridding.getUserCount());
-				riddingUser.setStatus(ridding.getRiddingStatus());
-				riddingUser.setSelfName(ridding.getName());
-				riddingUser.setRiddingCreateTime(ridding.getCreateTime());
+				activityRidding.setRidding(ridding);
 				IMap iMap = iMapMap.get(ridding.getMapId());
 				if (iMap != null) {
 					Photo photo = photoMap.get(iMap.getAvatorPic());
 					if (photo != null) {
-						riddingUser.genAvatorPic(photo.getOriginalPath());
+						iMap.setAvatorPicUrl(photo.getOriginalPath());
 					}
-					if (StringUtils.isEmpty(riddingUser.getAvatorPicUrl())) {
-						riddingUser.setAvatorPicUrl(iMap.getStaticImgSrc());
+					if (StringUtils.isEmpty(iMap.getAvatorPicUrl())) {
+						iMap.setAvatorPicUrl(iMap.getStaticImgSrc());
 					}
-					riddingUser.setStaticImgSrc(iMap.getStaticImgSrc());
-					riddingUser.setDistance(iMap.getDistance());
-					riddingUser.setBeginLocation(iMap.getBeginLocation());
-					riddingUser.setEndLocation(iMap.getEndLocation());
+					activityRidding.setiMap(iMap);
 				}
 				Profile profile = profileMap.get(ridding.getLeaderUserId());
 				if (profile != null) {
-					riddingUser.setLeaderProfile(profile);
+					activityRidding.setLeaderProfile(profile);
 				}
-			} else {
-				riddingUser.setStatus(RiddingStatus.Deleted.getValue());
-			}
+			} 
 		}
 	}
 
@@ -530,7 +525,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * int)
 	 */
 	@Override
-	public List<RiddingUser> getRiddingListbyUserId(long userId, int limit, int offset) {
+	public List<ActivityRidding> getRiddingListbyUserId(long userId, int limit, int offset) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("userId", userId);
 		hashMap.put("offset", offset);
@@ -541,15 +536,19 @@ public class RiddingServiceImpl implements RiddingService {
 			return null;
 		}
 		List<Long> ids = new ArrayList<Long>(riddingUsers.size());
+		List<ActivityRidding> activityList = new ArrayList<ActivityRidding>(riddingUsers.size());
 		for (RiddingUser riddingUser : riddingUsers) {
 			ids.add(riddingUser.getRiddingId());
+			ActivityRidding activityRidding = new ActivityRidding();
+			activityRidding.setRiddingUser(riddingUser);
+			activityList.add(activityRidding);
 		}
 		List<Ridding> riddingList = riddingMapper.getRiddingList(ids);
 		if (ListUtils.isEmptyList(riddingList)) {
 			return null;
 		}
-		this.insertMessage(riddingList, riddingUsers);
-		return riddingUsers;
+		this.insertMessage(riddingList, activityList);
+		return activityList;
 	}
 
 	/*
@@ -655,6 +654,9 @@ public class RiddingServiceImpl implements RiddingService {
 		for (Ridding ridding : riddingList) {
 			mapIds.add(ridding.getMapId());
 		}
+		if (ListUtils.isEmptyList(mapIds)) {
+			return;
+		}
 		List<IMap> iMapList = mapMapper.getIMaplist(mapIds);
 		Map<Long, IMap> iMapMap = HashMapMaker.listToMap(iMapList, "getId", IMap.class);
 		if (!ListUtils.isEmptyList(riddingList)) {
@@ -665,10 +667,10 @@ public class RiddingServiceImpl implements RiddingService {
 				if (iMap != null) {
 					ridding.setDistance(iMap.getDistance());
 				}
-				if(ridding.getFirstPicUrl()==null){
+				if (ridding.getFirstPicUrl() == null) {
 					RiddingPicture riddingPicture = riddingPictureMapper.getRiddingPicturesByRiddingId(map);
 					if (riddingPicture != null) {
-						ridding.setFirstPicUrl( riddingPicture.getPhotoUrl());
+						ridding.setFirstPicUrl(riddingPicture.getPhotoUrl());
 					} else if (iMap != null) {
 						Photo photo = photoMapper.getPhotoById(iMap.getAvatorPic());
 						if (photo != null) {

@@ -26,6 +26,7 @@ import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
+import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.security.MyUser;
 import com.ridding.service.MapService;
 import com.ridding.service.ProfileService;
@@ -114,7 +115,7 @@ public class RiddingWebPubController extends AbstractBaseController {
 		ModelAndView mv = new ModelAndView("riddingList");
 		int count = riddingService.getRiddingCount(userId);
 		mv.addObject("riddingCount", count);
-		List<RiddingUser> riddingUserlList = riddingService.getRiddingListbyUserId(userId, 0, 0);
+		List<ActivityRidding> riddingUserlList = riddingService.getRiddingListbyUserId(userId, 0, 0);
 		mv.addObject("riddingUserList", riddingUserlList);
 		long visitorUserId = -1L;
 		try {

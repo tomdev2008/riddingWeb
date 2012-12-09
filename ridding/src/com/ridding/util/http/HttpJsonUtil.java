@@ -13,7 +13,7 @@ import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
-import com.ridding.meta.Ridding.RiddingStatus;
+import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.util.ListUtils;
 import com.ridding.util.ObjectUtil;
@@ -77,34 +77,38 @@ public class HttpJsonUtil {
 	 * @param jsonObject
 	 * @param iMap
 	 */
-	public static void setRiddingList(JSONObject object, List<RiddingUser> riddingUserList) {
-		if (ListUtils.isEmptyList(riddingUserList)) {
+	public static void setRiddingList(JSONObject object, List<ActivityRidding> activityRiddings) {
+		if (ListUtils.isEmptyList(activityRiddings)) {
 			return;
 		}
 		JSONArray jsonArray = new JSONArray();
-		for (RiddingUser riddingUser : riddingUserList) {
-			if (riddingUser.getStatus() != RiddingStatus.Deleted.getValue()) {
-				JSONObject jsonObject = new JSONObject();
-				jsonObject.put("name", riddingUser.getSelfName());
-				jsonObject.put("status", riddingUser.getStatus());
-				jsonObject.put("id", riddingUser.getRiddingId());
-				jsonObject.put("distance", riddingUser.getDistance());
-				// v1.2以下版本
-				jsonObject.put("createtime", riddingUser.getCreateTime());
-				jsonObject.put("createtimestr", TimeUtil.getFormatTime(riddingUser.getCreateTime()));
-				// 老版本中返回字符会出现大写，新版本都用小写
-				jsonObject.put("beginLocation", riddingUser.getBeginLocation());
-				jsonObject.put("endLocation", riddingUser.getEndLocation());
-				jsonObject.put("userRole", riddingUser.getUserRole());
-				jsonObject.put("mapAvatorPicUrl", riddingUser.getAvatorPicUrl());
-				jsonObject.put("userCount", riddingUser.getUserCount());
-				if (riddingUser.getLeaderProfile() != null) {
-					jsonObject.put("leaderSAvatorUrl", riddingUser.getLeaderProfile().getsAvatorUrl());
-					jsonObject.put("leaderName", riddingUser.getLeaderProfile().getNickName());
-					jsonObject.put("leaderUserId", riddingUser.getLeaderProfile().getUserId());
-				}
-				jsonArray.add(jsonObject);
+		for (ActivityRidding activityRidding : activityRiddings) {
+			JSONObject jsonObject = new JSONObject();
+			if(activityRidding.getRidding()!=null){
+				jsonObject.put("name", activityRidding.getRidding().getName());
+				jsonObject.put("status", activityRidding.getRidding().getRiddingStatus());
+				jsonObject.put("id", activityRidding.getRidding().getId());
+				jsonObject.put("distance", activityRidding.getiMap().getDistance());
+				jsonObject.put("createtime", activityRidding.getRidding().getCreateTime());
+				jsonObject.put("createtimestr", TimeUtil.getFormatTime(activityRidding.getRidding().getCreateTime()));
+				jsonObject.put("userCount", activityRidding.getRidding().getUserCount());
 			}
+			if(activityRidding.getiMap()!=null){
+				jsonObject.put("beginLocation", activityRidding.getiMap().getBeginLocation());
+				jsonObject.put("endLocation", activityRidding.getiMap().getEndLocation());
+				jsonObject.put("mapAvatorPicUrl", SystemConst.returnPhotoUrl(activityRidding.getiMap().getAvatorPicUrl()));
+			}
+			
+			if(activityRidding.getRiddingUser()!=null){
+				jsonObject.put("userRole", activityRidding.getRiddingUser().getUserRole());
+			}
+			
+			if (activityRidding.getLeaderProfile() != null) {
+				jsonObject.put("leaderSAvatorUrl", activityRidding.getLeaderProfile().getsAvatorUrl());
+				jsonObject.put("leaderName", activityRidding.getLeaderProfile().getNickName());
+				jsonObject.put("leaderUserId", activityRidding.getLeaderProfile().getUserId());
+			}
+			jsonArray.add(jsonObject);
 		}
 		object.put("riddinglist", jsonArray);
 	}

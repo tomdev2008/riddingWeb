@@ -30,8 +30,8 @@ import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
-import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
+import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.service.MapService;
 import com.ridding.service.ProfileService;
@@ -140,7 +140,7 @@ public class RiddingPublicController extends AbstractBaseController {
 			e.printStackTrace();
 			return mv;
 		}
-		List<RiddingUser> riddingUserList = riddingService.getSelfRiddingUserList(userId, ridding.getLimit(), ridding.getCreateTime(), ridding
+		List<ActivityRidding> riddingUserList = riddingService.getSelfRiddingUserList(userId, ridding.getLimit(), ridding.getCreateTime(), ridding
 				.isLarger());
 		HttpJsonUtil.setRiddingList(returnObject, riddingUserList);
 

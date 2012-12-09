@@ -17,6 +17,7 @@ import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
 import com.ridding.meta.Ridding.RiddingStatus;
+import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.util.ListUtils;
 import com.ridding.util.ObjectUtil;
@@ -66,40 +67,51 @@ public class HttpServletUtil2 {
 	 * @param riddingUserList
 	 * @return
 	 */
-	public static JSONArray parseGetRiddingList(List<RiddingUser> riddingUserList) {
-		if (ListUtils.isEmptyList(riddingUserList)) {
+	public static JSONArray parseGetRiddingList(List<ActivityRidding> activityRiddings) {
+		if (ListUtils.isEmptyList(activityRiddings)) {
 			return new JSONArray();
 		}
 		JSONArray jsonArray = new JSONArray();
-		for (RiddingUser riddingUser : riddingUserList) {
-			if (riddingUser.getStatus() != RiddingStatus.Deleted.getValue()) {
-				JSONObject riddingObject = new JSONObject();
-				riddingObject.put("riddingid", riddingUser.getRiddingId());
-				riddingObject.put("riddingstatus", riddingUser.getStatus());
-				riddingObject.put("riddingname", riddingUser.getSelfName());
-				riddingObject.put("createtime", riddingUser.getCreateTime());
-				riddingObject.put("createtimestr", TimeUtil.getFormatTime(riddingUser.getCreateTime()));
-				riddingObject.put("usercount", riddingUser.getUserCount());
-
+		for (ActivityRidding activityRidding : activityRiddings) {
+			JSONObject riddingObject = new JSONObject();
+			if(activityRidding.getRidding()!=null){
+				riddingObject.put("riddingid", activityRidding.getRidding().getId());
+				riddingObject.put("riddingstatus", activityRidding.getRidding().getRiddingStatus());
+				riddingObject.put("riddingname", activityRidding.getRidding().getName());
+				riddingObject.put("createtime", activityRidding.getRidding().getCreateTime());
+				riddingObject.put("createtimestr", TimeUtil.getFormatTime(activityRidding.getRidding().getCreateTime()));
+				riddingObject.put("usercount", activityRidding.getRidding().getUserCount());
+				riddingObject.put("carecount", activityRidding.getRidding().getCareCount());
+				riddingObject.put("commentcount", activityRidding.getRidding().getCommentCount());
+				riddingObject.put("usecount", activityRidding.getRidding().getUseCount());
+				riddingObject.put("likecount", activityRidding.getRidding().getLikeCount());
+			}
+			if(activityRidding.getRiddingUser()!=null){
+				riddingObject.put("userrole", activityRidding.getRiddingUser().getUserRole());
+			}
+	
+			if(activityRidding.getiMap()!=null){
 				JSONObject mapObject = new JSONObject();
-				mapObject.put("distance", riddingUser.getDistance());
-				mapObject.put("beginlocation", riddingUser.getBeginLocation());
-				mapObject.put("endlocation", riddingUser.getEndLocation());
-				mapObject.put("avatorpicurl", riddingUser.getAvatorPicUrl());
+				mapObject.put("distance", activityRidding.getiMap().getDistance());
+				mapObject.put("beginlocation", activityRidding.getiMap().getBeginLocation());
+				mapObject.put("endlocation", activityRidding.getiMap().getEndLocation());
+				mapObject.put("avatorpicurl", SystemConst.returnPhotoUrl(activityRidding.getiMap().getAvatorPicUrl()));
 
 				riddingObject.put("map", mapObject);
-
-				if (riddingUser.getLeaderProfile() != null) {
-					JSONObject userObject = new JSONObject();
-					userObject.put("savatorurl", riddingUser.getLeaderProfile().getsAvatorUrl());
-					userObject.put("username", riddingUser.getLeaderProfile().getNickName());
-					userObject.put("userid", riddingUser.getLeaderProfile().getUserId());
-					riddingObject.put("user", userObject);
-				}
-				JSONObject returnObject = new JSONObject();
-				HttpServletUtil2.returnDataObject(riddingObject, "ridding", returnObject);
-				jsonArray.add(returnObject);
 			}
+			
+			
+
+			if (activityRidding.getLeaderProfile() != null) {
+				JSONObject userObject = new JSONObject();
+				userObject.put("savatorurl", activityRidding.getLeaderProfile().getsAvatorUrl());
+				userObject.put("username", activityRidding.getLeaderProfile().getNickName());
+				userObject.put("userid", activityRidding.getLeaderProfile().getUserId());
+				riddingObject.put("user", userObject);
+			}
+			JSONObject returnObject = new JSONObject();
+			HttpServletUtil2.returnDataObject(riddingObject, "ridding", returnObject);
+			jsonArray.add(returnObject);
 		}
 		return jsonArray;
 	}
@@ -228,6 +240,11 @@ public class HttpServletUtil2 {
 			riddingObject.put("createtimestr", TimeUtil.getFormatTime(ridding.getCreateTime()));
 			riddingObject.put("lastupdatetime", ridding.getLastUpdateTime());
 			riddingObject.put("lastupdatetimestr", TimeUtil.getFormatTime(ridding.getLastUpdateTime()));
+			riddingObject.put("usercount", ridding.getUserCount());
+			riddingObject.put("carecount", ridding.getCareCount());
+			riddingObject.put("commentcount", ridding.getCommentCount());
+			riddingObject.put("usecount", ridding.getUseCount());
+			riddingObject.put("likecount", ridding.getLikeCount());
 
 			JSONObject leaderUserObject = new JSONObject();
 			leaderUserObject.put("userid", ridding.getLeaderUserId());

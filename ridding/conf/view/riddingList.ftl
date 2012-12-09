@@ -36,23 +36,23 @@ body{font-size:83%;}
     <#if riddingUserList?exists>
         <#list riddingUserList as riddingUser>
               <li class="item">
-                  <div class="js-riddingLink" dataid="${riddingUser.riddingId!0}"  style="cursor: pointer;height: 260px; width: 260px;"   >
-                      <img style="height:260px;width:260px;display:block;" src="${riddingUser.avatorPicUrl!""}" alt="${riddingUser.selfName?default("")}"/>             
-                      <div class="cover js-cover-${riddingUser.riddingId!0}">
-					      <p class="l1">起点:${substring(riddingUser.beginLocation?default(""),26)}</p>
-					      <p class="l2">终点:${substring(riddingUser.endLocation?default(""),26)}</p>
+                  <div class="js-riddingLink" dataid="${riddingUser.ridding.id!0}"  style="cursor: pointer;height: 260px; width: 260px;"   >
+                      <img style="height:260px;width:260px;display:block;" src="http://images.qiqunar.com.cn/${riddingUser.iMap.avatorPicUrl!""}" alt="${riddingUser.ridding.name?default("")}"/>             
+                      <div class="cover js-cover-${riddingUser.ridding.id!0}">
+					      <p class="l1">起点:${substring(riddingUser.iMapbeginLocation?default(""),26)}</p>
+					      <p class="l2">终点:${substring(riddingUser.iMap.endLocation?default(""),26)}</p>
 				      </div>
                   </div>
                   <div class="ln">
-                      <span class="item-name">${substring(riddingUser.selfName?default(""),20)}</span>
+                      <span class="item-name">${substring(riddingUser.ridding.name?default(""),20)}</span>
                   </div>
                   <div class="ln item-desc clearfix">
                       <div class="clearfix" style="width:260px;">
-                          <span class="l" style="display: inline;width:100px;">创建于:${riddingUser.riddingCreateTime?number_to_date?string("yyyy-MM-dd")}</span>
-                          <span class="r" style="display: inline;color:<#if riddingUser.isLeader()>red;<#else>green</#if>"><#if riddingUser.isLeader()>队长<#else>队员</#if></span>
+                          <span class="l" style="display: inline;width:100px;">创建于:${riddingUser.ridding.createTime?number_to_date?string("yyyy-MM-dd")}</span>
+                          <span class="r" style="display: inline;color:<#if riddingUser.riddingUser.isLeader()>red;<#else>green</#if>"><#if riddingUser.riddingUser.isLeader()>队长<#else>队员</#if></span>
                       </div>
                   </div>
-                  <#if isMe?exists><#else><a class="js-riddingCollectLink l3" dataid="${riddingUser.riddingId!0}" href="javascript:void(0);" >使用</a></#if>
+                  <#if isMe?exists><#else><a class="js-riddingCollectLink l3" dataid="${riddingUser.ridding.id!0}" href="javascript:void(0);" >使用</a></#if>
               </li>
         </#list>
        </#if>
