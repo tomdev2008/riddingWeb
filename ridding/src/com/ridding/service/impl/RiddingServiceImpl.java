@@ -303,7 +303,7 @@ public class RiddingServiceImpl implements RiddingService {
 				if (profile != null) {
 					activityRidding.setLeaderProfile(profile);
 				}
-			} 
+			}
 		}
 	}
 
@@ -599,7 +599,7 @@ public class RiddingServiceImpl implements RiddingService {
 		map.put("riddingId", riddingId);
 		map.put("createTime", lastUpdateTime);
 		map.put("limit", limit);
-		return riddingPictureMapper.getRiddingPicturesByUserId(map);
+		return riddingPictureMapper.getRiddingPicturesByRiddingId(map);
 	}
 
 	/*
@@ -661,13 +661,15 @@ public class RiddingServiceImpl implements RiddingService {
 		if (!ListUtils.isEmptyList(riddingList)) {
 			for (Ridding ridding : riddingList) {
 				map.put("riddingId", ridding.getId());
+				map.put("createTime", new Date().getTime());
 				map.put("limit", 1);
 				IMap iMap = iMapMap.get(ridding.getMapId());
 				if (iMap != null) {
 					ridding.setDistance(iMap.getDistance());
 				}
 				if (ridding.getFirstPicUrl() == null) {
-					RiddingPicture riddingPicture = riddingPictureMapper.getRiddingPicturesByRiddingId(map);
+					List<RiddingPicture> list = riddingPictureMapper.getRiddingPicturesByRiddingId(map);
+					RiddingPicture riddingPicture = list.get(0);
 					if (riddingPicture != null) {
 						ridding.setFirstPicUrl(riddingPicture.getPhotoUrl());
 					} else if (iMap != null) {
@@ -733,5 +735,19 @@ public class RiddingServiceImpl implements RiddingService {
 		riddingAction.setCreateTime(nowTime);
 		riddingAction.setLastUpdateTime(nowTime);
 		return riddingActionMapper.addRiddingAction(riddingAction) > 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getRiddingPictureList(long, long)
+	 */
+	@Override
+	public List<RiddingPicture> getRiddingPictureList(long riddingId, long userId, int limit, long createTime) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("riddingId", riddingId);
+		map.put("createTime", new Date().getTime());
+		map.put("limit", 1);
+		return riddingPictureMapper.getRiddingPicturesByRiddingId(map);
 	}
 }

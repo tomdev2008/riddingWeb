@@ -51,6 +51,10 @@ public class Profile implements Serializable {
 	 */
 	private long accessUserId;
 	/**
+	 * 用户等级1为管理员
+	 */
+	private int level;
+	/**
 	 * 对应的sourceaccount
 	 */
 	private SourceAccount sourceAccount;
@@ -134,4 +138,13 @@ public class Profile implements Serializable {
 	public void setLastUpdateTime(long lastUpdateTime) {
 		this.lastUpdateTime = lastUpdateTime;
 	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
 }

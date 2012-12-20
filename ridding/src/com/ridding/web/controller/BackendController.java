@@ -1,19 +1,29 @@
 package com.ridding.web.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ridding.meta.Source;
+import com.ridding.constant.SystemConst;
+import com.ridding.meta.Profile;
+import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.WeiBo;
+import com.ridding.security.MyUser;
+import com.ridding.service.ProfileService;
+import com.ridding.service.RiddingService;
 import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
+import com.ridding.util.ListUtils;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -28,41 +38,21 @@ public class BackendController extends AbstractBaseController {
 	@Resource
 	private SinaWeiBoService sinaWeiBoService;
 
-	/**
-	 * 检查url
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	public ModelAndView checkUrlView(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ModelAndView mv = new ModelAndView("checkSinaWeiBo");
-		int page = ServletRequestUtils.getIntParameter(request, "page", -1);
-		if (page <= 0) {
-			page = 1;
-		}
-		int limit = 100;
-		int type = ServletRequestUtils.getIntParameter(request, "type", -1);
-		int sourceType = ServletRequestUtils.getIntParameter(request, "sourceType", -1);
-		if (sourceType < 0) {
-			sourceType = 1;
-		}
-		if (type == 0) {
-			// 得到被认定为url错误的新浪微博
+	@Resource
+	private ProfileService profileService;
 
-			List<Source> sourceList = sourceService.getSourceListWithAccount(Source.UrlError, limit, (page - 1) * limit, sourceType);
-			int sourceCount = sourceService.getSourceCountByStatus(Source.UrlError, sourceType);
-			mv.addObject("sourceTotalCount", sourceCount);
-			mv.addObject("sourceList", sourceList);
-		} else if (type == 1) {
-			// 得到已经被处理的，但是在map中不存在的新浪微博
-			List<Source> sourceList = sourceService.getDealedNotInMap(Source.Dealed, limit, (page - 1) * limit, sourceType);
-			mv.addObject("sourceList", sourceList);
-			mv.addObject("sourceTotalCount", sourceList == null ? 0 : sourceList.size());
+	@Resource
+	private RiddingService riddingService;
+
+	public ModelAndView indexBackend(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ModelAndView mv = new ModelAndView("backendIndex");
+		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+		Profile profile = profileService.getProfile(myUser.getUserId());
+		if (profile.getLevel() != 1) {
+			response.sendRedirect(SystemConst.getValue("HOST"));
+			return null;
 		}
-		mv.addObject("page", page);
-		mv.addObject("type", type);
+		this.setUD(mv, myUser.getUserId(), myUser.getUserId());
 		return mv;
 	}
 
@@ -79,6 +69,33 @@ public class BackendController extends AbstractBaseController {
 		List<WeiBo> sendList = sinaWeiBoService.getWeiBoList();
 		long visitUserId = ServletRequestUtils.getLongParameter(request, "userId");
 		mv.addObject("weiboList", sendList);
+		this.setUD(mv, visitUserId, visitUserId);
+		return mv;
+	}
+
+	/**
+	 * 推荐
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	public ModelAndView huodongRecom(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ModelAndView mv = new ModelAndView("huodongRecom");
+		int weight = ServletRequestUtils.getIntParameter(request, "weight", -1);
+		if (weight <= 0) {
+			weight = 99999;
+		}
+		List<Ridding> riddingList = riddingService.getRecomRiddingList(weight, 50, false);
+		if (!ListUtils.isEmptyList(riddingList)) {
+			for (Ridding ridding : riddingList) {
+				List<RiddingPicture> pictureList = riddingService.getRiddingPictureByRiddingId(ridding.getId(), 50, new Date().getTime());
+				ridding.setRiddingPictureList(pictureList);
+			}
+		}
+		long visitUserId = ServletRequestUtils.getLongParameter(request, "userId");
+		mv.addObject("riddingList", riddingList);
 		this.setUD(mv, visitUserId, visitUserId);
 		return mv;
 	}

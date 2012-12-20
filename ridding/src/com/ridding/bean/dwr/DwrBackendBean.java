@@ -3,6 +3,7 @@ package com.ridding.bean.dwr;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -152,6 +153,8 @@ public class DwrBackendBean {
 			}
 		}
 		String json = PublicType.PublicRecom.setJson(userId, riddingId, firstPicUrl);
+		
 		return publicService.addPublic(PublicType.PublicRecom.getValue(), json, weight);
 	}
+
 }

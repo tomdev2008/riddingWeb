@@ -202,4 +202,13 @@ public interface RiddingService {
 	 * @return
 	 */
 	public boolean incRiddingCare(long riddingId, long userId);
+
+	/**
+	 * 得到骑行图片列表
+	 * 
+	 * @param riddingId
+	 * @param userId
+	 * @return
+	 */
+	public List<RiddingPicture> getRiddingPictureList(long riddingId, long userId, int limit, long createTime);
 }

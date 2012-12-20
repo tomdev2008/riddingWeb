@@ -33,13 +33,5 @@ public interface RiddingPictureMapper {
 	 * @param map
 	 * @return
 	 */
-	public List<RiddingPicture> getRiddingPicturesByUserId(Map<String, Object> map);
-
-	/**
-	 * 得到第一张图片
-	 * 
-	 * @param riddingId
-	 * @return
-	 */
-	public RiddingPicture getRiddingPicturesByRiddingId(Map<String, Object> map);
+	public List<RiddingPicture> getRiddingPicturesByRiddingId(Map<String, Object> map);
 }

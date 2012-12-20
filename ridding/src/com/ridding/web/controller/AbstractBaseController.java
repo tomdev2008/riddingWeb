@@ -58,6 +58,7 @@ public abstract class AbstractBaseController extends MultiActionController {
 			mv.addObject("visitSAvatorUrl", visitProfile.getsAvatorUrl());
 			mv.addObject("visitBAvatorUrl", visitProfile.getbAvatorUrl());
 			mv.addObject("visitNickname", visitProfile.getNickName());
+			mv.addObject("visitLevel", visitProfile.getLevel());
 			MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
 			mv.addObject("userAccessToken", myUser.getAccessToken());
 			if (hostProfile.getUserId() == visitProfile.getUserId()) {

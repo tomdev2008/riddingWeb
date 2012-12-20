@@ -1,6 +1,7 @@
 package com.ridding.meta;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -73,11 +74,11 @@ public class Ridding implements Serializable {
 	/**
 	 * 是否是推荐
 	 */
-	public int isRecom=0;
+	public int isRecom = 0;
 	/**
 	 * 是否是公开
 	 */
-	public int isPublic=0;
+	public int isPublic = 0;
 
 	/**
 	 * 非公开或者非推荐
@@ -99,6 +100,10 @@ public class Ridding implements Serializable {
 	 * 权重，不存数据库
 	 */
 	private int weight;
+	/**
+	 * 骑行图片列表
+	 */
+	private List<RiddingPicture> riddingPictureList;
 
 	/**
 	 *骑行状态
@@ -308,6 +313,14 @@ public class Ridding implements Serializable {
 
 	public void setCareCount(int careCount) {
 		this.careCount = careCount;
+	}
+
+	public List<RiddingPicture> getRiddingPictureList() {
+		return riddingPictureList;
+	}
+
+	public void setRiddingPictureList(List<RiddingPicture> riddingPictureList) {
+		this.riddingPictureList = riddingPictureList;
 	}
 
 }

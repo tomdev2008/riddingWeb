@@ -19,9 +19,8 @@ body{font-size:83%;}
       </div>
       <div>
          <a href="/bind/sinabind/" style="background: none repeat scroll 0 0 #1C9FE5;border: 1px solid #11A0EE; border-radius: 7px;color: #FFFFFF;display: inline-block;font-size: 14px;height: 40px;line-height: 40px;opacity: 1;text-align: center;width: 200px;"><span>使用新浪微博登录</span></a>
-   
       </div>
-      <!--
+  <!--
       <div style="margin-top: 50px; margin-left: 230px;">
       <a style="border: 1px solid rgb(17, 160, 238); display: block; border-radius: 7px 7px 7px 7px; height: 53px; width: 177px;" href="itms-services://?action=download-manifest&url=http://qiqunar.com.cn/app/qiqunar.plist" class="appbreakimg" ></a>
       <p style="color: rgb(204, 204, 204); text-align: center; width: 177px;">(Iphone客户端最新版本1.1)</p>
@@ -33,6 +32,8 @@ body{font-size:83%;}
    </div>
    -->
    </div>
+   
+   
 </aside>
 
 

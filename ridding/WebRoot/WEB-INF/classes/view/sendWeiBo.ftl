@@ -10,20 +10,9 @@ body{font-size:83%;}
 
 <body>
 
-<div style="">
-    <p style="font-size: 20px;color: red;">添加推荐信息</p>
-    <span>骑行Id</span><input type="text" id="recom_riddingId" style="width:50px;"/>
-    <span>用户Id</span><input type="text" id="recom_userId" style="width:50px;"/>
-    <span>权重</span><input type="text" id="recom_weight" style="width:50px;"/>
-    <form id="recom_uploadFrame" action="/user/${visitUserId}/photoUpload/" target="uploadFrame" method="post" enctype="multipart/form-data" size="37" class="t" onsubmit="return saveRecomReport();">
-         <input type="file" value="浏览" name="file" size="37" class="t file l "/>
-         <input type="submit" value="上传图片"/>
-    </form>
-    <div>
-        <img style="width: 100px; height: 100px;display:none;" src=""  id="recom_image"/>
-    </div>
-    <input type="button" id="recom" value="确定"/>
-</div>
+<h3 style="font-size: 20px;color: red;"><a href="/backend/index/">返回</a></h3>
+
+
 <h3 style="font-size: 20px;color: red;">发微博功能</h3>
 <div>
 <span>总数为:</span>

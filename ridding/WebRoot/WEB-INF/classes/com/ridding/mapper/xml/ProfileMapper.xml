@@ -11,6 +11,7 @@
 		<result property="totalDistance" column="totalDistance" />
 		<result property="createTime" column="createTime" />
 		<result property="lastUpdateTime" column="lastUpdateTime" />
+		<result property="level" column="level" />
 	</resultMap>
 	<insert id="addProfile" parameterType="Profile" >
 		INSERT INTO TB_Profile(
@@ -20,7 +21,8 @@
 		createTime,
 		lastUpdateTime,
 		sAvatorUrl,
-		bAvatorUrl
+		bAvatorUrl,
+		level
 		)VALUES(
 		#{userName},
 		#{nickName},
@@ -28,7 +30,8 @@
 		#{createTime},
 		#{lastUpdateTime},
 		#{sAvatorUrl},
-		#{bAvatorUrl}
+		#{bAvatorUrl},
+		#{level}
 		)
 		<selectKey keyProperty="userId" resultType="long">
 			SELECT
