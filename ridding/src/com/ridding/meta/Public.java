@@ -103,9 +103,9 @@ public class Public {
 				Ridding ridding = new Ridding();
 				ridding.setId(jsonObject.getLong("riddingId"));
 				ridding.setLeaderUserId(jsonObject.getLong("userId"));
-				String firstPicUrl = jsonObject.getString("firstPicUrl");
-				if (!StringUtils.isEmpty(firstPicUrl)) {
-					ridding.setFirstPicUrl(firstPicUrl);
+				
+				if (jsonObject.get("firstPicUrl")!=null) {
+					ridding.setFirstPicUrl(jsonObject.getString("firstPicUrl"));
 				}
 
 				return ridding;
