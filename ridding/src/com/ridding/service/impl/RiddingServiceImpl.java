@@ -615,7 +615,10 @@ public class RiddingServiceImpl implements RiddingService {
 			for (Public public1 : publicList) {
 				Ridding ridding = PublicType.PublicRecom.getRidding(public1.getJson());
 				Ridding newRidding = riddingMapper.getRidding(ridding.getId());
-				newRidding.setFirstPicUrl(ridding.getFirstPicUrl());
+				if(ridding.getFirstPicUrl()!=null){
+					newRidding.setFirstPicUrl(ridding.getFirstPicUrl());
+				}
+				
 				newRidding.setWeight(public1.getWeight());
 				riddingList.add(newRidding);
 			}
