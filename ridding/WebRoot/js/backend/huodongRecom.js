@@ -1,5 +1,5 @@
 var _photoUrls=new Array()
-
+var _recom_photoUrl='';
 $("#recom").click(function(){
 	_riddingId= $("#recom_riddingId").val();
 	_userId=$("#recom_userId").val();
