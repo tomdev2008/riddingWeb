@@ -3,18 +3,14 @@ package com.ridding.bean.dwr;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ridding.meta.IMap;
-import com.ridding.meta.Photo;
-import com.ridding.meta.Ridding;
 import com.ridding.meta.Source;
 import com.ridding.meta.WeiBo;
 import com.ridding.meta.Public.PublicType;
@@ -140,20 +136,27 @@ public class DwrBackendBean {
 	 * @param userId
 	 */
 	public boolean addPublicRecom(long riddingId, long userId, int weight, String firstPicUrl) {
-		if (StringUtils.isEmpty(firstPicUrl)) {
-			Ridding ridding = riddingService.getRidding(riddingId);
-			if (ridding != null) {
-				IMap iMap = mapService.getMapById(ridding.getMapId(), IMap.Using);
-				if (iMap != null) {
-					Photo photo = photoService.getPhoto(iMap.getAvatorPic());
-					if (photo != null) {
-						firstPicUrl = photo.getOriginalPath();
-					}
-				}
-			}
-		}
+//		if (StringUtils.isEmpty(firstPicUrl)) {
+//			Ridding ridding = riddingService.getRidding(riddingId);
+//			if (ridding != null) {
+//				List<RiddingPicture> list = riddingService.getRiddingPictureByRiddingId(riddingId, 1, new Date().getTime());
+//				if (!ListUtils.isEmptyList(list)) {
+//					RiddingPicture picture = list.get(0);
+//					firstPicUrl = picture.getPhotoUrl();
+//				} else {
+//					IMap iMap = mapService.getMapById(ridding.getMapId(), IMap.Using);
+//					if (iMap != null) {
+//						Photo photo = photoService.getPhoto(iMap.getAvatorPic());
+//						if (photo != null) {
+//							firstPicUrl = photo.getOriginalPath();
+//						}
+//					}
+//				}
+//
+//			}
+//		}
 		String json = PublicType.PublicRecom.setJson(userId, riddingId, firstPicUrl);
-		
+
 		return publicService.addPublic(PublicType.PublicRecom.getValue(), json, weight);
 	}
 

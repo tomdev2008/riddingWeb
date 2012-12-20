@@ -2,6 +2,8 @@ package com.ridding.meta;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
  * @version CreateTime：2012-12-2 下午11:36:11 Class Description
@@ -101,7 +103,11 @@ public class Public {
 				Ridding ridding = new Ridding();
 				ridding.setId(jsonObject.getLong("riddingId"));
 				ridding.setLeaderUserId(jsonObject.getLong("userId"));
-				ridding.setFirstPicUrl(jsonObject.getString("firstPicUrl"));
+				String firstPicUrl = jsonObject.getString("firstPicUrl");
+				if (!StringUtils.isEmpty(firstPicUrl)) {
+					ridding.setFirstPicUrl(firstPicUrl);
+				}
+
 				return ridding;
 			}
 
@@ -109,7 +115,9 @@ public class Public {
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put("riddingId", riddingId);
 				jsonObject.put("userId", userId);
-				jsonObject.put("firstPicUrl", firstPicUrl);
+				if (!StringUtils.isEmpty(firstPicUrl)) {
+					jsonObject.put("firstPicUrl", firstPicUrl);
+				}
 				return jsonObject.toString();
 			}
 		};
