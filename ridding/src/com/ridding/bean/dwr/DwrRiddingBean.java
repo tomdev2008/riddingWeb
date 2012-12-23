@@ -92,7 +92,7 @@ public class DwrRiddingBean {
 	 * @return
 	 */
 	public boolean addUser(long riddingId, List<Profile> profileList, int sourceType) {
-		return riddingService.insertRiddingUsers(profileList, riddingId, sourceType);
+		return riddingService.insertRiddingUsers(profileList, riddingId, sourceType, -1);
 	}
 
 	/**

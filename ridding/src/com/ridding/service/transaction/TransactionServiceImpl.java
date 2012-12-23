@@ -164,8 +164,10 @@ public class TransactionServiceImpl implements TransactionService {
 			sourceAccount.setCreateTime(new Date().getTime());
 			this.insertSourceAccount(sourceAccount, profile);
 		}else{
-			String message = leaderProfile.getUserName() + "把你加入了骑行活动:" + ridding.getName() + ",快去看看吧";
-			iosApnsService.sendUserApns(sourceAccount.getUserId(), message);
+			if(leaderProfile!=null){
+				String message = leaderProfile.getUserName() + "把你加入了骑行活动:" + ridding.getName() + ",快去看看吧";
+				iosApnsService.sendUserApns(sourceAccount.getUserId(), message);
+			}
 		}
 		long nowTime = new Date().getTime();
 		hashMap = new HashMap<String, Object>();
