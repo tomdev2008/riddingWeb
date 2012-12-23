@@ -1,7 +1,6 @@
 package com.ridding.service.impl;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import javapns.Push;
@@ -11,7 +10,6 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
@@ -28,12 +26,10 @@ import com.ridding.util.ListUtils;
 public class IOSApnsServiceImpl implements IOSApnsService {
 
 	private static final String PASSWORD = "13823381398";
-	// developerApns.p12
-	private static final String FILENAME = "aps_product_identity.p12";
+	// developerApns.p12 aps_product_identity.p12
+	private static final String FILENAME = "developerApns.p12";
 
 	private static final int THREAD = 10;
-
-	private static final String MESSAGENAME = "message";
 
 	private static final Logger logger = Logger.getLogger(IOSApnsServiceImpl.class);
 
@@ -48,7 +44,7 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 	public void sendApns(String text) {
 		List<ApnsDevice> list = iosApnsMapper.getAllApnsDevice();
 		if (!ListUtils.isEmptyList(list)) {
-			this.sendOneMessage(list, "message", text, "message");
+			this.sendMessages(list, "message", text, "message");
 		}
 	}
 
@@ -65,33 +61,39 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 	 *            alert的标题
 	 * @return 返回成功数量
 	 */
-	public int sendOneMessage(List<ApnsDevice> devices, String messageName, String message, String title) {
-		Integer totalCount = 0;
-		try {
-			JSONObject jsonObject = new JSONObject(message);
-			totalCount = (Integer) jsonObject.get("totalCount");
-		} catch (JSONException e2) {
-			logger.info("sendOneMessage get totalCount error where totalCount=" + totalCount);
-		}
+	public int sendMessages(List<ApnsDevice> devices, String messageName, String message, String title) {
 		for (ApnsDevice device : devices) {
-			PushNotificationPayload payload = PushNotificationPayload.complex();
-			try {
-				payload.addCustomAlertBody(title);
-				payload.addBadge(totalCount);
-				payload.addCustomAlertActionLocKey("查看");
-				File resourceFile = ResourceUtils.getFile("classpath:" + FILENAME);
-				payload.addCustomDictionary(messageName, message);
-				// true表示在production环境
-				Push.alert(message, (Object) resourceFile, PASSWORD, true, device);
-				logger.info("success send apsn where userid=" + device.getUserId());
-			} catch (JSONException e1) {
-				e1.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			this.sendOneMessages(device, messageName, message, title);
 		}
-
 		return devices.size(); // 还没做异常处理
+	}
+
+	/**
+	 * 发送一条信息
+	 * 
+	 * @param device
+	 * @param messageName
+	 * @param message
+	 * @param title
+	 * @return
+	 */
+	public boolean sendOneMessages(ApnsDevice device, String messageName, String message, String title) {
+		PushNotificationPayload payload = PushNotificationPayload.complex();
+		try {
+			payload.addCustomAlertBody(title);
+			// payload.addBadge(totalCount);
+			payload.addCustomAlertActionLocKey("查看");
+			File resourceFile = ResourceUtils.getFile("classpath:" + FILENAME);
+			payload.addCustomDictionary(messageName, message);
+			// true表示在production环境
+			Push.alert(message, (Object) resourceFile, PASSWORD, false, device);
+			logger.info("success send apsn where userid=" + device.getUserId());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return true;
 	}
 
 	/*
@@ -108,5 +110,20 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 			return iosApnsMapper.updateApns(apnsDevice) > 0;
 		}
 		return iosApnsMapper.addApnsDevice(apnsDevice) > 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.IOSApnsService#sendUserCommentApns(long,
+	 * java.lang.String, long)
+	 */
+	@Override
+	public void sendUserApns(long userId, String message) {
+		ApnsDevice device = iosApnsMapper.getApnsDevice(userId);
+		if (device != null) {
+			this.sendOneMessages(device, "消息", message, "消息");
+		}
+
 	}
 }

@@ -261,7 +261,8 @@ public class RiddingController extends AbstractBaseController {
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
-		riddingService.insertRiddingUsers(profileList, ridingId, sourceType);
+		riddingService.insertRiddingUsers(profileList, ridingId, sourceType, userId);
+
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		logger.info(returnObject);
@@ -432,13 +433,16 @@ public class RiddingController extends AbstractBaseController {
 		JSONObject returnObject = new JSONObject();
 		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
 		String token = ServletRequestUtils.getStringParameter(request, "token", null);
+		String version = ServletRequestUtils.getStringParameter(request, "version", null);
 		ApnsDevice apnsDevice = new ApnsDevice();
 		apnsDevice.setUserId(userId);
 		apnsDevice.setToken(token);
+		apnsDevice.setVersion(version);
 		long time = new Date().getTime();
 		apnsDevice.setCreateTime(time);
 		apnsDevice.setLastUpdateTime(time);
 		apnsDevice.setStatus(ApnsDevice.VALID);
+
 		if (iosApnsService.addIosApns(apnsDevice)) {
 			returnObject.put("code", returnCodeConstance.SUCCESS);
 		} else {
@@ -579,8 +583,7 @@ public class RiddingController extends AbstractBaseController {
 		logger.info(returnObject);
 		return mv;
 	}
-	
-	
+
 	/**
 	 * 得到某人骑行操作记录
 	 * 
@@ -605,4 +608,5 @@ public class RiddingController extends AbstractBaseController {
 		logger.info(returnObject);
 		return mv;
 	}
+
 }

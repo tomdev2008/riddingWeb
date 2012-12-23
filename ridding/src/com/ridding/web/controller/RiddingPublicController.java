@@ -24,11 +24,11 @@ import weibo4j.Weibo;
 import com.ridding.constant.SystemConst;
 import com.ridding.constant.returnCodeConstance;
 import com.ridding.mapper.MapFixMapper;
+import com.ridding.meta.ApnsDevice;
 import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
-import com.ridding.meta.RiddingAction;
 import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.SourceAccount;
@@ -341,6 +341,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		response.setContentType("text/html;charset=UTF-8");
 		JSONObject returnObject = new JSONObject();
 		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
 		logger.info(jsonString);
 		ModelAndView mv = new ModelAndView("return");
 		RiddingComment riddingComment = null;
@@ -351,7 +352,7 @@ public class RiddingPublicController extends AbstractBaseController {
 			e.printStackTrace();
 			return mv;
 		}
-		List<RiddingComment> riddingComments = riddingCommentService.getRiddingComments(riddingComment.getLastCreateTime(),
+		List<RiddingComment> riddingComments = riddingCommentService.getRiddingComments(riddingId,riddingComment.getLastCreateTime(),
 				riddingComment.getLimit(), riddingComment.isLarger());
 		JSONArray dataArray = HttpServletUtil2.parseRiddingComment(riddingComments);
 		returnObject.put("data", dataArray);
@@ -361,5 +362,6 @@ public class RiddingPublicController extends AbstractBaseController {
 		return mv;
 	}
 
+	
 
 }

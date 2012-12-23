@@ -25,5 +25,5 @@ public interface RiddingCommentService {
 	 * @param isLarger
 	 * @return
 	 */
-	public List<RiddingComment> getRiddingComments(long createTime, int limit, boolean isLarger);
+	public List<RiddingComment> getRiddingComments(long riddingId,long createTime, int limit, boolean isLarger);
 }

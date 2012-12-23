@@ -44,12 +44,12 @@
 	
 	<!-- 查询Ridding -->
 	<select id="getRiddingCommentList" resultMap="riddingCommentMap">
-		SELECT * from TB_Ridding_Comment where
+		SELECT * from TB_Ridding_Comment where riddingId=#{riddingId} 
 		<if test="isLarger==1">
-		    createTime > #{createTime} 
+		    and createTime > #{createTime} 
 		</if>
 		<if test="isLarger==0">
-		    #{createTime} > createTime 
+		    and  #{createTime} > createTime 
 		</if>
 		order by createTime desc limit #{limit};
 	</select>

@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.ibatis.transaction.TransactionException;
@@ -36,6 +35,7 @@ import com.ridding.meta.WeiBo;
 import com.ridding.meta.Ridding.RiddingStatus;
 import com.ridding.meta.RiddingUser.RiddingUserRoleType;
 import com.ridding.meta.RiddingUser.SelfRiddingStatus;
+import com.ridding.service.IOSApnsService;
 import com.ridding.util.ListUtils;
 import com.ridding.web.controller.RiddingController;
 
@@ -65,6 +65,9 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Resource
 	private RepostMapWeiBoMapper repostMapWeiBoMapper;
+
+	@Resource
+	private IOSApnsService iosApnsService;
 
 	private static final Logger logger = Logger.getLogger(RiddingController.class);
 
@@ -149,7 +152,7 @@ public class TransactionServiceImpl implements TransactionService {
 	 * com.ridding.service.transaction.TransactionService#insertRiddingUser(
 	 * long, java.util.List)
 	 */
-	public boolean insertRiddingUser(Ridding ridding, Profile profile, int objectType) throws TransactionException {
+	public boolean insertRiddingUser(Ridding ridding, Profile profile, int objectType, Profile leaderProfile) throws TransactionException {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("sourceType", objectType);
 		hashMap.put("accessUserId", profile.getAccessUserId());
@@ -160,6 +163,9 @@ public class TransactionServiceImpl implements TransactionService {
 			sourceAccount.setSourceType(objectType);
 			sourceAccount.setCreateTime(new Date().getTime());
 			this.insertSourceAccount(sourceAccount, profile);
+		}else{
+			String message = leaderProfile.getUserName() + "把你加入了骑行活动:" + ridding.getName() + ",快去看看吧";
+			iosApnsService.sendUserApns(sourceAccount.getUserId(), message);
 		}
 		long nowTime = new Date().getTime();
 		hashMap = new HashMap<String, Object>();
@@ -187,6 +193,8 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		hashMap.put("id", ridding.getId());
 		hashMap.put("count", 1);
+
+		
 		if (riddingMapper.increaseUserCount(hashMap) < 0) {
 			throw new TransactionException("insertRiddingUser increaseUserCount error ");
 		}

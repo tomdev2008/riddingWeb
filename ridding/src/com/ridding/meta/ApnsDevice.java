@@ -30,7 +30,10 @@ public class ApnsDevice implements Device {
 	 * 数据状态，0表示有效地，1表示无效的
 	 */
 	private int status;
-
+	/**
+	 * 最新的版本号
+	 */
+	private String version;
 	/**
 	 * 有效的
 	 */
@@ -109,6 +112,14 @@ public class ApnsDevice implements Device {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 }

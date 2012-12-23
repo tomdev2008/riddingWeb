@@ -284,36 +284,6 @@ public class SourceServiceImpl implements SourceService {
 		return ExtraSourceReturnCode.Succeed;
 	}
 
-	/**
-	 * 添加骑行队员
-	 * 
-	 * @param source
-	 */
-	private boolean doAddUserToRidding(Source source) {
-		Ridding ridding = this.extraRiddingToRidingId(source.getText());
-		if (ridding == null) {
-			return false;
-		}
-		logger.info("get can extea user list begin,source=" + source.getText());
-		List<Long> accessUserIdList = this.extraRiddingUserList(source.getText());
-		if (ListUtils.isEmptyList(accessUserIdList)) {
-			return false;
-		}
-		int successCount = 0;
-		for (Long accessUserId : accessUserIdList) {
-			try {
-				Profile profile = new Profile();
-				profile.setAccessUserId(accessUserId);
-				if (transactionService.insertRiddingUser(ridding, profile, source.getSourceType())) {
-					successCount++;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				continue;
-			}
-		}
-		return successCount > 0;
-	}
 
 	public List<Source> getSourceListBystatus(int status, int limit, int offset, int sourceType) {
 		Map<String, Object> map = new HashMap<String, Object>();

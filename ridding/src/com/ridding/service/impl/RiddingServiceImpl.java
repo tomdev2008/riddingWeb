@@ -44,6 +44,7 @@ import com.ridding.meta.RiddingUser.RiddingUserRoleType;
 import com.ridding.meta.RiddingUser.SelfRiddingStatus;
 import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
+import com.ridding.service.IOSApnsService;
 import com.ridding.service.PublicService;
 import com.ridding.service.RiddingService;
 import com.ridding.service.transaction.TransactionService;
@@ -90,6 +91,9 @@ public class RiddingServiceImpl implements RiddingService {
 
 	@Resource
 	private RiddingActionMapper riddingActionMapper;
+
+	@Resource
+	private IOSApnsService iosApnsService;
 	private static final Logger logger = Logger.getLogger(RiddingServiceImpl.class);
 
 	/*
@@ -381,10 +385,11 @@ public class RiddingServiceImpl implements RiddingService {
 	 * com.ridding.service.RiddingService#updateRiddingUsers(java.util.List,
 	 * long)
 	 */
-	public boolean insertRiddingUsers(List<Profile> profileList, long riddingId, int sourceType) {
+	public boolean insertRiddingUsers(List<Profile> profileList, long riddingId, int sourceType, long userId) {
 		if (ListUtils.isEmptyList(profileList)) {
 			return true;
 		}
+		Profile leaderProfile = profileMapper.getProfile(userId);
 		Ridding ridding = riddingMapper.getRidding(riddingId);
 		if (ridding == null) {
 			return false;
@@ -392,7 +397,7 @@ public class RiddingServiceImpl implements RiddingService {
 		int succCount = 0;
 		for (Profile profile : profileList) {
 			try {
-				if (transactionService.insertRiddingUser(ridding, profile, sourceType)) {
+				if (transactionService.insertRiddingUser(ridding, profile, sourceType,leaderProfile)) {
 					succCount++;
 				}
 			} catch (Exception e) {

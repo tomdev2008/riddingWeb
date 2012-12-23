@@ -42,7 +42,7 @@ public interface TransactionService {
 	 * @param userList
 	 * @return
 	 */
-	public boolean insertRiddingUser(Ridding ridding, Profile profile, int sourceType) throws TransactionException;
+	public boolean insertRiddingUser(Ridding ridding, Profile profile, int sourceType,Profile leaderProfile) throws TransactionException;
 
 	/**
 	 * 插入一个新的骑行纪录

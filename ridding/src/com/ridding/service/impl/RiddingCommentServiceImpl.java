@@ -12,8 +12,11 @@ import org.springframework.stereotype.Service;
 import com.ridding.mapper.ProfileMapper;
 import com.ridding.mapper.RiddingCommentMapper;
 import com.ridding.meta.Profile;
+import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingComment;
+import com.ridding.service.IOSApnsService;
 import com.ridding.service.RiddingCommentService;
+import com.ridding.service.RiddingService;
 import com.ridding.util.HashMapMaker;
 import com.ridding.util.ListUtils;
 
@@ -28,6 +31,11 @@ public class RiddingCommentServiceImpl implements RiddingCommentService {
 	@Resource
 	private ProfileMapper profileMapper;
 
+	@Resource
+	private IOSApnsService iosApnsService;
+	@Resource
+	private RiddingService riddingService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -40,7 +48,32 @@ public class RiddingCommentServiceImpl implements RiddingCommentService {
 		if (riddingComment == null) {
 			return false;
 		}
+		this.sendMessage(riddingComment);
 		return riddingCommentMapper.addRiddingComment(riddingComment) > 0;
+	}
+
+	/**
+	 * 发消息
+	 * 
+	 * @param riddingComment
+	 */
+	private void sendMessage(RiddingComment riddingComment) {
+		if (riddingComment.getReplyId() > 0) {
+			Ridding ridding = riddingService.getRidding(riddingComment.getRiddingId());
+			Profile userProfile = profileMapper.getProfile(riddingComment.getUserId());
+			if (ridding != null) {
+				String message = userProfile.getUserName() + "回复了您在" + ridding.getName() + "的评论";
+				iosApnsService.sendUserApns(riddingComment.getToUserId(), message);
+			}
+		}
+		if (riddingComment.getReplyId() <= 0) {
+			Ridding ridding = riddingService.getRidding(riddingComment.getRiddingId());
+			if (riddingComment.getUserId() != ridding.getLeaderUserId()) {
+				Profile userProfile = profileMapper.getProfile(riddingComment.getUserId());
+				String message = userProfile.getUserName() + "评论了您的骑行活动" + ridding.getName() + ":" + riddingComment.getText();
+				iosApnsService.sendUserApns(ridding.getLeaderUserId(), message);
+			}
+		}
 	}
 
 	/*
@@ -49,9 +82,10 @@ public class RiddingCommentServiceImpl implements RiddingCommentService {
 	 * @see com.ridding.service.RiddingCommentService#getRiddingComments(long,
 	 * int, java.lang.Boolean)
 	 */
-	public List<RiddingComment> getRiddingComments(long createTime, int limit, boolean isLarger) {
+	public List<RiddingComment> getRiddingComments(long riddingId, long createTime, int limit, boolean isLarger) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("createTime", createTime);
+		map.put("riddingId", riddingId);
 		map.put("limit", limit);
 		map.put("isLarger", isLarger ? 1 : 0);
 		List<RiddingComment> riddingCommentList = riddingCommentMapper.getRiddingCommentList(map);

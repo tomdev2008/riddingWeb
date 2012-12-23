@@ -33,5 +33,9 @@ public interface IosApnsMapper {
 	 */
 	public int updateApns(ApnsDevice apnsDevice);
 
+	/**
+	 * 
+	 * @return
+	 */
 	public List<ApnsDevice> getAllApnsDevice();
 }

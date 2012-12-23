@@ -98,7 +98,7 @@ public interface RiddingService {
 	 * @param sinaIdList
 	 * @return
 	 */
-	public boolean insertRiddingUsers(List<Profile> profileList, long riddingId, int sourceType);
+	public boolean insertRiddingUsers(List<Profile> profileList, long riddingId, int sourceType,long userId);
 
 	/**
 	 * 删除骑行用户

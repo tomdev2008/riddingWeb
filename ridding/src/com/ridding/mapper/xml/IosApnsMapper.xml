@@ -8,6 +8,7 @@
 		<result property="createTime" column="createTime" />
 		<result property="lastUpdateTime" column="lastUpdateTime" />
 		<result property="status" column="status" />
+		<result property="version" column="version" />
 	</resultMap>
 
 	<insert id="addApnsDevice" parameterType="Apns">
@@ -16,13 +17,15 @@
 		token,
 		createTime,
 		lastUpdateTime,
-		status
+		status,
+		version
 		)VALUES(
 		#{userId},
 		#{token},
 		#{createTime},
 		#{lastUpdateTime},
-		#{status}
+		#{status},
+		#{version}
 		)
 	</insert>
 	
@@ -32,6 +35,7 @@
 		createTime = #{createTime},
 		lastUpdateTime = #{lastUpdateTime},
 		createTime = #{createTime},
+		version = #{version},
 		where userId = #{userId};
 	</update>
 	

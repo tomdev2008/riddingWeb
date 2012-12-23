@@ -11,4 +11,13 @@ public interface IOSApnsService {
 	public boolean addIosApns(ApnsDevice apnsDevice);
 
 	public void sendApns(String text);
+
+	/**
+	 * 发送用户评论
+	 * 
+	 * @param userId
+	 * @param message
+	 */
+	public void sendUserApns(long userId, String message);
+
 }
