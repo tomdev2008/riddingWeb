@@ -104,6 +104,10 @@ public class Ridding implements Serializable {
 	 * 骑行图片列表
 	 */
 	private List<RiddingPicture> riddingPictureList;
+	/**
+	 * 队长的profile
+	 */
+	private Profile leaderProfile;
 
 	/**
 	 *骑行状态
@@ -321,6 +325,14 @@ public class Ridding implements Serializable {
 
 	public void setRiddingPictureList(List<RiddingPicture> riddingPictureList) {
 		this.riddingPictureList = riddingPictureList;
+	}
+
+	public Profile getLeaderProfile() {
+		return leaderProfile;
+	}
+
+	public void setLeaderProfile(Profile leaderProfile) {
+		this.leaderProfile = leaderProfile;
 	}
 
 }

@@ -173,7 +173,6 @@ public class HttpJsonUtil {
 		JSONArray jsonArray = new JSONArray();
 		for (RiddingPicture riddingPicture : riddingPictures) {
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("filename", riddingPicture.getLocalName());
 			jsonObject.put("photourl", SystemConst.getValue("IMAGEHOST") + riddingPicture.getPhotoUrl());
 			jsonObject.put("latitude", riddingPicture.getLatitude());
 			jsonObject.put("longtitude", riddingPicture.getLongtitude());

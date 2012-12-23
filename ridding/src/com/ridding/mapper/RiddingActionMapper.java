@@ -1,5 +1,8 @@
 package com.ridding.mapper;
 
+import java.util.List;
+import java.util.Map;
+
 import com.ridding.meta.RiddingAction;
 
 /**
@@ -14,4 +17,20 @@ public interface RiddingActionMapper {
 	 * @return
 	 */
 	public int addRiddingAction(RiddingAction riddingLike);
+
+	/**
+	 * 得到操作通过userid，riddingId
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public RiddingAction getRiddingActionByUserId(Map<String, Object> map);
+
+	/**
+	 * 得到用户的操作记录
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public List<RiddingAction> getRiddingActionsByUserId(Map<String, Object> map);
 }

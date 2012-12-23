@@ -1,9 +1,6 @@
 package com.ridding.service.impl;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
@@ -12,7 +9,6 @@ import java.util.concurrent.Executors;
 import javax.annotation.Resource;
 
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +23,6 @@ import com.ridding.service.PhotoService;
 import com.ridding.util.FileUtil;
 import com.ridding.util.NetImageDownloadUtil;
 import com.ridding.util.ThumbnailUtil;
-import com.ridding.web.controller.UploadController;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -191,5 +186,4 @@ public class ImageUploadServiceImpl implements ImageUploadService {
 		String distPathEnd = year + "/" + month + "/" + day;
 		return distPathEnd + "/" + date.getTime() + ".jpg";
 	}
-
 }

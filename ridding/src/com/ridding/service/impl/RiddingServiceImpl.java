@@ -38,6 +38,7 @@ import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
 import com.ridding.meta.Public.PublicType;
 import com.ridding.meta.Ridding.RiddingStatus;
+import com.ridding.meta.RiddingAction.RiddingActionResponse;
 import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.RiddingUser.RiddingUserRoleType;
 import com.ridding.meta.RiddingUser.SelfRiddingStatus;
@@ -653,16 +654,25 @@ public class RiddingServiceImpl implements RiddingService {
 	private void insertRiddingInfo(List<Ridding> riddingList) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Long> mapIds = new ArrayList<Long>(riddingList.size());
+		List<Long> leaderUserIds = new ArrayList<Long>(riddingList.size());
 		for (Ridding ridding : riddingList) {
 			mapIds.add(ridding.getMapId());
+			leaderUserIds.add(ridding.getLeaderUserId());
 		}
 		if (ListUtils.isEmptyList(mapIds)) {
 			return;
 		}
+		List<Profile> profileList = profileMapper.getProfileList(leaderUserIds);
+		Map<Long, Profile> profileMap = HashMapMaker.listToMap(profileList, "getUserId", Profile.class);
 		List<IMap> iMapList = mapMapper.getIMaplist(mapIds);
 		Map<Long, IMap> iMapMap = HashMapMaker.listToMap(iMapList, "getId", IMap.class);
 		if (!ListUtils.isEmptyList(riddingList)) {
 			for (Ridding ridding : riddingList) {
+				Profile profile = profileMap.get(ridding.getLeaderUserId());
+				if (profile != null) {
+					ridding.setLeaderProfile(profile);
+				}
+
 				map.put("riddingId", ridding.getId());
 				map.put("createTime", new Date().getTime());
 				map.put("limit", 1);
@@ -696,9 +706,20 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#incRiddingLike(long)
 	 */
 	@Override
-	public boolean incRiddingLike(long riddingId, long userId) {
+	public RiddingActionResponse incRiddingLike(long riddingId, long userId) {
+		if (this.checkIsInRiddingAction(riddingId, userId, RiddingActions.Like)) {
+			return RiddingActionResponse.DoubleDo;
+		}
+
+		if (this.checkIsInRidding(riddingId, userId)) {
+			return RiddingActionResponse.InRidding;
+		}
+
 		this.addRiddingAction(riddingId, userId, RiddingActions.Like.getValue());
-		return riddingMapper.incLikeCount(riddingId) > 0;
+		if (riddingMapper.incLikeCount(riddingId) > 0) {
+			return RiddingActionResponse.SUCC;
+		}
+		return RiddingActionResponse.Fail;
 	}
 
 	/*
@@ -707,9 +728,19 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#incRiddingUse(long, long)
 	 */
 	@Override
-	public boolean incRiddingUse(long riddingId, long userId) {
+	public RiddingActionResponse incRiddingUse(long riddingId, long userId) {
+		if (this.checkIsInRiddingAction(riddingId, userId, RiddingActions.Use)) {
+			return RiddingActionResponse.DoubleDo;
+		}
+
+		if (this.checkIsInRidding(riddingId, userId)) {
+			return RiddingActionResponse.InRidding;
+		}
 		this.addRiddingAction(riddingId, userId, RiddingActions.Use.getValue());
-		return riddingMapper.incUseCount(riddingId) > 0;
+		if (riddingMapper.incUseCount(riddingId) > 0) {
+			return RiddingActionResponse.SUCC;
+		}
+		return RiddingActionResponse.Fail;
 	}
 
 	/*
@@ -718,9 +749,71 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#incRiddingCare(long, long)
 	 */
 	@Override
-	public boolean incRiddingCare(long riddingId, long userId) {
+	public RiddingActionResponse incRiddingCare(long riddingId, long userId) {
+
+		if (this.checkIsInRiddingAction(riddingId, userId, RiddingActions.Care)) {
+			return RiddingActionResponse.DoubleDo;
+		}
+
+		if (this.checkIsInRidding(riddingId, userId)) {
+			return RiddingActionResponse.InRidding;
+		}
+
 		this.addRiddingAction(riddingId, userId, RiddingActions.Care.getValue());
-		return riddingMapper.incCareCount(riddingId) > 0;
+		if (riddingMapper.incCareCount(riddingId) > 0) {
+			return RiddingActionResponse.SUCC;
+		}
+		return RiddingActionResponse.Fail;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#checkIsInRiddingAction(long,
+	 * long, com.ridding.meta.RiddingAction.RiddingActions)
+	 */
+	public boolean checkIsInRiddingAction(long riddingId, long userId, RiddingActions action) {
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("riddingId", riddingId);
+		hashMap.put("userId", userId);
+		hashMap.put("type", action.getValue());
+		if (riddingActionMapper.getRiddingActionByUserId(hashMap) != null) {
+			return true;
+		}
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#checkIsInRidding(long, long)
+	 */
+	public boolean checkIsInRidding(long riddingId, long userId) {
+		List<RiddingUser> riddingUsers = this.getAllRiddingUsers(riddingId);
+		if (ListUtils.isEmptyList(riddingUsers)) {
+			return false;
+		}
+		for (RiddingUser riddingUser : riddingUsers) {
+			if (riddingUser.getUserId() == userId) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 得到所有队员
+	 * 
+	 * @param riddingId
+	 * @return
+	 */
+	private List<RiddingUser> getAllRiddingUsers(long riddingId) {
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("riddingId", riddingId);
+		hashMap.put("userRole", RiddingUserRoleType.User.intValue());
+		hashMap.put("createTime", new Date().getTime());
+		hashMap.put("limit", -1);
+		return riddingUserMapper.getRiddingUserListByRiddingId(hashMap);
 	}
 
 	/**
@@ -754,5 +847,35 @@ public class RiddingServiceImpl implements RiddingService {
 		map.put("createTime", new Date().getTime());
 		map.put("limit", 1);
 		return riddingPictureMapper.getRiddingPicturesByRiddingId(map);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getUserAction(long, long)
+	 */
+	@Override
+	public RiddingAction getUserAction(long userId, long riddingId) {
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("riddingId", riddingId);
+		hashMap.put("userId", userId);
+		List<RiddingAction> riddingactionList = riddingActionMapper.getRiddingActionsByUserId(hashMap);
+		RiddingAction riddingAction = new RiddingAction();
+		if (ListUtils.isEmptyList(riddingactionList)) {
+			riddingAction.setUserCared(false);
+			riddingAction.setUserLiked(false);
+			riddingAction.setUserUsed(false);
+			return riddingAction;
+		}
+		for (RiddingAction action : riddingactionList) {
+			if (RiddingActions.genRiddingAction(action.getType()) == RiddingActions.Care) {
+				riddingAction.setUserCared(true);
+			} else if (RiddingActions.genRiddingAction(action.getType()) == RiddingActions.Use) {
+				riddingAction.setUserUsed(true);
+			} else if (RiddingActions.genRiddingAction(action.getType()) == RiddingActions.Like) {
+				riddingAction.setUserLiked(true);
+			}
+		}
+		return riddingAction;
 	}
 }

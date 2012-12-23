@@ -29,4 +29,16 @@
 			LAST_INSERT_ID() AS VALUE
 		</selectKey>
 	</insert>
+	
+	<select id="getRiddingActionByUserId" resultMap="riddingActionMap">
+		SELECT * from
+		TB_Ridding_Action where
+		userId=#{userId} and riddingId=#{riddingId} and type=#{type}; 
+	</select>
+	
+	<select id="getRiddingActionsByUserId" resultMap="riddingActionMap">
+		SELECT * from
+		TB_Ridding_Action where
+		userId=#{userId} and riddingId=#{riddingId}; 
+	</select>
 </mapper>

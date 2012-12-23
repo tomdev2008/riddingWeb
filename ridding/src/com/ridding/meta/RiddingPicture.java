@@ -18,10 +18,6 @@ public class RiddingPicture {
 	 */
 	private String photoUrl;
 	/**
-	 * 本地的文件名称
-	 */
-	private String localName;
-	/**
 	 * 用户id
 	 */
 	private long userId;
@@ -165,15 +161,7 @@ public class RiddingPicture {
 	public void setPhotoUrl(String photoUrl) {
 		this.photoUrl = photoUrl;
 	}
-
-	public String getLocalName() {
-		return localName;
-	}
-
-	public void setLocalName(String localName) {
-		this.localName = localName;
-	}
-
+	
 	public String getDescription() {
 		return description;
 	}

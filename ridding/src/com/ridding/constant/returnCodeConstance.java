@@ -38,5 +38,13 @@ public class returnCodeConstance {
 	 * token失败
 	 */
 	public static final int TOKENEXPIRED = -444;
+	/**
+	 * 多次点击
+	 */
+	public static final int RiddingActionDouble = -310;
+	/**
+	 * 自己的骑行活动不能操作
+	 */
+	public static final int RiddingActionInMyRidding = -311;
 
 }

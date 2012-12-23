@@ -12,6 +12,7 @@ import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingAction;
 import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
@@ -74,7 +75,7 @@ public class HttpServletUtil2 {
 		JSONArray jsonArray = new JSONArray();
 		for (ActivityRidding activityRidding : activityRiddings) {
 			JSONObject riddingObject = new JSONObject();
-			if(activityRidding.getRidding()!=null){
+			if (activityRidding.getRidding() != null) {
 				riddingObject.put("riddingid", activityRidding.getRidding().getId());
 				riddingObject.put("riddingstatus", activityRidding.getRidding().getRiddingStatus());
 				riddingObject.put("riddingname", activityRidding.getRidding().getName());
@@ -86,11 +87,11 @@ public class HttpServletUtil2 {
 				riddingObject.put("usecount", activityRidding.getRidding().getUseCount());
 				riddingObject.put("likecount", activityRidding.getRidding().getLikeCount());
 			}
-			if(activityRidding.getRiddingUser()!=null){
+			if (activityRidding.getRiddingUser() != null) {
 				riddingObject.put("userrole", activityRidding.getRiddingUser().getUserRole());
 			}
-	
-			if(activityRidding.getiMap()!=null){
+
+			if (activityRidding.getiMap() != null) {
 				JSONObject mapObject = new JSONObject();
 				mapObject.put("distance", activityRidding.getiMap().getDistance());
 				mapObject.put("beginlocation", activityRidding.getiMap().getBeginLocation());
@@ -99,8 +100,6 @@ public class HttpServletUtil2 {
 
 				riddingObject.put("map", mapObject);
 			}
-			
-			
 
 			if (activityRidding.getLeaderProfile() != null) {
 				JSONObject userObject = new JSONObject();
@@ -200,7 +199,6 @@ public class HttpServletUtil2 {
 		JSONArray jsonArray = new JSONArray();
 		for (RiddingPicture riddingPicture : riddingPictures) {
 			JSONObject pictureObject = new JSONObject();
-			pictureObject.put("filename", riddingPicture.getLocalName());
 			pictureObject.put("photourl", SystemConst.getValue("IMAGEHOST") + riddingPicture.getPhotoUrl());
 			pictureObject.put("latitude", riddingPicture.getLatitude());
 			pictureObject.put("longtitude", riddingPicture.getLongtitude());
@@ -248,6 +246,8 @@ public class HttpServletUtil2 {
 
 			JSONObject leaderUserObject = new JSONObject();
 			leaderUserObject.put("userid", ridding.getLeaderUserId());
+			leaderUserObject.put("savatorurl", ridding.getLeaderProfile().getsAvatorUrl());
+			leaderUserObject.put("bavatorurl", ridding.getLeaderProfile().getbAvatorUrl());
 			riddingObject.put("user", leaderUserObject);
 
 			JSONObject mapObject = new JSONObject();
@@ -396,5 +396,32 @@ public class HttpServletUtil2 {
 			jsonArray.add(returnObject);
 		}
 		return jsonArray;
+	}
+
+	public static JSONObject parseRiddingAction(Ridding ridding, RiddingAction riddingAction) {
+		if (ridding == null) {
+			return new JSONObject();
+		}
+
+		JSONObject riddingObject = new JSONObject();
+		riddingObject.put("riddingid", ridding.getId());
+		riddingObject.put("riddingname", ridding.getName());
+		riddingObject.put("riddingstatus", ridding.getRiddingStatus());
+		riddingObject.put("createtime", ridding.getCreateTime());
+		riddingObject.put("createtimestr", TimeUtil.getFormatTime(ridding.getCreateTime()));
+		riddingObject.put("lastupdatetime", ridding.getLastUpdateTime());
+		riddingObject.put("lastupdatetimestr", TimeUtil.getFormatTime(ridding.getLastUpdateTime()));
+		riddingObject.put("usercount", ridding.getUserCount());
+		riddingObject.put("carecount", ridding.getCareCount());
+		riddingObject.put("commentcount", ridding.getCommentCount());
+		riddingObject.put("usecount", ridding.getUseCount());
+		riddingObject.put("likecount", ridding.getLikeCount());
+
+		riddingObject.put("nowuserliked", riddingAction.isUserLiked());
+		riddingObject.put("nowusercared", riddingAction.isUserCared());
+		riddingObject.put("nowuserused", riddingAction.isUserUsed());
+		JSONObject returnObject = new JSONObject();
+		HttpServletUtil2.returnDataObject(riddingObject, "ridding", returnObject);
+		return returnObject;
 	}
 }

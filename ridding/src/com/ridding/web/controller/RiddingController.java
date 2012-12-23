@@ -29,10 +29,12 @@ import com.ridding.meta.IMap;
 import com.ridding.meta.Photo;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingAction;
 import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
+import com.ridding.meta.RiddingAction.RiddingActionResponse;
 import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ProfileSourceFeed;
 import com.ridding.security.MyUser;
@@ -118,12 +120,14 @@ public class RiddingController extends AbstractBaseController {
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 
 	/**
 	 * 插入骑行编译前地址
 	 * 
+	 * @deprecated 老版本功能
 	 * @param request
 	 * @param response
 	 * @return
@@ -157,6 +161,7 @@ public class RiddingController extends AbstractBaseController {
 		}
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -174,32 +179,56 @@ public class RiddingController extends AbstractBaseController {
 		int type = ServletRequestUtils.getIntParameter(request, "type", -1);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
-		boolean success = false;
+		RiddingActionResponse actionResponse = RiddingActionResponse.Fail;
 		switch (RiddingActions.genRiddingAction(type)) {
 		case Like:
-			success = riddingService.incRiddingLike(riddingId, userId);
+			actionResponse = riddingService.incRiddingLike(riddingId, userId);
 			break;
 		case Care:
-			success = riddingService.incRiddingCare(riddingId, userId);
+			actionResponse = riddingService.incRiddingCare(riddingId, userId);
 			break;
 		case Finished:
-			success = riddingService.endRiddingByLeader(riddingId, userId);
+			boolean succ = riddingService.endRiddingByLeader(riddingId, userId);
+			if (succ) {
+				actionResponse = RiddingActionResponse.SUCC;
+			}
 			break;
 		case Use:
-			success = dwrRiddingShareBean.useOthersRidding(riddingId, userId);
-			if (success) {
-				riddingService.incRiddingUse(riddingId, userId);
+			actionResponse = riddingService.incRiddingUse(riddingId, userId);
+			if (actionResponse == RiddingActionResponse.SUCC) {
+				succ = dwrRiddingShareBean.useOthersRidding(riddingId, userId);
+				if (!succ) {
+					actionResponse = RiddingActionResponse.Fail;
+				}
 			}
 			break;
 		default:
 			break;
 		}
-		if (!success) {
-			returnObject.put("code", returnCodeConstance.FAILED);
+
+		switch (actionResponse) {
+		case DoubleDo:
+			returnObject.put("code", returnCodeConstance.RiddingActionDouble);
+			mv.addObject("returnObject", returnObject.toString());
 			return mv;
+		case InRidding:
+			returnObject.put("code", returnCodeConstance.RiddingActionInMyRidding);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		case Fail:
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		default:
+			break;
 		}
+		Ridding ridding = riddingService.getRidding(riddingId);
+		RiddingAction riddingAction = riddingService.getUserAction(userId, riddingId);
+		JSONObject dataObject = HttpServletUtil2.parseRiddingAction(ridding, riddingAction);
+		returnObject.put("data", dataObject);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -235,6 +264,7 @@ public class RiddingController extends AbstractBaseController {
 		riddingService.insertRiddingUsers(profileList, ridingId, sourceType);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -269,6 +299,7 @@ public class RiddingController extends AbstractBaseController {
 		riddingService.deleteRiddingUsers(deleteList, ridingId);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -298,6 +329,7 @@ public class RiddingController extends AbstractBaseController {
 			returnObject.put("code", returnCodeConstance.FAILED);
 		}
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -330,6 +362,7 @@ public class RiddingController extends AbstractBaseController {
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -359,6 +392,7 @@ public class RiddingController extends AbstractBaseController {
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -381,6 +415,7 @@ public class RiddingController extends AbstractBaseController {
 		}
 		String cityName = ServletRequestUtils.getStringParameter(request, "cityname", null);
 		List<IMap> recomMaps = mapService.getRecomMaps(cityName);
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -410,6 +445,7 @@ public class RiddingController extends AbstractBaseController {
 			returnObject.put("code", returnCodeConstance.FAILED);
 		}
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -441,6 +477,7 @@ public class RiddingController extends AbstractBaseController {
 			returnObject.put("code", returnCodeConstance.FAILED);
 			mv.addObject("returnObject", returnObject.toString());
 		}
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -500,6 +537,7 @@ public class RiddingController extends AbstractBaseController {
 		returnObject.put("code", 200);
 		returnObject.put("code1", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -538,6 +576,33 @@ public class RiddingController extends AbstractBaseController {
 		returnObject.put("data", dataObject);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
+		return mv;
+	}
+	
+	
+	/**
+	 * 得到某人骑行操作记录
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView getRiddingActions(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		JSONObject returnObject = new JSONObject();
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		long riddingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		logger.info(jsonString);
+		ModelAndView mv = new ModelAndView("return");
+		Ridding ridding = riddingService.getRidding(riddingId);
+		RiddingAction riddingAction = riddingService.getUserAction(userId, riddingId);
+		JSONObject dataObject = HttpServletUtil2.parseRiddingAction(ridding, riddingAction);
+		returnObject.put("data", dataObject);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 }

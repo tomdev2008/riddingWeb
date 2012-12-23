@@ -11,6 +11,18 @@ public class RiddingAction {
 	private long riddingId;
 	private int type;
 	/**
+	 * 用户喜欢了
+	 */
+	private boolean userLiked;
+	/**
+	 * 用户关注了
+	 */
+	private boolean userCared;
+	/**
+	 * 用户使用了
+	 */
+	private boolean userUsed;
+	/**
 	 * 创建时间
 	 */
 	private long createTime;
@@ -116,4 +128,79 @@ public class RiddingAction {
 			return null;
 		}
 	}
+
+	/**
+	 *骑行操作返回
+	 * 
+	 * @author apple
+	 * 
+	 */
+	public enum RiddingActionResponse {
+		/**
+		 * 重复了(0)
+		 */
+		DoubleDo {
+			public int getValue() {
+				return 0;
+			}
+		},
+		/**
+		 * 自己的(1)
+		 */
+		InRidding {
+			public int getValue() {
+				return 1;
+			}
+		},
+		/**
+		 * 成功(2)
+		 */
+		SUCC {
+			public int getValue() {
+				return 2;
+			}
+		},
+		/**
+		 * 失败(3)
+		 */
+		Fail {
+			public int getValue() {
+				return 3;
+			}
+		};
+		public abstract int getValue();
+
+		public static RiddingActionResponse genRiddingActionResponse(int t) {
+			for (RiddingActionResponse response : RiddingActionResponse.values()) {
+				if (response.getValue() == t)
+					return response;
+			}
+			return null;
+		}
+	}
+
+	public boolean isUserLiked() {
+		return userLiked;
+	}
+
+	public void setUserLiked(boolean userLiked) {
+		this.userLiked = userLiked;
+	}
+
+	public boolean isUserCared() {
+		return userCared;
+	}
+
+	public void setUserCared(boolean userCared) {
+		this.userCared = userCared;
+	}
+
+	public boolean isUserUsed() {
+		return userUsed;
+	}
+
+	public void setUserUsed(boolean userUsed) {
+		this.userUsed = userUsed;
+	}
+
 }

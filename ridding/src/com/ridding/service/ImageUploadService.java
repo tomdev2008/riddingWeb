@@ -20,6 +20,7 @@ public interface ImageUploadService {
 	 */
 	public boolean imageCompressToFile(File file, Compress compress, String destPath);
 
+
 	/**
 	 * 保存图片
 	 * 

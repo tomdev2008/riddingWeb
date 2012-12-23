@@ -28,6 +28,7 @@ import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingAction;
 import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.SourceAccount;
@@ -107,7 +108,6 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		if (sourceAccount != null) {
 			returnObject.put("sourceid", sourceAccount.getAccessUserId());
-			returnObject.put("accesstoken", sourceAccount.getAccessToken());
 			returnObject.put("accessToken", sourceAccount.getAccessToken());
 		}
 		int count = riddingService.getRiddingCount(userId);
@@ -115,6 +115,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		JSONObject dataObject = HttpServletUtil2.parseGetUserProfile(profile, sourceAccount, count);
 		returnObject.put("data", dataObject);
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -148,6 +149,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("data", jsonArray.toString());
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -172,6 +174,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("data", dataObject.toString());
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -193,6 +196,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		JSONObject dataObject = HttpServletUtil2.parseGetFixedCoordinate(mapFix, latitude, longtitude);
 		returnObject.put("data", dataObject.toString());
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -232,6 +236,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		JSONArray dataArray = HttpServletUtil2.parseGetRiddingUserList(profileVOs);
 		returnObject.put("data", dataArray);
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -284,6 +289,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -315,11 +321,12 @@ public class RiddingPublicController extends AbstractBaseController {
 			riddingList = riddingService.getRiddingListByLastUpdateTime(ridding.getLastUpdateTime(), ridding.getLimit(), ridding.isLarger(),
 					ridding.isRecom);
 		}
-		HttpJsonUtil.setRiddingByLastUpdateTime(returnObject, riddingList);
+		// HttpJsonUtil.setRiddingByLastUpdateTime(returnObject, riddingList);
 		JSONArray dataArray = HttpServletUtil2.parseGetGoingRiddings(riddingList);
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
 
@@ -350,6 +357,9 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
 		return mv;
 	}
+
+
 }

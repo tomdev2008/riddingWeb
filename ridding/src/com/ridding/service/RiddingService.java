@@ -5,8 +5,11 @@ import java.util.List;
 import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingAction;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
+import com.ridding.meta.RiddingAction.RiddingActionResponse;
+import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 
@@ -183,7 +186,7 @@ public interface RiddingService {
 	 * @param riddingId
 	 * @return
 	 */
-	public boolean incRiddingLike(long riddingId, long userId);
+	public RiddingActionResponse incRiddingLike(long riddingId, long userId);
 
 	/**
 	 * 增加收藏
@@ -192,7 +195,7 @@ public interface RiddingService {
 	 * @param userId
 	 * @return
 	 */
-	public boolean incRiddingUse(long riddingId, long userId);
+	public RiddingActionResponse incRiddingUse(long riddingId, long userId);
 
 	/**
 	 * 增加关注
@@ -201,7 +204,26 @@ public interface RiddingService {
 	 * @param userId
 	 * @return
 	 */
-	public boolean incRiddingCare(long riddingId, long userId);
+	public RiddingActionResponse incRiddingCare(long riddingId, long userId);
+
+	/**
+	 * 检查是否已经操作过
+	 * 
+	 * @param riddingId
+	 * @param userId
+	 * @param action
+	 * @return
+	 */
+	public boolean checkIsInRiddingAction(long riddingId, long userId, RiddingActions action);
+
+	/**
+	 * 检查用户是否在骑行活动中
+	 * 
+	 * @param riddingId
+	 * @param userId
+	 * @return
+	 */
+	public boolean checkIsInRidding(long riddingId, long userId);
 
 	/**
 	 * 得到骑行图片列表
@@ -211,4 +233,13 @@ public interface RiddingService {
 	 * @return
 	 */
 	public List<RiddingPicture> getRiddingPictureList(long riddingId, long userId, int limit, long createTime);
+
+	/**
+	 * 得到用户操作记录,判断用户是否喜欢过，使用过，关注过
+	 * 
+	 * @param userId
+	 * @param riddingId
+	 * @return
+	 */
+	public RiddingAction getUserAction(long userId, long riddingId);
 }

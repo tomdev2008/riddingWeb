@@ -6,7 +6,6 @@
 		<id property="id" column="id" />
 		<result property="riddingId" column="riddingId" />
 		<result property="photoUrl" column="photoUrl" />
-		<result property="localName" column="localName" />
 		<result property="userId" column="userId" />
 		<result property="createTime" column="createTime" />
 		<result property="lastUpdateTime" column="lastUpdateTime" />
@@ -24,7 +23,6 @@
 		INSERT INTO TB_Ridding_Picture(
 		riddingId,
 		photoUrl,
-		localName,
 		userId,
 		createTime,
 		lastUpdateTime,
@@ -39,7 +37,6 @@
 		)VALUES(
 		#{riddingId},
 		#{photoUrl},
-		#{localName},
 		#{userId},
 		#{createTime},
 		#{lastUpdateTime},
@@ -62,7 +59,11 @@
 		parameterType="hashMap">
 		SELECT * from TB_Ridding_Picture where
 		riddingId=#{riddingId}  and #{createTime} > createTime  order by
-		createTime desc  limit #{limit};
+		createTime desc  
+		<if test="limit>0">
+			limit #{limit}
+		</if>
+		;
 	</select>
 
 </mapper>
