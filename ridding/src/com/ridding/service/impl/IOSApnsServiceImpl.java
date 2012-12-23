@@ -26,8 +26,8 @@ import com.ridding.util.ListUtils;
 public class IOSApnsServiceImpl implements IOSApnsService {
 
 	private static final String PASSWORD = "13823381398";
-	// developerApns.p12 aps_product_identity.p12
-	private static final String FILENAME = "developerApns.p12";
+	// developerApns.p12 
+	private static final String FILENAME = "aps_product_identity.p12";
 
 	private static final int THREAD = 10;
 
@@ -86,7 +86,7 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 			File resourceFile = ResourceUtils.getFile("classpath:" + FILENAME);
 			payload.addCustomDictionary(messageName, message);
 			// true表示在production环境
-			Push.alert(message, (Object) resourceFile, PASSWORD, false, device);
+			Push.alert(message, (Object) resourceFile, PASSWORD, true, device);
 			logger.info("success send apsn where userid=" + device.getUserId());
 		} catch (JSONException e1) {
 			e1.printStackTrace();
