@@ -12,16 +12,11 @@ body{font-size:83%;}
 
 <h3 style="font-size: 20px;color: red;"><a href="/backend/index/">返回</a></h3>
 
-
 <h3 style="font-size: 20px;color: red;">发微博功能</h3>
 <div>
 <span>总数为:</span>
 </div>
-<table border="1">
-<thead>
-<tr><td>id</td><td>内容</td><td>图片</td><td>发送源</td><td>发送时间</td><td>状态</td><td>操作</td></tr>
-</thead>
-</table>
+
 <div style="height:300px;">
     <h3>新建一条记录</h3> 
     <div>
@@ -71,7 +66,11 @@ body{font-size:83%;}
 
 
 
-
+<table border="1">
+<thead>
+<tr><td>id</td><td>内容</td><td>图片</td><td>发送源</td><td>发送时间</td><td>状态</td><td>操作</td></tr>
+</thead>
+<tbody>
 <#if weiboList?exists>
 <#list weiboList as weibo>
 <tr id="${weibo.id!0}">
@@ -81,6 +80,7 @@ body{font-size:83%;}
 <td><#if weibo.sourceType==1>新浪微博</#if></td>
 <td width="300">${weibo.sendTimeStr!""}</td>
 <td ><span style="color:red"><#if weibo.status==0>未发布<#else>已发布</#if></span></td>
+</tr>
 </#list>
 </#if>
 </tbody>
