@@ -178,4 +178,9 @@ public class RiddingWebPubController extends AbstractBaseController {
 		}
 		return mv;
 	}
+
+	public ModelAndView appdownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ModelAndView mvAndView = new ModelAndView("appDownload");
+		return mvAndView;
+	}
 }

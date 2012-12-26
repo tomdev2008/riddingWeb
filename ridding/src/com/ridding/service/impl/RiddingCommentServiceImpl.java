@@ -48,6 +48,7 @@ public class RiddingCommentServiceImpl implements RiddingCommentService {
 		if (riddingComment == null) {
 			return false;
 		}
+		riddingService.incRiddingComment(riddingComment.getRiddingId());
 		this.sendMessage(riddingComment);
 		return riddingCommentMapper.addRiddingComment(riddingComment) > 0;
 	}

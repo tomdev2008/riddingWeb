@@ -105,4 +105,12 @@ public interface RiddingMapper {
 	 * @return
 	 */
 	public int incUseCount(long riddingId);
+
+	/**
+	 * 评论数
+	 * 
+	 * @param riddingId
+	 * @return
+	 */
+	public int incCommentCount(long riddingId);
 }

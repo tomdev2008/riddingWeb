@@ -131,4 +131,10 @@
 		where id
 		= #{riddingId} ;
 	</update>
+	<update id="incCommentCount" parameterType="long" flushCache="true"
+		statementType="PREPARED">
+		update TB_Ridding set commentCount = commentCount + 1
+		where id
+		= #{riddingId} ;
+	</update>
 </mapper>

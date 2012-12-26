@@ -397,7 +397,7 @@ public class RiddingServiceImpl implements RiddingService {
 		int succCount = 0;
 		for (Profile profile : profileList) {
 			try {
-				if (transactionService.insertRiddingUser(ridding, profile, sourceType,leaderProfile)) {
+				if (transactionService.insertRiddingUser(ridding, profile, sourceType, leaderProfile)) {
 					succCount++;
 				}
 			} catch (Exception e) {
@@ -882,5 +882,15 @@ public class RiddingServiceImpl implements RiddingService {
 			}
 		}
 		return riddingAction;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#incRiddingComment(long)
+	 */
+	@Override
+	public boolean incRiddingComment(long riddingId) {
+		return riddingMapper.incCommentCount(riddingId) > 0;
 	}
 }
