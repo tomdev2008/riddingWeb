@@ -19,7 +19,7 @@ body{font-size:83%;}
                  <a href="/user/${hostUserId!0}/ridding/list/" title="${hostNickname!""}"><span style="font-size: 18px; font-weight: bold; color: rgb(102, 102, 102);">${hostNickname!""}</span></a>
             </div>
             <div style="position: relative; left: 60px; top: -50px;_top: -35px;*top: -35px; color: #999999;padding:0;margin:0;">
-                <span>参与了${riddingCount!0}个骑行活动   总骑行距离${totalDistance!0}KM</span> <#if visitLevel==1><a href="/backend/index/">后台</a></#if>
+                <span>参与了${riddingCount!0}个骑行活动   总骑行距离${totalDistance!0}KM</span> <#if visitLevel?exists><#if visitLevel==1><a href="/backend/index/">后台</a></#if></#if>
             </div>
         </div>
     </div>
