@@ -131,4 +131,8 @@
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 		<property name="mapperInterface" value="com.ridding.mapper.RiddingCommentMapper" />
 	</bean>
+	<bean id="userRelationMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.UserRelationMapper" />
+	</bean>
 </beans>

@@ -80,9 +80,19 @@ public interface ProfileService {
 
 	/**
 	 * 得到SourceAccount
+	 * 
 	 * @param userId
 	 * @param sourceType
 	 * @return
 	 */
 	public SourceAccount getSourceAccountByUserIdsSourceType(Long userId, int sourceType);
+
+	/**
+	 * 更新背景url
+	 * 
+	 * @param url
+	 * @param userId
+	 * @return
+	 */
+	public boolean updateBackgroundUrl(String url, long userId);
 }

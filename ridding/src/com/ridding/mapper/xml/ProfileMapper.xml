@@ -12,6 +12,7 @@
 		<result property="createTime" column="createTime" />
 		<result property="lastUpdateTime" column="lastUpdateTime" />
 		<result property="level" column="level" />
+		<result property="backgroundUrl" column="backgroundUrl" />
 	</resultMap>
 	<insert id="addProfile" parameterType="Profile" >
 		INSERT INTO TB_Profile(
@@ -22,7 +23,8 @@
 		lastUpdateTime,
 		sAvatorUrl,
 		bAvatorUrl,
-		level
+		level,
+		backgroundUrl
 		)VALUES(
 		#{userName},
 		#{nickName},
@@ -31,7 +33,8 @@
 		#{lastUpdateTime},
 		#{sAvatorUrl},
 		#{bAvatorUrl},
-		#{level}
+		#{level},
+		#{backgroundUrl}
 		)
 		<selectKey keyProperty="userId" resultType="long">
 			SELECT
@@ -52,7 +55,8 @@
 		nickName = #{nickName},
 		lastUpdateTime = #{lastUpdateTime},
 		sAvatorUrl = #{sAvatorUrl},
-		bAvatorUrl = #{bAvatorUrl}
+		bAvatorUrl = #{bAvatorUrl},
+		backgroundUrl = #{backgroundUrl},
 		where userId = #{userId};
 	</update>
 	
@@ -70,4 +74,11 @@
 			 #{item} 
 	</foreach>;
 	</select>
+	
+	<update id="updateBackgroundUrl" parameterType="Profile" flushCache="true"
+		statementType="PREPARED">
+		update TB_Profile set
+		backgroundUrl = #{backgroundUrl} 
+		where userId = #{userId};
+	</update>
 </mapper>

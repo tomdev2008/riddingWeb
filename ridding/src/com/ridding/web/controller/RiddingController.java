@@ -34,6 +34,7 @@ import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
+import com.ridding.meta.UserRelation;
 import com.ridding.meta.RiddingAction.RiddingActionResponse;
 import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ProfileSourceFeed;
@@ -45,6 +46,7 @@ import com.ridding.service.PhotoService;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
+import com.ridding.service.UserRelationService;
 import com.ridding.service.transaction.TransactionService;
 import com.ridding.util.http.HttpJsonUtil;
 import com.ridding.util.http.HttpServletUtil;
@@ -79,6 +81,9 @@ public class RiddingController extends AbstractBaseController {
 	private DwrRiddingShareBean dwrRiddingShareBean;
 	@Resource
 	private RiddingCommentService riddingCommentService;
+
+	@Resource
+	private UserRelationService userRelationService;
 
 	/**
 	 * 得到骑行用户信息，返回骑行数据
@@ -480,13 +485,15 @@ public class RiddingController extends AbstractBaseController {
 		if (riddingService.addRiddingPicture(riddingPicture) <= 0) {
 			returnObject.put("code", returnCodeConstance.FAILED);
 			mv.addObject("returnObject", returnObject.toString());
+			return mv;
 		}
-		logger.info(returnObject);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}
 
 	/**
-	 * 插入骑行编译前地址
+	 * 新建骑行活动
 	 * 
 	 * @param request
 	 * @param response
@@ -609,4 +616,73 @@ public class RiddingController extends AbstractBaseController {
 		return mv;
 	}
 
+	/**
+	 * 更新用户的背景
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView updateUserBackground(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		JSONObject returnObject = new JSONObject();
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		ModelAndView mv = new ModelAndView("return");
+		Profile profile = null;
+		try {
+			profile = HttpServletUtil.parseUpdateBackground(jsonString);
+		} catch (Exception e) {
+			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
+			e.printStackTrace();
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		boolean succ = profileService.updateBackgroundUrl(profile.getBackgroundUrl(), userId);
+		if (!succ) {
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		profile = profileService.getProfile(userId);
+		JSONObject dataObject = HttpServletUtil2.parseGetUserProfile(profile, null, -1);
+		returnObject.put("data", dataObject);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
+		return mv;
+	}
+
+	/**
+	 * 添加或者删除用户关系
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView removeOrAddUserRelation(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		JSONObject returnObject = new JSONObject();
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		ModelAndView mv = new ModelAndView("return");
+		UserRelation userRelation = null;
+		try {
+			userRelation = HttpServletUtil.parseRemoveOrAddUserRelation(jsonString);
+		} catch (Exception e) {
+			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
+			e.printStackTrace();
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		boolean succ = userRelationService.updateUserRelation(userRelation);
+		if (!succ) {
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
+		return mv;
+	}
 }

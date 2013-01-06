@@ -17,6 +17,7 @@ import weibo4j.Users;
 import weibo4j.model.User;
 import weibo4j.model.WeiboException;
 
+import com.ridding.mapper.CityMapper;
 import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.PhotoMapper;
 import com.ridding.mapper.ProfileMapper;
@@ -24,6 +25,7 @@ import com.ridding.mapper.RepostMapWeiBoMapper;
 import com.ridding.mapper.RiddingMapper;
 import com.ridding.mapper.RiddingUserMapper;
 import com.ridding.mapper.SourceAccountMapper;
+import com.ridding.meta.City;
 import com.ridding.meta.IMap;
 import com.ridding.meta.Profile;
 import com.ridding.meta.RepostMap;
@@ -62,6 +64,8 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Resource
 	private PhotoMapper photoMapper;
+	@Resource
+	private CityMapper cityMapper;
 
 	@Resource
 	private RepostMapWeiBoMapper repostMapWeiBoMapper;
@@ -110,6 +114,12 @@ public class TransactionServiceImpl implements TransactionService {
 	 * com.ridding.meta.IMap)
 	 */
 	public boolean insertANewRidding(IMap iMap, Ridding ridding) {
+		List<City> cityList = cityMapper.getCitybyName(iMap.getCityName());
+		if (!ListUtils.isEmptyList(cityList)) {
+			City city = cityList.get(0);
+			iMap.setCityId(city.getId());
+		}
+
 		if (iMap.getId() == 0) {
 			if (iMapMapper.addRiddingMap(iMap) < 0) {
 				throw new TransactionException("insertANewRidding iMapMapper addRiddingMap error");
@@ -163,8 +173,8 @@ public class TransactionServiceImpl implements TransactionService {
 			sourceAccount.setSourceType(objectType);
 			sourceAccount.setCreateTime(new Date().getTime());
 			this.insertSourceAccount(sourceAccount, profile);
-		}else{
-			if(leaderProfile!=null){
+		} else {
+			if (leaderProfile != null) {
 				String message = leaderProfile.getUserName() + "把你加入了骑行活动:" + ridding.getName() + ",快去看看吧";
 				iosApnsService.sendUserApns(sourceAccount.getUserId(), message);
 			}
@@ -196,7 +206,6 @@ public class TransactionServiceImpl implements TransactionService {
 		hashMap.put("id", ridding.getId());
 		hashMap.put("count", 1);
 
-		
 		if (riddingMapper.increaseUserCount(hashMap) < 0) {
 			throw new TransactionException("insertRiddingUser increaseUserCount error ");
 		}

@@ -24,7 +24,6 @@ import weibo4j.Weibo;
 import com.ridding.constant.SystemConst;
 import com.ridding.constant.returnCodeConstance;
 import com.ridding.mapper.MapFixMapper;
-import com.ridding.meta.ApnsDevice;
 import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
 import com.ridding.meta.Profile;
@@ -34,10 +33,12 @@ import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.SourceAccount;
 import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
+import com.ridding.meta.vo.UserRelationVO;
 import com.ridding.service.MapService;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
+import com.ridding.service.UserRelationService;
 import com.ridding.util.HashMapMaker;
 import com.ridding.util.ListUtils;
 import com.ridding.util.http.HttpJsonUtil;
@@ -65,6 +66,9 @@ public class RiddingPublicController extends AbstractBaseController {
 
 	@Resource
 	private RiddingCommentService riddingCommentService;
+
+	@Resource
+	private UserRelationService userRelationService;
 
 	/**
 	 * 得到用户信息
@@ -352,8 +356,8 @@ public class RiddingPublicController extends AbstractBaseController {
 			e.printStackTrace();
 			return mv;
 		}
-		List<RiddingComment> riddingComments = riddingCommentService.getRiddingComments(riddingId,riddingComment.getLastCreateTime(),
-				riddingComment.getLimit(), riddingComment.isLarger());
+		List<RiddingComment> riddingComments = riddingCommentService.getRiddingComments(riddingId, riddingComment.getLastCreateTime(), riddingComment
+				.getLimit(), riddingComment.isLarger());
 		JSONArray dataArray = HttpServletUtil2.parseRiddingComment(riddingComments);
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
@@ -362,6 +366,27 @@ public class RiddingPublicController extends AbstractBaseController {
 		return mv;
 	}
 
+	/**
+	 * 得到某个用户的关注关系
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView getUserRelations(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		JSONObject returnObject = new JSONObject();
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		ModelAndView mv = new ModelAndView("return");
+		List<UserRelationVO> list = userRelationService.getUserRelations(userId);
+		JSONArray dataArray = HttpServletUtil2.parseUserRelationVOs(list);
+		returnObject.put("data", dataArray);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
+		return mv;
+	}
+	
 	
 
 }

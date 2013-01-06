@@ -169,4 +169,18 @@ public class ProfileServiceImpl implements ProfileService {
 		return sourceAccounts.get(0);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ridding.service.ProfileService#updateBackgroundUrl(java.lang.String,
+	 * long)
+	 */
+	@Override
+	public boolean updateBackgroundUrl(String url, long userId) {
+		Profile profile = new Profile();
+		profile.setUserId(userId);
+		profile.setBackgroundUrl(url);
+		return profileMapper.updateBackgroundUrl(profile) > 0;
+	}
 }

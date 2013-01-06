@@ -2,10 +2,10 @@ package com.ridding.util.http;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.ridding.constant.SystemConst;
 import com.ridding.meta.IMap;
@@ -17,9 +17,9 @@ import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
-import com.ridding.meta.Ridding.RiddingStatus;
 import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
+import com.ridding.meta.vo.UserRelationVO;
 import com.ridding.util.ListUtils;
 import com.ridding.util.ObjectUtil;
 import com.ridding.util.TimeUtil;
@@ -45,7 +45,7 @@ public class HttpServletUtil2 {
 	 * @param sourceAccount
 	 */
 	public static JSONObject parseGetUserProfile(Profile profile, SourceAccount sourceAccount, int riddingCount) {
-		if (profile == null || sourceAccount == null || riddingCount < 0) {
+		if (profile == null) {
 			return new JSONObject();
 		}
 		JSONObject userObject = new JSONObject();
@@ -55,9 +55,14 @@ public class HttpServletUtil2 {
 		userObject.put("bavatorurl", profile.getbAvatorUrl());
 		userObject.put("savatorurl", profile.getsAvatorUrl());
 		userObject.put("totaldistance", profile.getTotalDistance());
-		userObject.put("sourceid", sourceAccount.getAccessUserId());
-		userObject.put("accesstoken", sourceAccount.getAccessToken());
-		userObject.put("riddingcount", riddingCount);
+		userObject.put("backgroundurl", SystemConst.returnPhotoUrl(profile.getBackgroundUrl()));
+		if (sourceAccount != null) {
+			userObject.put("sourceid", sourceAccount.getAccessUserId());
+			userObject.put("accesstoken", sourceAccount.getAccessToken());
+		}
+		if (riddingCount >= 0) {
+			userObject.put("riddingcount", riddingCount);
+		}
 		JSONObject returnObject = new JSONObject();
 		HttpServletUtil2.returnDataObject(userObject, "user", returnObject);
 		return returnObject;
@@ -372,7 +377,6 @@ public class HttpServletUtil2 {
 			if (riddingComment.getUserProfile() != null) {
 				JSONObject userObject = new JSONObject();
 				userObject.put("userid", riddingComment.getUserProfile().getUserId());
-				userObject.put("savatorurl", riddingComment.getUserProfile().getsAvatorUrl());
 				userObject.put("username", riddingComment.getUserProfile().getUserName());
 				userObject.put("nickname", riddingComment.getUserProfile().getNickName());
 				userObject.put("bavatorurl", riddingComment.getUserProfile().getbAvatorUrl());
@@ -383,7 +387,6 @@ public class HttpServletUtil2 {
 			if (riddingComment.getToUserProfile() != null) {
 				JSONObject touserObject = new JSONObject();
 				touserObject.put("userid", riddingComment.getToUserProfile().getUserId());
-				touserObject.put("savatorurl", riddingComment.getToUserProfile().getsAvatorUrl());
 				touserObject.put("username", riddingComment.getToUserProfile().getUserName());
 				touserObject.put("nickname", riddingComment.getToUserProfile().getNickName());
 				touserObject.put("bavatorurl", riddingComment.getToUserProfile().getbAvatorUrl());
@@ -423,5 +426,47 @@ public class HttpServletUtil2 {
 		JSONObject returnObject = new JSONObject();
 		HttpServletUtil2.returnDataObject(riddingObject, "ridding", returnObject);
 		return returnObject;
+	}
+
+	/**
+	 * 得到userRelations
+	 * 
+	 * @param userRelationVOs
+	 * @return
+	 */
+	public static JSONArray parseUserRelationVOs(List<UserRelationVO> userRelationVOs) {
+		if (ObjectUtil.isEmptyList(userRelationVOs)) {
+			return new JSONArray();
+		}
+		JSONArray jsonArray = new JSONArray();
+		for (UserRelationVO userRelationVO : userRelationVOs) {
+			JSONObject relationObject = new JSONObject();
+			relationObject.put("createtime", userRelationVO.getCreateTime());
+			relationObject.put("status", userRelationVO.getStatus());
+			if (userRelationVO.getUserProfile() != null) {
+				JSONObject userObject = new JSONObject();
+				userObject.put("userid", userRelationVO.getUserProfile().getUserId());
+				userObject.put("username", userRelationVO.getUserProfile().getUserName());
+				userObject.put("nickname", userRelationVO.getUserProfile().getNickName());
+				userObject.put("bavatorurl", userRelationVO.getUserProfile().getbAvatorUrl());
+				userObject.put("savatorurl", userRelationVO.getUserProfile().getsAvatorUrl());
+				relationObject.put("user", userObject);
+			}
+
+			if (userRelationVO.getToUserProfile() != null) {
+				JSONObject toUserObject = new JSONObject();
+				toUserObject.put("userid", userRelationVO.getUserProfile().getUserId());
+				toUserObject.put("username", userRelationVO.getUserProfile().getUserName());
+				toUserObject.put("nickname", userRelationVO.getUserProfile().getNickName());
+				toUserObject.put("bavatorurl", userRelationVO.getUserProfile().getbAvatorUrl());
+				toUserObject.put("savatorurl", userRelationVO.getUserProfile().getsAvatorUrl());
+				relationObject.put("touser", toUserObject);
+			}
+
+			JSONObject returnObject = new JSONObject();
+			HttpServletUtil2.returnDataObject(relationObject, "relationship", returnObject);
+			jsonArray.add(returnObject);
+		}
+		return jsonArray;
 	}
 }

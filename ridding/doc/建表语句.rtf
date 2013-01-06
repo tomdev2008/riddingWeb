@@ -119,6 +119,8 @@ CreateTime bigint(20) NOT NULL default '0' COMMENT '\'b4\'b4\'bd\'a8\'ca\'b1\'bc
 LastUpdateTime bigint(20) NOT NULL default '0' COMMENT '\'c9\'cf\'b4\'ce\'b8\'fc\'d0\'c2\'ca\'b1\'bc\'e4',\
 SAvatorUrl varchar(128) NOT NULL DEFAULT ' ' COMMENT '\'d3\'c3\'bb\'a7\'d0\'a1\'cd\'b7\'cf\'f1',\
 BAvatorUrl varchar(128) NOT NULL DEFAULT ' ' COMMENT '\'d3\'c3\'bb\'a7\'b4\'f3\'cd\'b7\'cf\'f1',\
+level int(11) NOT NULL DEFAULT '0' COMMENT '\'d3\'c3\'bb\'a7\'b5\'c7\'c2\'bd',\
+backgroundUrl varchar(127) NOT NULL DEFAULT ' ' COMMENT '\'d3\'c3\'bb\'a7\'b1\'b3\'be\'b0',\
 PRIMARY KEY  (`UserId`)\
 )   DEFAULT CHARSET=UTF8 COMMENT '\'d3\'c3\'bb\'a7\'d0\'c5\'cf\'a2\'b1\'ed';\
 \
@@ -315,4 +317,12 @@ sourceType tinyint(4) NOT NULL DEFAULT '0' COMMENT '\'d7\'ca\'d4\'b4\'b5\'c4\'c0
 CreateTime bigint(20) NOT NULL DEFAULT '0' COMMENT '\'bc\'c7\'c2\'bc\'b4\'b4\'bd\'a8\'ca\'b1\'bc\'e4',\
 PRIMARY KEY  (`id`)\
 )   DEFAULT CHARSET=UTF8 COMMENT  '\'bb\'f1\'b5\'c3\'d7\'aa\'b7\'a2\'b5\'d8\'cd\'bc\'ce\'a2\'b2\'a9\'c9\'fa\'b3\'c9\'b5\'d8\'cd\'bc\'b1\'ed';\
+\
+CREATE TABLE TB_USER_RELATION (\
+id bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id,\'d7\'d4\'d4\'f6\'b3\'a4',\
+userId bigint(20) NOT NULL DEFAULT '0' COMMENT '\'d3\'c3\'bb\'a7id',\
+toUserId bigint(20) NOT NULL DEFAULT '0' COMMENT '\'b9\'d8\'d7\'a2\'d3\'c3\'bb\'a7id',\
+CreateTime bigint(20) NOT NULL DEFAULT '0' COMMENT '\'bc\'c7\'c2\'bc\'b4\'b4\'bd\'a8\'ca\'b1\'bc\'e4',\
+Status tinyint(4) NOT NULL DEFAULT '0' COMMENT '0\'b1\'ed\'ca\'be\'c9\'be\'b3\'fd\'a3\'ac1\'b1\'ed\'ca\'be\'b4\'e6\'d4\'da',\
+)  DEFAULT CHARSET=UTF8 COMMENT  '\'d3\'c3\'bb\'a7\'b9\'d8\'cf\'b5\'b1\'ed';\
 }

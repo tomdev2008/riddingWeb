@@ -24,11 +24,12 @@ import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
+import com.ridding.meta.UserRelation;
 import com.ridding.meta.vo.ProfileSourceFeed;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
- * @version CreateTime��2012-3-5 ����02:04:03 Class Description http�������util
+ * @version CreateTime 2012-3-5 02:04:03 Class Description httputil
  */
 public final class HttpServletUtil {
 	private static Logger logger = Logger.getLogger(HttpServletUtil.class);
@@ -346,18 +347,18 @@ public final class HttpServletUtil {
 			iMap.setEndLocation(endLocation);
 			iMap.setDistance(jsonObject.getInt("distance"));
 			ridding.setName(jsonObject.getString("riddingname"));
-			if (jsonObject.getString("urlkey") != null) {
+			if (jsonObject.get("urlkey") != null) {
 				iMap.setUrlKey(jsonObject.getString("urlkey"));
 			}
-			if (jsonObject.getString("cityname") != null) {
+			if (jsonObject.get("cityname") != null) {
 				iMap.setCityName(jsonObject.getString("cityname"));
 			}
-			if(jsonObject.get("ispublic")!=null){
+			if (jsonObject.get("ispublic") != null) {
 				if (jsonObject.getInt("ispublic") > 0) {
 					ridding.isPublic = 1;
 				}
 			}
-			
+
 		} catch (Exception e) {
 			logger.error("info=" + jsonString);
 			throw new RequestBodyIsNullException();
@@ -454,5 +455,39 @@ public final class HttpServletUtil {
 			throw new RequestBodyIsNullException();
 		}
 		return riddingComment;
+	}
+
+	/**
+	 * 
+	 * @param jsonString
+	 * @return
+	 * @throws Exception
+	 */
+	public static Profile parseUpdateBackground(String jsonString) throws Exception {
+		JSONObject jsonObject = JSONObject.fromObject(jsonString);
+		if (jsonObject == null) {
+			throw new RequestBodyIsNullException();
+		}
+		Profile profile = new Profile();
+		profile.setBackgroundUrl(jsonObject.getString("url"));
+		return profile;
+	}
+
+	/**
+	 * 
+	 * @param jsonString
+	 * @return
+	 * @throws Exception
+	 */
+	public static UserRelation parseRemoveOrAddUserRelation(String jsonString) throws Exception {
+		JSONObject jsonObject = JSONObject.fromObject(jsonString);
+		if (jsonObject == null) {
+			throw new RequestBodyIsNullException();
+		}
+		UserRelation userRelation = new UserRelation();
+		userRelation.setUserId(jsonObject.getLong("userid"));
+		userRelation.setToUserId(jsonObject.getLong("touserid"));
+		userRelation.setStatus(jsonObject.getInt("status"));
+		return userRelation;
 	}
 }

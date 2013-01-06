@@ -1,13 +1,10 @@
 package com.ridding.meta;
 
 import java.io.Serializable;
-import sun.tools.tree.ThisExpression;
-
-import net.sf.json.JSONObject;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
- * @version CreateTime��2012-3-19 ����12:08:13 Class Description �û���Ϣmeta
+ * @version CreateTime2012-3-19 12:08:13 Class Description 个人信息meta
  */
 public class Profile implements Serializable {
 	/**
@@ -54,6 +51,10 @@ public class Profile implements Serializable {
 	 * 用户等级1为管理员
 	 */
 	private int level;
+	/**
+	 * 手机背景的地址
+	 */
+	private String backgroundUrl;
 	/**
 	 * 对应的sourceaccount
 	 */
@@ -145,6 +146,14 @@ public class Profile implements Serializable {
 
 	public void setLevel(int level) {
 		this.level = level;
+	}
+
+	public String getBackgroundUrl() {
+		return backgroundUrl;
+	}
+
+	public void setBackgroundUrl(String backgroundUrl) {
+		this.backgroundUrl = backgroundUrl;
 	}
 
 }

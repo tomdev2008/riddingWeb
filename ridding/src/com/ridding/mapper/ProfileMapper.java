@@ -7,7 +7,7 @@ import com.ridding.meta.Profile;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
- * @version CreateTime��2012-3-19 ����12:50:33 Class Description
+ * @version CreateTime 2012-3-19 12:50:33 Class Description
  */
 public interface ProfileMapper {
 	/**
@@ -49,4 +49,12 @@ public interface ProfileMapper {
 	 * @return
 	 */
 	public List<Profile> getProfileList(List<Long> userids);
+
+	/**
+	 * 更新手机背景url
+	 * 
+	 * @param profile
+	 * @return
+	 */
+	public int updateBackgroundUrl(Profile profile);
 }

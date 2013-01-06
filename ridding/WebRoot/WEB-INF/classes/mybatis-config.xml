@@ -20,6 +20,7 @@
 		<typeAlias alias="Public" type="com.ridding.meta.Public" />
 		<typeAlias alias="RiddingAction" type="com.ridding.meta.RiddingAction" />
 		<typeAlias alias="RiddingComment" type="com.ridding.meta.RiddingComment" />
+		<typeAlias alias="UserRelation" type="com.ridding.meta.UserRelation" />
 	</typeAliases>
 	<mappers>
 		<mapper resource="com/ridding/mapper/xml/AccountMapper.xml" />
@@ -41,6 +42,7 @@
 		<mapper resource="com/ridding/mapper/xml/PublicMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/RiddingActionMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/RiddingCommentMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/UserRelationMapper.xml" />
 	</mappers>
 </configuration>
 			

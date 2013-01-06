@@ -3,8 +3,6 @@ package com.ridding.meta;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.ridding.constant.SystemConst;
-
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
  * @version CreateTime 2012-3-19 骑行用户12:37:41 Class Description 骑行用户meta
