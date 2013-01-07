@@ -253,6 +253,10 @@ public class HttpServletUtil2 {
 			leaderUserObject.put("userid", ridding.getLeaderUserId());
 			leaderUserObject.put("savatorurl", ridding.getLeaderProfile().getsAvatorUrl());
 			leaderUserObject.put("bavatorurl", ridding.getLeaderProfile().getbAvatorUrl());
+			leaderUserObject.put("username", ridding.getLeaderProfile().getUserName());
+			leaderUserObject.put("nickname", ridding.getLeaderProfile().getNickName());
+			leaderUserObject.put("totaldistance", ridding.getLeaderProfile().getTotalDistance());
+			leaderUserObject.put("backgroundurl", SystemConst.returnPhotoUrl(ridding.getLeaderProfile().getBackgroundUrl()));
 			riddingObject.put("user", leaderUserObject);
 
 			JSONObject mapObject = new JSONObject();

@@ -27,6 +27,7 @@ isPublic tinyint(4) NOT NULL DEFAULT '0' COMMENT '\'ca\'c7\'b7\'f1\'ca\'c7\'b9\'
 \cf0 commentCount int(11) NOT NULL DEFAULT 0 COMMENT '\'c6\'c0\'c2\'db\'ca\'fd\'c1\'bf',\
 useCount  int(11) NOT NULL DEFAULT 0 COMMENT '\'ca\'d5\'b2\'d8\'ca\'fd\'c1\'bf',\
 careCount  int(11) NOT NULL DEFAULT 0 COMMENT '\'b9\'d8\'d7\'a2\'ca\'fd\'c1\'bf',\
+isSyncSina tinyint(4) NOT NULL DEFAULT '0' COMMENT '\'ca\'c7\'b7\'f1\'cd\'ac\'b2\'bd\'d0\'c2\'c0\'cb\'ce\'a2\'b2\'a9,0\'b1\'ed\'ca\'be\'b2\'bb\'cd\'ac\'b2\'bd,1\'b1\'ed\'ca\'be\'cd\'ac\'b2\'bd',\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 \cf0 PRIMARY KEY  (`Id`)\
 )   DEFAULT CHARSET=UTF8 COMMENT '\'c6\'ef\'d0\'d0\'d6\'f7\'b1\'ed';\
@@ -324,5 +325,6 @@ userId bigint(20) NOT NULL DEFAULT '0' COMMENT '\'d3\'c3\'bb\'a7id',\
 toUserId bigint(20) NOT NULL DEFAULT '0' COMMENT '\'b9\'d8\'d7\'a2\'d3\'c3\'bb\'a7id',\
 CreateTime bigint(20) NOT NULL DEFAULT '0' COMMENT '\'bc\'c7\'c2\'bc\'b4\'b4\'bd\'a8\'ca\'b1\'bc\'e4',\
 Status tinyint(4) NOT NULL DEFAULT '0' COMMENT '0\'b1\'ed\'ca\'be\'c9\'be\'b3\'fd\'a3\'ac1\'b1\'ed\'ca\'be\'b4\'e6\'d4\'da',\
-)  DEFAULT CHARSET=UTF8 COMMENT  '\'d3\'c3\'bb\'a7\'b9\'d8\'cf\'b5\'b1\'ed';\
+PRIMARY KEY  (`id`)\
+) DEFAULT CHARSET=UTF8 COMMENT  '\'d3\'c3\'bb\'a7\'b9\'d8\'cf\'b5\'b1\'ed';\
 }

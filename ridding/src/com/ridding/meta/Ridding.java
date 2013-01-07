@@ -64,6 +64,10 @@ public class Ridding implements Serializable {
 	 * 关注数
 	 */
 	private int careCount;
+	/**
+	 * 是否同步到新浪
+	 */
+	private int isSyncSina;
 
 	/**
 	 * 限制，-1表示全部
@@ -88,6 +92,14 @@ public class Ridding implements Serializable {
 	 * 公开或者推荐
 	 */
 	public static int PublicOrRecom = 1;
+	/**
+	 * 不同步
+	 */
+	public static int notSync = 0;
+	/**
+	 * 同步
+	 */
+	public static int sync = 1;
 	/**
 	 * 第一张图的url
 	 */
@@ -333,6 +345,14 @@ public class Ridding implements Serializable {
 
 	public void setLeaderProfile(Profile leaderProfile) {
 		this.leaderProfile = leaderProfile;
+	}
+
+	public int getIsSyncSina() {
+		return isSyncSina;
+	}
+
+	public void setIsSyncSina(int isSyncSina) {
+		this.isSyncSina = isSyncSina;
 	}
 
 }

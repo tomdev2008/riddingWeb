@@ -358,6 +358,9 @@ public final class HttpServletUtil {
 					ridding.isPublic = 1;
 				}
 			}
+			if (jsonObject.get("isSyncSina") != null) {
+				ridding.setIsSyncSina(jsonObject.getInt("issyncsina"));
+			}
 
 		} catch (Exception e) {
 			logger.error("info=" + jsonString);

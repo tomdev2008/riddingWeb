@@ -699,7 +699,6 @@ public class RiddingServiceImpl implements RiddingService {
 							ridding.setFirstPicUrl(iMap.getStaticImgSrc());
 						}
 					}
-
 				}
 			}
 		}

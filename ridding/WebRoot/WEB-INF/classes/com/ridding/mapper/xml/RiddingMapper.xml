@@ -18,6 +18,8 @@
 		<result property="commentCount" column="commentCount" />
 		<result property="useCount" column="useCount" />
 		<result property="careCount" column="careCount" />
+		<result property="isSyncSina" column="isSyncSina" />
+		
 	</resultMap>
 	<insert id="addRidding" parameterType="Ridding">
 		INSERT INTO TB_Ridding(
@@ -34,7 +36,8 @@
 		likeCount,
 		commentCount,
 		careCount,
-		useCount
+		useCount,
+		isSyncSina
 		)VALUES(
 		#{leaderUserId},
 		#{mapId},
@@ -49,7 +52,8 @@
 		#{likeCount},
 		#{commentCount},
 		#{careCount},
-		#{useCount}
+		#{useCount},
+		#{isSyncSina}
 		)
 		<selectKey keyProperty="id" resultType="long">
 			SELECT
