@@ -1,6 +1,7 @@
 package com.ridding.service.impl;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import javapns.Push;
@@ -26,7 +27,7 @@ import com.ridding.util.ListUtils;
 public class IOSApnsServiceImpl implements IOSApnsService {
 
 	private static final String PASSWORD = "13823381398";
-	// developerApns.p12 
+	// developerApns.p12
 	private static final String FILENAME = "aps_product_identity.p12";
 
 	private static final int THREAD = 10;
@@ -107,7 +108,10 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 	public boolean addIosApns(ApnsDevice apnsDevice) {
 		ApnsDevice apnsDevice2 = iosApnsMapper.getApnsDevice(apnsDevice.getUserId());
 		if (apnsDevice2 != null) {
-			return iosApnsMapper.updateApns(apnsDevice) > 0;
+			apnsDevice2.setToken(apnsDevice.getToken());
+			apnsDevice2.setLastUpdateTime(apnsDevice.getLastUpdateTime());
+			apnsDevice.setVersion(apnsDevice.getVersion());
+			return iosApnsMapper.updateApns(apnsDevice2) > 0;
 		}
 		return iosApnsMapper.addApnsDevice(apnsDevice) > 0;
 	}
