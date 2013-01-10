@@ -35,7 +35,7 @@
 		createTime = #{createTime},
 		lastUpdateTime = #{lastUpdateTime},
 		createTime = #{createTime},
-		version = #{version},
+		version = #{version}
 		where userId = #{userId};
 	</update>
 	

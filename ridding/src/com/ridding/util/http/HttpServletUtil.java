@@ -472,7 +472,9 @@ public final class HttpServletUtil {
 			throw new RequestBodyIsNullException();
 		}
 		Profile profile = new Profile();
-		profile.setBackgroundUrl(jsonObject.getString("url"));
+		if (jsonObject.get("url") != null){
+			profile.setBackgroundUrl(jsonObject.getString("url"));
+		}
 		return profile;
 	}
 

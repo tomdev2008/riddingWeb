@@ -178,6 +178,9 @@ public class ProfileServiceImpl implements ProfileService {
 	 */
 	@Override
 	public boolean updateBackgroundUrl(String url, long userId) {
+		if(url==null){
+			return false;
+		}
 		Profile profile = new Profile();
 		profile.setUserId(userId);
 		profile.setBackgroundUrl(url);

@@ -54,7 +54,7 @@ public class Profile implements Serializable {
 	/**
 	 * 手机背景的地址
 	 */
-	private String backgroundUrl;
+	private String backgroundUrl = "";
 	/**
 	 * 对应的sourceaccount
 	 */
