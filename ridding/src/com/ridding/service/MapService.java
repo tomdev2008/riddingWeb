@@ -90,4 +90,19 @@ public interface MapService {
 	 * @return
 	 */
 	public MapFix getMapFix(double latitude, double longtitude);
+	/**
+	 * 获取所有地图
+	 * 
+	 * @return
+	 */
+	public List<IMap> getAllMaps();
+	
+	/**
+	 * 根据相应ID更新地图URL
+	 * 
+	 * @param url
+	 * @param mapId
+	 * @return
+	 */
+	public int updateImapAvatorPicUrl(String url,long mapId);
 }
