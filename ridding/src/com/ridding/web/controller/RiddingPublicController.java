@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.ibatis.mapping.MappedStatement;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -23,9 +24,11 @@ import weibo4j.Weibo;
 
 import com.ridding.constant.SystemConst;
 import com.ridding.constant.returnCodeConstance;
+import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.MapFixMapper;
 import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
+import com.ridding.meta.Photo;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingComment;
@@ -35,6 +38,7 @@ import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.meta.vo.UserRelationVO;
 import com.ridding.service.MapService;
+import com.ridding.service.PhotoService;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
@@ -69,6 +73,9 @@ public class RiddingPublicController extends AbstractBaseController {
 
 	@Resource
 	private UserRelationService userRelationService;
+	
+	@Resource
+	private PhotoService photoService;
 
 	/**
 	 * 得到用户信息
@@ -296,6 +303,25 @@ public class RiddingPublicController extends AbstractBaseController {
 		logger.info(returnObject);
 		return mv;
 	}
+	
+	public void OriginalPathToAvatroPicUrl(){
+		List<IMap> imapList=mapService.getAllMaps();
+		if(ListUtils.isEmptyList(imapList)){
+			logger.error("List为空");
+		}
+		for(IMap imap : imapList){
+			long photoId=imap.getAvatorPic();
+			Photo photo = photoService.getPhoto(photoId);
+			if(photo==null){
+				logger.error("photo为空");
+			}
+			String originalPathString=photo.getOriginalPath();
+			int getUpdate = mapService.updateImapAvatorPicUrl(originalPathString,photoId);
+			if(getUpdate==0){
+				logger.error("无法将地图更新");
+			}
+		}
+	}
 
 	/**
 	 * 得到进行中的骑行活动，根据时间排序，或者推荐的
@@ -325,6 +351,7 @@ public class RiddingPublicController extends AbstractBaseController {
 			riddingList = riddingService.getRiddingListByLastUpdateTime(ridding.getLastUpdateTime(), ridding.getLimit(), ridding.isLarger(),
 					ridding.isRecom);
 		}
+		OriginalPathToAvatroPicUrl();
 		// HttpJsonUtil.setRiddingByLastUpdateTime(returnObject, riddingList);
 		JSONArray dataArray = HttpServletUtil2.parseGetGoingRiddings(riddingList);
 		returnObject.put("data", dataArray);
