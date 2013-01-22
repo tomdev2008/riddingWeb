@@ -109,6 +109,7 @@ public class IMap implements Serializable {
 	 * url对应的key
 	 */
 	private String urlKey;
+	
 
 	public String getBeginLocation() {
 		return beginLocation;

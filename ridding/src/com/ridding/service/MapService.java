@@ -104,5 +104,5 @@ public interface MapService {
 	 * @param mapId
 	 * @return
 	 */
-	public int updateImapAvatorPicUrl(String url,long mapId);
+	public boolean updateImapAvatorPicUrl(String url,long mapId);
 }

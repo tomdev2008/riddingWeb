@@ -18,6 +18,7 @@
 		<result property="midLocation" column="midLocation" />
 		<result property="cityId" column="cityId" />
 		<result property="avatorPic" column="avatorPic" />
+		<result property="avatorPicUrl" column="avatorPicUrl" />
 	</resultMap>
 
 	<insert id="addRiddingMap" parameterType="IMap">
@@ -35,7 +36,8 @@
 		endLocation,
 		midLocation,
 		cityId,
-		avatorPic
+		avatorPic,
+		avatorPicUrl
 		)VALUES(
 		#{createTime},
 		#{mapTaps},
@@ -50,7 +52,8 @@
 		#{endLocation},
 		#{midLocation},
 		#{cityId},
-		#{avatorPic}
+		#{avatorPic},
+		#{avatorPicUrl}
 		)
 		<selectKey keyProperty="id" resultType="long">
 			SELECT
@@ -60,14 +63,16 @@
 
 	<update id="updateRiddingMap" parameterType="IMap" flushCache="true"
 		statementType="PREPARED">
-		update TB_Map set 
+		update TB_Map set
 		MapTaps = #{mapTaps},
 		MapUrl = #{mapUrl},
 		MapPoint = #{mapPoint},
-		objectId = #{objectId},
+		objectId =
+		#{objectId},
 		objectType = #{objectType},
 		userId = #{userId},
-		status = #{status},
+		status =
+		#{status},
 		distance= #{distance},
 		beginLocation= #{beginLocation},
 		endLocation=#{endLocation},
@@ -76,55 +81,70 @@
 		avatorPic=#{avatorPic}
 		where Id = #{id};
 	</update>
-	
+
 	<select id="getRiddingMapListByStatus" resultMap="imapMap"
 		parameterType="hashmap">
 		SELECT * from TB_Map
-		where status=#{status} order by createTime desc 
-		limit #{limit} 
+		where status=#{status} order by
+		createTime desc
+		limit #{limit}
 		offset #{offset};
 	</select>
 
 	<delete id="deleteRiddingMap" parameterType="long">
-		delete from TB_Map where Id=#{id} 
+		delete from TB_Map
+		where Id=#{id} 
 	</delete>
 	<select id="getRiddingMap" resultMap="imapMap">
-	SELECT * from
-	TB_Map where id=#{id} ; 
+		SELECT * from
+		TB_Map where id=#{id} ; 
 	</select>
 	<!-- 查询地图列表列表-->
 	<select id="getIMaplist" resultMap="imapMap">
-		SELECT * from TB_Map where 
-		 id in 
-		<foreach item="item" collection="list" index="index" open="(" separator="," close=")" >
-			 #{item} 
-	</foreach>;
+		SELECT * from TB_Map where
+		id in
+		<foreach item="item" collection="list" index="index" open="("
+			separator="," close=")">
+			#{item} 
+	</foreach>
+		;
 	</select>
-	
+
 	<select id="getImapByObject" resultMap="imapMap" parameterType="hashmap">
 		SELECT * from TB_Map
 		where objectType=#{objectType} and ( objectId in
-	    <foreach item="item" collection="objectIdList" index="index" open="(" separator="," close=")" >
-	      #{item}
+		<foreach item="item" collection="objectIdList" index="index"
+			open="(" separator="," close=")">
+			#{item}
 	    </foreach>
-	    ) order by createTime desc 
-	    <if test="limit>0">
-		limit #{limit} 
-		offset #{offset};
+		) order by createTime desc
+		<if test="limit>0">
+			limit #{limit}
+			offset #{offset};
 		</if>
 	</select>
-	
-	
-	<select id="getImapsByUserIdCityId" resultMap="imapMap" parameterType="hashmap">
+
+
+	<select id="getImapsByUserIdCityId" resultMap="imapMap"
+		parameterType="hashmap">
 		SELECT * from TB_Map
-		where userId=#{userId} and cityId=#{cityId} order by createTime desc 
-	    <if test="limit>0">
-		limit #{limit} 
-		offset #{offset};
+		where userId=#{userId} and cityId=#{cityId} order
+		by createTime desc
+		<if test="limit>0">
+			limit #{limit}
+			offset #{offset};
 		</if>
 	</select>
-	
-	<select id="getAll" resultMap="imapMap" >
+
+	<select id="getAll" resultMap="imapMap">
 		SELECT * from TB_Map;
 	</select>
+
+
+	<update id="updateImapAvatorPicUrl" parameterType="hashmap"
+		flushCache="true" statementType="PREPARED">
+		update TB_Map set
+		avatorPicUrl = #{avatorPicUrl}
+		where Id = #{id};
+	</update>
 </mapper>

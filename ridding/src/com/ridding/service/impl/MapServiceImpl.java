@@ -337,12 +337,21 @@ public class MapServiceImpl implements MapService {
 
 	@Override
 	public List<IMap> getAllMaps() {
-		List<IMap> imapList=iMapMapper.getAll();
+		List<IMap> imapList = iMapMapper.getAll();
 		return imapList;
 	}
-	
-	public int updateImapAvatorPicUrl(String url,long mapId){
-		int hasUpdate = iMapMapper.updateImapAvatorPicUrl(url,mapId);
-		return hasUpdate;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ridding.service.MapService#updateImapAvatorPicUrl(java.lang.String,
+	 * long)
+	 */
+	public boolean updateImapAvatorPicUrl(String url, long mapId) {
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("avatorPicUrl", url);
+		hashMap.put("id", mapId);
+		return iMapMapper.updateImapAvatorPicUrl(hashMap) > 0;
 	}
 }

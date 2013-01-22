@@ -73,7 +73,7 @@ public class RiddingPublicController extends AbstractBaseController {
 
 	@Resource
 	private UserRelationService userRelationService;
-	
+
 	@Resource
 	private PhotoService photoService;
 
@@ -295,7 +295,7 @@ public class RiddingPublicController extends AbstractBaseController {
 			}
 		}
 		HttpJsonUtil.setupLoadedRiddingPicture(returnObject, riddingPictures);
-
+		this.OriginalPathToAvatroPicUrl();
 		JSONArray dataArray = HttpServletUtil2.parseGetuploadedPhotos(riddingPictures);
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
@@ -303,22 +303,24 @@ public class RiddingPublicController extends AbstractBaseController {
 		logger.info(returnObject);
 		return mv;
 	}
-	
-	public void OriginalPathToAvatroPicUrl(){
-		List<IMap> imapList=mapService.getAllMaps();
-		if(ListUtils.isEmptyList(imapList)){
+
+	public void OriginalPathToAvatroPicUrl() {
+		List<IMap> imapList = mapService.getAllMaps();
+		if (ListUtils.isEmptyList(imapList)) {
 			logger.error("List为空");
+			return;
 		}
-		for(IMap imap : imapList){
-			long photoId=imap.getAvatorPic();
+		for (IMap imap : imapList) {
+			long photoId = imap.getAvatorPic();
 			Photo photo = photoService.getPhoto(photoId);
-			if(photo==null){
-				logger.error("photo为空");
+			if (photo == null) {
+				logger.error("photo is null where photoId=" + photoId);
+				continue;
 			}
-			String originalPathString=photo.getOriginalPath();
-			int getUpdate = mapService.updateImapAvatorPicUrl(originalPathString,photoId);
-			if(getUpdate==0){
-				logger.error("无法将地图更新");
+			String originalPathString = photo.getOriginalPath();
+			boolean succ = mapService.updateImapAvatorPicUrl(originalPathString, imap.getId());
+			if (!succ) {
+				logger.error("无法将地图更新 where photoId=" + photoId + " originalPathString=" + originalPathString);
 			}
 		}
 	}
@@ -413,7 +415,5 @@ public class RiddingPublicController extends AbstractBaseController {
 		logger.info(returnObject);
 		return mv;
 	}
-	
-	
 
 }
