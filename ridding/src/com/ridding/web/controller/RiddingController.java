@@ -523,17 +523,6 @@ public class RiddingController extends AbstractBaseController {
 		iMap.setObjectType(SourceType.WebApi.getValue());
 		iMap.setObjectId(0);
 		iMap.setCreateTime(new Date().getTime());
-		Photo photo = new Photo();
-		photo.setOriginalPath(iMap.getUrlKey());
-		if (photoService.addPhoto(photo) < 0) {
-			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
-			mv.addObject("returnObject", returnObject.toString());
-			return mv;
-		}
-		iMap.setAvatorPic(photo.getId());
-		if (iMap.getMapUrl() == null) {
-			imageUploadService.saveImageFromUrl(iMap.getStaticImgSrc(), photo.getId());
-		}
 		if (!transactionService.insertANewRidding(iMap, ridding)) {
 			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
 			mv.addObject("returnObject", returnObject.toString());
