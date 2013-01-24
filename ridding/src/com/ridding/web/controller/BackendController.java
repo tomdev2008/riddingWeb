@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.crypto.Data;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ridding.constant.SystemConst;
+import com.ridding.constant.returnCodeConstance;
+import com.ridding.mapper.RiddingMapper;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingPicture;
@@ -23,6 +26,7 @@ import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingService;
 import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
+import com.ridding.service.impl.RiddingServiceImpl;
 import com.ridding.util.ListUtils;
 
 /**
@@ -129,12 +133,22 @@ public class BackendController extends AbstractBaseController {
 	
 	
 	public ModelAndView backendHuodong(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		ModelAndView mv = new ModelAndView("huodongList");
+		ModelAndView mv = new ModelAndView("return");
 		
 		long riddingId = ServletRequestUtils.getIntParameter(request, "riddingId", -1);
-		
-		
-	
+		if(riddingId<0){
+			
+		}
+		Ridding ridding = riddingService.getRidding(riddingId);
+		if (ridding==null){
+			return mv;
+		}
+		Date data = new Date();
+		long requestTime = data.getTime();
+		List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, 0, requestTime);
+		if(!ListUtils.isEmptyList(riddingPictures)){
+			ridding.setRiddingPictureList(riddingPictures);
+		}
 		return mv;
 	}
 }
