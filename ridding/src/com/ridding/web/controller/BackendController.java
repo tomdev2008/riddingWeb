@@ -21,6 +21,8 @@ import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.WeiBo;
+import com.ridding.meta.vo.ActivityRidding;
+import com.ridding.meta.vo.UserRelationVO;
 import com.ridding.security.MyUser;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingService;
@@ -126,7 +128,20 @@ public class BackendController extends AbstractBaseController {
 		if (offset < 0) {
 			offset = 0;
 		}
-		
+		Date data = new Date();
+		long requestTime = data.getTime();
+		List<Ridding> riddingList = riddingService.getRiddingListByLastUpdateTime(requestTime,0,false,0);
+		if(ListUtils.isEmptyList(riddingList)){
+			return mv;
+		}
+		int pictureLimit = 3;
+		for(Ridding ridding : riddingList){
+			long riddingId = ridding.getId();
+			List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, pictureLimit, requestTime);
+			if(!ListUtils.isEmptyList(riddingPictures)){
+				ridding.setRiddingPictureList(riddingPictures);
+			}
+		}		
 	
 		return mv;
 	}
@@ -137,7 +152,7 @@ public class BackendController extends AbstractBaseController {
 		
 		long riddingId = ServletRequestUtils.getIntParameter(request, "riddingId", -1);
 		if(riddingId<0){
-			
+			logger.error("riddingId<0!");
 		}
 		Ridding ridding = riddingService.getRidding(riddingId);
 		if (ridding==null){
