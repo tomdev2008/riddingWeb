@@ -123,7 +123,18 @@ public class BackendController extends AbstractBaseController {
 			offset = 0;
 		}
 		
+	
+		return mv;
+	}
+	
+	
+	public ModelAndView backendHuodong(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		ModelAndView mv = new ModelAndView("huodongList");
 		
+		long riddingId = ServletRequestUtils.getIntParameter(request, "riddingId", -1);
+		
+		
+	
 		return mv;
 	}
 }
