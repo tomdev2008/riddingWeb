@@ -117,20 +117,13 @@ public class BackendController extends AbstractBaseController {
 	 */
 	public ModelAndView huodongList(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("huodongList");
-		int weight = ServletRequestUtils.getIntParameter(request, "weight", -1);
-		if (weight <= 0) {
-			weight = 99999;
+		int limit = 10;
+		int offset = ServletRequestUtils.getIntParameter(request, "offset", -1);
+		if (offset < 0) {
+			offset = 0;
 		}
-		List<Ridding> riddingList = riddingService.getRecomRiddingList(weight, 50, false);
-		if (!ListUtils.isEmptyList(riddingList)) {
-			for (Ridding ridding : riddingList) {
-				List<RiddingPicture> pictureList = riddingService.getRiddingPictureByRiddingId(ridding.getId(), 50, new Date().getTime());
-				ridding.setRiddingPictureList(pictureList);
-			}
-		}
-		long visitUserId = ServletRequestUtils.getLongParameter(request, "userId");
-		mv.addObject("riddingList", riddingList);
-		this.setUD(mv, visitUserId, visitUserId);
+		
+		
 		return mv;
 	}
 }

@@ -4,13 +4,10 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ridding.meta.Ridding;
 import com.ridding.meta.Ridding.RiddingStatus;
-import com.ridding.security.MyUser;
 import com.ridding.service.RiddingService;
 
 /**

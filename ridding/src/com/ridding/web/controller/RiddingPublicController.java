@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.ibatis.mapping.MappedStatement;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -24,7 +23,6 @@ import weibo4j.Weibo;
 
 import com.ridding.constant.SystemConst;
 import com.ridding.constant.returnCodeConstance;
-import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.MapFixMapper;
 import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
@@ -321,7 +319,7 @@ public class RiddingPublicController extends AbstractBaseController {
 			boolean succ = mapService.updateImapAvatorPicUrl(originalPathString, imap.getId());
 			if (!succ) {
 				logger.error("无法将地图更新 where photoId=" + photoId + " originalPathString=" + originalPathString);
-			}
+			} 
 		}
 	}
 
