@@ -348,7 +348,7 @@ public final class HttpServletUtil {
 			iMap.setDistance(jsonObject.getInt("distance"));
 			ridding.setName(jsonObject.getString("riddingname"));
 			if (jsonObject.get("urlkey") != null) {
-				iMap.setUrlKey(jsonObject.getString("urlkey"));
+				iMap.setAvatorPicUrl(jsonObject.getString("urlkey"));
 			}
 			if (jsonObject.get("cityname") != null) {
 				iMap.setCityName(jsonObject.getString("cityname"));
