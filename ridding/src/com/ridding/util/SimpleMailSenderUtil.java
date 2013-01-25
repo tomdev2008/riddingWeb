@@ -7,12 +7,14 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import com.sun.istack.internal.logging.Logger;
 
 /**   
 * 简单邮件（不带附件的邮件）发送器   
 *
 */    
-public class SimpleMailSenderUtil  {   
+public class SimpleMailSenderUtil  {
+	private static final Logger logger = Logger.getLogger(SimpleMailSenderUtil.class);
 	/**   
 	*发送邮件需要使用的基本信息 
 	*
@@ -156,7 +158,8 @@ public class SimpleMailSenderUtil  {
       // 发送邮件    
       Transport.send(mailMessage);   
       return true;    
-      } catch (MessagingException ex) {    
+      } catch (MessagingException ex) { 
+    	  logger.info("catch MessagingEception");
           ex.printStackTrace();    
       }    
       return false;    
@@ -203,8 +206,9 @@ public class SimpleMailSenderUtil  {
       // 发送邮件    
       Transport.send(mailMessage);    
       return true;    
-      } catch (MessagingException ex) {    
-          ex.printStackTrace();    
+      } catch (MessagingException ex) {
+    	  logger.info("catch MessagingEception");
+          ex.printStackTrace();  
       }    
       return false;    
     }    
