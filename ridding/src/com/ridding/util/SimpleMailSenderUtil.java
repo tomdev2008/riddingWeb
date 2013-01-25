@@ -210,6 +210,6 @@ public class SimpleMailSenderUtil  {
     	  logger.info("catch MessagingEception");
           ex.printStackTrace();  
       }    
-      return false;    
-    }    
+      return false;   
+    } 
 }
