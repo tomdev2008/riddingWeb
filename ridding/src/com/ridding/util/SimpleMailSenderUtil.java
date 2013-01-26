@@ -20,8 +20,7 @@ import org.apache.log4j.Logger;
 import com.ridding.web.controller.RiddingController;
   
 /**   
-* 简单邮件（不带附件的邮件）发送器   
-http://www.bt285.cn BT下载
+* 简单邮件（不带附件的邮件）发送器
 */    
 public class SimpleMailSenderUtil  {   
 	private static final Logger logger = Logger.getLogger(SimpleMailSenderUtil.class);
@@ -54,7 +53,7 @@ public class SimpleMailSenderUtil  {
       // 设置邮件消息发送的时间    
       mailMessage.setSentDate(new Date());    
       // 设置邮件消息的主要内容    
-      String mailContent = mailInfo.getContent();    
+      String mailContent = mailInfo.getContent();
       mailMessage.setText(mailContent);    
       // 发送邮件    
       Transport.send(mailMessage);   
@@ -70,7 +69,7 @@ public class SimpleMailSenderUtil  {
       * 以HTML格式发送邮件   
       * @param mailInfo 待发送的邮件信息   
       */    
-    public static boolean sendHtmlMail(MailSenderInfo mailInfo){    
+    public static boolean sendHtmlMail(MailSenderInfo mailInfo){
       // 判断是否需要身份认证    
       MyAuthenticator authenticator = null;   
       Properties pro = mailInfo.getProperties();   

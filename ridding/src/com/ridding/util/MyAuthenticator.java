@@ -1,14 +1,14 @@
 package com.ridding.util;   
   
-import javax.mail.*;   
+import javax.mail.*;
      
 public class MyAuthenticator extends Authenticator{   
     String userName=null;   
     String password=null;   
         
-    public MyAuthenticator(){   
+    public MyAuthenticator(){
     }   
-    public MyAuthenticator(String username, String password) {    
+    public MyAuthenticator(String username, String password) {
         this.userName = username;    
         this.password = password;    
     }    

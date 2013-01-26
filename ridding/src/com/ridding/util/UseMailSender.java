@@ -12,7 +12,7 @@ public class UseMailSender {
      mailInfo.setMailServerPort("25");    
      mailInfo.setValidate(true);    
      mailInfo.setUserName("yunshang_734@163.com");    
-     mailInfo.setPassword("Qby771234");//您的邮箱密码    
+     mailInfo.setPassword("Qby771234");//您的邮箱密码
      mailInfo.setFromAddress("yunshang_734@163.com");    
      mailInfo.setToAddress("66157642@qq.com");    
      mailInfo.setSubject("哈哈哈");    
