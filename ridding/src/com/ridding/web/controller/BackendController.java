@@ -124,45 +124,66 @@ public class BackendController extends AbstractBaseController {
 	public ModelAndView huodongList(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("huodongList");
 		int limit = 10;
-		int offset = ServletRequestUtils.getIntParameter(request, "offset", -1);
-		if (offset < 0) {
-			offset = 0;
+		long requestTime = ServletRequestUtils.getIntParameter(request, "requestTime", -1);
+		if (requestTime < 0) {
+			requestTime = new Date().getTime();
 		}
-		Date data = new Date();
-		long requestTime = data.getTime();
-		List<Ridding> riddingList = riddingService.getRiddingListByLastUpdateTime(requestTime,0,false,0);
-		if(ListUtils.isEmptyList(riddingList)){
+		List<Ridding> riddingList = riddingService.getRiddingListByLastUpdateTime(requestTime, limit, false, 0);
+		if (ListUtils.isEmptyList(riddingList)) {
 			return mv;
 		}
 		int pictureLimit = 3;
-		for(Ridding ridding : riddingList){
+		for (Ridding ridding : riddingList) {
 			long riddingId = ridding.getId();
 			List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, pictureLimit, requestTime);
-			if(!ListUtils.isEmptyList(riddingPictures)){
+			if (!ListUtils.isEmptyList(riddingPictures)) {
 				ridding.setRiddingPictureList(riddingPictures);
 			}
-		}		
-	
+		}
+
 		return mv;
 	}
-	
-	
-	public ModelAndView backendHuodong(HttpServletRequest request, HttpServletResponse response) throws Exception{
+
+	/**
+	 * 得到骑行活动信息
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	public ModelAndView backendHuodong(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("return");
-		
-		long riddingId = ServletRequestUtils.getIntParameter(request, "riddingId", -1);
-		if(riddingId<0){
+
+		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
+		if (riddingId < 0) {
 			logger.error("riddingId<0!");
 		}
 		Ridding ridding = riddingService.getRidding(riddingId);
-		if (ridding==null){
+		if (ridding == null) {
 			return mv;
 		}
 		Date data = new Date();
 		long requestTime = data.getTime();
 		List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, 0, requestTime);
-		if(!ListUtils.isEmptyList(riddingPictures)){
-			ridding.setRiddingPictureList(riddingPictures);
+		mv.addObject("riddingPictures", riddingPictures);
+		mv.addObject("ridding", ridding);
+		return mv;
+	}
+
+	/**
+	 * 获得某个骑行活动的评论
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	public ModelAndView backendHuodongComments(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ModelAndView mv = new ModelAndView("return");
+		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
+		if (riddingId < 0) {
+			logger.error("riddingId<0!");
 		}
 		return mv;
 	}

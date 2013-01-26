@@ -117,7 +117,7 @@ public class DwrBackendBean {
 	}
 
 	/**
-	 * 发送apns小新
+	 * 发送apns消息
 	 * 
 	 * @param text
 	 * @return
@@ -136,28 +136,41 @@ public class DwrBackendBean {
 	 * @param userId
 	 */
 	public boolean addPublicRecom(long riddingId, long userId, int weight, String firstPicUrl) {
-//		if (StringUtils.isEmpty(firstPicUrl)) {
-//			Ridding ridding = riddingService.getRidding(riddingId);
-//			if (ridding != null) {
-//				List<RiddingPicture> list = riddingService.getRiddingPictureByRiddingId(riddingId, 1, new Date().getTime());
-//				if (!ListUtils.isEmptyList(list)) {
-//					RiddingPicture picture = list.get(0);
-//					firstPicUrl = picture.getPhotoUrl();
-//				} else {
-//					IMap iMap = mapService.getMapById(ridding.getMapId(), IMap.Using);
-//					if (iMap != null) {
-//						Photo photo = photoService.getPhoto(iMap.getAvatorPic());
-//						if (photo != null) {
-//							firstPicUrl = photo.getOriginalPath();
-//						}
-//					}
-//				}
-//
-//			}
-//		}
+		// if (StringUtils.isEmpty(firstPicUrl)) {
+		// Ridding ridding = riddingService.getRidding(riddingId);
+		// if (ridding != null) {
+		// List<RiddingPicture> list =
+		// riddingService.getRiddingPictureByRiddingId(riddingId, 1, new
+		// Date().getTime());
+		// if (!ListUtils.isEmptyList(list)) {
+		// RiddingPicture picture = list.get(0);
+		// firstPicUrl = picture.getPhotoUrl();
+		// } else {
+		// IMap iMap = mapService.getMapById(ridding.getMapId(), IMap.Using);
+		// if (iMap != null) {
+		// Photo photo = photoService.getPhoto(iMap.getAvatorPic());
+		// if (photo != null) {
+		// firstPicUrl = photo.getOriginalPath();
+		// }
+		// }
+		// }
+		//
+		// }
+		// }
 		String json = PublicType.PublicRecom.setJson(userId, riddingId, firstPicUrl);
 
 		return publicService.addPublic(PublicType.PublicRecom.getValue(), json, weight);
+	}
+
+	/**
+	 * 删除某一个骑行的骑行活动
+	 * 
+	 * @param riddingId
+	 * @param commentId
+	 * @return
+	 */
+	public boolean deleteRiddingComment(long riddingId, long commentId) {
+		return false;
 	}
 
 }

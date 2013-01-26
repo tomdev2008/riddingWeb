@@ -16,8 +16,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.apache.log4j.Logger;
-
-import com.ridding.web.controller.RiddingController;
   
 /**   
 * 简单邮件（不带附件的邮件）发送器
