@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dwr PUBLIC
+ "-//GetAhead Limited//DTD Direct Web Remoting 1.0//EN"
+ "http://www.getahead.ltd.uk/dwr/dwr10.dtd">
+
+<dwr>
+	<allow>
+		<create javascript="BackendBean" creator="spring">
+			<param name="beanName" value="dwrBackendBean" />
+		</create>
+		<create javascript="RiddingBean" creator="spring">
+			<param name="beanName" value="dwrRiddingBean" />
+		</create>
+		<create javascript="RiddingShareBean" creator="spring">
+			<param name="beanName" value="dwrRiddingShareBean" />
+		</create>
+		<create javascript="RiddingPubBean" creator="spring">
+			<param name="beanName" value="dwrRiddingPubBean" />
+		</create>
+        <convert converter="bean" match="com.ridding.meta.vo.Location" />
+		<convert converter="bean" match="com.ridding.meta.vo.Location" />
+		<convert converter="bean" match="net.sf.json.JSONArray" />
+		<convert converter="bean" match="com.ridding.meta.vo.ProfileVO" />
+		<convert converter="bean" match="com.ridding.meta.Profile" />
+
+
+	</allow>
+</dwr>
