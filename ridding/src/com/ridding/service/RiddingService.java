@@ -144,6 +144,17 @@ public interface RiddingService {
 			int offset);
 
 	/**
+	 * 
+	 * 通过userId获得骑行列表
+	 * 
+	 * @param userId
+	 * @param limit
+	 * @param offset
+	 * @return
+	 */
+	public List<Ridding> getRiddingsbyUserId(long userId);
+
+	/**
 	 * 添加骑行活动
 	 * 
 	 * @param ridding
