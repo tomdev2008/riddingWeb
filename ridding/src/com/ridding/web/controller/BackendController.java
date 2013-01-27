@@ -124,6 +124,7 @@ public class BackendController extends AbstractBaseController {
 		}
 		int nextOrBefore = ServletRequestUtils.getIntParameter(request, "nextOrBefore", 0);
 		boolean isLarge = nextOrBefore > 0;
+		long userId = ServletRequestUtils.getLongParameter(request, "userid", -1L);
 		List<Ridding> riddingList = riddingService.getRiddingListByLastUpdateTime(requestTime, limit, isLarge, 0);
 		if (ListUtils.isEmptyList(riddingList)) {
 			mv.addObject("topUpdateTime", -1);
