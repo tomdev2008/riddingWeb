@@ -14,7 +14,6 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ridding.constant.SystemConst;
-import com.ridding.constant.returnCodeConstance;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingComment;
@@ -132,7 +131,7 @@ public class BackendController extends AbstractBaseController {
 		int nextOrBefore = ServletRequestUtils.getIntParameter(request, "nextOrBefore", 0);
 		boolean isLarge = nextOrBefore > 0;
 		long userId = ServletRequestUtils.getLongParameter(request, "userid", -1L);
-		if (userId != 0) {
+		if (userId > 0) {
 			int listLimit = 0, offset = 0;
 			List<ActivityRidding> activityRiddings = riddingService.getRiddingListbyUserId(userId, listLimit, offset);
 			return mv;
