@@ -1,7 +1,6 @@
 package com.ridding.meta;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 import com.ridding.util.TimeUtil;
