@@ -22,7 +22,6 @@ import com.ridding.meta.Public.PublicType;
 import com.ridding.security.MyUser;
 import com.ridding.service.IOSApnsService;
 import com.ridding.service.MapService;
-import com.ridding.service.PhotoService;
 import com.ridding.service.PublicService;
 import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
@@ -55,8 +54,6 @@ public class DwrBackendBean {
 	@Resource
 	private MapService mapService;
 
-	@Resource
-	private PhotoService photoService;
 
 	@Resource
 	private RiddingCommentService riddingCommentService;

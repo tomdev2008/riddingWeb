@@ -24,7 +24,6 @@ import com.ridding.meta.vo.Location;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.security.MyUser;
 import com.ridding.service.MapService;
-import com.ridding.service.PhotoService;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingService;
 import com.ridding.service.transaction.TransactionService;
@@ -49,9 +48,6 @@ public class DwrRiddingBean {
 
 	@Resource
 	private ProfileService profileService;
-
-	@Resource
-	private PhotoService photoService;
 
 
 	/**

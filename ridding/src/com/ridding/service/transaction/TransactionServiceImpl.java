@@ -19,7 +19,6 @@ import weibo4j.model.WeiboException;
 
 import com.ridding.mapper.CityMapper;
 import com.ridding.mapper.IMapMapper;
-import com.ridding.mapper.PhotoMapper;
 import com.ridding.mapper.ProfileMapper;
 import com.ridding.mapper.RepostMapWeiBoMapper;
 import com.ridding.mapper.RiddingActionMapper;
@@ -41,7 +40,6 @@ import com.ridding.meta.Ridding.RiddingStatus;
 import com.ridding.meta.RiddingUser.RiddingUserRoleType;
 import com.ridding.meta.RiddingUser.SelfRiddingStatus;
 import com.ridding.service.IOSApnsService;
-import com.ridding.service.impl.RiddingServiceImpl;
 import com.ridding.util.ListUtils;
 import com.ridding.web.controller.RiddingController;
 
@@ -66,8 +64,6 @@ public class TransactionServiceImpl implements TransactionService {
 	@Resource
 	private ProfileMapper profileMapper;
 
-	@Resource
-	private PhotoMapper photoMapper;
 	@Resource
 	private CityMapper cityMapper;
 

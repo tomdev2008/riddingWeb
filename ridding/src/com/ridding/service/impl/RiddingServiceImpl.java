@@ -17,20 +17,17 @@ import org.springframework.stereotype.Service;
 
 import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.constant.SourceType;
-import com.ridding.constant.returnCodeConstance;
 import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.MapFixMapper;
-import com.ridding.mapper.PhotoMapper;
 import com.ridding.mapper.ProfileMapper;
 import com.ridding.mapper.RiddingActionMapper;
+import com.ridding.mapper.RiddingCommentMapper;
 import com.ridding.mapper.RiddingMapper;
 import com.ridding.mapper.RiddingPictureMapper;
 import com.ridding.mapper.RiddingUserMapper;
 import com.ridding.mapper.SourceAccountMapper;
-import com.ridding.mapper.RiddingCommentMapper;
 import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
-import com.ridding.meta.Photo;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Public;
 import com.ridding.meta.Ridding;
@@ -76,9 +73,6 @@ public class RiddingServiceImpl implements RiddingService {
 
 	@Resource
 	private MapFixMapper mapFixMapper;
-
-	@Resource
-	private PhotoMapper photoMapper;
 
 	@Resource
 	private TransactionService transactionService;
@@ -283,14 +277,6 @@ public class RiddingServiceImpl implements RiddingService {
 		List<Profile> leaderProfileList = profileMapper.getProfileList(leaderUserIds);
 		List<IMap> iMapList = mapMapper.getIMaplist(mapIds);
 		List<Long> photoIds = new ArrayList<Long>(riddingList.size());
-		List<Photo> photoList = new ArrayList<Photo>();
-		if (!ListUtils.isEmptyList(iMapList)) {
-			for (IMap iMap : iMapList) {
-				photoIds.add(iMap.getAvatorPic());
-			}
-			photoList = photoMapper.getPhotoList(photoIds);
-		}
-		Map<Long, Photo> photoMap = HashMapMaker.listToMap(photoList, "getId", Photo.class);
 		Map<Long, IMap> iMapMap = HashMapMaker.listToMap(iMapList, "getId", IMap.class);
 		Map<Long, Ridding> riddingMap = HashMapMaker.listToMap(riddingList, "getId", Ridding.class);
 		Map<Long, Profile> profileMap = HashMapMaker.listToMap(leaderProfileList, "getUserId", Profile.class);
@@ -300,10 +286,6 @@ public class RiddingServiceImpl implements RiddingService {
 				activityRidding.setRidding(ridding);
 				IMap iMap = iMapMap.get(ridding.getMapId());
 				if (iMap != null) {
-					Photo photo = photoMap.get(iMap.getAvatorPic());
-					if (photo != null) {
-						iMap.setAvatorPicUrl(photo.getOriginalPath());
-					}
 					if (StringUtils.isEmpty(iMap.getAvatorPicUrl())) {
 						iMap.setAvatorPicUrl(iMap.getStaticImgSrc());
 					}
