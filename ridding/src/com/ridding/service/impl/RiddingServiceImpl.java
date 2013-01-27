@@ -648,6 +648,17 @@ public class RiddingServiceImpl implements RiddingService {
 		map.put("limit", limit);
 		map.put("isLarger", isLarger ? 1 : 0);
 		List<Ridding> riddingList = riddingMapper.getRiddingListByLastUpdateTime(map);
+		if (ListUtils.isEmptyList(riddingList)) {
+			return null;
+		}
+		// 如果取的数据的时间是大于lastUpdateTime，得到的是增序排列的值，需要做转换成降序
+		if (isLarger) {
+			List<Ridding> descRiddingList = new ArrayList<Ridding>(riddingList.size());
+			for (int i = riddingList.size() - 1; i >= 0; i--) {
+				descRiddingList.add(riddingList.get(i));
+			}
+			riddingList = descRiddingList;
+		}
 		this.insertRiddingInfo(riddingList);
 		return riddingList;
 	}
@@ -692,12 +703,7 @@ public class RiddingServiceImpl implements RiddingService {
 						RiddingPicture riddingPicture = list.get(0);
 						ridding.setFirstPicUrl(riddingPicture.getPhotoUrl());
 					} else if (iMap != null) {
-						Photo photo = photoMapper.getPhotoById(iMap.getAvatorPic());
-						if (photo != null) {
-							ridding.setFirstPicUrl(photo.getOriginalPath());
-						} else {
-							ridding.setFirstPicUrl(iMap.getStaticImgSrc());
-						}
+						ridding.setFirstPicUrl(iMap.getAvatorPicUrl());
 					}
 				}
 			}

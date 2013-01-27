@@ -26,7 +26,6 @@ import com.ridding.constant.SystemConst;
 import com.ridding.constant.returnCodeConstance;
 import com.ridding.meta.ApnsDevice;
 import com.ridding.meta.IMap;
-import com.ridding.meta.Photo;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingAction;
@@ -40,7 +39,6 @@ import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ProfileSourceFeed;
 import com.ridding.security.MyUser;
 import com.ridding.service.IOSApnsService;
-import com.ridding.service.ImageUploadService;
 import com.ridding.service.MapService;
 import com.ridding.service.PhotoService;
 import com.ridding.service.ProfileService;
@@ -75,8 +73,6 @@ public class RiddingController extends AbstractBaseController {
 	private IOSApnsService iosApnsService;
 	@Resource
 	private TransactionService transactionService;
-	@Resource
-	private ImageUploadService imageUploadService;
 	@Resource
 	private DwrRiddingShareBean dwrRiddingShareBean;
 	@Resource

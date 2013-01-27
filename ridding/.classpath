@@ -54,7 +54,6 @@
 	<classpathentry kind="lib" path="lib/org.springframework.web-3.0.5.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/aopalliance-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/weibo4j.jar"/>
-	<classpathentry kind="lib" path="lib/Thumbnailator-0.3.8.jar"/>
 	<classpathentry kind="lib" path="lib/spring-security-acl-3.0.5.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/spring-security-aspects-3.0.5.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/spring-security-cas-client-3.0.5.RELEASE.jar"/>
@@ -76,5 +75,6 @@
 	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.j2eedt.core.MYECLIPSE_JAVAEE_5_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/activation.jar"/>
 	<classpathentry kind="lib" path="lib/mail.jar"/>
+	<classpathentry kind="lib" path="lib/Thumbnailator-0.3.8.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>

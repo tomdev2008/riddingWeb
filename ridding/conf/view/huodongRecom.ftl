@@ -31,7 +31,7 @@ body{font-size:83%;}
 <#list riddingList as ridding>
 <table border="1">
     <thead>
-         <tr><td>id</td><td>名称</td><td>路线封面</td><td>图片列表</td><td>权重</td><td>更新</td></tr>
+         <tr><td>id</td><td>名称</td><td>路线封面</td><td>图片列表</td><td>权重</td><td style="width:100px">更新</td></tr>
     </thead>
     <tbody>
          <tr>
@@ -41,9 +41,11 @@ body{font-size:83%;}
             <td>
               <#if ridding.riddingPictureList?exists>
                 <#list ridding.riddingPictureList as picture>
-                   <img style="width:100px;height:100px;" src="${cfg_imageHost}${picture.photoUrl}" id="recom_img_${picture.id}"/>
-                   <span>${photoUrl.description}</span>
-                   <a href="javascript:void(0);;" id="recom_img_delete_${picture.id}">删除</a>
+                <div style="float:left;width:120px;height:140px;">
+                   <img style="max-width:100px;max-height:100px;" src="${cfg_imageHost}${picture.photoUrl!""}" id="recom_img_${picture.id!0}"/>
+                   <p><span>${picture.description}</span></p>
+                   <p><a href="javascript:void(0);;" id="recom_img_recom_${picture.id!0}">设为封面</a></p>
+                </div>
                 </#list>
               </#if> 
             </td>
