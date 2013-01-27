@@ -3,6 +3,9 @@ package com.ridding.bean.dwr;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -10,7 +13,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.ridding.constant.returnCodeConstance;
+import com.ridding.mapper.MapFixMapper;
+import com.ridding.mapper.RiddingCommentMapper;
+import com.ridding.mapper.RiddingMapper;
 import com.ridding.meta.IMap;
+import com.ridding.meta.MapFix;
+import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingComment;
 import com.ridding.meta.Source;
 import com.ridding.meta.WeiBo;
 import com.ridding.meta.Public.PublicType;
@@ -19,10 +29,12 @@ import com.ridding.service.IOSApnsService;
 import com.ridding.service.MapService;
 import com.ridding.service.PhotoService;
 import com.ridding.service.PublicService;
+import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
 import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
 import com.ridding.service.transaction.TransactionService;
+import com.ridding.util.ListUtils;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -50,6 +62,18 @@ public class DwrBackendBean {
 
 	@Resource
 	private PhotoService photoService;
+
+	@Resource
+	private RiddingCommentService riddingCommentService;
+
+	@Resource
+	private RiddingCommentMapper riddingCommentMapper;
+
+	@Resource
+	private MapFixMapper mapFixMapper;
+
+	@Resource
+	private RiddingMapper riddingMapper;
 
 	/**
 	 * 更新非法的新浪微博
@@ -95,7 +119,8 @@ public class DwrBackendBean {
 	 * @param sourceType
 	 * @return
 	 */
-	public boolean updateWeiBo(String text, String date, String photoUrl, int sourceType, int weiboType, long riddingId) {
+	public boolean updateWeiBo(String text, String date, String photoUrl,
+			int sourceType, int weiboType, long riddingId) {
 		WeiBo weiBo = new WeiBo();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date adate;
@@ -123,7 +148,8 @@ public class DwrBackendBean {
 	 * @return
 	 */
 	public void sendApns(String text) {
-		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder
+				.getContext().getAuthentication()).getDetails();
 		if (myUser.getUserId() == 54) {
 			iosApnsService.sendApns(text);
 		}
@@ -135,7 +161,8 @@ public class DwrBackendBean {
 	 * @param riddingId
 	 * @param userId
 	 */
-	public boolean addPublicRecom(long riddingId, long userId, int weight, String firstPicUrl) {
+	public boolean addPublicRecom(long riddingId, long userId, int weight,
+			String firstPicUrl) {
 		// if (StringUtils.isEmpty(firstPicUrl)) {
 		// Ridding ridding = riddingService.getRidding(riddingId);
 		// if (ridding != null) {
@@ -157,20 +184,37 @@ public class DwrBackendBean {
 		//
 		// }
 		// }
-		String json = PublicType.PublicRecom.setJson(userId, riddingId, firstPicUrl);
+		String json = PublicType.PublicRecom.setJson(userId, riddingId,
+				firstPicUrl);
 
-		return publicService.addPublic(PublicType.PublicRecom.getValue(), json, weight);
+		return publicService.addPublic(PublicType.PublicRecom.getValue(), json,
+				weight);
 	}
 
 	/**
-	 * 删除某一个骑行的骑行活动
+	 * 删除某一个骑行的骑行评论
 	 * 
 	 * @param riddingId
 	 * @param commentId
 	 * @return
 	 */
-	public boolean deleteRiddingComment(long riddingId, long commentId) {
-		return false;
+	public void deleteRiddingComment(long commentId) {
+		if (commentId < 0) {
+			return;
+		}
+		// warning need auth
+		riddingCommentService.deleteRiddingCommentByReplyIdAndCount(commentId);
 	}
 
+	/**
+	 * 设置为推荐
+	 * 
+	 * 
+	 */
+	public boolean setIsRecom(long riddingId) {
+		if (riddingId < 0) {
+			return false;
+		}
+		return (riddingService.setRiddingIsRecom(riddingId));
+	}
 }

@@ -95,8 +95,7 @@ public class RiddingServiceImpl implements RiddingService {
 
 	@Resource
 	private IOSApnsService iosApnsService;
-	private static final Logger logger = Logger
-			.getLogger(RiddingServiceImpl.class);
+	private static final Logger logger = Logger.getLogger(RiddingServiceImpl.class);
 
 	/*
 	 * (non-Javadoc)
@@ -114,21 +113,18 @@ public class RiddingServiceImpl implements RiddingService {
 
 		List<RiddingUser> riddingUserList = new ArrayList<RiddingUser>();
 		if (!riddingUser.isShowTeamer()) {
-			riddingUser.setTimeBefore(TimeUtil.getTimeago(
-					riddingUser.getCacheTime(), false));
+			riddingUser.setTimeBefore(TimeUtil.getTimeago(riddingUser.getCacheTime(), false));
 			riddingUserList.add(riddingUser);
 			return riddingUserList;
 		} else {
-			ConcurrentHashMap<String, RiddingUser> map = RiddingUserCache
-					.getRiddingMap(riddingUser.getRiddingId());
+			ConcurrentHashMap<String, RiddingUser> map = RiddingUserCache.getRiddingMap(riddingUser.getRiddingId());
 			if (MapUtils.isEmpty(map)) {
 				return null;
 			}
 			Iterator<RiddingUser> iterator = map.values().iterator();
 			while (iterator.hasNext()) {
 				RiddingUser user = (RiddingUser) iterator.next();
-				user.setTimeBefore(TimeUtil.getTimeago(user.getCacheTime(),
-						false));
+				user.setTimeBefore(TimeUtil.getTimeago(user.getCacheTime(), false));
 				user.setState();
 				riddingUserList.add(user);
 			}
@@ -148,8 +144,7 @@ public class RiddingServiceImpl implements RiddingService {
 		}
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("latitude", MapFix.getLatPrefix(riddingUser.getLatitude()));
-		hashMap.put("longtitude",
-				MapFix.getLngPrefix(riddingUser.getLongtitude()));
+		hashMap.put("longtitude", MapFix.getLngPrefix(riddingUser.getLongtitude()));
 		MapFix mapFix = mapFixMapper.getMapFixByLatLng(hashMap);
 		if (mapFix != null) {
 			mapFix.setRealLat(riddingUser.getLatitude());
@@ -157,8 +152,7 @@ public class RiddingServiceImpl implements RiddingService {
 			riddingUser.setLatitude(mapFix.getLatitude());
 			riddingUser.setLongtitude(mapFix.getLongtitude());
 		}
-		String userKey = RiddingUserCache.createUserKey(
-				riddingUser.getRiddingId(), riddingUser.getUserId());
+		String userKey = RiddingUserCache.createUserKey(riddingUser.getRiddingId(), riddingUser.getUserId());
 		RiddingUserCache.set(riddingUser.getRiddingId(), userKey, riddingUser);
 	}
 
@@ -229,8 +223,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @see com.ridding.service.RiddingService#getRiddingList(long, int, long)
 	 */
-	public List<RiddingUser> getRiddingUserList(long userId, int limit,
-			long createTime, boolean isLarger) {
+	public List<RiddingUser> getRiddingUserList(long userId, int limit, long createTime, boolean isLarger) {
 		if (createTime < 0) {
 			createTime = new Date().getTime();
 		}
@@ -249,16 +242,13 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @see com.ridding.service.RiddingService#getRiddingList(long, int, long)
 	 */
-	public List<ActivityRidding> getSelfRiddingUserList(long userId, int limit,
-			long createTime, boolean isLarger) {
-		List<RiddingUser> riddingUsers = this.getRiddingUserList(userId, limit,
-				createTime, isLarger);
+	public List<ActivityRidding> getSelfRiddingUserList(long userId, int limit, long createTime, boolean isLarger) {
+		List<RiddingUser> riddingUsers = this.getRiddingUserList(userId, limit, createTime, isLarger);
 		if (ListUtils.isEmptyList(riddingUsers)) {
 			return null;
 		}
 		List<Long> ids = new ArrayList<Long>(riddingUsers.size());
-		List<ActivityRidding> activityList = new ArrayList<ActivityRidding>(
-				riddingUsers.size());
+		List<ActivityRidding> activityList = new ArrayList<ActivityRidding>(riddingUsers.size());
 		for (RiddingUser riddingUser : riddingUsers) {
 			ids.add(riddingUser.getRiddingId());
 			ActivityRidding activityRidding = new ActivityRidding();
@@ -278,8 +268,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @param riddingList
 	 */
-	private void insertMessage(List<Ridding> riddingList,
-			List<ActivityRidding> activityRiddings) {
+	private void insertMessage(List<Ridding> riddingList, List<ActivityRidding> activityRiddings) {
 
 		List<Long> mapIds = new ArrayList<Long>(riddingList.size());
 		List<Long> leaderUserIds = new ArrayList<Long>(riddingList.size());
@@ -287,8 +276,7 @@ public class RiddingServiceImpl implements RiddingService {
 			mapIds.add(ridding.getMapId());
 			leaderUserIds.add(ridding.getLeaderUserId());
 		}
-		List<Profile> leaderProfileList = profileMapper
-				.getProfileList(leaderUserIds);
+		List<Profile> leaderProfileList = profileMapper.getProfileList(leaderUserIds);
 		List<IMap> iMapList = mapMapper.getIMaplist(mapIds);
 		List<Long> photoIds = new ArrayList<Long>(riddingList.size());
 		List<Photo> photoList = new ArrayList<Photo>();
@@ -298,17 +286,12 @@ public class RiddingServiceImpl implements RiddingService {
 			}
 			photoList = photoMapper.getPhotoList(photoIds);
 		}
-		Map<Long, Photo> photoMap = HashMapMaker.listToMap(photoList, "getId",
-				Photo.class);
-		Map<Long, IMap> iMapMap = HashMapMaker.listToMap(iMapList, "getId",
-				IMap.class);
-		Map<Long, Ridding> riddingMap = HashMapMaker.listToMap(riddingList,
-				"getId", Ridding.class);
-		Map<Long, Profile> profileMap = HashMapMaker.listToMap(
-				leaderProfileList, "getUserId", Profile.class);
+		Map<Long, Photo> photoMap = HashMapMaker.listToMap(photoList, "getId", Photo.class);
+		Map<Long, IMap> iMapMap = HashMapMaker.listToMap(iMapList, "getId", IMap.class);
+		Map<Long, Ridding> riddingMap = HashMapMaker.listToMap(riddingList, "getId", Ridding.class);
+		Map<Long, Profile> profileMap = HashMapMaker.listToMap(leaderProfileList, "getUserId", Profile.class);
 		for (ActivityRidding activityRidding : activityRiddings) {
-			Ridding ridding = riddingMap.get(activityRidding.getRiddingUser()
-					.getRiddingId());
+			Ridding ridding = riddingMap.get(activityRidding.getRiddingUser().getRiddingId());
 			if (ridding != null) {
 				activityRidding.setRidding(ridding);
 				IMap iMap = iMapMap.get(ridding.getMapId());
@@ -336,11 +319,9 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#getRiddingUserList(long, int,
 	 * int)
 	 */
-	public List<ProfileVO> getRiddingUserListToProfile(long riddingId,
-			int limit, int createTime) {
+	public List<ProfileVO> getRiddingUserListToProfile(long riddingId, int limit, int createTime) {
 		List<ProfileVO> profileVOs = new ArrayList<ProfileVO>();
-		List<Long> userIdList = this.getProfileByRiddingUserList(riddingId,
-				limit, createTime, profileVOs);
+		List<Long> userIdList = this.getProfileByRiddingUserList(riddingId, limit, createTime, profileVOs);
 		if (ListUtils.isEmptyList(userIdList)) {
 			return null;
 		}
@@ -351,12 +332,9 @@ public class RiddingServiceImpl implements RiddingService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("sourceType", SourceType.SINAWEIBO.getValue());
 		map.put("userIds", userIdList);
-		List<SourceAccount> sourceAccounts = sourceAccountMapper
-				.getSourceAccountByUserIdsSourceType(map);
-		Map<Long, SourceAccount> sourceAccountMap = HashMapMaker.listToMap(
-				sourceAccounts, "getUserId", SourceAccount.class);
-		Map<Long, Profile> profileMap = HashMapMaker.listToMap(profileList,
-				"getUserId", Profile.class);
+		List<SourceAccount> sourceAccounts = sourceAccountMapper.getSourceAccountByUserIdsSourceType(map);
+		Map<Long, SourceAccount> sourceAccountMap = HashMapMaker.listToMap(sourceAccounts, "getUserId", SourceAccount.class);
+		Map<Long, Profile> profileMap = HashMapMaker.listToMap(profileList, "getUserId", Profile.class);
 		for (ProfileVO profileVO : profileVOs) {
 			Profile profile = profileMap.get(profileVO.getUserId());
 			if (profile != null) {
@@ -364,8 +342,7 @@ public class RiddingServiceImpl implements RiddingService {
 				profileVO.setsAvatorUrl(profile.getsAvatorUrl());
 				profileVO.setNickName(profile.getNickName());
 			}
-			SourceAccount sourceAccount = sourceAccountMap.get(profileVO
-					.getUserId());
+			SourceAccount sourceAccount = sourceAccountMap.get(profileVO.getUserId());
 			if (sourceAccount != null) {
 				profileVO.setSourceAccount(sourceAccount);
 			}
@@ -381,15 +358,13 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @param createTime
 	 * @return
 	 */
-	private List<Long> getProfileByRiddingUserList(long riddingId, int limit,
-			int createTime, List<ProfileVO> profileVOs) {
+	private List<Long> getProfileByRiddingUserList(long riddingId, int limit, int createTime, List<ProfileVO> profileVOs) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("riddingId", riddingId);
 		hashMap.put("userRole", RiddingUserRoleType.User.intValue());
 		hashMap.put("createTime", createTime);
 		hashMap.put("limit", limit);
-		List<RiddingUser> riddingUserList = riddingUserMapper
-				.getRiddingUserListByRiddingId(hashMap);
+		List<RiddingUser> riddingUserList = riddingUserMapper.getRiddingUserListByRiddingId(hashMap);
 		if (ListUtils.isEmptyList(riddingUserList)) {
 			return null;
 		}
@@ -411,8 +386,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * com.ridding.service.RiddingService#updateRiddingUsers(java.util.List,
 	 * long)
 	 */
-	public boolean insertRiddingUsers(List<Profile> profileList,
-			long riddingId, int sourceType, long userId) {
+	public boolean insertRiddingUsers(List<Profile> profileList, long riddingId, int sourceType, long userId) {
 		if (ListUtils.isEmptyList(profileList)) {
 			return true;
 		}
@@ -424,18 +398,15 @@ public class RiddingServiceImpl implements RiddingService {
 		int succCount = 0;
 		for (Profile profile : profileList) {
 			try {
-				if (transactionService.insertRiddingUser(ridding, profile,
-						sourceType, leaderProfile)) {
+				if (transactionService.insertRiddingUser(ridding, profile, sourceType, leaderProfile)) {
 					succCount++;
 				}
 			} catch (Exception e) {
 				logger.error(e.getMessage());
-				logger.error("insertRiddingUsers error where sinaId="
-						+ profile.getAccessUserId());
+				logger.error("insertRiddingUsers error where sinaId=" + profile.getAccessUserId());
 			}
 		}
-		logger.info("insertRiddingUsers successCount=" + succCount
-				+ " and initCount=" + profileList.size());
+		logger.info("insertRiddingUsers successCount=" + succCount + " and initCount=" + profileList.size());
 		return succCount > 0;
 	}
 
@@ -468,8 +439,7 @@ public class RiddingServiceImpl implements RiddingService {
 				succCount++;
 			}
 		}
-		logger.info("deleteRiddingUsers successCount=" + succCount
-				+ " and initCount=" + userIdList.size());
+		logger.info("deleteRiddingUsers successCount=" + succCount + " and initCount=" + userIdList.size());
 		return succCount > 0;
 	}
 
@@ -538,8 +508,7 @@ public class RiddingServiceImpl implements RiddingService {
 			return false;
 		}
 		try {
-			return transactionService.updateEndRiddingByLeader(riddingId,
-					iMap.getDistance());
+			return transactionService.updateEndRiddingByLeader(riddingId, iMap.getDistance());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -563,21 +532,18 @@ public class RiddingServiceImpl implements RiddingService {
 	 * int)
 	 */
 	@Override
-	public List<ActivityRidding> getRiddingListbyUserId(long userId, int limit,
-			int offset) {
+	public List<ActivityRidding> getRiddingListbyUserId(long userId, int limit, int offset) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("userId", userId);
 		hashMap.put("offset", offset);
 		hashMap.put("limit", limit);
 		hashMap.put("userRole", RiddingUserRoleType.User.intValue());
-		List<RiddingUser> riddingUsers = riddingUserMapper
-				.getRiddingListByUserId(hashMap);
+		List<RiddingUser> riddingUsers = riddingUserMapper.getRiddingListByUserId(hashMap);
 		if (ListUtils.isEmptyList(riddingUsers)) {
 			return null;
 		}
 		List<Long> ids = new ArrayList<Long>(riddingUsers.size());
-		List<ActivityRidding> activityList = new ArrayList<ActivityRidding>(
-				riddingUsers.size());
+		List<ActivityRidding> activityList = new ArrayList<ActivityRidding>(riddingUsers.size());
 		for (RiddingUser riddingUser : riddingUsers) {
 			ids.add(riddingUser.getRiddingId());
 			ActivityRidding activityRidding = new ActivityRidding();
@@ -608,8 +574,7 @@ public class RiddingServiceImpl implements RiddingService {
 			riddingUser.setUserId(ridding.getLeaderUserId());
 			riddingUser.setUserRole(RiddingUserRoleType.Leader.intValue());
 			riddingUser.setSelfName(ridding.getName());
-			riddingUser
-					.setRiddingStatus(SelfRiddingStatus.Beginning.getValue());
+			riddingUser.setRiddingStatus(SelfRiddingStatus.Beginning.getValue());
 			riddingUserMapper.addRiddingUser(riddingUser);
 			return ridding;
 		}
@@ -636,8 +601,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * (long, long)
 	 */
 	@Override
-	public List<RiddingPicture> getRiddingPictureByRiddingId(long riddingId,
-			int limit, long lastUpdateTime) {
+	public List<RiddingPicture> getRiddingPictureByRiddingId(long riddingId, int limit, long lastUpdateTime) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("riddingId", riddingId);
 		map.put("createTime", lastUpdateTime);
@@ -651,15 +615,12 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#getRecomRiddingList(int, int,
 	 * java.lang.Boolean)
 	 */
-	public List<Ridding> getRecomRiddingList(int weight, int limit,
-			Boolean isLarger) {
-		List<Public> publicList = publicService.getPublicListByType(
-				PublicType.PublicRecom.getValue(), limit, weight, isLarger);
+	public List<Ridding> getRecomRiddingList(int weight, int limit, Boolean isLarger) {
+		List<Public> publicList = publicService.getPublicListByType(PublicType.PublicRecom.getValue(), limit, weight, isLarger);
 		List<Ridding> riddingList = new ArrayList<Ridding>(publicList.size());
 		if (!ListUtils.isEmptyList(publicList)) {
 			for (Public public1 : publicList) {
-				Ridding ridding = PublicType.PublicRecom.getRidding(public1
-						.getJson());
+				Ridding ridding = PublicType.PublicRecom.getRidding(public1.getJson());
 				Ridding newRidding = riddingMapper.getRidding(ridding.getId());
 				if (ridding.getFirstPicUrl() != null) {
 					newRidding.setFirstPicUrl(ridding.getFirstPicUrl());
@@ -675,6 +636,20 @@ public class RiddingServiceImpl implements RiddingService {
 	}
 
 	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
+	public boolean setRiddingIsRecom(long riddingId) {
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("id", riddingId);
+		hashMap.put("isRecom", Ridding.PublicOrRecom);
+		return riddingMapper.updateRecomStatus(hashMap) > 0;
+	}
+
+	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
@@ -682,21 +657,18 @@ public class RiddingServiceImpl implements RiddingService {
 	 * int, com.ridding.meta.Ridding.RiddingStatus)
 	 */
 	@Override
-	public List<Ridding> getRiddingListByLastUpdateTime(long lastUpdateTime,
-			int limit, Boolean isLarger, int isRecom) {
+	public List<Ridding> getRiddingListByLastUpdateTime(long lastUpdateTime, int limit, Boolean isLarger, int isRecom) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("lastUpdateTime", lastUpdateTime);
 		map.put("limit", limit);
 		map.put("isLarger", isLarger ? 1 : 0);
-		List<Ridding> riddingList = riddingMapper
-				.getRiddingListByLastUpdateTime(map);
+		List<Ridding> riddingList = riddingMapper.getRiddingListByLastUpdateTime(map);
 		if (ListUtils.isEmptyList(riddingList)) {
 			return null;
 		}
 		// 如果取的数据的时间是大于lastUpdateTime，得到的是增序排列的值，需要做转换成降序
 		if (isLarger) {
-			List<Ridding> descRiddingList = new ArrayList<Ridding>(
-					riddingList.size());
+			List<Ridding> descRiddingList = new ArrayList<Ridding>(riddingList.size());
 			for (int i = riddingList.size() - 1; i >= 0; i--) {
 				descRiddingList.add(riddingList.get(i));
 			}
@@ -828,8 +800,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#checkIsInRiddingAction(long,
 	 * long, com.ridding.meta.RiddingAction.RiddingActions)
 	 */
-	public boolean checkIsInRiddingAction(long riddingId, long userId,
-			RiddingActions action) {
+	public boolean checkIsInRiddingAction(long riddingId, long userId, RiddingActions action) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("riddingId", riddingId);
 		hashMap.put("userId", userId);
@@ -898,8 +869,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#getRiddingPictureList(long, long)
 	 */
 	@Override
-	public List<RiddingPicture> getRiddingPictureList(long riddingId,
-			long userId, int limit, long createTime) {
+	public List<RiddingPicture> getRiddingPictureList(long riddingId, long userId, int limit, long createTime) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("riddingId", riddingId);
 		map.put("createTime", new Date().getTime());
@@ -917,8 +887,7 @@ public class RiddingServiceImpl implements RiddingService {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("riddingId", riddingId);
 		hashMap.put("userId", userId);
-		List<RiddingAction> riddingactionList = riddingActionMapper
-				.getRiddingActionsByUserId(hashMap);
+		List<RiddingAction> riddingactionList = riddingActionMapper.getRiddingActionsByUserId(hashMap);
 		RiddingAction riddingAction = new RiddingAction();
 		if (ListUtils.isEmptyList(riddingactionList)) {
 			riddingAction.setUserCared(false);

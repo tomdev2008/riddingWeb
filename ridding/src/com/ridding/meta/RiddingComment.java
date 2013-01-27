@@ -142,5 +142,4 @@ public class RiddingComment {
 	public void setLarger(boolean larger) {
 		this.larger = larger;
 	}
-
 }
