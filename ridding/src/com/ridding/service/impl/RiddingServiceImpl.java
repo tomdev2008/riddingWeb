@@ -27,6 +27,7 @@ import com.ridding.mapper.RiddingMapper;
 import com.ridding.mapper.RiddingPictureMapper;
 import com.ridding.mapper.RiddingUserMapper;
 import com.ridding.mapper.SourceAccountMapper;
+import com.ridding.mapper.RiddingCommentMapper;
 import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
 import com.ridding.meta.Photo;
@@ -92,6 +93,9 @@ public class RiddingServiceImpl implements RiddingService {
 
 	@Resource
 	private RiddingActionMapper riddingActionMapper;
+
+	@Resource
+	private RiddingCommentMapper riddingCommentMapper;
 
 	@Resource
 	private IOSApnsService iosApnsService;
@@ -694,11 +698,9 @@ public class RiddingServiceImpl implements RiddingService {
 			return;
 		}
 		List<Profile> profileList = profileMapper.getProfileList(leaderUserIds);
-		Map<Long, Profile> profileMap = HashMapMaker.listToMap(profileList,
-				"getUserId", Profile.class);
+		Map<Long, Profile> profileMap = HashMapMaker.listToMap(profileList, "getUserId", Profile.class);
 		List<IMap> iMapList = mapMapper.getIMaplist(mapIds);
-		Map<Long, IMap> iMapMap = HashMapMaker.listToMap(iMapList, "getId",
-				IMap.class);
+		Map<Long, IMap> iMapMap = HashMapMaker.listToMap(iMapList, "getId", IMap.class);
 		if (!ListUtils.isEmptyList(riddingList)) {
 			for (Ridding ridding : riddingList) {
 				Profile profile = profileMap.get(ridding.getLeaderUserId());
@@ -714,8 +716,7 @@ public class RiddingServiceImpl implements RiddingService {
 					ridding.setDistance(iMap.getDistance());
 				}
 				if (ridding.getFirstPicUrl() == null) {
-					List<RiddingPicture> list = riddingPictureMapper
-							.getRiddingPicturesByRiddingId(map);
+					List<RiddingPicture> list = riddingPictureMapper.getRiddingPicturesByRiddingId(map);
 
 					if (!ListUtils.isEmptyList(list)) {
 						RiddingPicture riddingPicture = list.get(0);
@@ -916,4 +917,5 @@ public class RiddingServiceImpl implements RiddingService {
 	public boolean incRiddingComment(long riddingId) {
 		return riddingMapper.incCommentCount(riddingId) > 0;
 	}
+
 }

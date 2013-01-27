@@ -3,24 +3,19 @@ package com.ridding.bean.dwr;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.ibatis.transaction.TransactionException;
+import org.apache.log4j.Logger;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.ridding.constant.returnCodeConstance;
 import com.ridding.mapper.MapFixMapper;
 import com.ridding.mapper.RiddingCommentMapper;
 import com.ridding.mapper.RiddingMapper;
 import com.ridding.meta.IMap;
-import com.ridding.meta.MapFix;
-import com.ridding.meta.Ridding;
-import com.ridding.meta.RiddingComment;
 import com.ridding.meta.Source;
 import com.ridding.meta.WeiBo;
 import com.ridding.meta.Public.PublicType;
@@ -34,7 +29,6 @@ import com.ridding.service.RiddingService;
 import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
 import com.ridding.service.transaction.TransactionService;
-import com.ridding.util.ListUtils;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -43,6 +37,7 @@ import com.ridding.util.ListUtils;
 @Service("dwrBackendBean")
 public class DwrBackendBean {
 
+	private static final Logger logger = Logger.getLogger(DwrBackendBean.class);
 	@Resource
 	private SourceService sourceService;
 
@@ -119,8 +114,7 @@ public class DwrBackendBean {
 	 * @param sourceType
 	 * @return
 	 */
-	public boolean updateWeiBo(String text, String date, String photoUrl,
-			int sourceType, int weiboType, long riddingId) {
+	public boolean updateWeiBo(String text, String date, String photoUrl, int sourceType, int weiboType, long riddingId) {
 		WeiBo weiBo = new WeiBo();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date adate;
@@ -148,8 +142,7 @@ public class DwrBackendBean {
 	 * @return
 	 */
 	public void sendApns(String text) {
-		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder
-				.getContext().getAuthentication()).getDetails();
+		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
 		if (myUser.getUserId() == 54) {
 			iosApnsService.sendApns(text);
 		}
@@ -161,8 +154,7 @@ public class DwrBackendBean {
 	 * @param riddingId
 	 * @param userId
 	 */
-	public boolean addPublicRecom(long riddingId, long userId, int weight,
-			String firstPicUrl) {
+	public boolean addPublicRecom(long riddingId, long userId, int weight, String firstPicUrl) {
 		// if (StringUtils.isEmpty(firstPicUrl)) {
 		// Ridding ridding = riddingService.getRidding(riddingId);
 		// if (ridding != null) {
@@ -184,15 +176,12 @@ public class DwrBackendBean {
 		//
 		// }
 		// }
-		String json = PublicType.PublicRecom.setJson(userId, riddingId,
-				firstPicUrl);
+		String json = PublicType.PublicRecom.setJson(userId, riddingId, firstPicUrl);
 
-		return publicService.addPublic(PublicType.PublicRecom.getValue(), json,
-				weight);
+		return publicService.addPublic(PublicType.PublicRecom.getValue(), json, weight);
 	}
 
 	/**
-	 * 删除某一个骑行的骑行评论
 	 * 
 	 * @param riddingId
 	 * @param commentId
@@ -209,12 +198,31 @@ public class DwrBackendBean {
 	/**
 	 * 设置为推荐
 	 * 
-	 * 
+	 * @param riddingId
+	 * @return
 	 */
 	public boolean setIsRecom(long riddingId) {
 		if (riddingId < 0) {
 			return false;
 		}
 		return (riddingService.setRiddingIsRecom(riddingId));
+	}
+
+	/**
+	 * 删除骑行活动,包括骑行队员，骑行图片，骑行评论，骑行操作
+	 * 
+	 * @param riddingId
+	 * @return
+	 **/
+	public boolean deleteRiddingById(long riddingId) {
+		if (riddingId < 0) {
+			return false;
+		}
+		try {
+			return transactionService.deleteRiddingAndLinkedThings(riddingId);
+		} catch (TransactionException e) {
+			logger.error("报错了呗~");
+			return false;
+		}
 	}
 }

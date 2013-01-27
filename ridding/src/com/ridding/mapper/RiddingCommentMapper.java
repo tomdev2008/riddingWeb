@@ -41,4 +41,10 @@ public interface RiddingCommentMapper {
 	 * @return
 	 */
 	public List<RiddingComment> getRiddingCommentListByReplyId(long replyId);
+
+	/**
+	 * 通过riddingId删除评论
+	 * 
+	 */
+	public int deleteRiddingCommentByRiddingId(long riddingId);
 }

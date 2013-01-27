@@ -50,7 +50,6 @@ public interface RiddingUserMapper {
 	 */
 	public int updateRiddingUserRole(Map<String, Object> hashMap);
 
-
 	/**
 	 * 得到骑行用户列表，通过时间
 	 * 
@@ -65,7 +64,8 @@ public interface RiddingUserMapper {
 	 * @param hashMap
 	 * @return
 	 */
-	public List<RiddingUser> getRiddingUserListByRiddingId(Map<String, Object> hashMap);
+	public List<RiddingUser> getRiddingUserListByRiddingId(
+			Map<String, Object> hashMap);
 
 	/**
 	 * 测试删除操作
@@ -74,7 +74,7 @@ public interface RiddingUserMapper {
 	 * @return
 	 */
 	public int deleteRiddingUser(Map<String, Object> hashMap);
-	
+
 	/**
 	 * 得到骑行数量
 	 * 
@@ -82,7 +82,7 @@ public interface RiddingUserMapper {
 	 * @return
 	 */
 	public int getRiddingCount(long userId);
-	
+
 	/**
 	 * 得到用户的骑行列表
 	 * 
@@ -90,4 +90,11 @@ public interface RiddingUserMapper {
 	 * @return
 	 */
 	public List<RiddingUser> getRiddingListByUserId(Map<String, Object> hashMap);
+	
+	/**
+	 * 根据riddingId删除
+	 * 
+	 * 
+	 */
+	public int deleteRiddingUserByRiddingId(long riddingId);
 }

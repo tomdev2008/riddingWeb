@@ -48,7 +48,7 @@ public interface RiddingMapper {
 	 * @param riddingId
 	 * @return
 	 */
-	public boolean deleteRidding(long riddingId);
+	public int deleteRidding(long riddingId);
 
 	/**
 	 * 更新骑行状态

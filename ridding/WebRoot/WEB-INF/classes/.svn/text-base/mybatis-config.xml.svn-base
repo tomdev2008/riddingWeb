@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias alias="Account" type="com.ridding.meta.Account" />
+		<typeAlias alias="SourceAccount" type="com.ridding.meta.SourceAccount" />
+		<typeAlias alias="IMap" type="com.ridding.meta.IMap" />
+		<typeAlias alias="Profile" type="com.ridding.meta.Profile" />
+		<typeAlias alias="Ridding" type="com.ridding.meta.Ridding" />
+		<typeAlias alias="RiddingUser" type="com.ridding.meta.RiddingUser" />
+		<typeAlias alias="Source" type="com.ridding.meta.Source" />
+		<typeAlias alias="City" type="com.ridding.meta.City" />
+		<typeAlias alias="Recom" type="com.ridding.meta.Recom" />
+		<typeAlias alias="MapFix" type="com.ridding.meta.MapFix" />
+		<typeAlias alias="Apns" type="com.ridding.meta.ApnsDevice" />
+		<typeAlias alias="Photo" type="com.ridding.meta.Photo" />
+		<typeAlias alias="RiddingPicture" type="com.ridding.meta.RiddingPicture" />
+		<typeAlias alias="WeiBo" type="com.ridding.meta.WeiBo" />
+		<typeAlias alias="RepostMap" type="com.ridding.meta.RepostMap" />
+	</typeAliases>
+	<mappers>
+		<mapper resource="com/ridding/mapper/xml/AccountMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/SourceAccountMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/IMapMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/ProfileMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/RiddingMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/RiddingUserMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/SourceMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/CityMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/RecomMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/MapFixMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/IosApnsMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/PhotoMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/RiddingPictureMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/WeiBoMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/WeiBoMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/RepostMapWeiBoMapper.xml" />
+	</mappers>
+</configuration>
+			
