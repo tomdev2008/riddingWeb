@@ -60,18 +60,25 @@ public class RiddingCommentServiceImpl implements RiddingCommentService {
 	 */
 	private void sendMessage(RiddingComment riddingComment) {
 		if (riddingComment.getReplyId() > 0) {
-			Ridding ridding = riddingService.getRidding(riddingComment.getRiddingId());
-			Profile userProfile = profileMapper.getProfile(riddingComment.getUserId());
+			Ridding ridding = riddingService.getRidding(riddingComment
+					.getRiddingId());
+			Profile userProfile = profileMapper.getProfile(riddingComment
+					.getUserId());
 			if (ridding != null) {
-				String message = userProfile.getUserName() + "回复了您在" + ridding.getName() + "的评论";
-				iosApnsService.sendUserApns(riddingComment.getToUserId(), message);
+				String message = userProfile.getUserName() + "回复了您在"
+						+ ridding.getName() + "的评论";
+				iosApnsService.sendUserApns(riddingComment.getToUserId(),
+						message);
 			}
 		}
 		if (riddingComment.getReplyId() <= 0) {
-			Ridding ridding = riddingService.getRidding(riddingComment.getRiddingId());
+			Ridding ridding = riddingService.getRidding(riddingComment
+					.getRiddingId());
 			if (riddingComment.getUserId() != ridding.getLeaderUserId()) {
-				Profile userProfile = profileMapper.getProfile(riddingComment.getUserId());
-				String message = userProfile.getUserName() + "评论了您的骑行活动" + ridding.getName() + ":" + riddingComment.getText();
+				Profile userProfile = profileMapper.getProfile(riddingComment
+						.getUserId());
+				String message = userProfile.getUserName() + "评论了您的骑行活动"
+						+ ridding.getName() + ":" + riddingComment.getText();
 				iosApnsService.sendUserApns(ridding.getLeaderUserId(), message);
 			}
 		}
@@ -83,13 +90,15 @@ public class RiddingCommentServiceImpl implements RiddingCommentService {
 	 * @see com.ridding.service.RiddingCommentService#getRiddingComments(long,
 	 * int, java.lang.Boolean)
 	 */
-	public List<RiddingComment> getRiddingComments(long riddingId, long createTime, int limit, boolean isLarger) {
+	public List<RiddingComment> getRiddingComments(long riddingId,
+			long createTime, int limit, boolean isLarger) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("createTime", createTime);
 		map.put("riddingId", riddingId);
 		map.put("limit", limit);
 		map.put("isLarger", isLarger ? 1 : 0);
-		List<RiddingComment> riddingCommentList = riddingCommentMapper.getRiddingCommentList(map);
+		List<RiddingComment> riddingCommentList = riddingCommentMapper
+				.getRiddingCommentList(map);
 		this.insertProfileInfo(riddingCommentList);
 		return riddingCommentList;
 	}
@@ -105,19 +114,34 @@ public class RiddingCommentServiceImpl implements RiddingCommentService {
 			toUserIds.add(riddingComment.getToUserId());
 		}
 		List<Profile> userProfiles = profileMapper.getProfileList(userIds);
-		Map<Long, Profile> userProfileMap = HashMapMaker.listToMap(userProfiles, "getUserId", Profile.class);
+		Map<Long, Profile> userProfileMap = HashMapMaker.listToMap(
+				userProfiles, "getUserId", Profile.class);
 		List<Profile> toUserProfiles = profileMapper.getProfileList(toUserIds);
-		Map<Long, Profile> toUserProfileMap = HashMapMaker.listToMap(toUserProfiles, "getUserId", Profile.class);
+		Map<Long, Profile> toUserProfileMap = HashMapMaker.listToMap(
+				toUserProfiles, "getUserId", Profile.class);
 		for (RiddingComment riddingComment : riddingCommentList) {
-			Profile userProfile = userProfileMap.get(riddingComment.getUserId());
+			Profile userProfile = userProfileMap
+					.get(riddingComment.getUserId());
 			if (userProfile != null) {
 				riddingComment.setUserProfile(userProfile);
 			}
-			Profile toUserProfile = toUserProfileMap.get(riddingComment.getToUserId());
+			Profile toUserProfile = toUserProfileMap.get(riddingComment
+					.getToUserId());
 			if (toUserProfile != null) {
 				riddingComment.setToUserProfile(toUserProfile);
 			}
 		}
-
+	}
+	public void deleteRiddingCommentByReplyIdAndCount(long replyId) {
+		riddingCommentMapper.deleteRiddingComment(replyId);
+		List<RiddingComment> riddingCommentList = riddingCommentMapper
+				.getRiddingCommentListByReplyId(replyId);
+		if (ListUtils.isEmptyList(riddingCommentList)) {
+			return ;
+		}
+		for (RiddingComment riddingComment : riddingCommentList) {
+			this.deleteRiddingCommentByReplyIdAndCount(
+					riddingComment.getReplyId());
+		}
 	}
 }

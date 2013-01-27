@@ -93,10 +93,10 @@
 	</update>
 
 	<update id="updateRecomStatus" parameterType="hashMap"
-		flushCache="true" statementType="PREPARED">
-		update TB_Ridding set isRecom =
-		#{isRecom}
-		where id = #{id} ;
+	flushCache="true" statementType="PREPARED">
+	update TB_Ridding set isRecom =
+	#{isRecom}
+	where id = #{id} ;
 	</update>
 
 	<update id="updatePublicStatus" parameterType="hashMap"

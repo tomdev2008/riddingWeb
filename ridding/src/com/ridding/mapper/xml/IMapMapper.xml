@@ -93,7 +93,7 @@
 
 	<delete id="deleteRiddingMap" parameterType="long">
 		delete from TB_Map
-		where Id=#{id} 
+		where id=#{id} ;
 	</delete>
 	<select id="getRiddingMap" resultMap="imapMap">
 		SELECT * from

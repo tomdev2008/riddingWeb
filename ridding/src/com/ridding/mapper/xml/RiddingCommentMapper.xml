@@ -53,4 +53,20 @@
 		</if>
 		order by createTime desc limit #{limit};
 	</select>
+	
+	<delete id="deleteRiddingComment" parameterType="long">
+		delete from TB_Ridding_Comment
+		where id=#{commentId} ;
+	</delete>
+	
+	<select id="getRiddingCommentByReplyId" resultMap="riddingCommentMap"
+		parameterType="long">
+		SELECT * from TB_Ridding_COMMENT
+		where replyId=#{replyId} order by
+		createTime desc
+		<if test="limit>0">
+			limit #{limit}
+			offset #{offset};
+		</if>
+	</select>
 </mapper>
