@@ -14,10 +14,12 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ridding.constant.SystemConst;
+import com.ridding.constant.returnCodeConstance;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.WeiBo;
+import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.security.MyUser;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingService;
@@ -51,9 +53,11 @@ public class BackendController extends AbstractBaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	public ModelAndView indexBackend(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView indexBackend(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("backendIndex");
-		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder
+				.getContext().getAuthentication()).getDetails();
 		Profile profile = profileService.getProfile(myUser.getUserId());
 		if (profile.getLevel() != 1) {
 			response.sendRedirect(SystemConst.getValue("HOST"));
@@ -71,10 +75,12 @@ public class BackendController extends AbstractBaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	public ModelAndView sendWeiBo(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView sendWeiBo(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("sendWeiBo");
 		List<WeiBo> sendList = sinaWeiBoService.getWeiBoList();
-		long visitUserId = ServletRequestUtils.getLongParameter(request, "userId");
+		long visitUserId = ServletRequestUtils.getLongParameter(request,
+				"userId");
 		mv.addObject("weiboList", sendList);
 		this.setUD(mv, visitUserId, visitUserId);
 		return mv;
@@ -88,20 +94,25 @@ public class BackendController extends AbstractBaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	public ModelAndView huodongRecom(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView huodongRecom(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("huodongRecom");
 		int weight = ServletRequestUtils.getIntParameter(request, "weight", -1);
 		if (weight <= 0) {
 			weight = 99999;
 		}
-		List<Ridding> riddingList = riddingService.getRecomRiddingList(weight, 50, false);
+		List<Ridding> riddingList = riddingService.getRecomRiddingList(weight,
+				50, false);
 		if (!ListUtils.isEmptyList(riddingList)) {
 			for (Ridding ridding : riddingList) {
-				List<RiddingPicture> pictureList = riddingService.getRiddingPictureByRiddingId(ridding.getId(), 50, new Date().getTime());
+				List<RiddingPicture> pictureList = riddingService
+						.getRiddingPictureByRiddingId(ridding.getId(), 50,
+								new Date().getTime());
 				ridding.setRiddingPictureList(pictureList);
 			}
 		}
-		long visitUserId = ServletRequestUtils.getLongParameter(request, "userId");
+		long visitUserId = ServletRequestUtils.getLongParameter(request,
+				"userId");
 		mv.addObject("riddingList", riddingList);
 		this.setUD(mv, visitUserId, visitUserId);
 		return mv;
@@ -115,17 +126,28 @@ public class BackendController extends AbstractBaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	public ModelAndView huodongList(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView huodongList(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("huodongList");
 		int limit = 10;
-		long requestTime = ServletRequestUtils.getLongParameter(request, "requestTime", -1L);
+		long requestTime = ServletRequestUtils.getLongParameter(request,
+				"requestTime", -1L);
 		if (requestTime < 0) {
 			requestTime = new Date().getTime();
 		}
-		int nextOrBefore = ServletRequestUtils.getIntParameter(request, "nextOrBefore", 0);
+		int nextOrBefore = ServletRequestUtils.getIntParameter(request,
+				"nextOrBefore", 0);
 		boolean isLarge = nextOrBefore > 0;
-		long userId = ServletRequestUtils.getLongParameter(request, "userid", -1L);
-		List<Ridding> riddingList = riddingService.getRiddingListByLastUpdateTime(requestTime, limit, isLarge, 0);
+		long userId = ServletRequestUtils.getLongParameter(request, "userid",
+				-1L);
+		if (userId != 0) {
+			int listLimit = 0, offset = 0;
+			List<ActivityRidding> activityRiddings = riddingService
+					.getRiddingListbyUserId(userId, listLimit, offset);
+			return mv;
+		}
+		List<Ridding> riddingList = riddingService
+				.getRiddingListByLastUpdateTime(requestTime, limit, isLarge, 0);
 		if (ListUtils.isEmptyList(riddingList)) {
 			mv.addObject("topUpdateTime", -1);
 			mv.addObject("bottomUpdateTime", -1);
@@ -134,7 +156,9 @@ public class BackendController extends AbstractBaseController {
 		int pictureLimit = 3;
 		for (Ridding ridding : riddingList) {
 			long riddingId = ridding.getId();
-			List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, pictureLimit, requestTime);
+			List<RiddingPicture> riddingPictures = riddingService
+					.getRiddingPictureByRiddingId(riddingId, pictureLimit,
+							requestTime);
 			if (!ListUtils.isEmptyList(riddingPictures)) {
 				ridding.setRiddingPictureList(riddingPictures);
 			}
@@ -142,7 +166,8 @@ public class BackendController extends AbstractBaseController {
 		mv.addObject("riddingList", riddingList);
 
 		mv.addObject("topUpdateTime", riddingList.get(0).getLastUpdateTime());
-		mv.addObject("bottomUpdateTime", riddingList.get(riddingList.size() - 1).getLastUpdateTime());
+		mv.addObject("bottomUpdateTime", riddingList
+				.get(riddingList.size() - 1).getLastUpdateTime());
 		return mv;
 	}
 
@@ -154,10 +179,12 @@ public class BackendController extends AbstractBaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	public ModelAndView backendHuodong(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView backendHuodong(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("backendHuodong");
 
-		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
+		long riddingId = ServletRequestUtils.getLongParameter(request,
+				"riddingId", -1L);
 		if (riddingId < 0) {
 			logger.error("riddingId<0!");
 		}
@@ -167,7 +194,8 @@ public class BackendController extends AbstractBaseController {
 		}
 		Date data = new Date();
 		long requestTime = data.getTime();
-		List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, 0, requestTime);
+		List<RiddingPicture> riddingPictures = riddingService
+				.getRiddingPictureByRiddingId(riddingId, 0, requestTime);
 		mv.addObject("riddingPictures", riddingPictures);
 		mv.addObject("ridding", ridding);
 		return mv;
@@ -181,9 +209,11 @@ public class BackendController extends AbstractBaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	public ModelAndView backendHuodongComments(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView backendHuodongComments(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("return");
-		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
+		long riddingId = ServletRequestUtils.getLongParameter(request,
+				"riddingId", -1L);
 		if (riddingId < 0) {
 			logger.error("riddingId<0!");
 		}
