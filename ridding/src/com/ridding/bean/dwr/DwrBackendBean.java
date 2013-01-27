@@ -3,17 +3,22 @@ package com.ridding.bean.dwr;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.ibatis.transaction.TransactionException;
+import org.apache.log4j.Logger;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ridding.meta.IMap;
+import com.ridding.meta.RiddingUser;
 import com.ridding.meta.Source;
 import com.ridding.meta.WeiBo;
 import com.ridding.meta.Public.PublicType;
+import com.ridding.meta.vo.ProfileVO;
 import com.ridding.security.MyUser;
 import com.ridding.service.IOSApnsService;
 import com.ridding.service.MapService;
@@ -23,6 +28,8 @@ import com.ridding.service.RiddingService;
 import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
 import com.ridding.service.transaction.TransactionService;
+import com.ridding.util.ListUtils;
+import com.ridding.web.controller.RiddingController;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -31,6 +38,7 @@ import com.ridding.service.transaction.TransactionService;
 @Service("dwrBackendBean")
 public class DwrBackendBean {
 
+	private static final Logger logger = Logger.getLogger(DwrBackendBean.class);
 	@Resource
 	private SourceService sourceService;
 
@@ -95,7 +103,8 @@ public class DwrBackendBean {
 	 * @param sourceType
 	 * @return
 	 */
-	public boolean updateWeiBo(String text, String date, String photoUrl, int sourceType, int weiboType, long riddingId) {
+	public boolean updateWeiBo(String text, String date, String photoUrl,
+			int sourceType, int weiboType, long riddingId) {
 		WeiBo weiBo = new WeiBo();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date adate;
@@ -123,7 +132,8 @@ public class DwrBackendBean {
 	 * @return
 	 */
 	public void sendApns(String text) {
-		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder
+				.getContext().getAuthentication()).getDetails();
 		if (myUser.getUserId() == 54) {
 			iosApnsService.sendApns(text);
 		}
@@ -135,29 +145,52 @@ public class DwrBackendBean {
 	 * @param riddingId
 	 * @param userId
 	 */
-	public boolean addPublicRecom(long riddingId, long userId, int weight, String firstPicUrl) {
-//		if (StringUtils.isEmpty(firstPicUrl)) {
-//			Ridding ridding = riddingService.getRidding(riddingId);
-//			if (ridding != null) {
-//				List<RiddingPicture> list = riddingService.getRiddingPictureByRiddingId(riddingId, 1, new Date().getTime());
-//				if (!ListUtils.isEmptyList(list)) {
-//					RiddingPicture picture = list.get(0);
-//					firstPicUrl = picture.getPhotoUrl();
-//				} else {
-//					IMap iMap = mapService.getMapById(ridding.getMapId(), IMap.Using);
-//					if (iMap != null) {
-//						Photo photo = photoService.getPhoto(iMap.getAvatorPic());
-//						if (photo != null) {
-//							firstPicUrl = photo.getOriginalPath();
-//						}
-//					}
-//				}
-//
-//			}
-//		}
-		String json = PublicType.PublicRecom.setJson(userId, riddingId, firstPicUrl);
+	public boolean addPublicRecom(long riddingId, long userId, int weight,
+			String firstPicUrl) {
+		// if (StringUtils.isEmpty(firstPicUrl)) {
+		// Ridding ridding = riddingService.getRidding(riddingId);
+		// if (ridding != null) {
+		// List<RiddingPicture> list =
+		// riddingService.getRiddingPictureByRiddingId(riddingId, 1, new
+		// Date().getTime());
+		// if (!ListUtils.isEmptyList(list)) {
+		// RiddingPicture picture = list.get(0);
+		// firstPicUrl = picture.getPhotoUrl();
+		// } else {
+		// IMap iMap = mapService.getMapById(ridding.getMapId(), IMap.Using);
+		// if (iMap != null) {
+		// Photo photo = photoService.getPhoto(iMap.getAvatorPic());
+		// if (photo != null) {
+		// firstPicUrl = photo.getOriginalPath();
+		// }
+		// }
+		// }
+		//
+		// }
+		// }
+		String json = PublicType.PublicRecom.setJson(userId, riddingId,
+				firstPicUrl);
 
-		return publicService.addPublic(PublicType.PublicRecom.getValue(), json, weight);
+		return publicService.addPublic(PublicType.PublicRecom.getValue(), json,
+				weight);
 	}
 
+	/**
+	 * 删除骑行活动,包括骑行队员，骑行图片，骑行评论，骑行操作
+	 * 
+	 * @param riddingId
+	 * @return
+	 */
+	public boolean deleteRiddingById(long riddingId) {
+		if (riddingId < 0) {
+			return false;
+		}
+		try {
+			return transactionService.deleteRiddingAndLinkedThings(riddingId);
+		} catch (TransactionException e) {
+			logger.error("报错了呗~");
+		   return false;
+		}
+
+	}
 }

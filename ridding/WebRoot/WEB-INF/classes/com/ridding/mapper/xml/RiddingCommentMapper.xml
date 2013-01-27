@@ -41,16 +41,22 @@
 			LAST_INSERT_ID() AS VALUE
 		</selectKey>
 	</insert>
-	
+
 	<!-- 查询Ridding -->
 	<select id="getRiddingCommentList" resultMap="riddingCommentMap">
-		SELECT * from TB_Ridding_Comment where riddingId=#{riddingId} 
+		SELECT * from TB_Ridding_Comment where riddingId=#{riddingId}
 		<if test="isLarger==1">
-		    and createTime > #{createTime} 
+			and createTime > #{createTime} 
 		</if>
 		<if test="isLarger==0">
-		    and  #{createTime} > createTime 
+			and #{createTime} > createTime 
 		</if>
 		order by createTime desc limit #{limit};
 	</select>
+
+	<delete id="deleteRiddingCommentByRiddingId" parameterType="long"
+		flushCache="true" statementType="PREPARED">
+		delete from TB_Ridding_Comment where
+		riddingId=#{riddingId};
+	</delete>
 </mapper>

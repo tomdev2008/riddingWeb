@@ -34,4 +34,10 @@ public interface RiddingPictureMapper {
 	 * @return
 	 */
 	public List<RiddingPicture> getRiddingPicturesByRiddingId(Map<String, Object> map);
+	
+	/**
+	 * 通过riddingId删除骑行图片
+	 * 
+	 */
+	public int deleteRiddingPicByRiddingId(long riddingId);
 }

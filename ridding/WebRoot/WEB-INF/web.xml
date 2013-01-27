@@ -80,4 +80,4 @@
 		<servlet-name>frontend-dispatch</servlet-name>
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
-</    web-app   >
+</web-app>

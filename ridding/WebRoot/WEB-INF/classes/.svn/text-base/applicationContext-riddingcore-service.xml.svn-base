@@ -15,9 +15,14 @@
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-				<ref bean="sinaWeiBoTrigger" />
-				<ref bean="sinaToGoogleUrlTrigger" />
-				<ref bean="googleUrlToTapsTrigger" />
+				<!--
+					<ref bean="sinaWeiBoTrigger" /> <ref
+					bean="sourceToGoogleUrlTrigger" /> <ref
+					bean="googleUrlToTapsTrigger" />
+				-->
+				<!--  <ref bean="apnsTrigger"/>  -->
+				<ref bean="sendWeiBoTrigger" />
+				<ref bean="repostWeiBoTrigger" />
 			</list>
 		</property>
 		<property name="startupDelay" value="0" />
@@ -48,21 +53,21 @@
 		<property name="cronExpression" value="0 0/1 * * * ?" />
 	</bean>
 	<!-- 将sina微博数据取出googleurl -->
-	<bean id="sinaToGoogleUrlDetail"
+	<bean id="sourceToGoogleUrlDetail"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
-			<ref bean="sinaWeiBoService" />
+			<ref bean="sourceService" />
 		</property>
 		<property name="targetMethod">
-			<value>getIMapListFromWeiBoQuartz</value>
+			<value>getIMapListFromSourceQuartz</value>
 		</property>
 		<property name="concurrent">
 			<value>false</value>
 		</property>
 	</bean>
-	<bean id="sinaToGoogleUrlTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	<bean id="sourceToGoogleUrlTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail">
-			<ref bean="sinaToGoogleUrlDetail" />
+			<ref bean="sourceToGoogleUrlDetail" />
 		</property>
 		<property name="cronExpression" value="0 0/1 * * * ?" />
 	</bean>
@@ -85,41 +90,63 @@
 		</property>
 		<property name="cronExpression" value="0 0/1 * * * ?" />
 	</bean>
-	<!--
-		<bean id="asyncTaskService"
-		class="com.ridding.service.async.AsyncTaskServiceImpl"
-		init-method="init" destroy-method="destroy"> <property
-		name="delayTime"> <value>1000</value> </property> <property
-		name="executors"> <list> <ref bean="riddingMapExecutor" /> </list>
-		</property> <property name="threadPool"> <bean
-		class="org.apache.tomcat.util.threads.ThreadPool"> <property
-		name="maxThreads" value="10" /> </bean> </property> </bean>
+	<!-- 消息推送任务 -->
+	<!-- 将google url转为标点 
+	<bean id="apnsDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="iosApnsService" />
+		</property>
+		<property name="targetMethod">
+			<value>quartz</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="apnsTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="apnsDetail" />
+		</property>
+		<property name="cronExpression" value="0 0/1 * * * ?" />
+	</bean>
 	-->
-	<!--
-		<bean id="filterChainProxy"
-		class="org.acegisecurity.util.FilterChainProxy"> <property
-		name="filterInvocationDefinitionSource"> <value>
-		CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON PATTERN_TYPE_APACHE_ANT
-		/**=preposingFilter,exceptionTranslationFilter,accessTokenFilter</value>
-		</property> </bean> <bean id="preposingConfig"
-		class="com.ridding.security.PreposingConfig"> <property
-		name="noAuthURIConfig"> <value>/**/riddingPub.do*</value> </property>
-		</bean> <bean id="preposingFilter"
-		class="com.ridding.security.PreposingFilter"> <property
-		name="preposingConfig"> <ref bean="preposingConfig" /> </property>
-		</bean> <bean id="accessTokenFilter"
-		class="com.ridding.security.AccessTokenFilter"> <property
-		name="accountMapper"> <ref bean="accountMapper" /> </property> </bean>
-
-
-		<bean id="exceptionTranslationFilter"
-		class="com.ridding.security.InterfaceExceptionTranslationFilter">
-		<property name="defaultErrorUrl">
-		<value>http://photo.163.com/photo/err?code=404</value> </property>
-		<property name="exceptionMappings"> <props> <prop
-		key="com.ridding.exception.TokenNotRightException"> 1001 </prop> <prop
-		key="ocom.ridding.exception.NoUserIdException"> 1002 </prop> <prop
-		key="com.ridding.exception.NoAccountException"> 1002 </prop> </props>
-		</property> </bean>
-	-->
+	<!-- 定时发送微博 -->
+	<bean id="sendWeiBoDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="sinaWeiBoService" />
+		</property>
+		<property name="targetMethod">
+			<value>sendWeiBoQuartz</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="sendWeiBoTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="sendWeiBoDetail" />
+		</property>
+		<property name="cronExpression" value="0 0/10 * * * ?" />
+	</bean>
+	<!-- 定时将转发的地图微博生成活动 -->
+	<bean id="repostWeiBoDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="sinaWeiBoService" />
+		</property>
+		<property name="targetMethod">
+			<value>genMapFromMapWeiBoQuartz</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="repostWeiBoTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="repostWeiBoDetail" />
+		</property>
+		<property name="cronExpression" value="0 0/5 * * * ?" />
+	</bean>
 </beans>

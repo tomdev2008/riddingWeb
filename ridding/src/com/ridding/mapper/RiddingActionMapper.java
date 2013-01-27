@@ -33,4 +33,11 @@ public interface RiddingActionMapper {
 	 * @return
 	 */
 	public List<RiddingAction> getRiddingActionsByUserId(Map<String, Object> map);
+	
+	/**
+	 * 通过riddingId删除操作
+	 * 
+	 * 
+	 */
+	public int deleteRiddingActionByRiddingId(long riddingId);
 }

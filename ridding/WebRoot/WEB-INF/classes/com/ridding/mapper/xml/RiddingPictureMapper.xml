@@ -58,12 +58,19 @@
 	<select id="getRiddingPicturesByRiddingId" resultMap="riddingPictureMap"
 		parameterType="hashMap">
 		SELECT * from TB_Ridding_Picture where
-		riddingId=#{riddingId}  and #{createTime} > createTime  order by
-		createTime desc  
+		riddingId=#{riddingId} and
+		#{createTime} > createTime order by
+		createTime desc
 		<if test="limit>0">
 			limit #{limit}
 		</if>
 		;
 	</select>
+
+	<delete id="deleteRiddingPicByRiddingId" parameterType="long"
+		flushCache="true" statementType="PREPARED">
+		delete from TB_Ridding_Picture where
+		riddingId=#{riddingId};
+	</delete>
 
 </mapper>

@@ -19,7 +19,7 @@
 		<result property="useCount" column="useCount" />
 		<result property="careCount" column="careCount" />
 		<result property="isSyncSina" column="isSyncSina" />
-		
+
 	</resultMap>
 	<insert id="addRidding" parameterType="Ridding">
 		INSERT INTO TB_Ridding(
@@ -85,6 +85,12 @@
 		and 30 > riddingStatus order by createTime desc;
 	</select>
 
+	<delete id="deleteRidding" parameterType="long" flushCache="true"
+		statementType="PREPARED">
+		delete from TB_Ridding
+		where id=#{riddingId};
+	</delete>
+
 	<update id="updateRiddingStatus" parameterType="hashMap"
 		flushCache="true" statementType="PREPARED">
 		update TB_Ridding set riddingStatus =
@@ -133,7 +139,8 @@
 		statementType="PREPARED">
 		update TB_Ridding set useCount = useCount + 1
 		where id
-		= #{riddingId} ;
+		=
+		#{riddingId} ;
 	</update>
 	<update id="incCommentCount" parameterType="long" flushCache="true"
 		statementType="PREPARED">
