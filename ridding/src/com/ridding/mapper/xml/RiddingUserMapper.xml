@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ridding.mapper.RiddingUserMapper">
-	
+
 	<resultMap type="RiddingUser" id="riddingUserMap">
 		<id property="id" column="id" />
 		<result property="riddingId" column="riddingId" />
@@ -46,13 +46,14 @@
 	<update id="updateRiddingName" parameterType="hashMap"
 		flushCache="true" statementType="PREPARED">
 		update TB_Ridding_User set selfName
-		=#{name} 
+		=#{name}
 		where userId=#{userId} and
 		riddingId=#{riddingId} ;
 	</update>
 	<update id="updateRiddingStatus" parameterType="hashMap"
 		flushCache="true" statementType="PREPARED">
-		update TB_Ridding_User set riddingStatus
+		update TB_Ridding_User set
+		riddingStatus
 		=#{riddingStatus}
 		where userId=#{userId} and
 		riddingId=#{riddingId} ;
@@ -68,34 +69,37 @@
 
 	<delete id="deleteRiddingUser" parameterType="hashMap"
 		flushCache="true" statementType="PREPARED">
-		delete from TB_Ridding_User where riddingId=#{riddingId} and
+		delete from TB_Ridding_User where
+		riddingId=#{riddingId} and
 		userId=#{userId}
 	</delete>
 
-	<!-- 查询Ridding列表-->
+	<!-- 查询Ridding列表 -->
 	<select id="getSelfRiddingList" resultMap="riddingUserMap"
 		parameterType="hashMap">
 		SELECT * from TB_Ridding_User where
-		userId= #{userId}  
+		userId= #{userId}
 		<if test="isLarger==1">
 			and lastUpdateTime > #{lastUpdateTime} 
 		</if>
 		<if test="isLarger==0">
 			and #{lastUpdateTime} > lastUpdateTime 
 		</if>
-		and userRole >= #{userRole} and 30 > riddingStatus order by lastUpdateTime desc
+		and userRole >= #{userRole} and 30 > riddingStatus order by
+		lastUpdateTime desc
 		<if test="limit>0">
 			limit #{limit}
 		</if>
 		;
 	</select>
-	<!-- 查询RiddingUser列表-->
+	<!-- 查询RiddingUser列表 -->
 	<select id="getRiddingUserListByRiddingId" resultMap="riddingUserMap"
 		parameterType="hashMap">
 		SELECT * from TB_Ridding_User where
 		riddingId= #{riddingId} and
 		createTime >
-		#{createTime} and userRole >= #{userRole} and 30 > riddingStatus order by
+		#{createTime} and userRole >= #{userRole} and 30 >
+		riddingStatus order by
 		createTime desc
 		<if test="limit>0">
 			limit #{limit}
@@ -103,20 +107,28 @@
 		;
 	</select>
 
-    <!-- 查询用户的骑行数量Ridding -->
+	<!-- 查询用户的骑行数量Ridding -->
 	<select id="getRiddingCount" resultType="int" parameterType="long">
 		SELECT count(*) from TB_Ridding_User where
-		userId=#{userId} and userRole >=10 and 30 > riddingStatus;
+		userId=#{userId} and
+		userRole >=10 and 30 > riddingStatus;
 	</select>
-	
-	 <!-- 查询用户的骑行数量Ridding -->
+
+	<!-- 查询用户的骑行数量Ridding -->
 	<select id="getRiddingListByUserId" resultMap="riddingUserMap"
 		parameterType="hashMap">
 		SELECT * from TB_Ridding_User where
-		userId= #{userId} and userRole >= #{userRole} and 30 > riddingStatus order by createTime desc 
+		userId= #{userId} and userRole >=
+		#{userRole} and 30 > riddingStatus order by createTime desc
 		<if test="limit>0">
 			limit #{limit} offset #{offset}
 		</if>
 		;
 	</select>
+	
+	<delete id="deleteRiddingUserByRiddingId" parameterType="long"
+		flushCache="true" statementType="PREPARED">
+		delete from TB_Ridding_User where
+		riddingId=#{riddingId};
+	</delete>
 </mapper>

@@ -25,4 +25,10 @@ public interface RiddingCommentMapper {
 	 * @return
 	 */
 	public List<RiddingComment> getRiddingCommentList(Map<String, Object> map);
+	
+	/**
+	 * 通过riddingId删除评论
+	 * 
+	 */
+	public int deleteRiddingCommentByRiddingId(long riddingId);
 }

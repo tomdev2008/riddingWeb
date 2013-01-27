@@ -20,7 +20,10 @@
 
 	<!-- 导入属性配置文件 -->
 	<context:property-placeholder location="classpath:mysql.properties" />
-
+	<!--
+		<context:property-placeholder
+		location="classpath:memcached.properties" />
+	-->
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${mysql.driver}" />
@@ -60,6 +63,10 @@
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 		<property name="mapperInterface" value="com.ridding.mapper.AccountMapper" />
 	</bean>
+	<bean id="sourceAccountMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.SourceAccountMapper" />
+	</bean>
 	<bean id="imapMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 		<property name="mapperInterface" value="com.ridding.mapper.IMapMapper" />
@@ -76,8 +83,40 @@
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 		<property name="mapperInterface" value="com.ridding.mapper.ProfileMapper" />
 	</bean>
-	<bean id="SinaWeiBoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	<bean id="sourceMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-		<property name="mapperInterface" value="com.ridding.mapper.SinaWeiBoMapper" />
+		<property name="mapperInterface" value="com.ridding.mapper.SourceMapper" />
+	</bean>
+	<bean id="cityMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.CityMapper" />
+	</bean>
+	<bean id="recomMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.RecomMapper" />
+	</bean>
+	<bean id="mapFixMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.MapFixMapper" />
+	</bean>
+	<bean id="iosApnsMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.IosApnsMapper" />
+	</bean>
+	<bean id="photoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.PhotoMapper" />
+	</bean>
+	<bean id="riddingPictureMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.RiddingPictureMapper" />
+	</bean>
+	<bean id="weiBoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.WeiBoMapper" />
+	</bean>
+	<bean id="repostMapWeiBoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.RepostMapWeiBoMapper" />
 	</bean>
 </beans>

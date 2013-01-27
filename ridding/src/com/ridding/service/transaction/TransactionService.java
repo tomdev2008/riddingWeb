@@ -23,7 +23,8 @@ public interface TransactionService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Profile insertSourceAccount(SourceAccount sourceAccount, Profile profile) throws TransactionException;
+	public Profile insertSourceAccount(SourceAccount sourceAccount,
+			Profile profile) throws TransactionException;
 
 	/**
 	 * 插入地图
@@ -33,7 +34,8 @@ public interface TransactionService {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean insertMap(IMap iMap, Source sinaWeiBo) throws TransactionException;
+	public boolean insertMap(IMap iMap, Source sinaWeiBo)
+			throws TransactionException;
 
 	/**
 	 * 插入骑行用户
@@ -42,7 +44,8 @@ public interface TransactionService {
 	 * @param userList
 	 * @return
 	 */
-	public boolean insertRiddingUser(Ridding ridding, Profile profile, int sourceType,Profile leaderProfile) throws TransactionException;
+	public boolean insertRiddingUser(Ridding ridding, Profile profile,
+			int sourceType, Profile leaderProfile) throws TransactionException;
 
 	/**
 	 * 插入一个新的骑行纪录
@@ -58,7 +61,8 @@ public interface TransactionService {
 	 * @param riddingId
 	 * @return
 	 */
-	public boolean updateEndRiddingByLeader(long riddingId, int distance) throws TransactionException;
+	public boolean updateEndRiddingByLeader(long riddingId, int distance)
+			throws TransactionException;
 
 	/**
 	 * 对新转发的微博，并创建骑行活动
@@ -66,5 +70,16 @@ public interface TransactionService {
 	 * @param response
 	 * @param weiBo
 	 */
-	public long insertRepostMap(WeiBo weiBo, JSONObject jsonObject2) throws TransactionException;
+	public long insertRepostMap(WeiBo weiBo, JSONObject jsonObject2)
+			throws TransactionException;
+
+	/**
+	 * 删除骑行队员、图片、评论、操作
+	 * 
+	 * @param riddingId
+	 * @return
+	 */
+	public boolean deleteRiddingAndLinkedThings(long riddingId)
+			throws TransactionException;
+
 }
