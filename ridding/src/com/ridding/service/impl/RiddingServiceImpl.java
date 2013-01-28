@@ -596,6 +596,11 @@ public class RiddingServiceImpl implements RiddingService {
 		return activityList;
 	}
 
+	/*
+	 * 
+	 * (non-Javadoc)
+	 * @see com.ridding.service.RiddingService#getRiddingsbyUserId(long)
+	 */
 	public List<Ridding> getRiddingsbyUserId(long userId) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("userId", userId);
@@ -609,7 +614,17 @@ public class RiddingServiceImpl implements RiddingService {
 		for (RiddingUser riddingUser : riddingUsers) {
 			riddingIds.add(riddingUser.getRiddingId());
 		}
-		return riddingMapper.getRiddingList(riddingIds);
+		List<Ridding> riddings = riddingMapper.getRiddingList(riddingIds);
+		Map<Long, Ridding> riddingHashMap = HashMapMaker.listToMap(riddings,
+				"getId", Ridding.class);
+		List<Ridding> riddinglist = new ArrayList<Ridding>(riddings.size());
+		for (long riddingId : riddingIds) {
+			Ridding tmpRidding = riddingHashMap.get(riddingId);
+			if (tmpRidding != null) {
+				riddinglist.add(tmpRidding);
+			}
+		}
+		return riddinglist;
 	}
 
 	/*
