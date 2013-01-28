@@ -40,7 +40,6 @@ import com.ridding.meta.vo.ProfileSourceFeed;
 import com.ridding.security.MyUser;
 import com.ridding.service.IOSApnsService;
 import com.ridding.service.MapService;
-import com.ridding.service.PhotoService;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
@@ -67,8 +66,7 @@ public class RiddingController extends AbstractBaseController {
 
 	@Resource
 	private ProfileService profileService;
-	@Resource
-	private PhotoService photoService;
+	
 	@Resource
 	private IOSApnsService iosApnsService;
 	@Resource

@@ -26,7 +26,6 @@ import com.ridding.constant.returnCodeConstance;
 import com.ridding.mapper.MapFixMapper;
 import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
-import com.ridding.meta.Photo;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingComment;
@@ -36,7 +35,6 @@ import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.meta.vo.UserRelationVO;
 import com.ridding.service.MapService;
-import com.ridding.service.PhotoService;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
@@ -71,9 +69,6 @@ public class RiddingPublicController extends AbstractBaseController {
 
 	@Resource
 	private UserRelationService userRelationService;
-
-	@Resource
-	private PhotoService photoService;
 
 	/**
 	 * 得到用户信息
@@ -301,27 +296,6 @@ public class RiddingPublicController extends AbstractBaseController {
 		return mv;
 	}
 
-	public void OriginalPathToAvatroPicUrl() {
-		List<IMap> imapList = mapService.getAllMaps();
-		if (ListUtils.isEmptyList(imapList)) {
-			logger.error("List为空");
-			return;
-		}
-		for (IMap imap : imapList) {
-			long photoId = imap.getAvatorPic();
-			Photo photo = photoService.getPhoto(photoId);
-			if (photo == null) {
-				logger.error("photo is null where photoId=" + photoId);
-				continue;
-			}
-			String originalPathString = photo.getOriginalPath();
-			boolean succ = mapService.updateImapAvatorPicUrl(originalPathString, imap.getId());
-			if (!succ) {
-				logger.error("无法将地图更新 where photoId=" + photoId + " originalPathString=" + originalPathString);
-			} 
-		}
-	}
-
 	/**
 	 * 得到进行中的骑行活动，根据时间排序，或者推荐的
 	 * 
@@ -350,7 +324,6 @@ public class RiddingPublicController extends AbstractBaseController {
 			riddingList = riddingService.getRiddingListByLastUpdateTime(ridding.getLastUpdateTime(), ridding.getLimit(), ridding.isLarger(),
 					ridding.isRecom);
 		}
-		OriginalPathToAvatroPicUrl();
 		HttpJsonUtil.setRiddingByLastUpdateTime(returnObject, riddingList);
 		JSONArray dataArray = HttpServletUtil2.parseGetGoingRiddings(riddingList);
 		returnObject.put("data", dataArray);

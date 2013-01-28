@@ -2,7 +2,6 @@ package com.ridding.web.controller;
 
 import java.io.IOException;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,8 +13,6 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ridding.service.PhotoService;
-
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
  * @version CreateTime：2012-8-6 下午08:46:33 Class Description
@@ -23,8 +20,6 @@ import com.ridding.service.PhotoService;
 @Controller("uploadController")
 public class UploadController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(UploadController.class);
-	@Resource
-	private PhotoService photoService;
 
 	/**
 	 * 图片上传接口
