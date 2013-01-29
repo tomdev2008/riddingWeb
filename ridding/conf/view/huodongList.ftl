@@ -14,10 +14,17 @@ body{font-size:83%;}
     <input type="text" value="输入用户id"/>
     <input type="button" id="search" value="搜索"/>
 </div>
+<div>
+    <h3><a href="/Ridding/backend.do?action=huodongList&requestTime=${bottomUpdateTime!"-1"}&nextOrBefore=0">默认排序</a></h3>
+    <h3><a href="/Ridding/backend.do?action=huodongList&orderByLike=1">喜欢数排序</a></h3>
+    <h3><a href="/Ridding/backend.do?action=huodongList&orderByComment=1">评论数排序</a></h3>
+    <h3><a href="/Ridding/backend.do?action=huodongList&orderByUse=1">使用数排序</a></h3>
+</div>
 
 <div>
    <h3><#if topUpdateTime == -1><#else><a href="/Ridding/backend.do?action=huodongList&requestTime=${topUpdateTime!"-1"}&nextOrBefore=1">上一页</a></#if></h3>
    <h3><a href="/Ridding/backend.do?action=huodongList&requestTime=${bottomUpdateTime!"-1"}&nextOrBefore=0">下一页</a></h3>
+   
 </div>
 <#if riddingList?exists>
 <div>
