@@ -80,7 +80,8 @@ public interface RiddingMapper {
 	 * @param hashMap
 	 * @return
 	 */
-	public List<Ridding> getRiddingListByLastUpdateTime(Map<String, Object> hashMap);
+	public List<Ridding> getRiddingListByLastUpdateTime(
+			Map<String, Object> hashMap);
 
 	/**
 	 * 喜欢数

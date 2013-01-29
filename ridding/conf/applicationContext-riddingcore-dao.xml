@@ -20,10 +20,8 @@
 
 	<!-- 导入属性配置文件 -->
 	<context:property-placeholder location="classpath:mysql.properties" />
-	<!--
-		<context:property-placeholder
-		location="classpath:memcached.properties" />
-	-->
+	<!-- <context:property-placeholder location="classpath:memcached.properties" 
+		/> -->
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${mysql.driver}" />
@@ -42,7 +40,7 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-	<!--配置哪些方法,什么情况下需要回滚-->
+	<!--配置哪些方法,什么情况下需要回滚 -->
 	<tx:advice id="serviceAdvice" transaction-manager="transactionManager">
 		<tx:attributes>
 			<tx:method name="insert*" propagation="REQUIRED"
@@ -134,5 +132,9 @@
 	<bean id="userRelationMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 		<property name="mapperInterface" value="com.ridding.mapper.UserRelationMapper" />
+	</bean>
+	<bean id="userNearbyMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.UserNearbyMapper" />
 	</bean>
 </beans>

@@ -21,6 +21,7 @@
 		<typeAlias alias="RiddingAction" type="com.ridding.meta.RiddingAction" />
 		<typeAlias alias="RiddingComment" type="com.ridding.meta.RiddingComment" />
 		<typeAlias alias="UserRelation" type="com.ridding.meta.UserRelation" />
+		<typeAlias alias="UserNearby" type="com.ridding.meta.UserNearby" />
 	</typeAliases>
 	<mappers>
 		<mapper resource="com/ridding/mapper/xml/AccountMapper.xml" />
@@ -43,6 +44,7 @@
 		<mapper resource="com/ridding/mapper/xml/RiddingActionMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/RiddingCommentMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/UserRelationMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/UserNearbyMapper.xml" />
 	</mappers>
 </configuration>
 			

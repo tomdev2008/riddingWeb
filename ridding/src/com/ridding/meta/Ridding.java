@@ -122,7 +122,7 @@ public class Ridding implements Serializable {
 	private Profile leaderProfile;
 
 	/**
-	 *骑行状态
+	 * 骑行状态
 	 * 
 	 * @author apple
 	 * 

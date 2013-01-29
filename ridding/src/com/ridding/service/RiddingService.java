@@ -2,16 +2,14 @@ package com.ridding.service;
 
 import java.util.List;
 
-import org.apache.ibatis.transaction.TransactionException;
-
 import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingAction;
-import com.ridding.meta.RiddingPicture;
-import com.ridding.meta.RiddingUser;
 import com.ridding.meta.RiddingAction.RiddingActionResponse;
 import com.ridding.meta.RiddingAction.RiddingActions;
+import com.ridding.meta.RiddingPicture;
+import com.ridding.meta.RiddingUser;
 import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 

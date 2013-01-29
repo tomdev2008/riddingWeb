@@ -14,7 +14,7 @@
 		<result property="level" column="level" />
 		<result property="backgroundUrl" column="backgroundUrl" />
 	</resultMap>
-	<insert id="addProfile" parameterType="Profile" >
+	<insert id="addProfile" parameterType="Profile">
 		INSERT INTO TB_Profile(
 		userName,
 		nickName,
@@ -53,32 +53,38 @@
 		update TB_Profile set totalDistance = #{totalDistance},
 		userName = #{userName},
 		nickName = #{nickName},
-		lastUpdateTime = #{lastUpdateTime},
+		lastUpdateTime =
+		#{lastUpdateTime},
 		sAvatorUrl = #{sAvatorUrl},
-		bAvatorUrl = #{bAvatorUrl},
+		bAvatorUrl =
+		#{bAvatorUrl},
 		backgroundUrl = #{backgroundUrl},
-		where userId = #{userId};
+		where userId =
+		#{userId};
 	</update>
-	
-	<update id="incUserTotalDistance" parameterType="hashMap" flushCache="true"
-		statementType="PREPARED">
-		update TB_Profile set totalDistance = totalDistance + #{totalDistance}
+
+	<update id="incUserTotalDistance" parameterType="hashMap"
+		flushCache="true" statementType="PREPARED">
+		update TB_Profile set totalDistance =
+		totalDistance + #{totalDistance}
 		where userId = #{userId} ;
 	</update>
-	
+
 	<select id="getProfileList" resultMap="profileMap">
-		SELECT * from TB_Profile where 
-		 userId in 
-		<foreach item="item" collection="list" index="index" 
-			open="(" separator="," close=")" >
-			 #{item} 
-	</foreach>;
+		SELECT * from TB_Profile where
+		userId in
+		<foreach item="item" collection="list" index="index" open="("
+			separator="," close=")">
+			#{item} 
+	</foreach>
+		;
 	</select>
-	
-	<update id="updateBackgroundUrl" parameterType="Profile" flushCache="true"
-		statementType="PREPARED">
+
+	<update id="updateBackgroundUrl" parameterType="Profile"
+		flushCache="true" statementType="PREPARED">
 		update TB_Profile set
-		backgroundUrl = #{backgroundUrl} 
+		backgroundUrl =
+		#{backgroundUrl}
 		where userId = #{userId};
 	</update>
 </mapper>
