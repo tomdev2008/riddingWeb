@@ -685,4 +685,42 @@ public class RiddingController extends AbstractBaseController {
 		logger.info(returnObject);
 		return mv;
 	}
+
+	/**
+	 * 得到附近的用户
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView showNearbyUsers(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		ModelAndView mv = new ModelAndView("return");
+		JSONObject returnObject = new JSONObject();
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 发送我当前的位置，保存到数据库
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView sendMyLocation(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		ModelAndView mv = new ModelAndView("return");
+		JSONObject returnObject = new JSONObject();
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		double latitude = ServletRequestUtils.getDoubleParameter(request, "latitude", 0.0);
+		double longitude = ServletRequestUtils.getDoubleParameter(request, "longitude", 0.0);
+
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
 }
