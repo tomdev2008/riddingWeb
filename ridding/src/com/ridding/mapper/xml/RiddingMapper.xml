@@ -163,7 +163,7 @@
 		select * from
 		TB_Ridding
 		order by commentCount desc
-		limti #{limit}
+		limit #{limit}
 		offset #{offset};
 	</select>
 

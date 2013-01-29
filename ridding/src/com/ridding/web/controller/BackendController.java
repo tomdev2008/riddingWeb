@@ -149,7 +149,7 @@ public class BackendController extends AbstractBaseController {
 			riddings = riddingService.getRiddingsbyComment(limit, offset);
 			
 		} else if (orderByUse > 0) {
-			riddings = riddingService.getRiddingsbyLike(limit, offset);
+			riddings = riddingService.getRiddingsbyUse(limit, offset);
 			
 		} else {
 			riddings = riddingService.getRiddingListByLastUpdateTime(requestTime, limit, isLarge, Ridding.notPublicOrRecom);
