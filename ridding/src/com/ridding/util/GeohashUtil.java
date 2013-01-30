@@ -139,5 +139,4 @@ public class GeohashUtil {
 			buf[--charPos] = '-';
 		return new String(buf, charPos, (65 - charPos));
 	}
-
 }

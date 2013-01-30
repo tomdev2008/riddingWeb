@@ -13,13 +13,13 @@
 	<insert id="addUserNearby" parameterType="UserNearby">
 		INSERT INTO
 		TB_User_Nearby(
-		userId
+		userId,
 		latitude,
 		longitude,
 		geohash,
 		lastUpdateTime
 		)VALUES(
-		userId
+		#{userId},
 		#{latitude},
 		#{longitude},
 		#{geohash},
@@ -30,16 +30,21 @@
 	<update id="updateUserNearby" parameterType="UserNearby"
 		flushCache="true" statementType="PREPARED">
 		update TB_User_Nearby set latitude
-		=#{latitude}
-		longitude=#{longitude}
-		geohash=#{geohash}
+		=#{latitude}, longitude=#{longitude} ,
+		geohash=#{geohash} ,
 		lastUpdateTime=#{lastUpdateTime}
 		where userId = #{userId} ;
 	</update>
 
-	<select id="getUserNearby" parameterType="long" resultType="UserNearby">
+	<select id="getUserNearby" parameterType="long" resultMap="userNearbyMap">
 		select * from
-		TB_Uuser_Nearby
+		TB_User_Nearby
 		where userId=#{userId};
+	</select>
+
+	<select id="getUserNearbyList" parameterType="string" resultMap="userNearbyMap">
+		select * from
+		TB_User_Nearby
+		where geohash like CONCAT('${geohash}','%');
 	</select>
 </mapper>

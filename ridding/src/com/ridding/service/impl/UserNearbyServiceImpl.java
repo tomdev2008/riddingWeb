@@ -1,14 +1,22 @@
 package com.ridding.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import javax.annotation.Resource;
 
+import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.stereotype.Service;
 
+import com.ridding.mapper.ProfileMapper;
 import com.ridding.mapper.UserNearbyMapper;
+import com.ridding.mapper.ProfileMapper;
+import com.ridding.meta.Profile;
 import com.ridding.meta.UserNearby;
 import com.ridding.service.UserNearbyService;
 import com.ridding.util.GeohashUtil;
+import com.sun.org.glassfish.external.statistics.Statistic;
 
 /**
  * @author yunshang_734 E-mail:yunshang_734@163.com
@@ -19,11 +27,14 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 	@Resource
 	private UserNearbyMapper userNearbyMapper;
 
+	@Resource
+	private ProfileMapper profileMapper;
+
 	/**
-	 * 添加附近用户
+	 * 添加或更新附近用户
 	 * 
 	 */
-	public boolean addOrUpdateUsersNearby(long userId, double latitude,
+	public int addOrUpdateUsersNearby(long userId, double latitude,
 			double longitude) {
 		UserNearby userNearby = new UserNearby();
 		userNearby.setUserId(userId);
@@ -31,10 +42,34 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 		userNearby.setLongitude(longitude);
 		userNearby.setGeohash(GeohashUtil.encode(latitude, longitude));
 		userNearby.setLastUpdateTime(new Date().getTime());
-		if (userNearbyMapper.getUserNearby(userId) == null) {
+		if (userNearbyMapper.getUserNearby(userId) ==null ) {
 			return userNearbyMapper.addUserNearby(userNearby);
 		} else {
-			return userNearbyMapper.addUserNearby(userNearby);
+			return userNearbyMapper.updateUserNearby(userNearby);
 		}
+	}
+
+	/**
+	 * 显示附近用户
+	 * 
+	 */
+	public List<Profile> showUserNearbyList(long userId) {
+		UserNearby userNearby = userNearbyMapper.getUserNearby(userId);
+		if (userNearby == null) {
+			return null;
+		}
+		int offset = 0, endIndex = 2;
+		String geohash = userNearby.getGeohash().substring(offset, endIndex);
+		List<UserNearby> userNearbyList = userNearbyMapper
+				.getUserNearbyList(geohash);
+		List<Profile> userNearbyProfiles = new ArrayList<Profile>(
+				userNearbyList.size());
+		for (UserNearby userNearbies : userNearbyList) {
+			Profile profile = profileMapper
+					.getProfile(userNearbies.getUserId());
+			userNearbyProfiles.add(profile);
+		}
+		return userNearbyProfiles;
+
 	}
 }

@@ -1,6 +1,8 @@
 package com.ridding.mapper;
 
-import java.util.Map;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 
 import com.ridding.meta.UserNearby;
 
@@ -15,7 +17,7 @@ public interface UserNearbyMapper {
 	 * @param userNearby
 	 * @return
 	 */
-	public boolean addUserNearby(UserNearby userNearby);
+	public int addUserNearby(UserNearby userNearby);
 
 	/**
 	 * 更新附近用户
@@ -23,7 +25,7 @@ public interface UserNearbyMapper {
 	 * @param userNearby
 	 * @return
 	 */
-	public boolean updateUserNearby(UserNearby userNearby);
+	public int updateUserNearby(UserNearby userNearby);
 
 	/**
 	 * 根据userId获取对象
@@ -32,4 +34,12 @@ public interface UserNearbyMapper {
 	 * @return
 	 */
 	public UserNearby getUserNearby(long userId);
+
+	/**
+	 * 通过geohash获取附近用户列表
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public List<UserNearby> getUserNearbyList(@Param(value="geohash")String geohash);
 }
