@@ -66,7 +66,7 @@ public class RiddingController extends AbstractBaseController {
 
 	@Resource
 	private ProfileService profileService;
-	
+
 	@Resource
 	private IOSApnsService iosApnsService;
 	@Resource
@@ -176,6 +176,7 @@ public class RiddingController extends AbstractBaseController {
 		long riddingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
 		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
 		int type = ServletRequestUtils.getIntParameter(request, "type", -1);
+		long objectId = ServletRequestUtils.getLongParameter(request, "objectId", -1L);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
 		RiddingActionResponse actionResponse = RiddingActionResponse.Fail;
