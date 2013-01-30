@@ -13,7 +13,6 @@
 		<typeAlias alias="Recom" type="com.ridding.meta.Recom" />
 		<typeAlias alias="MapFix" type="com.ridding.meta.MapFix" />
 		<typeAlias alias="Apns" type="com.ridding.meta.ApnsDevice" />
-		<typeAlias alias="Photo" type="com.ridding.meta.Photo" />
 		<typeAlias alias="RiddingPicture" type="com.ridding.meta.RiddingPicture" />
 		<typeAlias alias="WeiBo" type="com.ridding.meta.WeiBo" />
 		<typeAlias alias="RepostMap" type="com.ridding.meta.RepostMap" />
@@ -35,7 +34,6 @@
 		<mapper resource="com/ridding/mapper/xml/RecomMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/MapFixMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/IosApnsMapper.xml" />
-		<mapper resource="com/ridding/mapper/xml/PhotoMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/RiddingPictureMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/WeiBoMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/WeiBoMapper.xml" />

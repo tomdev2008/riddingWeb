@@ -14,33 +14,55 @@ body{font-size:83%;}
     <input type="text" value="输入用户id"/>
     <input type="button" id="search" value="搜索"/>
 </div>
+<div>
+    <h3><a href="/Ridding/backend.do?action=huodongList&requestTime=${bottomUpdateTime!"-1"}&nextOrBefore=0">默认排序</a></h3>
+    <h3><a href="/Ridding/backend.do?action=huodongList&orderByLike=1">喜欢数排序</a></h3>
+    <h3><a href="/Ridding/backend.do?action=huodongList&orderByComment=1">评论数排序</a></h3>
+    <h3><a href="/Ridding/backend.do?action=huodongList&orderByUse=1">使用数排序</a></h3>
+</div>
 
-
+<div>
+   <h3><#if topUpdateTime == -1><#else><a href="/Ridding/backend.do?action=huodongList&requestTime=${topUpdateTime!"-1"}&nextOrBefore=1">上一页</a></#if></h3>
+   <h3><a href="/Ridding/backend.do?action=huodongList&requestTime=${bottomUpdateTime!"-1"}&nextOrBefore=0">下一页</a></h3>
+   
+</div>
 <#if riddingList?exists>
 <div>
 <#list riddingList as ridding>
 <table border="1">
     <thead>
-         <tr><td>id</td><td>名称</td><td>路线封面</td><td>图片列表</td><td>权重</td><td>更新</td></tr>
+         <tr><td>id</td><td style="width:200px;">名称</td><td>创建时间</td><td>路线封面</td><td>图片列表</td><td>队员数</td><td>喜欢数</td><td>评论数</td><td>使用数</td><td>关注数</td><td>操作</td></tr>
     </thead>
     <tbody>
          <tr>
             <td><span>${ridding.id!0}</span></td>
-            <td><input type="text" id="recom_name_${ridding.id!0}" value="${ridding.name!""}" /></td>
-            <td><img style="width:100px;height:100px;" src="${cfg_imageHost}${ridding.firstPicUrl!""}" id="recom_coverImg"/></td>
+            <td><a id="huodong_name_${ridding.id!0}" href="/Ridding/backend.do?action=backendHuodong&riddingId=${ridding.id!0}">${ridding.name!""}</a></td>
+            <td><span >${ridding.createTimeStr}</span></td>
+            <td><img style="width:100px;height:100px;" src="${cfg_imageHost}${ridding.firstPicUrl!""}" id="huodong_coverImg"/></td>
             <td>
-              <#if ridding.riddingPictureList?exists>
-                <#list ridding.riddingPictureList as picture>
-                   <img style="width:100px;height:100px;" src="${cfg_imageHost}${picture.photoUrl}" id="recom_img_${picture.id}"/>
-                   <span>${photoUrl.description}</span>
-                   <a href="javascript:void(0);;" id="recom_img_delete_${picture.id}">删除</a>
+              <#if riddingPictures?exists>
+                <#list riddingPictures as picture>
+                   <img style="width:100px;height:100px;" src="${cfg_imageHost}${picture.photoUrl!""}" id="huodong_img_${picture.id!0}"/>
+                   <span>${picture.description!""}</span>
                 </#list>
               </#if> 
             </td>
             <td>
-               <input type="text" id="recom_weight" value="${ridding.weight!0}"/>
+               <div style="text-align: center;">${ridding.userCount!0}</div>
             </td>
-            <td><a href="javascript:void(0);;" onClick="updateRecom(${ridding.leaderUserId}),${ridding.id});">更新</a><a href="javascript:void(0);;" id="recom_update">删除</a></td>
+            <td>
+               <div style="text-align: center;">${ridding.likeCount!0}</div>
+            </td>
+            <td>
+               <div style="text-align: center;">${ridding.commentCount!0}</div>
+            </td>
+            <td>
+               <div style="text-align: center;">${ridding.useCount!0}</div>
+            </td>
+            <td>
+               <div style="text-align: center;">${ridding.careCount!0}</div>
+            </td>
+            <td><a href="javascript:void(0);;" id="huodong_update">删除</a>||<a href="javascript:void(0);;" id="huodong_recom">设置为推荐</a></td>
          </tr>
     </tbody>
 </table>

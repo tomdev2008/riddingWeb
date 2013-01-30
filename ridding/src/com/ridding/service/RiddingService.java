@@ -1,6 +1,7 @@
 package com.ridding.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.meta.Profile;
@@ -12,6 +13,7 @@ import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
+import com.sun.mail.iap.Literal;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@corp.netease.com
@@ -141,6 +143,17 @@ public interface RiddingService {
 			int offset);
 
 	/**
+	 * 
+	 * 通过userId获得骑行列表
+	 * 
+	 * @param userId
+	 * @param limit
+	 * @param offset
+	 * @return
+	 */
+	public List<Ridding> getRiddingsbyUserId(long userId);
+
+	/**
 	 * 添加骑行活动
 	 * 
 	 * @param ridding
@@ -186,6 +199,12 @@ public interface RiddingService {
 	 */
 	public List<Ridding> getRecomRiddingList(int weight, int limit,
 			Boolean isLarger);
+
+	/**
+	 * 设置骑行活动为推荐
+	 * 
+	 */
+	public boolean setRiddingIsRecom(long riddingId);
 
 	/**
 	 * 增加喜欢
@@ -261,4 +280,27 @@ public interface RiddingService {
 	 */
 	public RiddingAction getUserAction(long userId, long riddingId);
 
+	/**
+	 * 通过喜欢数获取骑行活动
+	 * 
+	 * @param orderByLike
+	 * @return
+	 */
+	public List<Ridding> getRiddingsbyLike(int limit, int offset);
+
+	/**
+	 * 通过评论数获取骑行活动
+	 * 
+	 * @param orderByComment
+	 * @return
+	 */
+	public List<Ridding> getRiddingsbyComment(int limit, int offset);
+
+	/**
+	 * 通过使用数获取骑行活动
+	 * 
+	 * @param orderByUse
+	 * @return
+	 */
+	public List<Ridding> getRiddingsbyUse(int limit, int offset);
 }

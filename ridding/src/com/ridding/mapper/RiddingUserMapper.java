@@ -1,8 +1,10 @@
 package com.ridding.mapper;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingUser;
 
 /**
@@ -90,11 +92,19 @@ public interface RiddingUserMapper {
 	 * @return
 	 */
 	public List<RiddingUser> getRiddingListByUserId(Map<String, Object> hashMap);
-	
+
 	/**
 	 * 根据riddingId删除
 	 * 
 	 * 
 	 */
 	public int deleteRiddingUserByRiddingId(long riddingId);
+
+	/**
+	 * 根据userId获得RiddingUser对象
+	 * 
+	 * @param hashMap
+	 * @return
+	 */
+	public List<RiddingUser> getRiddingUsersByUserId(Map<String, Object> hashMap);
 }

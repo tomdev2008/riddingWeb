@@ -10,6 +10,8 @@ public class RiddingAction {
 	private long userId;
 	private long riddingId;
 	private int type;
+	private long objectId;
+
 	/**
 	 * 用户喜欢了
 	 */
@@ -117,6 +119,14 @@ public class RiddingAction {
 			public int getValue() {
 				return 3;
 			}
+		},
+		/**
+		 * 喜欢了某张图(4)
+		 */
+		LikePicture {
+			public int getValue() {
+				return 4;
+			}
 		};
 		public abstract int getValue();
 
@@ -201,6 +211,14 @@ public class RiddingAction {
 
 	public void setUserUsed(boolean userUsed) {
 		this.userUsed = userUsed;
+	}
+
+	public long getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(long objectId) {
+		this.objectId = objectId;
 	}
 
 }

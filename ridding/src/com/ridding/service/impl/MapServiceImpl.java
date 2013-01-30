@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.ridding.constant.returnCodeConstance;
 import com.ridding.dao.CityDao;
 import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.MapFixMapper;
@@ -332,5 +333,25 @@ public class MapServiceImpl implements MapService {
 			mapFix.setRealLng(longtitude);
 		}
 		return mapFix;
+	}
+
+	@Override
+	public List<IMap> getAllMaps() {
+		List<IMap> imapList = iMapMapper.getAll();
+		return imapList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ridding.service.MapService#updateImapAvatorPicUrl(java.lang.String,
+	 * long)
+	 */
+	public boolean updateImapAvatorPicUrl(String url, long mapId) {
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("avatorPicUrl", url);
+		hashMap.put("id", mapId);
+		return iMapMapper.updateImapAvatorPicUrl(hashMap) > 0;
 	}
 }

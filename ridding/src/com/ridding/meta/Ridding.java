@@ -3,6 +3,8 @@ package com.ridding.meta;
 import java.io.Serializable;
 import java.util.List;
 
+import com.ridding.util.TimeUtil;
+
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
  * @version CreateTime 2012-3-19 12:32:25 Class Description 骑行meta
@@ -120,6 +122,10 @@ public class Ridding implements Serializable {
 	 * 队长的profile
 	 */
 	private Profile leaderProfile;
+	/**
+	 * 创建时间
+	 */
+	private String createTimeStr;
 
 	/**
 	 * 骑行状态
@@ -232,6 +238,7 @@ public class Ridding implements Serializable {
 	}
 
 	public void setCreateTime(long createTime) {
+		this.setCreateTimeStr(TimeUtil.getFormatTime(createTime));
 		this.createTime = createTime;
 	}
 
@@ -353,6 +360,14 @@ public class Ridding implements Serializable {
 
 	public void setIsSyncSina(int isSyncSina) {
 		this.isSyncSina = isSyncSina;
+	}
+
+	public String getCreateTimeStr() {
+		return createTimeStr;
+	}
+
+	public void setCreateTimeStr(String createTimeStr) {
+		this.createTimeStr = createTimeStr;
 	}
 
 }

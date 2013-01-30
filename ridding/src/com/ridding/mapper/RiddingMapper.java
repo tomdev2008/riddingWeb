@@ -114,4 +114,28 @@ public interface RiddingMapper {
 	 * @return
 	 */
 	public int incCommentCount(long riddingId);
+
+	/**
+	 * 取出喜欢数排行骑行
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public List<Ridding> getRiddingsbyLike(Map<String, Object> map);
+	
+	/**
+	 * 取出评论数排行骑行
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public List<Ridding> getRiddingsbyComment(Map<String, Object> map);
+	
+	/**
+	 * 取出使用数排行骑行
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public List<Ridding> getRiddingsbyUse(Map<String, Object> map);
 }

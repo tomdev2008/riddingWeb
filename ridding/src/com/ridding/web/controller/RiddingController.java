@@ -26,7 +26,6 @@ import com.ridding.constant.SystemConst;
 import com.ridding.constant.returnCodeConstance;
 import com.ridding.meta.ApnsDevice;
 import com.ridding.meta.IMap;
-import com.ridding.meta.Photo;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingAction;
@@ -40,9 +39,7 @@ import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ProfileSourceFeed;
 import com.ridding.security.MyUser;
 import com.ridding.service.IOSApnsService;
-import com.ridding.service.ImageUploadService;
 import com.ridding.service.MapService;
-import com.ridding.service.PhotoService;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
@@ -72,14 +69,11 @@ public class RiddingController extends AbstractBaseController {
 
 	@Resource
 	private ProfileService profileService;
-	@Resource
-	private PhotoService photoService;
+
 	@Resource
 	private IOSApnsService iosApnsService;
 	@Resource
 	private TransactionService transactionService;
-	@Resource
-	private ImageUploadService imageUploadService;
 	@Resource
 	private DwrRiddingShareBean dwrRiddingShareBean;
 	@Resource
@@ -203,6 +197,7 @@ public class RiddingController extends AbstractBaseController {
 		long userId = ServletRequestUtils.getLongParameter(request, "userId",
 				-1L);
 		int type = ServletRequestUtils.getIntParameter(request, "type", -1);
+		long objectId = ServletRequestUtils.getLongParameter(request, "objectId", -1L);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
 		RiddingActionResponse actionResponse = RiddingActionResponse.Fail;
@@ -590,18 +585,6 @@ public class RiddingController extends AbstractBaseController {
 		iMap.setObjectType(SourceType.WebApi.getValue());
 		iMap.setObjectId(0);
 		iMap.setCreateTime(new Date().getTime());
-		Photo photo = new Photo();
-		photo.setOriginalPath(iMap.getUrlKey());
-		if (photoService.addPhoto(photo) < 0) {
-			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
-			mv.addObject("returnObject", returnObject.toString());
-			return mv;
-		}
-		iMap.setAvatorPic(photo.getId());
-		if (iMap.getMapUrl() == null) {
-			imageUploadService.saveImageFromUrl(iMap.getStaticImgSrc(),
-					photo.getId());
-		}
 		if (!transactionService.insertANewRidding(iMap, ridding)) {
 			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
 			mv.addObject("returnObject", returnObject.toString());

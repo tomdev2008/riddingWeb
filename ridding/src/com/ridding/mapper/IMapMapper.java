@@ -73,6 +73,20 @@ public interface IMapMapper {
 	 * @return
 	 */
 	public List<IMap> getImapsByUserIdCityId(Map<String, Object> hashMap);
-	
+
+	/**
+	 * 获取所有地图
+	 * 
+	 * @return
+	 */
 	public List<IMap> getAll();
+
+	/**
+	 * 更新相应ID的地图URL
+	 * 
+	 * @param url
+	 * @param mapId
+	 * @return
+	 */
+	public int updateImapAvatorPicUrl(Map<String, Object> hashMap);
 }

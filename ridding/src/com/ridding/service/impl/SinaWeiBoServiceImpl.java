@@ -389,4 +389,5 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 		}
 		return null;
 	}
+
 }

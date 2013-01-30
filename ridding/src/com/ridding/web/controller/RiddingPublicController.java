@@ -288,7 +288,6 @@ public class RiddingPublicController extends AbstractBaseController {
 			}
 		}
 		HttpJsonUtil.setupLoadedRiddingPicture(returnObject, riddingPictures);
-
 		JSONArray dataArray = HttpServletUtil2.parseGetuploadedPhotos(riddingPictures);
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
@@ -325,7 +324,7 @@ public class RiddingPublicController extends AbstractBaseController {
 			riddingList = riddingService.getRiddingListByLastUpdateTime(ridding.getLastUpdateTime(), ridding.getLimit(), ridding.isLarger(),
 					ridding.isRecom);
 		}
-		// HttpJsonUtil.setRiddingByLastUpdateTime(returnObject, riddingList);
+		HttpJsonUtil.setRiddingByLastUpdateTime(returnObject, riddingList);
 		JSONArray dataArray = HttpServletUtil2.parseGetGoingRiddings(riddingList);
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
@@ -386,7 +385,5 @@ public class RiddingPublicController extends AbstractBaseController {
 		logger.info(returnObject);
 		return mv;
 	}
-	
-	
 
 }
