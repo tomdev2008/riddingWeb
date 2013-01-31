@@ -796,7 +796,8 @@ public class RiddingServiceImpl implements RiddingService {
 	 */
 	@Override
 	public RiddingActionResponse incRiddingLike(long riddingId, long userId) {
-		if (this.checkIsInRiddingAction(riddingId, userId, RiddingActions.Like)) {
+		if (this.checkIsInRiddingAction(riddingId, userId, RiddingActions.Like,
+				0)) {
 			return RiddingActionResponse.DoubleDo;
 		}
 
@@ -818,7 +819,8 @@ public class RiddingServiceImpl implements RiddingService {
 	 */
 	@Override
 	public RiddingActionResponse incRiddingUse(long riddingId, long userId) {
-		if (this.checkIsInRiddingAction(riddingId, userId, RiddingActions.Use)) {
+		if (this.checkIsInRiddingAction(riddingId, userId, RiddingActions.Use,
+				0)) {
 			return RiddingActionResponse.DoubleDo;
 		}
 
@@ -840,7 +842,8 @@ public class RiddingServiceImpl implements RiddingService {
 	@Override
 	public RiddingActionResponse incRiddingCare(long riddingId, long userId) {
 
-		if (this.checkIsInRiddingAction(riddingId, userId, RiddingActions.Care)) {
+		if (this.checkIsInRiddingAction(riddingId, userId, RiddingActions.Care,
+				0)) {
 			return RiddingActionResponse.DoubleDo;
 		}
 
@@ -862,11 +865,12 @@ public class RiddingServiceImpl implements RiddingService {
 	 * long, com.ridding.meta.RiddingAction.RiddingActions)
 	 */
 	public boolean checkIsInRiddingAction(long riddingId, long userId,
-			RiddingActions action) {
+			RiddingActions action, long objectId) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("riddingId", riddingId);
 		hashMap.put("userId", userId);
 		hashMap.put("type", action.getValue());
+		hashMap.put("objectId", objectId);
 		if (riddingActionMapper.getRiddingActionByUserId(hashMap) != null) {
 			return true;
 		}
@@ -1057,7 +1061,7 @@ public class RiddingServiceImpl implements RiddingService {
 	public RiddingActionResponse incPicLike(long riddingId, long userId,
 			long objectId) {
 		if (this.checkIsInRiddingAction(riddingId, userId,
-				RiddingActions.LikePicture)) {
+				RiddingActions.LikePicture, objectId)) {
 			return RiddingActionResponse.DoubleDo;
 		}
 
@@ -1065,11 +1069,9 @@ public class RiddingServiceImpl implements RiddingService {
 			return RiddingActionResponse.InRidding;
 		}
 
-		this.addRiddingAction(riddingId, userId,
-				RiddingActions.LikePicture.getValue());
 		if (riddingPictureMapper.incLikePicCount(objectId) > 0) {
-			if (riddingActionMapper.addRiddingActionByObjectId(this
-					.getRiddingActionByObject(riddingId, userId, 4, objectId)) > 0) {
+			if (riddingActionMapper.addRiddingAction(this
+					.getRiddingActionByObject(riddingId, userId, RiddingActions.LikePicture.getValue(), objectId)) > 0) {
 				return RiddingActionResponse.SUCC;
 			}
 		}

@@ -250,7 +250,7 @@ public interface RiddingService {
 	 * @return
 	 */
 	public boolean checkIsInRiddingAction(long riddingId, long userId,
-			RiddingActions action);
+			RiddingActions action, long objectId);
 
 	/**
 	 * 检查用户是否在骑行活动中

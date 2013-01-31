@@ -193,7 +193,7 @@ public class RiddingController extends AbstractBaseController {
 			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		long riddingId = ServletRequestUtils.getLongParameter(request,
-				"ridingId", -1L);
+				"riddingId", -1L);
 		long userId = ServletRequestUtils.getLongParameter(request, "userId",
 				-1L);
 		int type = ServletRequestUtils.getIntParameter(request, "type", -1);

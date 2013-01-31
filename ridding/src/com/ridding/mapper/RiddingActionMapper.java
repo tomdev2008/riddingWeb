@@ -40,12 +40,4 @@ public interface RiddingActionMapper {
 	 * 
 	 */
 	public int deleteRiddingActionByRiddingId(long riddingId);
-
-	/**
-	 * 通过objectId添加
-	 * 
-	 * @param riddingLike
-	 * @return
-	 */
-	public int addRiddingActionByObjectId(RiddingAction riddingAction);
 }

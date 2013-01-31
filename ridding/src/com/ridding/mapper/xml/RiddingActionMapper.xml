@@ -17,45 +17,6 @@
 		riddingId,
 		type,
 		createTime,
-		lastUpdateTime
-		)VALUES(
-		#{userId},
-		#{riddingId},
-		#{type},
-		#{createTime},
-		#{lastUpdateTime}
-		)
-		<selectKey keyProperty="id" resultType="long">
-			SELECT
-			LAST_INSERT_ID() AS VALUE
-		</selectKey>
-	</insert>
-
-	<select id="getRiddingActionByUserId" resultMap="riddingActionMap">
-		SELECT * from
-		TB_Ridding_Action where
-		userId=#{userId} and riddingId=#{riddingId} and
-		type=#{type}; 
-	</select>
-
-	<select id="getRiddingActionsByUserId" resultMap="riddingActionMap">
-		SELECT * from
-		TB_Ridding_Action where
-		userId=#{userId} and riddingId=#{riddingId};
-	</select>
-
-	<delete id="deleteRiddingActionByRiddingId" parameterType="long"
-		flushCache="true" statementType="PREPARED">
-		delete from TB_Ridding_Action where
-		riddingId=#{riddingId};
-	</delete>
-
-	<insert id="addRiddingActionByObjectId" parameterType="RiddingAction">
-		INSERT INTO TB_Ridding_Action(
-		userId,
-		riddingId,
-		type,
-		createTime,
 		lastUpdateTime,
 		objectId
 		)VALUES(
@@ -72,4 +33,22 @@
 		</selectKey>
 	</insert>
 
+	<select id="getRiddingActionByUserId" resultMap="riddingActionMap">
+		SELECT * from
+		TB_Ridding_Action where
+		userId=#{userId} and riddingId=#{riddingId} and
+		type=#{type} and objectId=#{objectId};
+	</select>
+
+	<select id="getRiddingActionsByUserId" resultMap="riddingActionMap">
+		SELECT * from
+		TB_Ridding_Action where
+		userId=#{userId} and riddingId=#{riddingId};
+	</select>
+
+	<delete id="deleteRiddingActionByRiddingId" parameterType="long"
+		flushCache="true" statementType="PREPARED">
+		delete from TB_Ridding_Action where
+		riddingId=#{riddingId};
+	</delete>
 </mapper>
