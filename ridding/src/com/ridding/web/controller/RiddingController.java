@@ -197,7 +197,8 @@ public class RiddingController extends AbstractBaseController {
 		long userId = ServletRequestUtils.getLongParameter(request, "userId",
 				-1L);
 		int type = ServletRequestUtils.getIntParameter(request, "type", -1);
-		long objectId = ServletRequestUtils.getLongParameter(request, "objectId", -1L);
+		long objectId = ServletRequestUtils.getLongParameter(request,
+				"objectId", -1L);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
 		RiddingActionResponse actionResponse = RiddingActionResponse.Fail;
@@ -222,6 +223,10 @@ public class RiddingController extends AbstractBaseController {
 					actionResponse = RiddingActionResponse.Fail;
 				}
 			}
+			break;
+		case LikePicture:
+			actionResponse = riddingService.incPicLike(riddingId, userId,
+					objectId);
 			break;
 		default:
 			break;

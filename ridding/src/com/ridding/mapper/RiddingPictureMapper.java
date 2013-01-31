@@ -40,4 +40,12 @@ public interface RiddingPictureMapper {
 	 * 
 	 */
 	public int deleteRiddingPicByRiddingId(long riddingId);
+	
+	/**
+	 * 增加对照片的喜欢
+	 * 
+	 * @param riddingId
+	 * @return
+	 */
+	public int incLikePicCount(long objectId);
 }

@@ -151,26 +151,32 @@
 		= #{riddingId} ;
 	</update>
 
-	<select id="getRiddingsbyLike" resultMap="riddingMap" parameterType="hashMap">
+	<select id="getRiddingsbyLike" resultMap="riddingMap"
+		parameterType="hashMap">
 		select * from
 		TB_Ridding
 		order by likeCount desc
-		limit #{limit}
+		limit
+		#{limit}
 		offset #{offset};
 	</select>
 
-	<select id="getRiddingsbyComment" resultMap="riddingMap" parameterType="hashMap">
+	<select id="getRiddingsbyComment" resultMap="riddingMap"
+		parameterType="hashMap">
 		select * from
 		TB_Ridding
 		order by commentCount desc
-		limit #{limit}
+		limit
+		#{limit}
 		offset #{offset};
 	</select>
 
-	<select id="getRiddingsbyUse" resultMap="riddingMap" parameterType="hashMap">
+	<select id="getRiddingsbyUse" resultMap="riddingMap"
+		parameterType="hashMap">
 		select * from TB_Ridding
 		order by useCount desc
-		limti #{limit}
+		limti
+		#{limit}
 		offset #{offset};
 	</select>
 </mapper>

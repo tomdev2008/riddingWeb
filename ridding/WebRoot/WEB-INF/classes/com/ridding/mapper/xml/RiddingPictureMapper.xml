@@ -17,6 +17,7 @@
 		<result property="takePicLocation" column="takePicLocation" />
 		<result property="width" column="width" />
 		<result property="height" column="height" />
+		<result property="likeCount" column="likeCount" />
 	</resultMap>
 
 	<insert id="addRiddingPicture" parameterType="RiddingPicture">
@@ -73,4 +74,10 @@
 		riddingId=#{riddingId};
 	</delete>
 
+	<update id="incLikePicCount" parameterType="long" flushCache="true"
+		statementType="PREPARED">
+		update TB_Ridding_Picture set likeCount = likeCount + 1
+		where id
+		= #{objectId} ;
+	</update>
 </mapper>

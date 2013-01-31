@@ -233,7 +233,7 @@ public interface RiddingService {
 	public RiddingActionResponse incRiddingCare(long riddingId, long userId);
 
 	/**
-	 * 增加关注
+	 * 增加评论
 	 * 
 	 * @param riddingId
 	 * @param userId
@@ -303,4 +303,15 @@ public interface RiddingService {
 	 * @return
 	 */
 	public List<Ridding> getRiddingsbyUse(int limit, int offset);
+
+	/**
+	 * 增加照片喜欢
+	 * 
+	 * @param riddingId
+	 * @param userId
+	 * @param objectId
+	 * @return
+	 */
+	public RiddingActionResponse incPicLike(long riddingId, long userId,
+			long objectId);
 }

@@ -122,7 +122,7 @@ public interface RiddingMapper {
 	 * @return
 	 */
 	public List<Ridding> getRiddingsbyLike(Map<String, Object> map);
-	
+
 	/**
 	 * 取出评论数排行骑行
 	 * 
@@ -130,7 +130,7 @@ public interface RiddingMapper {
 	 * @return
 	 */
 	public List<Ridding> getRiddingsbyComment(Map<String, Object> map);
-	
+
 	/**
 	 * 取出使用数排行骑行
 	 * 
