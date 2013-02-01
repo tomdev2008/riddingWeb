@@ -26,7 +26,8 @@ public interface UserRelationService {
 	 * @param userId
 	 * @return
 	 */
-	public List<UserRelationVO> getUserRelations(long userId);
+	public List<UserRelationVO> getUserRelations(long userId, int limit,
+			int offset);
 
 	/**
 	 * 删除用户关系

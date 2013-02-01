@@ -33,7 +33,9 @@
 		parameterType="long">
 		SELECT * from TB_User_Relation where
 		userId = #{userId}
-		and status =1 ;
+		and status =1
+		limit #{limit}
+		offset #{offset};
 	</select>
 
 	<select id="getUserRelation" resultMap="userRelationMap"

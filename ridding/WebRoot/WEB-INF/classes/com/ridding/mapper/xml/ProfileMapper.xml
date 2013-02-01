@@ -73,7 +73,7 @@
 	<select id="getProfileList" resultMap="profileMap">
 		SELECT * from TB_Profile where
 		userId in
-		<foreach item="item" collection="list" index="index" open="("
+		<foreach item="item" collection="userids" index="index" open="("
 			separator="," close=")">
 			#{item} 
 	</foreach>

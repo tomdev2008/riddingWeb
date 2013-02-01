@@ -69,12 +69,17 @@ public class UserRelationServiceImpl implements UserRelationService {
 	 * 
 	 * @see com.ridding.service.UserRelationService#getUserRelations(long)
 	 */
-	public List<UserRelationVO> getUserRelations(long userId) {
+	public List<UserRelationVO> getUserRelations(long userId, int limit,
+			int offset) {
 		if (userId <= 0) {
 			return null;
 		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("limit", limit);
+		map.put("offset", offset);
 		List<UserRelation> userRelationList = userRelationMapper
-				.getUserRelations(userId);
+				.getUserRelations(map);
 		return this.getUserRelationVO(userRelationList);
 	}
 

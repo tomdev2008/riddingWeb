@@ -24,7 +24,7 @@ public interface UserRelationMapper {
 	 * @param userId
 	 * @return
 	 */
-	public List<UserRelation> getUserRelations(long userId);
+	public List<UserRelation> getUserRelations(Map<String, Object> map);
 
 	/**
 	 * 得到用户关系

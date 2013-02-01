@@ -37,6 +37,7 @@ import com.ridding.meta.UserRelation;
 import com.ridding.meta.RiddingAction.RiddingActionResponse;
 import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ProfileSourceFeed;
+import com.ridding.meta.vo.UserRelationVO;
 import com.ridding.security.MyUser;
 import com.ridding.service.IOSApnsService;
 import com.ridding.service.MapService;
@@ -817,6 +818,35 @@ public class RiddingController extends AbstractBaseController {
 			return mv;
 		}
 		returnObject.put("code", returnCodeConstance.FAILED);
+		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
+		return mv;
+	}
+
+	/**
+	 * 获取好友列表
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView getUserRelationList(HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		JSONObject returnObject = new JSONObject();
+		String jsonString = HttpServletUtil.parseRequestAsString(request,
+				"utf-8");
+		ModelAndView mv = new ModelAndView("return");
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
+		int limit = ServletRequestUtils.getIntParameter(request, "limit", 0);
+		int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
+		List<UserRelationVO> userRelationVOs = userRelationService
+				.getUserRelations(userId, limit, offset);
+		JSONArray dataArray = HttpServletUtil2
+				.parseUserRelationVOs(userRelationVOs);
+		returnObject.put("data", dataArray);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		logger.info(returnObject);
 		return mv;
