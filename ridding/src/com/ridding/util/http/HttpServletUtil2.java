@@ -204,6 +204,7 @@ public class HttpServletUtil2 {
 		JSONArray jsonArray = new JSONArray();
 		for (RiddingPicture riddingPicture : riddingPictures) {
 			JSONObject pictureObject = new JSONObject();
+			pictureObject.put("dbid", riddingPicture.getId());
 			pictureObject.put("photourl", SystemConst.getValue("IMAGEHOST") + riddingPicture.getPhotoUrl());
 			pictureObject.put("latitude", riddingPicture.getLatitude());
 			pictureObject.put("longtitude", riddingPicture.getLongtitude());
