@@ -34,7 +34,8 @@
 		takePicDate,
 		takePicLocation,
 		width,
-		height
+		height,
+		likeCount
 		)VALUES(
 		#{riddingId},
 		#{photoUrl},
@@ -48,7 +49,8 @@
 		#{takePicDate},
 		#{takePicLocation},
 		#{width},
-		#{height}
+		#{height},
+		#{likeCount}
 		)
 		<selectKey keyProperty="id" resultType="long">
 			SELECT
@@ -78,6 +80,6 @@
 		statementType="PREPARED">
 		update TB_Ridding_Picture set likeCount = likeCount + 1
 		where id
-		= #{objectId} ;
+		= #{pictureId} ;
 	</update>
 </mapper>

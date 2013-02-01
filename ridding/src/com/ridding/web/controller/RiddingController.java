@@ -46,7 +46,6 @@ import com.ridding.service.RiddingService;
 import com.ridding.service.UserNearbyService;
 import com.ridding.service.UserRelationService;
 import com.ridding.service.transaction.TransactionService;
-import com.ridding.service.UserNearbyService;
 import com.ridding.util.http.HttpJsonUtil;
 import com.ridding.util.http.HttpServletUtil;
 import com.ridding.util.http.HttpServletUtil2;
@@ -193,12 +192,10 @@ public class RiddingController extends AbstractBaseController {
 			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		long riddingId = ServletRequestUtils.getLongParameter(request,
-				"riddingId", -1L);
+				"ridingId", -1L);
 		long userId = ServletRequestUtils.getLongParameter(request, "userId",
 				-1L);
 		int type = ServletRequestUtils.getIntParameter(request, "type", -1);
-		long objectId = ServletRequestUtils.getLongParameter(request,
-				"objectId", -1L);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
 		RiddingActionResponse actionResponse = RiddingActionResponse.Fail;
@@ -224,14 +221,9 @@ public class RiddingController extends AbstractBaseController {
 				}
 			}
 			break;
-		case LikePicture:
-			actionResponse = riddingService.incPicLike(riddingId, userId,
-					objectId);
-			break;
 		default:
 			break;
 		}
-
 		switch (actionResponse) {
 		case DoubleDo:
 			returnObject.put("code", returnCodeConstance.RiddingActionDouble);
@@ -255,6 +247,49 @@ public class RiddingController extends AbstractBaseController {
 		JSONObject dataObject = HttpServletUtil2.parseRiddingAction(ridding,
 				riddingAction);
 		returnObject.put("data", dataObject);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
+		return mv;
+	}
+
+	/**
+	 * 喜欢骑行中的某张图片
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView RiddingLikePic(HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		long riddingId = ServletRequestUtils.getLongParameter(request,
+				"riddingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
+		long objectId = ServletRequestUtils.getLongParameter(request,
+				"objectId", -1L);
+		JSONObject returnObject = new JSONObject();
+		ModelAndView mv = new ModelAndView("return");
+		RiddingActionResponse actionResponse = riddingService.incPicLike(
+				riddingId, userId, objectId);
+		switch (actionResponse) {
+		case DoubleDo:
+			returnObject.put("code", returnCodeConstance.RiddingActionDouble);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		case InRidding:
+			returnObject.put("code",
+					returnCodeConstance.RiddingActionInMyRidding);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		case Fail:
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		default:
+			break;
+		}
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		logger.info(returnObject);
@@ -728,6 +763,36 @@ public class RiddingController extends AbstractBaseController {
 	}
 
 	/**
+	 * 好友申请
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView requestToAddRelation(HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		JSONObject returnObject = new JSONObject();
+		String jsonString = HttpServletUtil.parseRequestAsString(request,
+				"utf-8");
+		ModelAndView mv = new ModelAndView("return");
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
+		long toUserId = ServletRequestUtils.getLongParameter(request,
+				"toUserId", -1L);
+		if (userRelationService.addUserRelation(userId, toUserId) == RiddingActionResponse.SUCC) {
+			returnObject.put("code", returnCodeConstance.SUCCESS);
+			mv.addObject("returnObject", returnObject.toString());
+			logger.info(returnObject);
+			return mv;
+		}
+		returnObject.put("code", returnCodeConstance.FAILED);
+		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
+		return mv;
+	}
+
+	/**
 	 * 添加或者删除用户关系
 	 * 
 	 * @param request
@@ -741,23 +806,20 @@ public class RiddingController extends AbstractBaseController {
 		String jsonString = HttpServletUtil.parseRequestAsString(request,
 				"utf-8");
 		ModelAndView mv = new ModelAndView("return");
-		UserRelation userRelation = null;
-		try {
-			userRelation = HttpServletUtil
-					.parseRemoveOrAddUserRelation(jsonString);
-		} catch (Exception e) {
-			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
-			e.printStackTrace();
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
+		long toUserId = ServletRequestUtils.getLongParameter(request,
+				"toUserId", -1L);
+		int status = ServletRequestUtils.getIntParameter(request, "status", 0);
+		RiddingActionResponse actionResponse = userRelationService
+				.removeOrAddUserRelation(userId, toUserId, status);
+		if (actionResponse == RiddingActionResponse.SUCC) {
+			returnObject.put("code", returnCodeConstance.SUCCESS);
 			mv.addObject("returnObject", returnObject.toString());
+			logger.info(returnObject);
 			return mv;
 		}
-		boolean succ = userRelationService.updateUserRelation(userRelation);
-		if (!succ) {
-			returnObject.put("code", returnCodeConstance.FAILED);
-			mv.addObject("returnObject", returnObject.toString());
-			return mv;
-		}
-		returnObject.put("code", returnCodeConstance.SUCCESS);
+		returnObject.put("code", returnCodeConstance.FAILED);
 		mv.addObject("returnObject", returnObject.toString());
 		logger.info(returnObject);
 		return mv;

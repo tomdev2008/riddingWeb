@@ -47,5 +47,5 @@ public interface RiddingPictureMapper {
 	 * @param riddingId
 	 * @return
 	 */
-	public int incLikePicCount(long objectId);
+	public int incLikePicCount(long pictureId);
 }

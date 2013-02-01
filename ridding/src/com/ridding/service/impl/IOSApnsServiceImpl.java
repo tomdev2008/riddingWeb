@@ -1,7 +1,6 @@
 package com.ridding.service.impl;
 
 import java.io.File;
-import java.util.Date;
 import java.util.List;
 
 import javapns.Push;

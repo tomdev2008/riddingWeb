@@ -41,4 +41,12 @@ public interface UserRelationMapper {
 	 * @return
 	 */
 	public int updateUserRelation(UserRelation userRelation);
+
+	/**
+	 * 删除用户关系
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public int deleteUserRelation(Map<String, Object> map);
 }

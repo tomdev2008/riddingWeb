@@ -16,7 +16,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import com.ridding.constant.returnCodeConstance;
 import com.ridding.dao.CityDao;
 import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.MapFixMapper;

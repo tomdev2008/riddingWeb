@@ -6,17 +6,14 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.ridding.mapper.ProfileMapper;
 import com.ridding.mapper.UserNearbyMapper;
-import com.ridding.mapper.ProfileMapper;
 import com.ridding.meta.Profile;
 import com.ridding.meta.UserNearby;
 import com.ridding.service.UserNearbyService;
 import com.ridding.util.GeohashUtil;
-import com.sun.org.glassfish.external.statistics.Statistic;
 
 /**
  * @author yunshang_734 E-mail:yunshang_734@163.com
