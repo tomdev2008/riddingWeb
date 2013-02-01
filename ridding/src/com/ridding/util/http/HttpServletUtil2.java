@@ -215,6 +215,8 @@ public class HttpServletUtil2 {
 			pictureObject.put("description", riddingPicture.getDescription());
 			pictureObject.put("width", riddingPicture.getWidth());
 			pictureObject.put("height", riddingPicture.getHeight());
+			pictureObject.put("likecount", riddingPicture.getLikeCount());
+			pictureObject.put("liked", riddingPicture.isLiked());
 			JSONObject userObject = new JSONObject();
 			userObject.put("savatorurl", riddingPicture.getsAvatorUrl());
 			pictureObject.put("user", userObject);
@@ -469,6 +471,28 @@ public class HttpServletUtil2 {
 
 			JSONObject returnObject = new JSONObject();
 			HttpServletUtil2.returnDataObject(relationObject, "relationship", returnObject);
+			jsonArray.add(returnObject);
+		}
+		return jsonArray;
+	}
+
+	public static JSONArray parseShowNearbyUsers(List<Profile> userNearbyProfiles) {
+		if (ObjectUtil.isEmptyList(userNearbyProfiles)) {
+			return new JSONArray();
+		}
+		JSONArray jsonArray = new JSONArray();
+		for (Profile profile : userNearbyProfiles) {
+			JSONObject userObject = new JSONObject();
+			userObject.put("userid", profile.getUserId());
+			userObject.put("username", profile.getUserName());
+			userObject.put("nickname", profile.getNickName());
+			userObject.put("bavatorurl", profile.getbAvatorUrl());
+			userObject.put("savatorurl", profile.getsAvatorUrl());
+			userObject.put("totaldistance", profile.getTotalDistance());
+			userObject.put("backgroundurl", SystemConst.returnPhotoUrl(profile.getBackgroundUrl()));
+
+			JSONObject returnObject = new JSONObject();
+			HttpServletUtil2.returnDataObject(userObject, "user", returnObject);
 			jsonArray.add(returnObject);
 		}
 		return jsonArray;

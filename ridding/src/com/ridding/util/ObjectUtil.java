@@ -8,13 +8,13 @@ import org.apache.log4j.Logger;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
- * @version CreateTime��2012-3-21 ����01:46:22 Class Description
+ * @version CreateTime 2012-3-21 01:46:22 Class Description
  */
 public class ObjectUtil {
 	private static final Logger logger = Logger.getLogger(ObjectUtil.class);
 
 	/**
-	 * ��ӡ���������
+	 * 
 	 * 
 	 * @param <T>
 	 * @param tObject

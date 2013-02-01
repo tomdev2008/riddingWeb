@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ridding.mapper.UserNearbyMapper">
+
+	<resultMap type="UserNearby" id="userNearbyMap">
+		<id property="userId" column="userId" />
+		<result property="latitude" column="latitude" />
+		<result property="longitude" column="longitude" />
+		<result property="geohash" column="geohash" />
+		<result property="lastUpdateTime" column="lastUpdateTime" />
+	</resultMap>
+
+	<insert id="addUserNearby" parameterType="UserNearby">
+		INSERT INTO
+		TB_User_Nearby(
+		userId,
+		latitude,
+		longitude,
+		geohash,
+		lastUpdateTime
+		)VALUES(
+		#{userId},
+		#{latitude},
+		#{longitude},
+		#{geohash},
+		#{lastUpdateTime}
+		)
+	</insert>
+
+	<update id="updateUserNearby" parameterType="UserNearby"
+		flushCache="true" statementType="PREPARED">
+		update TB_User_Nearby set latitude
+		=#{latitude}, longitude=#{longitude} ,
+		geohash=#{geohash} ,
+		lastUpdateTime=#{lastUpdateTime}
+		where userId = #{userId} ;
+	</update>
+
+	<select id="getUserNearby" parameterType="long" resultMap="userNearbyMap">
+		select * from
+		TB_User_Nearby
+		where userId=#{userId};
+	</select>
+
+	<select id="getUserNearbyList" parameterType="string" resultMap="userNearbyMap">
+		select * from
+		TB_User_Nearby
+		where geohash like CONCAT('${geohash}','%');
+	</select>
+</mapper>

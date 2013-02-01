@@ -9,6 +9,7 @@
 		<result property="type" column="type" />
 		<result property="createTime" column="createTime" />
 		<result property="lastUpdateTime" column="lastUpdateTime" />
+		<result property="objectId" column="objectId" />
 	</resultMap>
 	<insert id="addRiddingAction" parameterType="RiddingAction">
 		INSERT INTO TB_Ridding_Action(
@@ -16,13 +17,15 @@
 		riddingId,
 		type,
 		createTime,
-		lastUpdateTime
+		lastUpdateTime,
+		objectId
 		)VALUES(
 		#{userId},
 		#{riddingId},
 		#{type},
 		#{createTime},
-		#{lastUpdateTime}
+		#{lastUpdateTime},
+		#{objectId}
 		)
 		<selectKey keyProperty="id" resultType="long">
 			SELECT
@@ -34,7 +37,13 @@
 		SELECT * from
 		TB_Ridding_Action where
 		userId=#{userId} and riddingId=#{riddingId} and
-		type=#{type}; 
+		type=#{type} and objectId=#{objectId};
+	</select>
+
+	<select id="getRiddingActionsByType" resultMap="riddingActionMap">
+		SELECT * from
+		TB_Ridding_Action where
+		riddingId=#{riddingId} and type=#{type} ;
 	</select>
 
 	<select id="getRiddingActionsByUserId" resultMap="riddingActionMap">
@@ -45,7 +54,7 @@
 
 	<delete id="deleteRiddingActionByRiddingId" parameterType="long"
 		flushCache="true" statementType="PREPARED">
-		delete from TB_Ridding_Action where 
+		delete from TB_Ridding_Action where
 		riddingId=#{riddingId};
 	</delete>
 </mapper>

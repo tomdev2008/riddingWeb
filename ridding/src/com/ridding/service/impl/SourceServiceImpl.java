@@ -22,7 +22,6 @@ import com.ridding.constant.ExtraSourceReturnCode;
 import com.ridding.constant.SourceType;
 import com.ridding.mapper.SourceMapper;
 import com.ridding.meta.IMap;
-import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.Source;
 import com.ridding.meta.SourceAccount;

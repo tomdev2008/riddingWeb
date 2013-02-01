@@ -43,6 +43,7 @@ import com.ridding.service.MapService;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
+import com.ridding.service.UserNearbyService;
 import com.ridding.service.UserRelationService;
 import com.ridding.service.transaction.TransactionService;
 import com.ridding.util.http.HttpJsonUtil;
@@ -78,6 +79,9 @@ public class RiddingController extends AbstractBaseController {
 
 	@Resource
 	private UserRelationService userRelationService;
+
+	@Resource
+	private UserNearbyService userNearbyService;
 
 	/**
 	 * 得到骑行用户信息，返回骑行数据
@@ -176,7 +180,6 @@ public class RiddingController extends AbstractBaseController {
 		long riddingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
 		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
 		int type = ServletRequestUtils.getIntParameter(request, "type", -1);
-		long objectId = ServletRequestUtils.getLongParameter(request, "objectId", -1L);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
 		RiddingActionResponse actionResponse = RiddingActionResponse.Fail;
@@ -205,7 +208,6 @@ public class RiddingController extends AbstractBaseController {
 		default:
 			break;
 		}
-
 		switch (actionResponse) {
 		case DoubleDo:
 			returnObject.put("code", returnCodeConstance.RiddingActionDouble);
@@ -226,6 +228,43 @@ public class RiddingController extends AbstractBaseController {
 		RiddingAction riddingAction = riddingService.getUserAction(userId, riddingId);
 		JSONObject dataObject = HttpServletUtil2.parseRiddingAction(ridding, riddingAction);
 		returnObject.put("data", dataObject);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
+		return mv;
+	}
+
+	/**
+	 * 喜欢骑行中的某张图片
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView RiddingLikePic(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		long objectId = ServletRequestUtils.getLongParameter(request, "objectId", -1L);
+		JSONObject returnObject = new JSONObject();
+		ModelAndView mv = new ModelAndView("return");
+		RiddingActionResponse actionResponse = riddingService.incPicLike(riddingId, userId, objectId);
+		switch (actionResponse) {
+		case DoubleDo:
+			returnObject.put("code", returnCodeConstance.RiddingActionDouble);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		case InRidding:
+			returnObject.put("code", returnCodeConstance.RiddingActionInMyRidding);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		case Fail:
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		default:
+			break;
+		}
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		logger.info(returnObject);
@@ -667,6 +706,75 @@ public class RiddingController extends AbstractBaseController {
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		logger.info(returnObject);
+		return mv;
+	}
+
+	/**
+	 * 得到附近的用户
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView showNearbyUsers(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		ModelAndView mv = new ModelAndView("return");
+		JSONObject returnObject = new JSONObject();
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		if (userId < 0) {
+			logger.error("userId=" + userId + " is wrong!");
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		List<Profile> userNearbyProfiles = userNearbyService.showUserNearbyList(userId);
+		if (userNearbyProfiles == null) {
+			logger.error("There is no userNearby!");
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		JSONArray jsonArray = HttpServletUtil2.parseShowNearbyUsers(userNearbyProfiles);
+		returnObject.put("data", jsonArray);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 发送我当前的位置，保存到数据库
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView sendMyLocation(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		ModelAndView mv = new ModelAndView("return");
+		JSONObject returnObject = new JSONObject();
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		double latitude = ServletRequestUtils.getDoubleParameter(request, "latitude", 0.0);
+		double longitude = ServletRequestUtils.getDoubleParameter(request, "longitude", 0.0);
+		if (userId < 0) {
+			logger.error("The userId=" + userId + " is wrong!");
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		} else if ((latitude > 90) || (latitude < -90) || (longitude > 180) || (longitude) < -180) {
+			logger.error("The latitude=" + latitude + ",the longitude=" + longitude + "is wrong!");
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		int hasAddOrUpdate = userNearbyService.addOrUpdateUsersNearby(userId, latitude, longitude);
+		if (hasAddOrUpdate < 0) {
+			logger.error("addOrUpdateUsersNearby is failed!");
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}
 }

@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.fileupload.util.LimitedInputStream;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -815,15 +814,20 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#checkIsInRiddingAction(long,
 	 * long, com.ridding.meta.RiddingAction.RiddingActions)
 	 */
-	public boolean checkIsInRiddingAction(long riddingId, long userId, RiddingActions action) {
+	public boolean checkIsInRiddingAction(long riddingId, long userId, RiddingActions action, long objectId) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("riddingId", riddingId);
 		hashMap.put("userId", userId);
 		hashMap.put("type", action.getValue());
+		hashMap.put("objectId", objectId);
 		if (riddingActionMapper.getRiddingActionByUserId(hashMap) != null) {
 			return true;
 		}
 		return false;
+	}
+
+	public boolean checkIsInRiddingAction(long riddingId, long userId, RiddingActions action) {
+		return this.checkIsInRiddingAction(riddingId, userId, action, 0);
 	}
 
 	/*
@@ -876,6 +880,27 @@ public class RiddingServiceImpl implements RiddingService {
 		riddingAction.setCreateTime(nowTime);
 		riddingAction.setLastUpdateTime(nowTime);
 		return riddingActionMapper.addRiddingAction(riddingAction) > 0;
+	}
+
+	/**
+	 * 根据Object得到操作
+	 * 
+	 * @param riddingId
+	 * @param userId
+	 * @param type
+	 * @param objectId
+	 * @return
+	 */
+	private RiddingAction getRiddingActionByObject(long riddingId, long userId, int type, long objectId) {
+		RiddingAction riddingAction = new RiddingAction();
+		riddingAction.setUserId(userId);
+		riddingAction.setRiddingId(riddingId);
+		riddingAction.setType(type);
+		riddingAction.setObjectId(objectId);
+		long nowTime = new Date().getTime();
+		riddingAction.setCreateTime(nowTime);
+		riddingAction.setLastUpdateTime(nowTime);
+		return riddingAction;
 	}
 
 	/*
@@ -975,5 +1000,34 @@ public class RiddingServiceImpl implements RiddingService {
 		List<Ridding> riddingList = riddingMapper.getRiddingsbyLike(hashMap);
 		this.insertRiddingInfo(riddingList);
 		return riddingList;
+	}
+
+	/*
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#incPicLike(long, long, long)
+	 */
+	public RiddingActionResponse incPicLike(long riddingId, long userId, long objectId) {
+		if (this.checkIsInRiddingAction(riddingId, userId, RiddingActions.LikePicture, objectId)) {
+			return RiddingActionResponse.DoubleDo;
+		}
+
+		if (this.checkIsInRidding(riddingId, userId)) {
+			return RiddingActionResponse.InRidding;
+		}
+
+		if (riddingPictureMapper.incLikePicCount(objectId) > 0) {
+			if (riddingActionMapper.addRiddingAction(this
+					.getRiddingActionByObject(riddingId, userId, RiddingActions.LikePicture.getValue(), objectId)) > 0) {
+				return RiddingActionResponse.SUCC;
+			}
+		}
+		return RiddingActionResponse.Fail;
+	}
+
+	@Override
+	public List<RiddingAction> getRiddingActionsByType(long riddingId, int type) {
+		return riddingActionMapper.getRiddingActionsByType(riddingId, type);
 	}
 }

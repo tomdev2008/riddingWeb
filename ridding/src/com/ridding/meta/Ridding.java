@@ -128,7 +128,7 @@ public class Ridding implements Serializable {
 	private String createTimeStr;
 
 	/**
-	 *骑行状态
+	 * 骑行状态
 	 * 
 	 * @author apple
 	 * 

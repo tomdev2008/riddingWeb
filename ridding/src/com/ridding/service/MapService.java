@@ -2,11 +2,8 @@ package com.ridding.service;
 
 import java.util.List;
 
-import net.sf.json.JSONArray;
-
 import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
-import com.ridding.meta.vo.Location;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
