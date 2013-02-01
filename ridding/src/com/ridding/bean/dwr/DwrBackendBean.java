@@ -12,10 +12,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.ridding.constant.returnCodeConstance;
 import com.ridding.mapper.MapFixMapper;
 import com.ridding.mapper.RiddingCommentMapper;
 import com.ridding.mapper.RiddingMapper;
+import com.ridding.mapper.RiddingPictureMapper;
 import com.ridding.meta.IMap;
+import com.ridding.meta.Public;
+import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.Source;
 import com.ridding.meta.WeiBo;
 import com.ridding.meta.Public.PublicType;
@@ -53,7 +58,6 @@ public class DwrBackendBean {
 	private RiddingService riddingService;
 	@Resource
 	private MapService mapService;
-
 
 	@Resource
 	private RiddingCommentService riddingCommentService;
@@ -111,7 +115,8 @@ public class DwrBackendBean {
 	 * @param sourceType
 	 * @return
 	 */
-	public boolean updateWeiBo(String text, String date, String photoUrl, int sourceType, int weiboType, long riddingId) {
+	public boolean updateWeiBo(String text, String date, String photoUrl,
+			int sourceType, int weiboType, long riddingId) {
 		WeiBo weiBo = new WeiBo();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date adate;
@@ -139,7 +144,8 @@ public class DwrBackendBean {
 	 * @return
 	 */
 	public void sendApns(String text) {
-		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder
+				.getContext().getAuthentication()).getDetails();
 		if (myUser.getUserId() == 54) {
 			iosApnsService.sendApns(text);
 		}
@@ -151,7 +157,8 @@ public class DwrBackendBean {
 	 * @param riddingId
 	 * @param userId
 	 */
-	public boolean addPublicRecom(long riddingId, long userId, int weight, String firstPicUrl) {
+	public boolean addPublicRecom(long riddingId, long userId, int weight,
+			String firstPicUrl) {
 		// if (StringUtils.isEmpty(firstPicUrl)) {
 		// Ridding ridding = riddingService.getRidding(riddingId);
 		// if (ridding != null) {
@@ -173,9 +180,11 @@ public class DwrBackendBean {
 		//
 		// }
 		// }
-		String json = PublicType.PublicRecom.setJson(userId, riddingId, firstPicUrl);
+		String json = PublicType.PublicRecom.setJson(userId, riddingId,
+				firstPicUrl);
 
-		return publicService.addPublic(PublicType.PublicRecom.getValue(), json, weight);
+		return publicService.addPublic(PublicType.PublicRecom.getValue(), json,
+				weight);
 	}
 
 	/**
@@ -221,5 +230,47 @@ public class DwrBackendBean {
 			logger.error("报错了呗~");
 			return false;
 		}
+	}
+
+	/**
+	 * 更新广告内容
+	 * 
+	 * @param publicId
+	 * @param riddingId
+	 * @param pictureId
+	 * @return
+	 */
+	public boolean setFirstPicUrl(long publicId, long pictureId) {
+		if (publicId < 0 || pictureId < 0) {
+			return false;
+		}
+		RiddingPicture riddingPicture = riddingService
+				.getRiddingPictureById(pictureId);
+		String firstPictureUrl = riddingPicture.getPhotoUrl();
+
+		Public public1 = publicService.getPublicById(publicId);
+		if (public1 == null) {
+			return false;
+		}
+		String jsonString = public1.getJson();
+		Ridding ridding = Public.PublicType.PublicRecom.getRidding(jsonString);
+		long userId = ridding.getLeaderUserId();
+		long riddingId = ridding.getId();
+		String newJsonString = Public.PublicType.PublicRecom.setJson(userId,
+				riddingId, firstPictureUrl);
+		return publicService.updatePublic(publicId, newJsonString);
+	}
+
+	/**
+	 * 通过Id删除广告
+	 * 
+	 * @param publicId
+	 * @return
+	 */
+	public boolean deletePublicByPublicId(long publicId) {
+		if (publicId < 0) {
+			return false;
+		}
+		return publicService.deletePublicByPublicId(publicId);
 	}
 }

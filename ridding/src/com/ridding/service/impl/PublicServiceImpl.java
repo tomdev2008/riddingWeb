@@ -45,12 +45,40 @@ public class PublicServiceImpl implements PublicService {
 	 * 
 	 * @see com.ridding.service.PublicService#getPublicListByType(int, int, int)
 	 */
-	public List<Public> getPublicListByType(int type, int limit, int weight, boolean isLarger) {
+	public List<Public> getPublicListByType(int type, int limit, int weight,
+			boolean isLarger) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("type", type);
 		map.put("limit", limit);
 		map.put("weight", weight);
 		map.put("isLarger", isLarger ? 1 : 0);
 		return publicMapper.getPublicListsByType(map);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.PublicService#getPublicById(long)
+	 */
+	public Public getPublicById(long publicId) {
+		return publicMapper.getPublicById(publicId);
+	}
+
+	/*
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.PublicService#updatePublic(long,
+	 * java.lang.String)
+	 */
+	public boolean updatePublic(long publicId, String jsonStr) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("publicId", publicId);
+		map.put("jsonStr", jsonStr);
+		return publicMapper.updatePublic(map);
+	}
+
+	public boolean deletePublicByPublicId(long publicId) {
+		return publicMapper.deletePublicByPublicId(publicId);
 	}
 }

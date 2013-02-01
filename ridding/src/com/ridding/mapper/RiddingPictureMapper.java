@@ -33,14 +33,15 @@ public interface RiddingPictureMapper {
 	 * @param map
 	 * @return
 	 */
-	public List<RiddingPicture> getRiddingPicturesByRiddingId(Map<String, Object> map);
-	
+	public List<RiddingPicture> getRiddingPicturesByRiddingId(
+			Map<String, Object> map);
+
 	/**
 	 * 通过riddingId删除骑行图片
 	 * 
 	 */
 	public int deleteRiddingPicByRiddingId(long riddingId);
-	
+
 	/**
 	 * 增加对照片的喜欢
 	 * 
@@ -48,4 +49,12 @@ public interface RiddingPictureMapper {
 	 * @return
 	 */
 	public int incLikePicCount(long pictureId);
+
+	/**
+	 * 通过ID获取图片
+	 * 
+	 * @param pictureId
+	 * @return
+	 */
+	public RiddingPicture getRiddingPicturesById(long pictureId);
 }

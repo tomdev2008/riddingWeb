@@ -82,4 +82,10 @@
 		where id
 		= #{pictureId} ;
 	</update>
+
+	<select id="getRiddingPicturesById" parameterType="long">
+		select * from
+		TB_Ridding_Picture
+		where id=#{pictureId};
+	</select>
 </mapper>
