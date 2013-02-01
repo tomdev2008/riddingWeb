@@ -45,7 +45,7 @@
 		<init-param>
 			<param-name>crossDomainSessionSecurity</param-name>
 			<param-value>false</param-value>
-		</init-param>	
+		</init-param>
 	</servlet>
 
 	<servlet-mapping>
