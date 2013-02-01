@@ -250,7 +250,7 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 		logger.info("sendWeiBoQuartz begin!");
 		SourceAccount sourceAccount = profileService.getSourceAccountByAccessUserId(Long.valueOf(SystemConst.getValue("ADMINUSERSINAID")),
 				SourceType.SINAWEIBO.getValue());
-		if(sourceAccount==null){
+		if (sourceAccount == null) {
 			return;
 		}
 		Weibo weibo = new Weibo();
@@ -390,4 +390,36 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 		return null;
 	}
 
+	/**
+	 * 定时获取有"骑行"字符的新浪微博
+	 */
+	public void getRiddingSinaWeiBoQuartz() {
+		List list = this.getSinaWeiBoFromSina("骑行");
+	}
+
+	/**
+	 * 搜索相关内容的微博并且回调
+	 * 
+	 * @param q
+	 * @return
+	 */
+	private List getSinaWeiBoFromSina(String q) {
+		return null;
+	}
+
+	/**
+	 * 发送需要推荐的微博评论
+	 */
+	public void sendWeiBoCommentQuartz() {
+
+	}
+
+	/**
+	 * 发送评论
+	 * 
+	 * @param weiboId
+	 */
+	private void sendComment(long weiboId) {
+
+	}
 }
