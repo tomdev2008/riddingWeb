@@ -73,6 +73,14 @@ public class RiddingPicture {
 	 * 对应userid的小头像
 	 */
 	private String sAvatorUrl;
+	/**
+	 * 是否已经喜欢过
+	 */
+	private boolean liked;
+	/**
+	 * 喜欢这张照片的数量
+	 */
+	private int likeCount;
 
 	public long getId() {
 		return id;
@@ -161,7 +169,7 @@ public class RiddingPicture {
 	public void setPhotoUrl(String photoUrl) {
 		this.photoUrl = photoUrl;
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}
@@ -208,6 +216,22 @@ public class RiddingPicture {
 
 	public void setsAvatorUrl(String sAvatorUrl) {
 		this.sAvatorUrl = sAvatorUrl;
+	}
+
+	public boolean isLiked() {
+		return liked;
+	}
+
+	public void setLiked(boolean liked) {
+		this.liked = liked;
+	}
+
+	public int getLikeCount() {
+		return likeCount;
+	}
+
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
 	}
 
 }

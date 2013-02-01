@@ -28,9 +28,11 @@ import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingAction;
 import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.SourceAccount;
+import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.meta.vo.UserRelationVO;
@@ -280,10 +282,18 @@ public class RiddingPublicController extends AbstractBaseController {
 			}
 			List<Profile> profileList = profileService.getProfileList(userids);
 			Map<Long, Profile> profileMap = HashMapMaker.listToMap(profileList, "getUserId", Profile.class);
+			List<RiddingAction> actions = riddingService.getRiddingActionsByType(riddingId, RiddingActions.LikePicture.getValue());
+			Map<Long, RiddingAction> riddingActionMap = HashMapMaker.listToMap(actions, "getObjectId", RiddingAction.class);
 			for (RiddingPicture riddingPicture : riddingPictures) {
 				Profile profile = profileMap.get(riddingPicture.getUserId());
 				if (profile != null) {
 					riddingPicture.setsAvatorUrl(profile.getsAvatorUrl());
+				}
+				RiddingAction action = riddingActionMap.get(riddingPicture.getUserId());
+				if (action != null) {
+					riddingPicture.setLiked(true);
+				} else {
+					riddingPicture.setLiked(false);
 				}
 			}
 		}

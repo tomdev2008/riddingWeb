@@ -3,7 +3,6 @@ package com.ridding.service;
 import java.util.List;
 
 import com.ridding.meta.Profile;
-import com.ridding.meta.UserNearby;
 
 /**
  * @author yunshang_734 E-mail:yunshang_734@163.com
