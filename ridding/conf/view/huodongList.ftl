@@ -10,8 +10,8 @@ body{font-size:83%;}
 <body>
 <h3 style="font-size: 20px;color: red;"><a href="/backend/index/">返回</a></h3>
 <div style="">
-    <input type="text" value="输入用户名"/>
-    <input type="text" value="输入用户id"/>
+    <input type="text" id="search_username" value="输入用户名"/>
+    <input type="text" id="search_userid" value="输入用户id"/>
     <input type="button" id="search" value="搜索"/>
 </div>
 <div>
@@ -62,7 +62,7 @@ body{font-size:83%;}
             <td>
                <div style="text-align: center;">${ridding.careCount!0}</div>
             </td>
-            <td><a href="javascript:void(0);;" id="huodong_update">删除</a>||<a href="javascript:void(0);;" id="huodong_recom">设置为推荐</a></td>
+            <td><a href="javascript:void(0);;" class="huodong_delete" data-id="${ridding.id!0}">删除</a>||<a href="javascript:void(0);;" id="huodong_recom">设置为推荐</a></td>
          </tr>
     </tbody>
 </table>
