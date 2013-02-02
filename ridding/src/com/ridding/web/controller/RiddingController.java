@@ -57,7 +57,8 @@ import com.ridding.util.http.HttpServletUtil2;
 @Controller("riddingController")
 public class RiddingController extends AbstractBaseController {
 
-	private static final Logger logger = Logger.getLogger(RiddingController.class);
+	private static final Logger logger = Logger
+			.getLogger(RiddingController.class);
 
 	@Resource
 	private RiddingService riddingService;
@@ -90,12 +91,16 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView showRiddingView(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView showRiddingView(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
-		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request,
+				"utf-8");
 		logger.info(jsonString);
-		long ridingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		long ridingId = ServletRequestUtils.getLongParameter(request,
+				"ridingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
 		RiddingUser user = riddingService.getRiddingUser(ridingId, userId);
@@ -106,7 +111,8 @@ public class RiddingController extends AbstractBaseController {
 		}
 		RiddingUser riddingUser = null;
 		try {
-			riddingUser = HttpServletUtil.parseToRidding4RiddingView(jsonString);
+			riddingUser = HttpServletUtil
+					.parseToRidding4RiddingView(jsonString);
 		} catch (Exception e) {
 			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
 			e.printStackTrace();
@@ -116,10 +122,12 @@ public class RiddingController extends AbstractBaseController {
 		riddingUser.setRiddingId(ridingId);
 		riddingUser.setCacheTime(time);
 
-		List<RiddingUser> ridingUserList = riddingService.getAllRiddingUserList(riddingUser);
+		List<RiddingUser> ridingUserList = riddingService
+				.getAllRiddingUserList(riddingUser);
 		HttpJsonUtil.setShowRiddingView(returnObject, ridingUserList);
 
-		JSONArray dataArray = HttpServletUtil2.parseShowRiddingView(ridingUserList);
+		JSONArray dataArray = HttpServletUtil2
+				.parseShowRiddingView(ridingUserList);
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
@@ -135,15 +143,20 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView setRidingMapLocation(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView setRidingMapLocation(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
-		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request,
+				"utf-8");
 		logger.info(jsonString);
-		long ridingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		long ridingId = ServletRequestUtils.getLongParameter(request,
+				"ridingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
-		RiddingUser riddingUser = riddingService.getRiddingUser(ridingId, userId);
+		RiddingUser riddingUser = riddingService.getRiddingUser(ridingId,
+				userId);
 		if (riddingUser == null || !riddingUser.isTeamer()) {
 			returnObject.put("code", returnCodeConstance.NOTRIDINGUSER);
 			return mv;
@@ -175,10 +188,13 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView RiddingAction(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView RiddingAction(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
-		long riddingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		long riddingId = ServletRequestUtils.getLongParameter(request,
+				"ridingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
 		int type = ServletRequestUtils.getIntParameter(request, "type", -1);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
@@ -214,7 +230,8 @@ public class RiddingController extends AbstractBaseController {
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		case InRidding:
-			returnObject.put("code", returnCodeConstance.RiddingActionInMyRidding);
+			returnObject.put("code",
+					returnCodeConstance.RiddingActionInMyRidding);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		case Fail:
@@ -225,8 +242,10 @@ public class RiddingController extends AbstractBaseController {
 			break;
 		}
 		Ridding ridding = riddingService.getRidding(riddingId);
-		RiddingAction riddingAction = riddingService.getUserAction(userId, riddingId);
-		JSONObject dataObject = HttpServletUtil2.parseRiddingAction(ridding, riddingAction);
+		RiddingAction riddingAction = riddingService.getUserAction(userId,
+				riddingId);
+		JSONObject dataObject = HttpServletUtil2.parseRiddingAction(ridding,
+				riddingAction);
 		returnObject.put("data", dataObject);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
@@ -241,21 +260,27 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView RiddingLikePic(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView RiddingLikePic(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
-		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
-		long objectId = ServletRequestUtils.getLongParameter(request, "objectId", -1L);
+		long riddingId = ServletRequestUtils.getLongParameter(request,
+				"riddingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
+		long objectId = ServletRequestUtils.getLongParameter(request,
+				"objectId", -1L);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
-		RiddingActionResponse actionResponse = riddingService.incPicLike(riddingId, userId, objectId);
+		RiddingActionResponse actionResponse = riddingService.incPicLike(
+				riddingId, userId, objectId);
 		switch (actionResponse) {
 		case DoubleDo:
 			returnObject.put("code", returnCodeConstance.RiddingActionDouble);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		case InRidding:
-			returnObject.put("code", returnCodeConstance.RiddingActionInMyRidding);
+			returnObject.put("code",
+					returnCodeConstance.RiddingActionInMyRidding);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		case Fail:
@@ -278,16 +303,22 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView addRiddingUsers(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView addRiddingUsers(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
-		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request,
+				"utf-8");
 		logger.info(jsonString);
-		long ridingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
-		int sourceType = ServletRequestUtils.getIntParameter(request, "sourceType", -1);
+		long ridingId = ServletRequestUtils.getLongParameter(request,
+				"ridingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
+		int sourceType = ServletRequestUtils.getIntParameter(request,
+				"sourceType", -1);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
-		RiddingUser riddingUser = riddingService.getRiddingUser(ridingId, userId);
+		RiddingUser riddingUser = riddingService.getRiddingUser(ridingId,
+				userId);
 		if (riddingUser == null || !riddingUser.isLeader()) {
 			returnObject.put("code", returnCodeConstance.NOTRIDINGLEADER);
 			return mv;
@@ -300,7 +331,8 @@ public class RiddingController extends AbstractBaseController {
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
-		riddingService.insertRiddingUsers(profileList, ridingId, sourceType, userId);
+		riddingService.insertRiddingUsers(profileList, ridingId, sourceType,
+				userId);
 
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
@@ -315,15 +347,20 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView deleteRiddingUsers(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView deleteRiddingUsers(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
-		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request,
+				"utf-8");
 		logger.info(jsonString);
-		long ridingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		long ridingId = ServletRequestUtils.getLongParameter(request,
+				"ridingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
-		RiddingUser riddingUser = riddingService.getRiddingUser(ridingId, userId);
+		RiddingUser riddingUser = riddingService.getRiddingUser(ridingId,
+				userId);
 		if (riddingUser == null || !riddingUser.isLeader()) {
 			returnObject.put("code", returnCodeConstance.NOTRIDINGLEADER);
 			return mv;
@@ -350,18 +387,23 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView quitRidding(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView quitRidding(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
-		long ridingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		long ridingId = ServletRequestUtils.getLongParameter(request,
+				"ridingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
-		RiddingUser riddingUser = riddingService.getRiddingUser(ridingId, userId);
+		RiddingUser riddingUser = riddingService.getRiddingUser(ridingId,
+				userId);
 		if (riddingUser == null) {
 			returnObject.put("code", returnCodeConstance.NOTRIDINGUSER);
 			return mv;
 		}
-		RiddingQuitConstant constant = riddingService.quitRidding(userId, ridingId);
+		RiddingQuitConstant constant = riddingService.quitRidding(userId,
+				ridingId);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		if (constant == RiddingQuitConstant.Leader) {
 			returnObject.put("code", returnCodeConstance.RIDDINGLEADER);
@@ -380,25 +422,32 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView getUserPublicMessage(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView getUserPublicMessage(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
-		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request,
+				"utf-8");
 		logger.info(jsonString);
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
 		ProfileSourceFeed profileSourceFeed;
 		try {
-			profileSourceFeed = HttpServletUtil.parseToProfileSourceFeed(jsonString);
+			profileSourceFeed = HttpServletUtil
+					.parseToProfileSourceFeed(jsonString);
 		} catch (Exception e) {
 			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
-		List<SourceAccount> sourceAccounts = profileService.getSourceAccountByUserIdsSourceType(profileSourceFeed.getUserIdList(), profileSourceFeed
-				.getSourceType());
+		List<SourceAccount> sourceAccounts = profileService
+				.getSourceAccountByUserIdsSourceType(
+						profileSourceFeed.getUserIdList(),
+						profileSourceFeed.getSourceType());
 		HttpJsonUtil.setSourceAccount(returnObject, sourceAccounts);
-		JSONArray dataArray = HttpServletUtil2.parseGetUserPublicMessage(sourceAccounts);
+		JSONArray dataArray = HttpServletUtil2
+				.parseGetUserPublicMessage(sourceAccounts);
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
@@ -414,9 +463,11 @@ public class RiddingController extends AbstractBaseController {
 	 * @return
 	 * @throws ServletRequestBindingException
 	 */
-	public ModelAndView quit(HttpServletRequest request, HttpServletResponse response) throws ServletRequestBindingException {
+	public ModelAndView quit(HttpServletRequest request,
+			HttpServletResponse response) throws ServletRequestBindingException {
 		response.setContentType("text/html;charset=UTF-8");
-		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder
+				.getContext().getAuthentication()).getDetails();
 		ModelAndView mv = new ModelAndView("return");
 		JSONObject returnObject = new JSONObject();
 		if (myUser == null) {
@@ -425,8 +476,10 @@ public class RiddingController extends AbstractBaseController {
 			return mv;
 		}
 		Long userId = ServletRequestUtils.getLongParameter(request, "userId");
-		Integer sourceType = ServletRequestUtils.getIntParameter(request, "sourceType");
-		SourceAccount sourceAccount = profileService.getSourceAccountByUserIdsSourceType(userId, sourceType);
+		Integer sourceType = ServletRequestUtils.getIntParameter(request,
+				"sourceType");
+		SourceAccount sourceAccount = profileService
+				.getSourceAccountByUserIdsSourceType(userId, sourceType);
 		if (sourceAccount == null) {
 			returnObject.put("code", returnCodeConstance.FAILED);
 			mv.addObject("returnObject", returnObject.toString());
@@ -443,9 +496,11 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView firstRecom(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView firstRecom(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
-		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder
+				.getContext().getAuthentication()).getDetails();
 		ModelAndView mv = new ModelAndView("return");
 		JSONObject returnObject = new JSONObject();
 		if (myUser == null) {
@@ -453,7 +508,8 @@ public class RiddingController extends AbstractBaseController {
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
-		String cityName = ServletRequestUtils.getStringParameter(request, "cityname", null);
+		String cityName = ServletRequestUtils.getStringParameter(request,
+				"cityname", null);
 		List<IMap> recomMaps = mapService.getRecomMaps(cityName);
 		logger.info(returnObject);
 		return mv;
@@ -466,13 +522,17 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView addApnsToken(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView addApnsToken(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		ModelAndView mv = new ModelAndView("return");
 		JSONObject returnObject = new JSONObject();
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
-		String token = ServletRequestUtils.getStringParameter(request, "token", null);
-		String version = ServletRequestUtils.getStringParameter(request, "version", null);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
+		String token = ServletRequestUtils.getStringParameter(request, "token",
+				null);
+		String version = ServletRequestUtils.getStringParameter(request,
+				"version", null);
 		ApnsDevice apnsDevice = new ApnsDevice();
 		apnsDevice.setUserId(userId);
 		apnsDevice.setToken(token);
@@ -499,13 +559,17 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView uploadRiddingPhotos(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView uploadRiddingPhotos(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
-		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request,
+				"utf-8");
 		ModelAndView mv = new ModelAndView("return");
 		JSONObject returnObject = new JSONObject();
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
-		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
+		long riddingId = ServletRequestUtils.getLongParameter(request,
+				"riddingId", -1L);
 		RiddingPicture riddingPicture;
 		try {
 			riddingPicture = HttpServletUtil.parseToRiddingPicture(jsonString);
@@ -533,17 +597,21 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView addRiddingMap(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView addRiddingMap(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
-		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request,
+				"utf-8");
 		logger.info(jsonString);
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
 		IMap iMap = null;
 		Ridding ridding = new Ridding();
 		try {
-			logger.info("addRiddingMap json=" + jsonString + " userId=" + userId);
+			logger.info("addRiddingMap json=" + jsonString + " userId="
+					+ userId);
 			iMap = HttpServletUtil.parseFromMap(jsonString, ridding);
 			iMap.setUserId(userId);
 			ridding.setLeaderUserId(userId);
@@ -563,9 +631,11 @@ public class RiddingController extends AbstractBaseController {
 			return mv;
 		}
 		returnObject.put("riddingId", ridding.getId());
-		returnObject.put("imageUrl", SystemConst.getValue("IMAGEHOST") + iMap.getUrlKey());
+		returnObject.put("imageUrl",
+				SystemConst.getValue("IMAGEHOST") + iMap.getUrlKey());
 
-		JSONObject dataObject = HttpServletUtil2.parseAddRiddingMap(ridding, SystemConst.getValue("IMAGEHOST") + iMap.getUrlKey());
+		JSONObject dataObject = HttpServletUtil2.parseAddRiddingMap(ridding,
+				SystemConst.getValue("IMAGEHOST") + iMap.getUrlKey());
 		returnObject.put("data", dataObject);
 		// 由于以前的bug，这里code 用200, 一直到v1.2以下版本才做更新
 		returnObject.put("code", 200);
@@ -581,12 +651,16 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView addRiddingComment(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView addRiddingComment(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
-		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request,
+				"utf-8");
 		logger.info(jsonString);
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
-		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
+		long riddingId = ServletRequestUtils.getLongParameter(request,
+				"riddingId", -1L);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
 		RiddingComment riddingComment = null;
@@ -606,7 +680,8 @@ public class RiddingController extends AbstractBaseController {
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
-		JSONObject dataObject = HttpServletUtil2.parseAddRiddingComment(riddingComment);
+		JSONObject dataObject = HttpServletUtil2
+				.parseAddRiddingComment(riddingComment);
 		returnObject.put("data", dataObject);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
@@ -621,17 +696,23 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView getRiddingActions(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView getRiddingActions(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		JSONObject returnObject = new JSONObject();
-		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
-		long riddingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		String jsonString = HttpServletUtil.parseRequestAsString(request,
+				"utf-8");
+		long riddingId = ServletRequestUtils.getLongParameter(request,
+				"ridingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
 		logger.info(jsonString);
 		ModelAndView mv = new ModelAndView("return");
 		Ridding ridding = riddingService.getRidding(riddingId);
-		RiddingAction riddingAction = riddingService.getUserAction(userId, riddingId);
-		JSONObject dataObject = HttpServletUtil2.parseRiddingAction(ridding, riddingAction);
+		RiddingAction riddingAction = riddingService.getUserAction(userId,
+				riddingId);
+		JSONObject dataObject = HttpServletUtil2.parseRiddingAction(ridding,
+				riddingAction);
 		returnObject.put("data", dataObject);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
@@ -646,11 +727,14 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView updateUserBackground(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView updateUserBackground(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		JSONObject returnObject = new JSONObject();
-		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		String jsonString = HttpServletUtil.parseRequestAsString(request,
+				"utf-8");
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
 		ModelAndView mv = new ModelAndView("return");
 		Profile profile = null;
 		try {
@@ -661,14 +745,16 @@ public class RiddingController extends AbstractBaseController {
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
-		boolean succ = profileService.updateBackgroundUrl(profile.getBackgroundUrl(), userId);
+		boolean succ = profileService.updateBackgroundUrl(
+				profile.getBackgroundUrl(), userId);
 		if (!succ) {
 			returnObject.put("code", returnCodeConstance.FAILED);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
 		profile = profileService.getProfile(userId);
-		JSONObject dataObject = HttpServletUtil2.parseGetUserProfile(profile, null, -1);
+		JSONObject dataObject = HttpServletUtil2.parseGetUserProfile(profile,
+				null, -1);
 		returnObject.put("data", dataObject);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
@@ -683,14 +769,17 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView removeOrAddUserRelation(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView removeOrAddUserRelation(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		JSONObject returnObject = new JSONObject();
-		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request,
+				"utf-8");
 		ModelAndView mv = new ModelAndView("return");
 		UserRelation userRelation = null;
 		try {
-			userRelation = HttpServletUtil.parseRemoveOrAddUserRelation(jsonString);
+			userRelation = HttpServletUtil
+					.parseRemoveOrAddUserRelation(jsonString);
 		} catch (Exception e) {
 			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
 			e.printStackTrace();
@@ -716,25 +805,29 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView showNearbyUsers(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView showNearbyUsers(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		ModelAndView mv = new ModelAndView("return");
 		JSONObject returnObject = new JSONObject();
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
 		if (userId < 0) {
 			logger.error("userId=" + userId + " is wrong!");
 			returnObject.put("code", returnCodeConstance.FAILED);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
-		List<Profile> userNearbyProfiles = userNearbyService.showUserNearbyList(userId);
+		List<Profile> userNearbyProfiles = userNearbyService
+				.showUserNearbyList(userId);
 		if (userNearbyProfiles == null) {
 			logger.error("There is no userNearby!");
 			returnObject.put("code", returnCodeConstance.FAILED);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
-		JSONArray jsonArray = HttpServletUtil2.parseShowNearbyUsers(userNearbyProfiles);
+		JSONArray jsonArray = HttpServletUtil2
+				.parseShowNearbyUsers(userNearbyProfiles);
 		returnObject.put("data", jsonArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
@@ -748,27 +841,60 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView sendMyLocation(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView sendMyLocation(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		ModelAndView mv = new ModelAndView("return");
 		JSONObject returnObject = new JSONObject();
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
-		double latitude = ServletRequestUtils.getDoubleParameter(request, "latitude", 0.0);
-		double longitude = ServletRequestUtils.getDoubleParameter(request, "longitude", 0.0);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
+		double latitude = ServletRequestUtils.getDoubleParameter(request,
+				"latitude", 0.0);
+		double longitude = ServletRequestUtils.getDoubleParameter(request,
+				"longitude", 0.0);
 		if (userId < 0) {
 			logger.error("The userId=" + userId + " is wrong!");
 			returnObject.put("code", returnCodeConstance.FAILED);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
-		} else if ((latitude > 90) || (latitude < -90) || (longitude > 180) || (longitude) < -180) {
-			logger.error("The latitude=" + latitude + ",the longitude=" + longitude + "is wrong!");
+		} else if ((latitude > 90) || (latitude < -90) || (longitude > 180)
+				|| (longitude) < -180) {
+			logger.error("The latitude=" + latitude + ",the longitude="
+					+ longitude + "is wrong!");
 			returnObject.put("code", returnCodeConstance.FAILED);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
-		int hasAddOrUpdate = userNearbyService.addOrUpdateUsersNearby(userId, latitude, longitude);
+		int hasAddOrUpdate = userNearbyService.addOrUpdateUsersNearby(userId,
+				latitude, longitude);
 		if (hasAddOrUpdate < 0) {
 			logger.error("addOrUpdateUsersNearby is failed!");
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	public ModelAndView deletePicture(HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		ModelAndView mv = new ModelAndView("return");
+		JSONObject returnObject = new JSONObject();
+		long pictureId = ServletRequestUtils.getLongParameter(request,
+				"pictureId", -1L);
+		if (pictureId < 0) {
+			logger.error("The pictureId=" + pictureId + " is wrong!");
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		int hasRemoveRiddingPicture = riddingService
+				.removeRiddingPicture(pictureId);
+		if (hasRemoveRiddingPicture < 0) {
+			logger.error("deletePicture is failed!");
 			returnObject.put("code", returnCodeConstance.FAILED);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
