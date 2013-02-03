@@ -33,9 +33,7 @@ import com.ridding.mapper.SourceAccountMapper;
 import com.ridding.mapper.WeiBoMapper;
 import com.ridding.meta.RepostMap;
 import com.ridding.meta.SourceAccount;
-import com.ridding.meta.WeiBoToBeSend;
 import com.ridding.meta.WeiBo;
-import com.ridding.meta.WeiBoToBeSend;
 import com.ridding.meta.WeiBo.WeiBoType;
 import com.ridding.service.ProfileService;
 import com.ridding.service.SinaWeiBoService;
@@ -426,46 +424,5 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 		return null;
 	}
 
-	/**
-	 * 定时获取有"骑行"字符的新浪微博
-	 */
-	public void getRiddingSinaWeiBoQuartz() {
-		List<WeiBoToBeSend> weiBoToBeSendList = this.getSinaWeiBoFromSina("骑行");
-		for (WeiBoToBeSend weiBoToBeSend : weiBoToBeSendList) {
-			long accountId = weiBoToBeSend.getAccountId();
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("userId", accountId);
-			map.put("sourceType", SourceType.SINAWEIBO.getValue());
-			if (sourceAccountMapper.getSourceAccountByAccessUserId(map) == null) {
-
-			}
-		}
-
-	}
-
-	/**
-	 * 搜索相关内容的微博并且回调
-	 * 
-	 * @param q
-	 * @return
-	 */
-	private List<WeiBoToBeSend> getSinaWeiBoFromSina(String q) {
-		return null;
-	}
-
-	/**
-	 * 发送需要推荐的微博评论
-	 */
-	public void sendWeiBoCommentQuartz() {
-
-	}
-
-	/**
-	 * 发送评论
-	 * 
-	 * @param weiboId
-	 */
-	private void sendComment(long weiboId) {
-
-	}
+	
 }

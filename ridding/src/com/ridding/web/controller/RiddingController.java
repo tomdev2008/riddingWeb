@@ -763,6 +763,23 @@ public class RiddingController extends AbstractBaseController {
 	}
 
 	/**
+	 * 删除一张骑行照片
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView removeRiddingPicture(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		JSONObject returnObject = new JSONObject();
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		long pictureId = ServletRequestUtils.getLongParameter(request, "pictureId", -1L);
+		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
+		ModelAndView mv = new ModelAndView("return");
+		return mv;
+	}
+
+	/**
 	 * 添加或者删除用户关系
 	 * 
 	 * @param request
