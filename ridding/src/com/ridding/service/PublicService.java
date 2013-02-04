@@ -29,4 +29,13 @@ public interface PublicService {
 	 * @return
 	 */
 	public List<Public> getPublicListByType(int type, int limit, int weight, boolean isLarger);
+
+	/**
+	 * 更新广告
+	 * 
+	 * @param riddingId
+	 * @param picUrl
+	 * @return
+	 */
+	public boolean updatePublicFirstPicUrl(long id, String picUrl);
 }

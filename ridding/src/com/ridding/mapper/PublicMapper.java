@@ -3,6 +3,8 @@ package com.ridding.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.ridding.meta.Public;
 
 /**
@@ -26,4 +28,19 @@ public interface PublicMapper {
 	 */
 	public List<Public> getPublicListsByType(Map<String, Object> map);
 
+	/**
+	 * 通过
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Public getPublicById(long id);
+
+	/**
+	 * 更新
+	 * 
+	 * @param p
+	 * @return
+	 */
+	public int updateJsonById(@Param(value = "id") long id, @Param(value = "json") String json);
 }

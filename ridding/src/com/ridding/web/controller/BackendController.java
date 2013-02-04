@@ -108,6 +108,9 @@ public class BackendController extends AbstractBaseController {
 		if (!ListUtils.isEmptyList(riddingList)) {
 			for (Ridding ridding : riddingList) {
 				List<RiddingPicture> pictureList = riddingService.getRiddingPictureByRiddingId(ridding.getId(), 50, new Date().getTime());
+				for (RiddingPicture riddingPicture : pictureList) {
+					riddingPicture.setPhotoUrl(SystemConst.returnPhotoUrl(riddingPicture.getPhotoUrl()));
+				}
 				ridding.setRiddingPictureList(pictureList);
 			}
 		}
@@ -144,13 +147,13 @@ public class BackendController extends AbstractBaseController {
 			riddings = riddingService.getRiddingsbyUserId(userId);
 		} else if (orderByLike > 0) {
 			riddings = riddingService.getRiddingsbyLike(limit, offset);
-			
+
 		} else if (orderByComment > 0) {
 			riddings = riddingService.getRiddingsbyComment(limit, offset);
-			
+
 		} else if (orderByUse > 0) {
 			riddings = riddingService.getRiddingsbyUse(limit, offset);
-			
+
 		} else {
 			riddings = riddingService.getRiddingListByLastUpdateTime(requestTime, limit, isLarge, Ridding.notPublicOrRecom);
 		}

@@ -10,7 +10,7 @@
 		<result property="lastUpdateTime" column="lastUpdateTime" />
 		<result property="weight" column="weight" />
 	</resultMap>
-	<insert id="addPublic" parameterType="Public" >
+	<insert id="addPublic" parameterType="Public">
 		INSERT INTO TB_Public(
 		type,
 		json,
@@ -29,17 +29,29 @@
 			LAST_INSERT_ID() AS VALUE
 		</selectKey>
 	</insert>
-	
-	
+
+
 	<select id="getPublicListsByType" resultMap="publicMap">
-		SELECT * from TB_Public where 
-		 type = #{type} 
-		 <if test="isLarger==1">
+		SELECT * from TB_Public where
+		type = #{type}
+		<if test="isLarger==1">
 			and weight > #{weight} 
 		</if>
 		<if test="isLarger==0">
 			and #{weight} > weight 
 		</if>
-		  order by weight desc limit #{limit} 
+		order by weight desc limit #{limit}
 	</select>
+
+	<select id="getPublicById" resultMap="publicMap">
+		SELECT * from TB_Public
+		where
+		id= #{id}
+	</select>
+
+	<update id="updateJsonById" parameterType="Profile" flushCache="true"
+		statementType="PREPARED">
+		update TB_Public set json= #{json}
+		where id = #{id};
+	</update>
 </mapper>

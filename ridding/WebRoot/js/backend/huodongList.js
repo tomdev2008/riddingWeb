@@ -1,7 +1,19 @@
-$(".huodong_delete").click(function(){
+$("#huodong_delete").click(function(){
 	_riddingId= $(this).attr("data-id");
 	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'deleteRiddingById',_riddingId,submitCB);
 });
+
+$("#huodong_recom").click(function(){
+	_riddingId= $(this).attr("data-id");
+	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'setIsRecom',_riddingId,submitCB);
+});
+
+$("#recom_img_recom").click(function(){
+	_pictureId= $(this).attr("data-id");
+	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'setIsRecom',_riddingId,submitCB);
+});
+
+
 
 function submitCB(_flag){
 	

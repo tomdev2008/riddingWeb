@@ -62,7 +62,7 @@ body{font-size:83%;}
             <td>
                <div style="text-align: center;">${ridding.careCount!0}</div>
             </td>
-            <td><a href="javascript:void(0);;" class="huodong_delete" data-id="${ridding.id!0}">删除</a>||<a href="javascript:void(0);;" id="huodong_recom">设置为推荐</a></td>
+            <td><a href="javascript:void(0);;" id="huodong_delete" data-id="${ridding.id!0}">删除</a>||<a href="javascript:void(0);;" id="huodong_recom" data-id="${ridding.id!0}">设置为推荐</a></td>
          </tr>
     </tbody>
 </table>
