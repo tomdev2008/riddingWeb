@@ -891,9 +891,7 @@ public class RiddingController extends AbstractBaseController {
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
-		int hasRemoveRiddingPicture = riddingService
-				.removeRiddingPicture(pictureId);
-		if (hasRemoveRiddingPicture < 0) {
+		if (!riddingService.removeRiddingPicture(pictureId)) {
 			logger.error("deletePicture is failed!");
 			returnObject.put("code", returnCodeConstance.FAILED);
 			mv.addObject("returnObject", returnObject.toString());

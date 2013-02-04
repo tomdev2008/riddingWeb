@@ -1086,7 +1086,10 @@ public class RiddingServiceImpl implements RiddingService {
 		return riddingActionMapper.getRiddingActionsByType(riddingId, type);
 	}
 
-	public int removeRiddingPicture(long pictureId) {
-		return riddingPictureMapper.deleteRiddingPicture(pictureId);
+	public boolean removeRiddingPicture(long pictureId) {
+		if (riddingPictureMapper.deleteRiddingPicture(pictureId) < 0) {
+			return false;
+		}
+		return true;
 	}
 }

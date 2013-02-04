@@ -3,6 +3,7 @@ package com.ridding.service;
 import java.util.List;
 
 import com.ridding.meta.WeiBo;
+import com.ridding.meta.WeiBoToBeSend;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -25,8 +26,9 @@ public interface SinaWeiBoService {
 	 * @param count
 	 * @param page
 	 */
-	public void getAtMeSinaWeiBo(long userId, String accessToken, long since_id, int filter_by_author, int filter_by_source, int filter_by_type,
-			int count, int page);
+	public void getAtMeSinaWeiBo(long userId, String accessToken,
+			long since_id, int filter_by_author, int filter_by_source,
+			int filter_by_type, int count, int page);
 
 	/**
 	 * 添加地图成功后回复评论
@@ -69,4 +71,16 @@ public interface SinaWeiBoService {
 	 * 将转发地图微博生成地图
 	 */
 	public void genMapFromMapWeiBoQuartz();
+
+	/**
+	 * 定时获取应发送微博
+	 */
+	public void getRiddingSinaWeiBoQuartz();
+
+	/**
+	 * 定时发送微博
+	 * 
+	 * @return
+	 */
+	public void sendWeiBoCommentQuartz();
 }

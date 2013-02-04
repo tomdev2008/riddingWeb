@@ -340,5 +340,5 @@ public interface RiddingService {
 	 * @param pictureId
 	 * @return
 	 */
-	public int removeRiddingPicture(long pictureId);
+	public boolean removeRiddingPicture(long pictureId);
 }
