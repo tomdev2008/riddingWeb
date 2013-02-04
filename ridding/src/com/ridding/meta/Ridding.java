@@ -126,6 +126,10 @@ public class Ridding implements Serializable {
 	 * 创建时间
 	 */
 	private String createTimeStr;
+	/**
+	 * 广告id
+	 */
+	private long publicId;
 
 	/**
 	 * 骑行状态
@@ -368,6 +372,14 @@ public class Ridding implements Serializable {
 
 	public void setCreateTimeStr(String createTimeStr) {
 		this.createTimeStr = createTimeStr;
+	}
+
+	public long getPublicId() {
+		return publicId;
+	}
+
+	public void setPublicId(long publicId) {
+		this.publicId = publicId;
 	}
 
 }

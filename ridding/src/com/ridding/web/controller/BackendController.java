@@ -113,9 +113,10 @@ public class BackendController extends AbstractBaseController {
 				50, false);
 		if (!ListUtils.isEmptyList(riddingList)) {
 			for (Ridding ridding : riddingList) {
-				List<RiddingPicture> pictureList = riddingService
-						.getRiddingPictureByRiddingId(ridding.getId(), 50,
-								new Date().getTime());
+				List<RiddingPicture> pictureList = riddingService.getRiddingPictureByRiddingId(ridding.getId(), 50, new Date().getTime());
+				for (RiddingPicture riddingPicture : pictureList) {
+					riddingPicture.setPhotoUrl(SystemConst.returnPhotoUrl(riddingPicture.getPhotoUrl()));
+				}
 				ridding.setRiddingPictureList(pictureList);
 			}
 		}

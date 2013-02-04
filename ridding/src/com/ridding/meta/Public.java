@@ -102,7 +102,6 @@ public class Public {
 				JSONObject jsonObject = JSONObject.fromObject(json);
 				Ridding ridding = new Ridding();
 				ridding.setId(jsonObject.getLong("riddingId"));
-				ridding.setLeaderUserId(jsonObject.getLong("userId"));
 				
 				if (jsonObject.get("firstPicUrl")!=null) {
 					ridding.setFirstPicUrl(jsonObject.getString("firstPicUrl"));
@@ -111,10 +110,9 @@ public class Public {
 				return ridding;
 			}
 
-			public String setJson(long userId, long riddingId, String firstPicUrl) {
+			public String setJson(long riddingId, String firstPicUrl) {
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put("riddingId", riddingId);
-				jsonObject.put("userId", userId);
 				if (!StringUtils.isEmpty(firstPicUrl)) {
 					jsonObject.put("firstPicUrl", firstPicUrl);
 				}
@@ -125,7 +123,7 @@ public class Public {
 
 		public abstract Ridding getRidding(String json);
 
-		public abstract String setJson(long userId, long riddingId, String firstPicUrl);
+		public abstract String setJson(long riddingId, String firstPicUrl);
 
 		public static PublicType genPublicType(int t) {
 			for (PublicType type : PublicType.values()) {

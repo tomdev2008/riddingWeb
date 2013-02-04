@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.constant.SourceType;
+import com.ridding.constant.SystemConst;
 import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.MapFixMapper;
 import com.ridding.mapper.ProfileMapper;
@@ -638,10 +639,11 @@ public class RiddingServiceImpl implements RiddingService {
 			for (Public public1 : publicList) {
 				Ridding ridding = PublicType.PublicRecom.getRidding(public1.getJson());
 				Ridding newRidding = riddingMapper.getRidding(ridding.getId());
+				newRidding.setPublicId(public1.getId());
 				if (ridding.getFirstPicUrl() != null) {
-					newRidding.setFirstPicUrl(ridding.getFirstPicUrl());
+					String url = SystemConst.returnPhotoUrl(ridding.getFirstPicUrl());
+					newRidding.setFirstPicUrl(url);
 				}
-
 				newRidding.setWeight(public1.getWeight());
 				riddingList.add(newRidding);
 			}
@@ -652,13 +654,13 @@ public class RiddingServiceImpl implements RiddingService {
 	}
 
 	/*
+	 * (non-Javadoc)
 	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 * @see com.ridding.service.RiddingService#setRiddingIsRecom(long)
 	 */
 	public boolean setRiddingIsRecom(long riddingId) {
+		String json = PublicType.PublicRecom.setJson(riddingId, null);
+		publicService.addPublic(PublicType.PublicRecom.getValue(), json, 1);
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("id", riddingId);
 		hashMap.put("isRecom", Ridding.PublicOrRecom);
@@ -1043,6 +1045,6 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#removeRiddingPicture(long)
 	 */
 	public boolean removeRiddingPicture(long pictureId) {
-		return riddingPictureMapper.deleteRiddingPicture(pictureId)>0;
+		return riddingPictureMapper.deleteRiddingPicture(pictureId) > 0;
 	}
 }
