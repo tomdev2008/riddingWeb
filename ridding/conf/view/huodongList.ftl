@@ -73,11 +73,7 @@ body{font-size:83%;}
             <td style="text-align: center;" width="5%">
                <div style="text-align: center;">${ridding.careCount!0}</div>
             </td>
-<<<<<<< HEAD
-            <td style="text-align: center;" width="10%"><a href="javascript:void(0);;" class="huodong_delete" data-id="${ridding.id!0}">删除</a>||<a href="javascript:void(0);;" id="huodong_recom">设置为推荐</a></td>
-=======
             <td><a href="javascript:void(0);;" id="huodong_delete" data-id="${ridding.id!0}">删除</a>||<a href="javascript:void(0);;" id="huodong_recom" data-id="${ridding.id!0}">设置为推荐</a></td>
->>>>>>> 8e394d18da4804039683e0ae8a88c1be662bc41b
          </tr>
     </tbody>
     </#list>
