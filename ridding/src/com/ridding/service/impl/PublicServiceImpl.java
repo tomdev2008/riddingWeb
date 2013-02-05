@@ -45,6 +45,15 @@ public class PublicServiceImpl implements PublicService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see com.ridding.service.PublicService#addPublic(com.ridding.meta.Public)
+	 */
+	public boolean addPublic(Public aPublic) {
+		return publicMapper.addPublic(aPublic) > 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ridding.service.PublicService#getPublicListByType(int, int, int)
 	 */
 	public List<Public> getPublicListByType(int type, int limit, int weight, boolean isLarger) {
@@ -70,9 +79,8 @@ public class PublicServiceImpl implements PublicService {
 		if (PublicType.genPublicType(public1.getType()) != PublicType.PublicRecom) {
 			return false;
 		}
-		Ridding ridding = PublicType.genPublicType(public1.getType()).getRidding(public1.getJson());
-		ridding.setFirstPicUrl(picUrl);
-		String json = PublicType.PublicRecom.setJson(ridding.getId(), ridding.getFirstPicUrl());
-		return publicMapper.updateJsonById(id, json) > 0;
+		public1.setFirstPicUrl(picUrl);
+		public1.genJson();
+		return publicMapper.updateJsonById(id, public1.getJson()) > 0;
 	}
 }

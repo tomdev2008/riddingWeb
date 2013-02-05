@@ -14,6 +14,9 @@ body{font-size:83%;}
     <span>骑行Id</span><input type="text" id="recom_riddingId" style="width:50px;"/>
     <span>权重</span><input type="text" id="recom_weight" style="width:50px;"/>
     <span>图片url</span><input type="text" id="recom_firstpicurl" style="width:500px;"/>
+    <span>链接文本(10个字)</span><input type="text" id="recom_ad_text" style="width:500px;"/>
+    <span>链接图片url</span><input type="text" id="recom_ad_image_url" style="width:500px;"/>
+    <span>链接url</span><input type="text" id="recom_link_url" style="width:500px;"/>
     <input type="button" id="recom" value="确定"/>
 </div>
 
@@ -29,7 +32,7 @@ body{font-size:83%;}
          <tr>
             <td><span>${ridding.id!0}</span></td>
             <td><span>${ridding.name!""}</span></td>
-            <td><img style="width:100px;height:100px;" src="${ridding.firstPicUrl!""}" id="recom_coverImg"/></td>
+            <td><img style="width:100px;height:100px;" src="${ridding.aPublic.firstPicUrl!""}" id="recom_coverImg"/></td>
             <td>
               <#if ridding.riddingPictureList?exists>
                 <#list ridding.riddingPictureList as picture>
@@ -42,7 +45,7 @@ body{font-size:83%;}
               </#if> 
             </td>
             <td>
-               <input type="text" id="recom_weight" value="${ridding.weight!0}"/>
+               <input type="text" id="recom_weight" value="${ridding.aPublic.weight!0}"/>
             </td>
             <td><a href="javascript:void(0);;" onClick="updateRecom(${ridding.leaderUserId}),${ridding.id});">更新</a><a href="javascript:void(0);;" id="recom_update">删除</a></td>
          </tr>

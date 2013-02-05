@@ -2,8 +2,11 @@
 $("#recom").click(function(){
 	_riddingId= $("#recom_riddingId").val();
 	_firstPicUrl=$("#recom_firstpicurl").val();
+	_linkText=$("#recom_ad_text").val();
+	_linkImageUrl=$("#recom_ad_image_url").val();
+	_linkUrl=$("#recom_link_url").val();
 	_weight=$("#recom_weight").val();
-	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'addPublicRecom',_riddingId,_weight,_firstPicUrl,submitWeiBoCB);
+	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'addPublicRecom',_riddingId,_weight,_firstPicUrl,_linkText,_linkImageUrl,_linkUrl,submitWeiBoCB);
 });
 
 
