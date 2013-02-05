@@ -111,6 +111,7 @@ public class HttpServletUtil2 {
 				userObject.put("savatorurl", activityRidding.getLeaderProfile().getsAvatorUrl());
 				userObject.put("username", activityRidding.getLeaderProfile().getNickName());
 				userObject.put("userid", activityRidding.getLeaderProfile().getUserId());
+				userObject.put("totaldistance", activityRidding.getLeaderProfile().getTotalDistance());
 				riddingObject.put("user", userObject);
 			}
 			JSONObject returnObject = new JSONObject();
@@ -388,6 +389,7 @@ public class HttpServletUtil2 {
 				userObject.put("nickname", riddingComment.getUserProfile().getNickName());
 				userObject.put("bavatorurl", riddingComment.getUserProfile().getbAvatorUrl());
 				userObject.put("savatorurl", riddingComment.getUserProfile().getsAvatorUrl());
+				userObject.put("totaldistance", riddingComment.getUserProfile().getTotalDistance());
 				commentObject.put("user", userObject);
 			}
 
@@ -398,6 +400,7 @@ public class HttpServletUtil2 {
 				touserObject.put("nickname", riddingComment.getToUserProfile().getNickName());
 				touserObject.put("bavatorurl", riddingComment.getToUserProfile().getbAvatorUrl());
 				touserObject.put("savatorurl", riddingComment.getToUserProfile().getsAvatorUrl());
+				touserObject.put("totaldistance", riddingComment.getToUserProfile().getTotalDistance());
 				commentObject.put("touser", touserObject);
 			}
 
@@ -457,16 +460,18 @@ public class HttpServletUtil2 {
 				userObject.put("nickname", userRelationVO.getUserProfile().getNickName());
 				userObject.put("bavatorurl", userRelationVO.getUserProfile().getbAvatorUrl());
 				userObject.put("savatorurl", userRelationVO.getUserProfile().getsAvatorUrl());
+				userObject.put("totaldistance", userRelationVO.getUserProfile().getTotalDistance());
 				relationObject.put("user", userObject);
 			}
 
 			if (userRelationVO.getToUserProfile() != null) {
 				JSONObject toUserObject = new JSONObject();
-				toUserObject.put("userid", userRelationVO.getUserProfile().getUserId());
-				toUserObject.put("username", userRelationVO.getUserProfile().getUserName());
-				toUserObject.put("nickname", userRelationVO.getUserProfile().getNickName());
-				toUserObject.put("bavatorurl", userRelationVO.getUserProfile().getbAvatorUrl());
-				toUserObject.put("savatorurl", userRelationVO.getUserProfile().getsAvatorUrl());
+				toUserObject.put("userid", userRelationVO.getToUserProfile().getUserId());
+				toUserObject.put("username", userRelationVO.getToUserProfile().getUserName());
+				toUserObject.put("nickname", userRelationVO.getToUserProfile().getNickName());
+				toUserObject.put("bavatorurl", userRelationVO.getToUserProfile().getbAvatorUrl());
+				toUserObject.put("savatorurl", userRelationVO.getToUserProfile().getsAvatorUrl());
+				toUserObject.put("totaldistance", userRelationVO.getToUserProfile().getTotalDistance());
 				relationObject.put("touser", toUserObject);
 			}
 

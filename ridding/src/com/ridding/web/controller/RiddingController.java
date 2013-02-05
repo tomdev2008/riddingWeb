@@ -878,7 +878,14 @@ public class RiddingController extends AbstractBaseController {
 		return mv;
 	}
 
-	public ModelAndView deletePicture(HttpServletRequest request,
+	/**
+	 * 删除骑行照片
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView removeRiddingPicture(HttpServletRequest request,
 			HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		ModelAndView mv = new ModelAndView("return");
@@ -891,8 +898,11 @@ public class RiddingController extends AbstractBaseController {
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
-		if (!riddingService.removeRiddingPicture(pictureId)) {
-			logger.error("deletePicture is failed!");
+
+		boolean succ = riddingService.removeRiddingPicture(pictureId);
+		if (!succ) {
+			logger.error("deletePicture is failed! where pictureId="
+					+ pictureId);
 			returnObject.put("code", returnCodeConstance.FAILED);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;

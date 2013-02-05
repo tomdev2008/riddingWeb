@@ -54,7 +54,6 @@ public class DwrBackendBean {
 	@Resource
 	private MapService mapService;
 
-
 	@Resource
 	private RiddingCommentService riddingCommentService;
 
@@ -151,30 +150,8 @@ public class DwrBackendBean {
 	 * @param riddingId
 	 * @param userId
 	 */
-	public boolean addPublicRecom(long riddingId, long userId, int weight, String firstPicUrl) {
-		// if (StringUtils.isEmpty(firstPicUrl)) {
-		// Ridding ridding = riddingService.getRidding(riddingId);
-		// if (ridding != null) {
-		// List<RiddingPicture> list =
-		// riddingService.getRiddingPictureByRiddingId(riddingId, 1, new
-		// Date().getTime());
-		// if (!ListUtils.isEmptyList(list)) {
-		// RiddingPicture picture = list.get(0);
-		// firstPicUrl = picture.getPhotoUrl();
-		// } else {
-		// IMap iMap = mapService.getMapById(ridding.getMapId(), IMap.Using);
-		// if (iMap != null) {
-		// Photo photo = photoService.getPhoto(iMap.getAvatorPic());
-		// if (photo != null) {
-		// firstPicUrl = photo.getOriginalPath();
-		// }
-		// }
-		// }
-		//
-		// }
-		// }
-		String json = PublicType.PublicRecom.setJson(userId, riddingId, firstPicUrl);
-
+	public boolean addPublicRecom(long riddingId, int weight, String firstPicUrl) {
+		String json = PublicType.PublicRecom.setJson(riddingId, firstPicUrl);
 		return publicService.addPublic(PublicType.PublicRecom.getValue(), json, weight);
 	}
 
@@ -202,7 +179,7 @@ public class DwrBackendBean {
 		if (riddingId < 0) {
 			return false;
 		}
-		return (riddingService.setRiddingIsRecom(riddingId));
+		return riddingService.setRiddingIsRecom(riddingId);
 	}
 
 	/**
@@ -221,5 +198,16 @@ public class DwrBackendBean {
 			logger.error("报错了呗~");
 			return false;
 		}
+	}
+
+	/**
+	 * 更新firstPic
+	 * 
+	 * @param id
+	 * @param picUrl
+	 * @return
+	 */
+	public boolean updatePublicFirstPicUrl(long id, String picUrl) {
+		return publicService.updatePublicFirstPicUrl(id, picUrl);
 	}
 }

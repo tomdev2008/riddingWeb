@@ -51,7 +51,10 @@
 		<if test="isLarger==0">
 			and #{createTime} > createTime 
 		</if>
-		order by createTime desc limit #{limit};
+		order by createTime desc
+		<if test="limit>0">
+			limit #{limit}
+		</if>;
 	</select>
 
 	<delete id="deleteRiddingComment" parameterType="long">
