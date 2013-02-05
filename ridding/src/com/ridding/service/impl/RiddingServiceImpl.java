@@ -640,8 +640,10 @@ public class RiddingServiceImpl implements RiddingService {
 			for (Public aPublic : publicList) {
 				aPublic.getJson();
 				Ridding newRidding = riddingMapper.getRidding(aPublic.getRiddingId());
+				if (newRidding == null) {
+					continue;
+				}
 				newRidding.setaPublic(aPublic);
-				aPublic.setFirstPicUrl(aPublic.getFirstPicUrl());
 				riddingList.add(newRidding);
 			}
 			this.insertRiddingInfo(riddingList);
@@ -742,9 +744,7 @@ public class RiddingServiceImpl implements RiddingService {
 					List<RiddingPicture> list = riddingPictureMapper.getRiddingPicturesByRiddingId(map);
 					if (!ListUtils.isEmptyList(list)) {
 						RiddingPicture riddingPicture = list.get(0);
-						if (riddingPicture != null) {
-							ridding.getaPublic().setFirstPicUrl(riddingPicture.getPhotoUrl());
-						}
+						ridding.getaPublic().setFirstPicUrl(riddingPicture.getPhotoUrl());
 					}
 				}
 			}
