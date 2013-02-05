@@ -102,10 +102,10 @@ public class Ridding implements Serializable {
 	 * 同步
 	 */
 	public static int sync = 1;
-	/**
-	 * 第一张图的url
-	 */
-	public String firstPicUrl;
+//	/**
+//	 * 第一张图的url
+//	 */
+//	public String firstPicUrl;
 	/**
 	 * 距离
 	 */
@@ -279,14 +279,14 @@ public class Ridding implements Serializable {
 	public void setIsPublic(int isPublic) {
 		this.isPublic = isPublic;
 	}
-
-	public String getFirstPicUrl() {
-		return firstPicUrl;
-	}
-
-	public void setFirstPicUrl(String firstPicUrl) {
-		this.firstPicUrl = firstPicUrl;
-	}
+//
+//	public String getFirstPicUrl() {
+//		return firstPicUrl;
+//	}
+//
+//	public void setFirstPicUrl(String firstPicUrl) {
+//		this.firstPicUrl = firstPicUrl;
+//	}
 
 	public int getDistance() {
 		return distance;

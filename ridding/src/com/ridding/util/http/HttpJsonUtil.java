@@ -211,7 +211,7 @@ public class HttpJsonUtil {
 				// 新版本
 				jsonObject.put("lastupdatetime", TimeUtil.getFormatTime(ridding.getLastUpdateTime()));
 				jsonObject.put("leaderuserid", ridding.getLeaderUserId());
-				jsonObject.put("firstpicurl", ridding.getFirstPicUrl());
+				jsonObject.put("firstpicurl", ridding.getaPublic().getFirstPicUrl());
 				jsonObject.put("weight", ridding.getaPublic().getWeight());
 				jsonArray.add(jsonObject);
 			}
