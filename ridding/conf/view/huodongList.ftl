@@ -43,8 +43,9 @@ body{font-size:83%;}
          <td style="text-align: center;">关注数</td>
          <td style="text-align: center;">操作</td></tr>
     </thead>
+     <tbody>
     <#list riddingList as ridding>
-    <tbody>
+
          <tr>
             <td style="text-align: center;" width="10%"><span>${ridding.id!0}</span></td>
             <td style="text-align: center;" width="10%"><a id="huodong_name_${ridding.id!0}" href="/Ridding/backend.do?action=backendHuodong&riddingId=${ridding.id!0}">${ridding.name!""}</a></td>
@@ -75,8 +76,9 @@ body{font-size:83%;}
             </td>
             <td><a href="javascript:void(0);;" class="huodong_delete" data-id="${ridding.id!0}">删除</a>||<a href="javascript:void(0);;" class="huodong_recom" data-id="${ridding.id!0}">设置为推荐</a></td>
          </tr>
-    </tbody>
+  
     </#list>
+      </tbody>
 </table>
 </div>
 </#if>
