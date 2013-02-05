@@ -641,8 +641,7 @@ public class RiddingServiceImpl implements RiddingService {
 				aPublic.getJson();
 				Ridding newRidding = riddingMapper.getRidding(aPublic.getRiddingId());
 				newRidding.setaPublic(aPublic);
-
-				aPublic.setFirstPicUrl(SystemConst.returnPhotoUrl(aPublic.getFirstPicUrl()));
+				aPublic.setFirstPicUrl(aPublic.getFirstPicUrl());
 				riddingList.add(newRidding);
 			}
 			this.insertRiddingInfo(riddingList);
