@@ -39,7 +39,7 @@ body{font-size:83%;}
                 <div style="float:left;width:120px;height:140px;">
                    <img style="max-width:100px;max-height:100px;" src="${picture.photoUrl!""}" id="recom_img_${picture.id!0}"/>
                    <p><span>${picture.description}</span></p>
-                   <p><a href="javascript:void(0);;" class="recom_img_recom" data-id="${ridding.publicId!0}" data-url="${picture.photoUrl!""}">设为封面</a></p>
+                   <p><a href="javascript:void(0);;" class="recom_img_recom" data-id="${ridding.aPublic.id!0}" data-url="${picture.photoUrl!""}">设为封面</a></p>
                 </div>
                 </#list>
               </#if> 
