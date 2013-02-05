@@ -283,13 +283,13 @@ public class RiddingPublicController extends AbstractBaseController {
 			List<Profile> profileList = profileService.getProfileList(userids);
 			Map<Long, Profile> profileMap = HashMapMaker.listToMap(profileList, "getUserId", Profile.class);
 			List<RiddingAction> actions = riddingService.getRiddingActionsByType(riddingId, RiddingActions.LikePicture.getValue());
-			Map<Long, RiddingAction> riddingActionMap = HashMapMaker.listToMap(actions, "getUserId", RiddingAction.class);
+			Map<Long, RiddingAction> riddingActionMap = HashMapMaker.listToMap(actions, "getObjectId", RiddingAction.class);
 			for (RiddingPicture riddingPicture : riddingPictures) {
 				Profile profile = profileMap.get(riddingPicture.getUserId());
 				if (profile != null) {
 					riddingPicture.setsAvatorUrl(profile.getsAvatorUrl());
 				}
-				RiddingAction action = riddingActionMap.get(riddingPicture.getUserId());
+				RiddingAction action = riddingActionMap.get(riddingPicture.getId());
 				if (action != null) {
 					riddingPicture.setLiked(true);
 				} else {
