@@ -36,6 +36,7 @@ import com.ridding.meta.RiddingAction;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
+import com.ridding.meta.Public.PublicContentType;
 import com.ridding.meta.Public.PublicType;
 import com.ridding.meta.Ridding.RiddingStatus;
 import com.ridding.meta.RiddingAction.RiddingActionResponse;
@@ -636,15 +637,13 @@ public class RiddingServiceImpl implements RiddingService {
 		List<Public> publicList = publicService.getPublicListByType(PublicType.PublicRecom.getValue(), limit, weight, isLarger);
 		List<Ridding> riddingList = new ArrayList<Ridding>(publicList.size());
 		if (!ListUtils.isEmptyList(publicList)) {
-			for (Public public1 : publicList) {
-				Ridding ridding = PublicType.PublicRecom.getRidding(public1.getJson());
-				Ridding newRidding = riddingMapper.getRidding(ridding.getId());
-				newRidding.setPublicId(public1.getId());
-				if (ridding.getFirstPicUrl() != null) {
-					String url = SystemConst.returnPhotoUrl(ridding.getFirstPicUrl());
-					newRidding.setFirstPicUrl(url);
+			for (Public aPublic : publicList) {
+				aPublic.getJson();
+				Ridding newRidding = riddingMapper.getRidding(aPublic.getRiddingId());
+				if (newRidding == null) {
+					continue;
 				}
-				newRidding.setWeight(public1.getWeight());
+				newRidding.setaPublic(aPublic);
 				riddingList.add(newRidding);
 			}
 			this.insertRiddingInfo(riddingList);
@@ -659,8 +658,15 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#setRiddingIsRecom(long)
 	 */
 	public boolean setRiddingIsRecom(long riddingId) {
-		String json = PublicType.PublicRecom.setJson(riddingId, null);
-		publicService.addPublic(PublicType.PublicRecom.getValue(), json, 1);
+		Public public1 = new Public();
+		long nowTime = new Date().getTime();
+		public1.setCreateTime(nowTime);
+		public1.setLastUpdateTime(nowTime);
+		public1.setRiddingId(riddingId);
+		public1.setType(PublicType.PublicRecom.getValue());
+		public1.genJson();
+		public1.setWeight(1);
+		publicService.addPublic(public1);
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("id", riddingId);
 		hashMap.put("isRecom", Ridding.PublicOrRecom);
@@ -730,14 +736,15 @@ public class RiddingServiceImpl implements RiddingService {
 				if (iMap != null) {
 					ridding.setDistance(iMap.getDistance());
 				}
-				if (ridding.getFirstPicUrl() == null) {
+				if (ridding.getaPublic() == null) {
+					Public public1 = new Public();
+					ridding.setaPublic(public1);
+				}
+				if (StringUtils.isEmpty(ridding.getaPublic().getFirstPicUrl())) {
 					List<RiddingPicture> list = riddingPictureMapper.getRiddingPicturesByRiddingId(map);
-
 					if (!ListUtils.isEmptyList(list)) {
 						RiddingPicture riddingPicture = list.get(0);
-						ridding.setFirstPicUrl(riddingPicture.getPhotoUrl());
-					} else if (iMap != null) {
-						ridding.setFirstPicUrl(iMap.getAvatorPicUrl());
+						ridding.getaPublic().setFirstPicUrl(riddingPicture.getPhotoUrl());
 					}
 				}
 			}

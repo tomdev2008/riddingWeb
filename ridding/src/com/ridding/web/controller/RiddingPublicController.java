@@ -289,7 +289,7 @@ public class RiddingPublicController extends AbstractBaseController {
 				if (profile != null) {
 					riddingPicture.setsAvatorUrl(profile.getsAvatorUrl());
 				}
-				RiddingAction action = riddingActionMap.get(riddingPicture.getUserId());
+				RiddingAction action = riddingActionMap.get(riddingPicture.getId());
 				if (action != null) {
 					riddingPicture.setLiked(true);
 				} else {
@@ -329,7 +329,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		}
 		List<Ridding> riddingList = null;
 		if (ridding.isRecom == 1) {
-			riddingList = riddingService.getRecomRiddingList(ridding.getWeight(), ridding.getLimit(), ridding.isLarger());
+			riddingList = riddingService.getRecomRiddingList(ridding.getaPublic().getWeight(), ridding.getLimit(), ridding.isLarger());
 		} else {
 			riddingList = riddingService.getRiddingListByLastUpdateTime(ridding.getLastUpdateTime(), ridding.getLimit(), ridding.isLarger(),
 					ridding.isRecom);

@@ -38,4 +38,12 @@ public interface PublicService {
 	 * @return
 	 */
 	public boolean updatePublicFirstPicUrl(long id, String picUrl);
+
+	/**
+	 * 添加
+	 * 
+	 * @param aPublic
+	 * @return
+	 */
+	public boolean addPublic(Public aPublic);
 }

@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.transaction.TransactionException;
 import org.apache.log4j.Logger;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,8 +17,10 @@ import com.ridding.mapper.MapFixMapper;
 import com.ridding.mapper.RiddingCommentMapper;
 import com.ridding.mapper.RiddingMapper;
 import com.ridding.meta.IMap;
+import com.ridding.meta.Public;
 import com.ridding.meta.Source;
 import com.ridding.meta.WeiBo;
+import com.ridding.meta.Public.PublicContentType;
 import com.ridding.meta.Public.PublicType;
 import com.ridding.security.MyUser;
 import com.ridding.service.IOSApnsService;
@@ -150,9 +153,25 @@ public class DwrBackendBean {
 	 * @param riddingId
 	 * @param userId
 	 */
-	public boolean addPublicRecom(long riddingId, int weight, String firstPicUrl) {
-		String json = PublicType.PublicRecom.setJson(riddingId, firstPicUrl);
-		return publicService.addPublic(PublicType.PublicRecom.getValue(), json, weight);
+	public boolean addPublicRecom(long riddingId, int weight, String firstPicUrl, String linkText, String linkImageUrl, String linkUrl) {
+		Public public1 = new Public();
+		public1.setRiddingId(riddingId);
+		public1.setFirstPicUrl(firstPicUrl);
+		if (StringUtils.isEmpty(linkText) && StringUtils.isEmpty(linkImageUrl)) {
+			public1.setAdContentType(PublicContentType.PublicNone.getValue());
+		} else if (StringUtils.isEmpty(linkText)) {
+			public1.setAdContentType(PublicContentType.PublicImage.getValue());
+			public1.setAdImageUrl(linkImageUrl);
+			public1.setLinkUrl(linkUrl);
+		} else {
+			public1.setAdContentType(PublicContentType.PublicText.getValue());
+			public1.setAdText(linkText);
+			public1.setLinkUrl(linkUrl);
+		}
+		public1.genJson();
+		public1.setWeight(weight);
+		public1.setType(PublicType.PublicRecom.getValue());
+		return publicService.addPublic(public1);
 	}
 
 	/**
