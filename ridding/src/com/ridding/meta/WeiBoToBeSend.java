@@ -21,6 +21,19 @@ public class WeiBoToBeSend {
 	private int sourceType;
 
 	/**
+	 * 微博内容
+	 */
+	private String text;
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String textString) {
+		this.text = textString;
+	}
+
+	/**
 	 * 微博创建时间
 	 * 
 	 */

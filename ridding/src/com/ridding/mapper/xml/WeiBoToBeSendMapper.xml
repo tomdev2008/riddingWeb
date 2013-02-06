@@ -7,6 +7,7 @@
 		<result property="sendStatus" column="sendStatus" />
 		<result property="lastUpdateTime" column="lastUpdateTime" />
 		<result property="sourceType" column="sourceType" />
+		<result property="text" column="text" />
 	</resultMap>
 
 
@@ -16,16 +17,19 @@
 		accountId,
 		sendStatus,
 		lastUpdateTime,
-		sourceType
+		sourceType,
+		text
 		)VALUES(
 		#{accountId},
 		#{sendStatus},
 		#{lastUpdateTime},
-		#{sourceType}
+		#{sourceType},
+		#{text}
 		)
 	</insert>
 
-	<select id="getWeiBoToBeSendList" parameterType="int">
+	<select id="getWeiBoToBeSendList" parameterType="int"
+		resultMap="weiBoToBeSendMap">
 		select * from
 		TB_WeiBo_ToBeSend
 		where
@@ -39,13 +43,14 @@
 		#{sendStatus},
 		lastUpdateTime = #{lastUpdateTime},
 		sourceType =
-		#{sourceType},
+		#{sourceType}
 		where
 		accountId =
 		#{accountId};
 	</update>
 
-	<select id="getWeiBoToBeSendListByAccountId" parameterType="long">
+	<select id="getWeiBoToBeSendListByAccountId" parameterType="long"
+		resultMap="weiBoToBeSendMap">
 		select * from
 		TB_WeiBo_ToBeSend
 		where

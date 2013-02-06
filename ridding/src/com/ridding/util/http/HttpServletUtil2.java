@@ -35,7 +35,8 @@ public class HttpServletUtil2 {
 	 * @param name
 	 * @return
 	 */
-	private static void returnDataObject(JSONObject jsonObject, String name, JSONObject returnObject) {
+	private static void returnDataObject(JSONObject jsonObject, String name,
+			JSONObject returnObject) {
 		returnObject.put(name, jsonObject);
 	}
 
@@ -44,7 +45,8 @@ public class HttpServletUtil2 {
 	 * @param profile
 	 * @param sourceAccount
 	 */
-	public static JSONObject parseGetUserProfile(Profile profile, SourceAccount sourceAccount, int riddingCount) {
+	public static JSONObject parseGetUserProfile(Profile profile,
+			SourceAccount sourceAccount, int riddingCount) {
 		if (profile == null) {
 			return new JSONObject();
 		}
@@ -55,7 +57,8 @@ public class HttpServletUtil2 {
 		userObject.put("bavatorurl", profile.getbAvatorUrl());
 		userObject.put("savatorurl", profile.getsAvatorUrl());
 		userObject.put("totaldistance", profile.getTotalDistance());
-		userObject.put("backgroundurl", SystemConst.returnPhotoUrl(profile.getBackgroundUrl()));
+		userObject.put("backgroundurl",
+				SystemConst.returnPhotoUrl(profile.getBackgroundUrl()));
 		if (sourceAccount != null) {
 			userObject.put("sourceid", sourceAccount.getAccessUserId());
 			userObject.put("accesstoken", sourceAccount.getAccessToken());
@@ -73,7 +76,8 @@ public class HttpServletUtil2 {
 	 * @param riddingUserList
 	 * @return
 	 */
-	public static JSONArray parseGetRiddingList(List<ActivityRidding> activityRiddings) {
+	public static JSONArray parseGetRiddingList(
+			List<ActivityRidding> activityRiddings) {
 		if (ListUtils.isEmptyList(activityRiddings)) {
 			return new JSONArray();
 		}
@@ -81,41 +85,63 @@ public class HttpServletUtil2 {
 		for (ActivityRidding activityRidding : activityRiddings) {
 			JSONObject riddingObject = new JSONObject();
 			if (activityRidding.getRidding() != null) {
-				riddingObject.put("riddingid", activityRidding.getRidding().getId());
-				riddingObject.put("riddingstatus", activityRidding.getRidding().getRiddingStatus());
-				riddingObject.put("riddingname", activityRidding.getRidding().getName());
-				riddingObject.put("createtime", activityRidding.getRidding().getCreateTime());
-				riddingObject.put("createtimestr", TimeUtil.getFormatTime(activityRidding.getRidding().getCreateTime()));
-				riddingObject.put("usercount", activityRidding.getRidding().getUserCount());
-				riddingObject.put("carecount", activityRidding.getRidding().getCareCount());
-				riddingObject.put("commentcount", activityRidding.getRidding().getCommentCount());
-				riddingObject.put("usecount", activityRidding.getRidding().getUseCount());
-				riddingObject.put("likecount", activityRidding.getRidding().getLikeCount());
+				riddingObject.put("riddingid", activityRidding.getRidding()
+						.getId());
+				riddingObject.put("riddingstatus", activityRidding.getRidding()
+						.getRiddingStatus());
+				riddingObject.put("riddingname", activityRidding.getRidding()
+						.getName());
+				riddingObject.put("createtime", activityRidding.getRidding()
+						.getCreateTime());
+				riddingObject.put("createtimestr", TimeUtil
+						.getFormatTime(activityRidding.getRidding()
+								.getCreateTime()));
+				riddingObject.put("usercount", activityRidding.getRidding()
+						.getUserCount());
+				riddingObject.put("carecount", activityRidding.getRidding()
+						.getCareCount());
+				riddingObject.put("commentcount", activityRidding.getRidding()
+						.getCommentCount());
+				riddingObject.put("usecount", activityRidding.getRidding()
+						.getUseCount());
+				riddingObject.put("likecount", activityRidding.getRidding()
+						.getLikeCount());
 			}
 			if (activityRidding.getRiddingUser() != null) {
-				riddingObject.put("userrole", activityRidding.getRiddingUser().getUserRole());
+				riddingObject.put("userrole", activityRidding.getRiddingUser()
+						.getUserRole());
 			}
 
 			if (activityRidding.getiMap() != null) {
 				JSONObject mapObject = new JSONObject();
-				mapObject.put("distance", activityRidding.getiMap().getDistance());
-				mapObject.put("beginlocation", activityRidding.getiMap().getBeginLocation());
-				mapObject.put("endlocation", activityRidding.getiMap().getEndLocation());
-				mapObject.put("avatorpicurl", SystemConst.returnPhotoUrl(activityRidding.getiMap().getAvatorPicUrl()));
+				mapObject.put("distance", activityRidding.getiMap()
+						.getDistance());
+				mapObject.put("beginlocation", activityRidding.getiMap()
+						.getBeginLocation());
+				mapObject.put("endlocation", activityRidding.getiMap()
+						.getEndLocation());
+				mapObject.put("avatorpicurl", SystemConst
+						.returnPhotoUrl(activityRidding.getiMap()
+								.getAvatorPicUrl()));
 
 				riddingObject.put("map", mapObject);
 			}
 
 			if (activityRidding.getLeaderProfile() != null) {
 				JSONObject userObject = new JSONObject();
-				userObject.put("savatorurl", activityRidding.getLeaderProfile().getsAvatorUrl());
-				userObject.put("username", activityRidding.getLeaderProfile().getNickName());
-				userObject.put("userid", activityRidding.getLeaderProfile().getUserId());
-				userObject.put("totaldistance", activityRidding.getLeaderProfile().getTotalDistance());
+				userObject.put("savatorurl", activityRidding.getLeaderProfile()
+						.getsAvatorUrl());
+				userObject.put("username", activityRidding.getLeaderProfile()
+						.getNickName());
+				userObject.put("userid", activityRidding.getLeaderProfile()
+						.getUserId());
+				userObject.put("totaldistance", activityRidding
+						.getLeaderProfile().getTotalDistance());
 				riddingObject.put("user", userObject);
 			}
 			JSONObject returnObject = new JSONObject();
-			HttpServletUtil2.returnDataObject(riddingObject, "ridding", returnObject);
+			HttpServletUtil2.returnDataObject(riddingObject, "ridding",
+					returnObject);
 			jsonArray.add(returnObject);
 		}
 		return jsonArray;
@@ -134,7 +160,8 @@ public class HttpServletUtil2 {
 		if (!StringUtils.isEmpty(iMap.getMapPoint())) {
 			mapObject.put("mappoint", iMap.getMapPoint());
 		}
-		if (!StringUtils.isEmpty(iMap.getMapUrl()) || !StringUtils.isEmpty(iMap.getMapTaps())) {
+		if (!StringUtils.isEmpty(iMap.getMapUrl())
+				|| !StringUtils.isEmpty(iMap.getMapTaps())) {
 			mapObject.put("maptaps", iMap.getMapTaps());
 		}
 		mapObject.put("distance", iMap.getDistance());
@@ -152,7 +179,8 @@ public class HttpServletUtil2 {
 	 * @param longtitude
 	 * @return
 	 */
-	public static JSONObject parseGetFixedCoordinate(MapFix mapFix, double latitude, double longtitude) {
+	public static JSONObject parseGetFixedCoordinate(MapFix mapFix,
+			double latitude, double longtitude) {
 		if (mapFix == null) {
 			return new JSONObject();
 		}
@@ -184,7 +212,8 @@ public class HttpServletUtil2 {
 			userObject.put("bavatorurl", profileVO.getbAvatorUrl());
 			userObject.put("savatorurl", profileVO.getsAvatorUrl());
 			if (profileVO.getSourceAccount() != null) {
-				userObject.put("sourceid", profileVO.getSourceAccount().getAccessUserId());
+				userObject.put("sourceid", profileVO.getSourceAccount()
+						.getAccessUserId());
 			}
 			JSONObject returnObject = new JSONObject();
 			HttpServletUtil2.returnDataObject(userObject, "user", returnObject);
@@ -198,7 +227,8 @@ public class HttpServletUtil2 {
 	 * @param riddingPictures
 	 * @return
 	 */
-	public static JSONArray parseGetuploadedPhotos(List<RiddingPicture> riddingPictures) {
+	public static JSONArray parseGetuploadedPhotos(
+			List<RiddingPicture> riddingPictures) {
 		if (ListUtils.isEmptyList(riddingPictures)) {
 			return new JSONArray();
 		}
@@ -206,14 +236,17 @@ public class HttpServletUtil2 {
 		for (RiddingPicture riddingPicture : riddingPictures) {
 			JSONObject pictureObject = new JSONObject();
 			pictureObject.put("dbid", riddingPicture.getId());
-			pictureObject.put("photourl", SystemConst.getValue("IMAGEHOST") + riddingPicture.getPhotoUrl());
+			pictureObject.put("photourl", SystemConst.getValue("IMAGEHOST")
+					+ riddingPicture.getPhotoUrl());
 			pictureObject.put("latitude", riddingPicture.getLatitude());
 			pictureObject.put("longtitude", riddingPicture.getLongtitude());
 			pictureObject.put("location", riddingPicture.getTakePicLocation());
 			pictureObject.put("createtime", riddingPicture.getCreateTime());
-			pictureObject.put("createtimestr", TimeUtil.getFormatTime(riddingPicture.getCreateTime()));
+			pictureObject.put("createtimestr",
+					TimeUtil.getFormatTime(riddingPicture.getCreateTime()));
 			pictureObject.put("takepicdatel", riddingPicture.getTakePicDate());
-			pictureObject.put("takepicdatestr", TimeUtil.getFormatTime(riddingPicture.getTakePicDate()));
+			pictureObject.put("takepicdatestr",
+					TimeUtil.getFormatTime(riddingPicture.getTakePicDate()));
 			pictureObject.put("description", riddingPicture.getDescription());
 			pictureObject.put("width", riddingPicture.getWidth());
 			pictureObject.put("height", riddingPicture.getHeight());
@@ -223,7 +256,8 @@ public class HttpServletUtil2 {
 			userObject.put("savatorurl", riddingPicture.getsAvatorUrl());
 			pictureObject.put("user", userObject);
 			JSONObject returnObject = new JSONObject();
-			HttpServletUtil2.returnDataObject(pictureObject, "picture", returnObject);
+			HttpServletUtil2.returnDataObject(pictureObject, "picture",
+					returnObject);
 			jsonArray.add(returnObject);
 		}
 		return jsonArray;
@@ -237,16 +271,19 @@ public class HttpServletUtil2 {
 		for (Ridding ridding : riddingList) {
 			JSONObject activityObject = new JSONObject();
 			activityObject.put("weight", ridding.getWeight());
-			activityObject.put("firstpicurl", SystemConst.returnPhotoUrl(ridding.getFirstPicUrl()));
+			activityObject.put("firstpicurl",
+					SystemConst.returnPhotoUrl(ridding.getFirstPicUrl()));
 
 			JSONObject riddingObject = new JSONObject();
 			riddingObject.put("riddingid", ridding.getId());
 			riddingObject.put("riddingname", ridding.getName());
 			riddingObject.put("riddingstatus", ridding.getRiddingStatus());
 			riddingObject.put("createtime", ridding.getCreateTime());
-			riddingObject.put("createtimestr", TimeUtil.getFormatTime(ridding.getCreateTime()));
+			riddingObject.put("createtimestr",
+					TimeUtil.getFormatTime(ridding.getCreateTime()));
 			riddingObject.put("lastupdatetime", ridding.getLastUpdateTime());
-			riddingObject.put("lastupdatetimestr", TimeUtil.getFormatTime(ridding.getLastUpdateTime()));
+			riddingObject.put("lastupdatetimestr",
+					TimeUtil.getFormatTime(ridding.getLastUpdateTime()));
 			riddingObject.put("usercount", ridding.getUserCount());
 			riddingObject.put("carecount", ridding.getCareCount());
 			riddingObject.put("commentcount", ridding.getCommentCount());
@@ -255,12 +292,19 @@ public class HttpServletUtil2 {
 
 			JSONObject leaderUserObject = new JSONObject();
 			leaderUserObject.put("userid", ridding.getLeaderUserId());
-			leaderUserObject.put("savatorurl", ridding.getLeaderProfile().getsAvatorUrl());
-			leaderUserObject.put("bavatorurl", ridding.getLeaderProfile().getbAvatorUrl());
-			leaderUserObject.put("username", ridding.getLeaderProfile().getUserName());
-			leaderUserObject.put("nickname", ridding.getLeaderProfile().getNickName());
-			leaderUserObject.put("totaldistance", ridding.getLeaderProfile().getTotalDistance());
-			leaderUserObject.put("backgroundurl", SystemConst.returnPhotoUrl(ridding.getLeaderProfile().getBackgroundUrl()));
+			leaderUserObject.put("savatorurl", ridding.getLeaderProfile()
+					.getsAvatorUrl());
+			leaderUserObject.put("bavatorurl", ridding.getLeaderProfile()
+					.getbAvatorUrl());
+			leaderUserObject.put("username", ridding.getLeaderProfile()
+					.getUserName());
+			leaderUserObject.put("nickname", ridding.getLeaderProfile()
+					.getNickName());
+			leaderUserObject.put("totaldistance", ridding.getLeaderProfile()
+					.getTotalDistance());
+			leaderUserObject.put("backgroundurl", SystemConst
+					.returnPhotoUrl(ridding.getLeaderProfile()
+							.getBackgroundUrl()));
 			riddingObject.put("user", leaderUserObject);
 
 			JSONObject mapObject = new JSONObject();
@@ -270,7 +314,8 @@ public class HttpServletUtil2 {
 			activityObject.put("ridding", riddingObject);
 
 			JSONObject returnObject = new JSONObject();
-			HttpServletUtil2.returnDataObject(activityObject, "activity", returnObject);
+			HttpServletUtil2.returnDataObject(activityObject, "activity",
+					returnObject);
 			jsonArray.add(returnObject);
 		}
 		return jsonArray;
@@ -306,7 +351,8 @@ public class HttpServletUtil2 {
 	 * @param sourceAccounts
 	 * @return
 	 */
-	public static JSONArray parseGetUserPublicMessage(List<SourceAccount> sourceAccounts) {
+	public static JSONArray parseGetUserPublicMessage(
+			List<SourceAccount> sourceAccounts) {
 		if (ListUtils.isEmptyList(sourceAccounts)) {
 			return null;
 		}
@@ -336,12 +382,14 @@ public class HttpServletUtil2 {
 
 		riddingObject.put("map", mapObject);
 
-		HttpServletUtil2.returnDataObject(riddingObject, "ridding", returnObject);
+		HttpServletUtil2.returnDataObject(riddingObject, "ridding",
+				returnObject);
 
 		return returnObject;
 	}
 
-	public static JSONObject parseAddRiddingComment(RiddingComment riddingComment) {
+	public static JSONObject parseAddRiddingComment(
+			RiddingComment riddingComment) {
 		if (riddingComment == null) {
 			return null;
 		}
@@ -357,14 +405,18 @@ public class HttpServletUtil2 {
 		commentObject.put("commenttype", riddingComment.getCommentType());
 		commentObject.put("replyId", riddingComment.getReplyId());
 		commentObject.put("createtime", riddingComment.getCreateTime());
-		commentObject.put("createtimestr", TimeUtil.getFormatTime(riddingComment.getCreateTime()));
-		commentObject.put("beforetime", TimeUtil.getTimeago(riddingComment.getCreateTime(), true));
-		HttpServletUtil2.returnDataObject(commentObject, "comment", returnObject);
+		commentObject.put("createtimestr",
+				TimeUtil.getFormatTime(riddingComment.getCreateTime()));
+		commentObject.put("beforetime",
+				TimeUtil.getTimeago(riddingComment.getCreateTime(), true));
+		HttpServletUtil2.returnDataObject(commentObject, "comment",
+				returnObject);
 
 		return returnObject;
 	}
 
-	public static JSONArray parseRiddingComment(List<RiddingComment> riddingComments) {
+	public static JSONArray parseRiddingComment(
+			List<RiddingComment> riddingComments) {
 		if (ObjectUtil.isEmptyList(riddingComments)) {
 			return new JSONArray();
 		}
@@ -380,38 +432,54 @@ public class HttpServletUtil2 {
 			commentObject.put("commenttype", riddingComment.getCommentType());
 			commentObject.put("replyId", riddingComment.getReplyId());
 			commentObject.put("createtime", riddingComment.getCreateTime());
-			commentObject.put("createtimestr", TimeUtil.getFormatTime(riddingComment.getCreateTime()));
-			commentObject.put("beforetime", TimeUtil.getTimeago(riddingComment.getCreateTime(), true));
+			commentObject.put("createtimestr",
+					TimeUtil.getFormatTime(riddingComment.getCreateTime()));
+			commentObject.put("beforetime",
+					TimeUtil.getTimeago(riddingComment.getCreateTime(), true));
 			if (riddingComment.getUserProfile() != null) {
 				JSONObject userObject = new JSONObject();
-				userObject.put("userid", riddingComment.getUserProfile().getUserId());
-				userObject.put("username", riddingComment.getUserProfile().getUserName());
-				userObject.put("nickname", riddingComment.getUserProfile().getNickName());
-				userObject.put("bavatorurl", riddingComment.getUserProfile().getbAvatorUrl());
-				userObject.put("savatorurl", riddingComment.getUserProfile().getsAvatorUrl());
-				userObject.put("totaldistance", riddingComment.getUserProfile().getTotalDistance());
+				userObject.put("userid", riddingComment.getUserProfile()
+						.getUserId());
+				userObject.put("username", riddingComment.getUserProfile()
+						.getUserName());
+				userObject.put("nickname", riddingComment.getUserProfile()
+						.getNickName());
+				userObject.put("bavatorurl", riddingComment.getUserProfile()
+						.getbAvatorUrl());
+				userObject.put("savatorurl", riddingComment.getUserProfile()
+						.getsAvatorUrl());
+				userObject.put("totaldistance", riddingComment.getUserProfile()
+						.getTotalDistance());
 				commentObject.put("user", userObject);
 			}
 
 			if (riddingComment.getToUserProfile() != null) {
 				JSONObject touserObject = new JSONObject();
-				touserObject.put("userid", riddingComment.getToUserProfile().getUserId());
-				touserObject.put("username", riddingComment.getToUserProfile().getUserName());
-				touserObject.put("nickname", riddingComment.getToUserProfile().getNickName());
-				touserObject.put("bavatorurl", riddingComment.getToUserProfile().getbAvatorUrl());
-				touserObject.put("savatorurl", riddingComment.getToUserProfile().getsAvatorUrl());
-				touserObject.put("totaldistance", riddingComment.getToUserProfile().getTotalDistance());
+				touserObject.put("userid", riddingComment.getToUserProfile()
+						.getUserId());
+				touserObject.put("username", riddingComment.getToUserProfile()
+						.getUserName());
+				touserObject.put("nickname", riddingComment.getToUserProfile()
+						.getNickName());
+				touserObject.put("bavatorurl", riddingComment
+						.getToUserProfile().getbAvatorUrl());
+				touserObject.put("savatorurl", riddingComment
+						.getToUserProfile().getsAvatorUrl());
+				touserObject.put("totaldistance", riddingComment
+						.getToUserProfile().getTotalDistance());
 				commentObject.put("touser", touserObject);
 			}
 
 			JSONObject returnObject = new JSONObject();
-			HttpServletUtil2.returnDataObject(commentObject, "comment", returnObject);
+			HttpServletUtil2.returnDataObject(commentObject, "comment",
+					returnObject);
 			jsonArray.add(returnObject);
 		}
 		return jsonArray;
 	}
 
-	public static JSONObject parseRiddingAction(Ridding ridding, RiddingAction riddingAction) {
+	public static JSONObject parseRiddingAction(Ridding ridding,
+			RiddingAction riddingAction) {
 		if (ridding == null) {
 			return new JSONObject();
 		}
@@ -421,9 +489,11 @@ public class HttpServletUtil2 {
 		riddingObject.put("riddingname", ridding.getName());
 		riddingObject.put("riddingstatus", ridding.getRiddingStatus());
 		riddingObject.put("createtime", ridding.getCreateTime());
-		riddingObject.put("createtimestr", TimeUtil.getFormatTime(ridding.getCreateTime()));
+		riddingObject.put("createtimestr",
+				TimeUtil.getFormatTime(ridding.getCreateTime()));
 		riddingObject.put("lastupdatetime", ridding.getLastUpdateTime());
-		riddingObject.put("lastupdatetimestr", TimeUtil.getFormatTime(ridding.getLastUpdateTime()));
+		riddingObject.put("lastupdatetimestr",
+				TimeUtil.getFormatTime(ridding.getLastUpdateTime()));
 		riddingObject.put("usercount", ridding.getUserCount());
 		riddingObject.put("carecount", ridding.getCareCount());
 		riddingObject.put("commentcount", ridding.getCommentCount());
@@ -434,7 +504,8 @@ public class HttpServletUtil2 {
 		riddingObject.put("nowusercared", riddingAction.isUserCared());
 		riddingObject.put("nowuserused", riddingAction.isUserUsed());
 		JSONObject returnObject = new JSONObject();
-		HttpServletUtil2.returnDataObject(riddingObject, "ridding", returnObject);
+		HttpServletUtil2.returnDataObject(riddingObject, "ridding",
+				returnObject);
 		return returnObject;
 	}
 
@@ -444,7 +515,8 @@ public class HttpServletUtil2 {
 	 * @param userRelationVOs
 	 * @return
 	 */
-	public static JSONArray parseUserRelationVOs(List<UserRelationVO> userRelationVOs) {
+	public static JSONArray parseUserRelationVOs(
+			List<UserRelationVO> userRelationVOs) {
 		if (ObjectUtil.isEmptyList(userRelationVOs)) {
 			return new JSONArray();
 		}
@@ -455,34 +527,48 @@ public class HttpServletUtil2 {
 			relationObject.put("status", userRelationVO.getStatus());
 			if (userRelationVO.getUserProfile() != null) {
 				JSONObject userObject = new JSONObject();
-				userObject.put("userid", userRelationVO.getUserProfile().getUserId());
-				userObject.put("username", userRelationVO.getUserProfile().getUserName());
-				userObject.put("nickname", userRelationVO.getUserProfile().getNickName());
-				userObject.put("bavatorurl", userRelationVO.getUserProfile().getbAvatorUrl());
-				userObject.put("savatorurl", userRelationVO.getUserProfile().getsAvatorUrl());
-				userObject.put("totaldistance", userRelationVO.getUserProfile().getTotalDistance());
+				userObject.put("userid", userRelationVO.getUserProfile()
+						.getUserId());
+				userObject.put("username", userRelationVO.getUserProfile()
+						.getUserName());
+				userObject.put("nickname", userRelationVO.getUserProfile()
+						.getNickName());
+				userObject.put("bavatorurl", userRelationVO.getUserProfile()
+						.getbAvatorUrl());
+				userObject.put("savatorurl", userRelationVO.getUserProfile()
+						.getsAvatorUrl());
+				userObject.put("totaldistance", userRelationVO.getUserProfile()
+						.getTotalDistance());
 				relationObject.put("user", userObject);
 			}
 
 			if (userRelationVO.getToUserProfile() != null) {
 				JSONObject toUserObject = new JSONObject();
-				toUserObject.put("userid", userRelationVO.getToUserProfile().getUserId());
-				toUserObject.put("username", userRelationVO.getToUserProfile().getUserName());
-				toUserObject.put("nickname", userRelationVO.getToUserProfile().getNickName());
-				toUserObject.put("bavatorurl", userRelationVO.getToUserProfile().getbAvatorUrl());
-				toUserObject.put("savatorurl", userRelationVO.getToUserProfile().getsAvatorUrl());
-				toUserObject.put("totaldistance", userRelationVO.getToUserProfile().getTotalDistance());
+				toUserObject.put("userid", userRelationVO.getToUserProfile()
+						.getUserId());
+				toUserObject.put("username", userRelationVO.getToUserProfile()
+						.getUserName());
+				toUserObject.put("nickname", userRelationVO.getToUserProfile()
+						.getNickName());
+				toUserObject.put("bavatorurl", userRelationVO
+						.getToUserProfile().getbAvatorUrl());
+				toUserObject.put("savatorurl", userRelationVO
+						.getToUserProfile().getsAvatorUrl());
+				toUserObject.put("totaldistance", userRelationVO
+						.getToUserProfile().getTotalDistance());
 				relationObject.put("touser", toUserObject);
 			}
 
 			JSONObject returnObject = new JSONObject();
-			HttpServletUtil2.returnDataObject(relationObject, "relationship", returnObject);
+			HttpServletUtil2.returnDataObject(relationObject, "relationship",
+					returnObject);
 			jsonArray.add(returnObject);
 		}
 		return jsonArray;
 	}
 
-	public static JSONArray parseShowNearbyUsers(List<Profile> userNearbyProfiles) {
+	public static JSONArray parseShowNearbyUsers(
+			List<Profile> userNearbyProfiles) {
 		if (ObjectUtil.isEmptyList(userNearbyProfiles)) {
 			return new JSONArray();
 		}
@@ -495,7 +581,8 @@ public class HttpServletUtil2 {
 			userObject.put("bavatorurl", profile.getbAvatorUrl());
 			userObject.put("savatorurl", profile.getsAvatorUrl());
 			userObject.put("totaldistance", profile.getTotalDistance());
-			userObject.put("backgroundurl", SystemConst.returnPhotoUrl(profile.getBackgroundUrl()));
+			userObject.put("backgroundurl",
+					SystemConst.returnPhotoUrl(profile.getBackgroundUrl()));
 
 			JSONObject returnObject = new JSONObject();
 			HttpServletUtil2.returnDataObject(userObject, "user", returnObject);

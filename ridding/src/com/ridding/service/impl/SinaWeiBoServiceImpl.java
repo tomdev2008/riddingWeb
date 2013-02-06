@@ -1,5 +1,8 @@
 package com.ridding.service.impl;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +13,7 @@ import javax.annotation.Resource;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.codec.Decoder;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -18,18 +22,19 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.stereotype.Service;
+
+import sun.text.normalizer.UTF16;
 
 import weibo4j.Account;
 import weibo4j.Comments;
 import weibo4j.Weibo;
 import weibo4j.model.WeiboException;
 import weibo4j.org.json.JSONException;
+import weibo4j.util.URLEncodeUtils;
 
 import com.ridding.constant.SourceType;
 import com.ridding.constant.SystemConst;
-import com.ridding.constant.returnCodeConstance;
 import com.ridding.mapper.RepostMapWeiBoMapper;
 import com.ridding.mapper.SourceAccountMapper;
 import com.ridding.mapper.WeiBoMapper;
@@ -38,6 +43,7 @@ import com.ridding.meta.RepostMap;
 import com.ridding.meta.SourceAccount;
 import com.ridding.meta.WeiBo;
 import com.ridding.meta.WeiBo.WeiBoType;
+import com.ridding.meta.WeiBoToBeSend;
 import com.ridding.service.ProfileService;
 import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
@@ -434,15 +440,14 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 	 * 定时获取有"骑行"字符的新浪微博
 	 */
 	public void getRiddingSinaWeiBoQuartz() {
-		int page = 1, days = 1;
-		boolean isEnd = false;
+		logger.info("getRiddingSinaWeiBoQuartz begin");
+		int page = 10, days = 1;
 		long lastCreateTime = TimeUtil.getDayBefore(new Date().getTime(), days);
-		while (!isEnd) {
+		while (page > 0) {
 			List<WeiBoToBeSend> weiBoToBeSendList = this.getSinaWeiBoFromSina(
 					"骑行", page);
 			for (WeiBoToBeSend weiBoToBeSend : weiBoToBeSendList) {
-				if (weiBoToBeSend.getCreateTime() < lastCreateTime) {
-					isEnd = true;
+				if (weiBoToBeSend.getCreateTime() > lastCreateTime) {
 					break;
 				}
 				long accountId = weiBoToBeSend.getAccountId();
@@ -452,14 +457,14 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 				if (sourceAccountMapper.getSourceAccountByAccessUserId(map) == null) {
 					if (ListUtils.isEmptyList(weiBoToBeSendMapper
 							.getWeiBoToBeSendListByAccountId(accountId))) {
-						int sendStatus = 0;
+						int sendStatus = 1;
 						weiBoToBeSend.setLastUpdateTime(new Date().getTime());
 						weiBoToBeSend.setSendStatus(sendStatus);
 						weiBoToBeSendMapper.addWeiBoToBeSend(weiBoToBeSend);
 					}
 				}
 			}
-			page++;
+			page--;
 		}
 	}
 
@@ -482,7 +487,7 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 				+ "/search/topics.json");
 		sb.append("?source=" + SystemConst.getValue("WEBAPPKEY"));
 		sb.append("&access_token=" + sourceAccount.getAccessToken());
-		sb.append("&q=" + q);
+		sb.append("&q=" + URLEncodeUtils.encodeURL(q));
 		sb.append("&count=" + count);
 		sb.append("&page=" + page);
 		int result = -1;
@@ -494,8 +499,32 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 			result = httpclient.executeMethod(get);
 			response = get.getResponseBodyAsString();
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error(e.getMessage());
 			return null;
+		}
+		if (response != null) {
+			JSONObject jsonObject = JSONObject.fromObject(response);
+			JSONArray statuses = jsonObject.getJSONArray("statuses");
+			if (statuses.isEmpty()) {
+				return null;
+			}
+			List<WeiBoToBeSend> weiBoToBeSendList = new ArrayList<WeiBoToBeSend>(
+					statuses.size());
+			for (int i = 0; i < statuses.size(); i++) {
+				JSONObject status = JSONObject.fromObject(statuses.get(i));
+				JSONObject.fromObject(status);
+				WeiBoToBeSend weiBoToBeSend = new WeiBoToBeSend();
+				String text = URLDecoder.decode(status.getString("text"));
+				weiBoToBeSend.setText(text);
+				String createTimeString = status.getString("created_at");
+				Date createTime = new Date(createTimeString);
+				weiBoToBeSend.setCreateTime(createTime.getTime());
+				JSONObject user = status.getJSONObject("user");
+				weiBoToBeSend.setAccountId(user.getLong("id"));
+				weiBoToBeSendList.add(weiBoToBeSend);
+			}
+			return weiBoToBeSendList;
 		}
 		return null;
 	}
@@ -510,25 +539,16 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 		if (!ListUtils.isEmptyList(weiBoToBeSendList)) {
 			for (WeiBoToBeSend weiBoToBeSend : weiBoToBeSendList) {
 				long accountId = weiBoToBeSend.getAccountId();
-				this.sendComment(accountId);
+				this.sendSinaWeiBoCallBack(accountId, "qiqunar.com.cn 骑行者APP，骑行路上与您相伴");
 				sendStatus = WeiBoToBeSend.SendStatus.Sended.getValue();
 				weiBoToBeSend.setSendStatus(sendStatus);
 				if (weiBoToBeSendMapper.updateWeiBoToBeSend(weiBoToBeSend) > 0) {
-					logger.info("Succeed to send comment to" + accountId + "!");
+					logger.info("Succeed to send comment to " + accountId + "!");
 				} else {
-					logger.error("Failed to send comment to" + accountId + "!");
+					logger.error("Failed to send comment to " + accountId + "!");
 				}
 
 			}
 		}
-	}
-
-	/**
-	 * 发送评论
-	 * 
-	 * @param weiboId
-	 */
-	private boolean sendComment(long weiboId) {
-		return false;
 	}
 }
