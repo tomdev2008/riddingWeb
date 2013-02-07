@@ -2,11 +2,16 @@
 <#escape x as x?html>
 <#assign pageName = "huodongList" />
 <#include "head.ftl">
-<style>
+<style type="text/css">
 html,body,#gmap{height:100%; margin:0;}
 body{font-size:83%;}
 #help{padding-top:20%; text-align:center;}
+.picture {
+  float: left;
+  clear behind;
+  }
 </style>
+
 <body>
 <h3 style="font-size: 20px;color: red;"><a href="/backend/index/">返回</a></h3>
 
@@ -29,7 +34,7 @@ body{font-size:83%;}
 
 <#if riddingList?exists>
 <div>
-<table border="1" cellspacing="0px" width="100%">
+<table border="1" cellspacing="0px" width="80%">
     <thead>
          <tr><td style="text-align: center;">id</td>
          <td style="text-align: center;">名称</td>
@@ -59,11 +64,13 @@ body{font-size:83%;}
 				</#if> 
             </td>
             <td style="text-align: center;" width="10%"><img style="width:100px;height:100px;" src="${cfg_imageHost}${ridding.firstPicUrl!""}" id="huodong_coverImg"/></td>
-            <td style="text-align: center;" width="20%">
-              <#if riddingPictures?exists>
-                <#list riddingPictures as picture>
-                   <img style="width:100px;height:100px;" src="${cfg_imageHost}${picture.photoUrl!""}" id="huodong_img_${picture.id!0}"/>
-                   <span>${picture.description!""}</span>
+            <td style="word-break:break-all; word-wrap:break-all; text-align: center; width="20%"">
+              <#if ridding.riddingPictureList?exists>
+                <#list ridding.riddingPictureList as picture>
+                	<div class="picture">
+						<img style="width:100px;height:100px;" src="${cfg_imageHost}${picture.photoUrl!""}" id="huodong_img_${picture.id!0}"/><br>
+						<span>${picture.description!""}</span>
+					</div>
                 </#list>
               </#if> 
             </td>
@@ -83,7 +90,7 @@ body{font-size:83%;}
                <div style="text-align: center;">${ridding.careCount!0}</div>
             </td>
 
-            <td><a href="javascript:void(0);;" class="huodong_delete" data-id="${ridding.id!0}">删除</a>||<a href="javascript:void(0);;" class="huodong_recom" data-id="${ridding.id!0}">设置为推荐</a></td>
+            <td style="text-align: center;" width="10%"><a href="javascript:void(0);;" class="huodong_delete" data-id="${ridding.id!0}">删除</a>||<a href="javascript:void(0);;" class="huodong_recom" data-id="${ridding.id!0}">设置为推荐</a></td>
          </tr>
   
     </#list>
