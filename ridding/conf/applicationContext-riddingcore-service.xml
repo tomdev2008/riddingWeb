@@ -20,6 +20,8 @@
 				<!-- <ref bean="apnsTrigger"/> -->
 				<ref bean="sendWeiBoTrigger" />
 				<ref bean="repostWeiBoTrigger" />
+			    <ref bean="getRiddingSinaWeiBoTrigger" />
+				<!--<ref bean="sendWeiBoCommentTrigger" />-->
 			</list>
 		</property>
 		<property name="startupDelay" value="0" />
@@ -132,5 +134,43 @@
 			<ref bean="repostWeiBoDetail" />
 		</property>
 		<property name="cronExpression" value="0 0/5 * * * ?" />
+	</bean>
+	<!-- 定时获取有"骑行"字符的新浪微博 -->
+	<bean id="getRiddingSinaWeiBoDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="sinaWeiBoService" />
+		</property>
+		<property name="targetMethod">
+			<value>getRiddingSinaWeiBoQuartz</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="getRiddingSinaWeiBoTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="getRiddingSinaWeiBoDetail" />
+		</property>
+		<property name="cronExpression" value="0 0 3 * * ?" />
+	</bean>
+	<!-- 定时发送需要推送的微博 -->
+	<bean id="sendWeiBoCommentDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="sinaWeiBoService" />
+		</property>
+		<property name="targetMethod">
+			<value>sendWeiBoCommentQuartz</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+	<bean id="sendWeiBoCommentTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="sendWeiBoCommentDetail" />
+		</property>
+		<property name="cronExpression" value="0 0 10 ? * *" />
 	</bean>
 </beans>
