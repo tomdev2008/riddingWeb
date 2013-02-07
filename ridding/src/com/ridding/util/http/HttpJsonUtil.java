@@ -84,7 +84,7 @@ public class HttpJsonUtil {
 		JSONArray jsonArray = new JSONArray();
 		for (ActivityRidding activityRidding : activityRiddings) {
 			JSONObject jsonObject = new JSONObject();
-			if(activityRidding.getRidding()!=null){
+			if (activityRidding.getRidding() != null) {
 				jsonObject.put("name", activityRidding.getRidding().getName());
 				jsonObject.put("status", activityRidding.getRidding().getRiddingStatus());
 				jsonObject.put("id", activityRidding.getRidding().getId());
@@ -93,16 +93,16 @@ public class HttpJsonUtil {
 				jsonObject.put("createtimestr", TimeUtil.getFormatTime(activityRidding.getRidding().getCreateTime()));
 				jsonObject.put("userCount", activityRidding.getRidding().getUserCount());
 			}
-			if(activityRidding.getiMap()!=null){
+			if (activityRidding.getiMap() != null) {
 				jsonObject.put("beginLocation", activityRidding.getiMap().getBeginLocation());
 				jsonObject.put("endLocation", activityRidding.getiMap().getEndLocation());
 				jsonObject.put("mapAvatorPicUrl", SystemConst.returnPhotoUrl(activityRidding.getiMap().getAvatorPicUrl()));
 			}
-			
-			if(activityRidding.getRiddingUser()!=null){
+
+			if (activityRidding.getRiddingUser() != null) {
 				jsonObject.put("userRole", activityRidding.getRiddingUser().getUserRole());
 			}
-			
+
 			if (activityRidding.getLeaderProfile() != null) {
 				jsonObject.put("leaderSAvatorUrl", activityRidding.getLeaderProfile().getsAvatorUrl());
 				jsonObject.put("leaderName", activityRidding.getLeaderProfile().getNickName());
@@ -211,8 +211,8 @@ public class HttpJsonUtil {
 				// 新版本
 				jsonObject.put("lastupdatetime", TimeUtil.getFormatTime(ridding.getLastUpdateTime()));
 				jsonObject.put("leaderuserid", ridding.getLeaderUserId());
-				jsonObject.put("firstpicurl", ridding.getFirstPicUrl());
-				jsonObject.put("weight", ridding.getWeight());
+				jsonObject.put("firstpicurl", ridding.getaPublic().getFirstPicUrl());
+				jsonObject.put("weight", ridding.getaPublic().getWeight());
 				jsonArray.add(jsonObject);
 			}
 		}

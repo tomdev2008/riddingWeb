@@ -91,6 +91,7 @@ public class HttpServletUtil2 {
 				riddingObject.put("commentcount", activityRidding.getRidding().getCommentCount());
 				riddingObject.put("usecount", activityRidding.getRidding().getUseCount());
 				riddingObject.put("likecount", activityRidding.getRidding().getLikeCount());
+				riddingObject.put("issyncsina", activityRidding.getRidding().getIsSyncSina());
 			}
 			if (activityRidding.getRiddingUser() != null) {
 				riddingObject.put("userrole", activityRidding.getRiddingUser().getUserRole());
@@ -236,8 +237,6 @@ public class HttpServletUtil2 {
 		JSONArray jsonArray = new JSONArray();
 		for (Ridding ridding : riddingList) {
 			JSONObject activityObject = new JSONObject();
-			activityObject.put("weight", ridding.getWeight());
-			activityObject.put("firstpicurl", SystemConst.returnPhotoUrl(ridding.getFirstPicUrl()));
 
 			JSONObject riddingObject = new JSONObject();
 			riddingObject.put("riddingid", ridding.getId());
@@ -252,6 +251,7 @@ public class HttpServletUtil2 {
 			riddingObject.put("commentcount", ridding.getCommentCount());
 			riddingObject.put("usecount", ridding.getUseCount());
 			riddingObject.put("likecount", ridding.getLikeCount());
+			riddingObject.put("issyncsina", ridding.getIsSyncSina());
 
 			JSONObject leaderUserObject = new JSONObject();
 			leaderUserObject.put("userid", ridding.getLeaderUserId());
@@ -262,6 +262,19 @@ public class HttpServletUtil2 {
 			leaderUserObject.put("totaldistance", ridding.getLeaderProfile().getTotalDistance());
 			leaderUserObject.put("backgroundurl", SystemConst.returnPhotoUrl(ridding.getLeaderProfile().getBackgroundUrl()));
 			riddingObject.put("user", leaderUserObject);
+
+			if (ridding.getaPublic() != null) {
+				JSONObject publicObject = new JSONObject();
+				publicObject.put("dbid", ridding.getaPublic().getId());
+				publicObject.put("weight", ridding.getaPublic().getWeight());
+				publicObject.put("riddingid", ridding.getaPublic().getRiddingId());
+				publicObject.put("linktext", ridding.getaPublic().getAdText());
+				publicObject.put("linkurl", ridding.getaPublic().getLinkUrl());
+				publicObject.put("linkimageurl", ridding.getaPublic().getAdImageUrl());
+				publicObject.put("firstpicurl", SystemConst.returnPhotoUrl(ridding.getaPublic().getFirstPicUrl()));
+				publicObject.put("adcontenttype", ridding.getaPublic().getAdContentType());
+				riddingObject.put("public", publicObject);
+			}
 
 			JSONObject mapObject = new JSONObject();
 			mapObject.put("distance", ridding.getDistance());

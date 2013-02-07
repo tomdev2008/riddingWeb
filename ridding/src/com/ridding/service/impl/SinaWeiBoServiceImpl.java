@@ -25,6 +25,7 @@ import weibo4j.Comments;
 import weibo4j.Weibo;
 import weibo4j.model.WeiboException;
 import weibo4j.org.json.JSONException;
+import weibo4j.util.URLEncodeUtils;
 
 import com.ridding.constant.SourceType;
 import com.ridding.constant.SystemConst;
