@@ -91,6 +91,7 @@ public class HttpServletUtil2 {
 				riddingObject.put("commentcount", activityRidding.getRidding().getCommentCount());
 				riddingObject.put("usecount", activityRidding.getRidding().getUseCount());
 				riddingObject.put("likecount", activityRidding.getRidding().getLikeCount());
+				riddingObject.put("issyncsina", activityRidding.getRidding().getIsSyncSina());
 			}
 			if (activityRidding.getRiddingUser() != null) {
 				riddingObject.put("userrole", activityRidding.getRiddingUser().getUserRole());
