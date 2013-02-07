@@ -250,6 +250,7 @@ public class HttpServletUtil2 {
 			riddingObject.put("commentcount", ridding.getCommentCount());
 			riddingObject.put("usecount", ridding.getUseCount());
 			riddingObject.put("likecount", ridding.getLikeCount());
+			riddingObject.put("issyncsina", ridding.getIsSyncSina());
 
 			JSONObject leaderUserObject = new JSONObject();
 			leaderUserObject.put("userid", ridding.getLeaderUserId());
