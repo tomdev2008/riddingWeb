@@ -13,6 +13,10 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.qiniu.qbox.auth.DigestAuthClient;
+import com.qiniu.qbox.rs.PutFileRet;
+import com.qiniu.qbox.rs.RSService;
+
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
  * @version CreateTime：2012-8-6 下午08:46:33 Class Description
@@ -32,6 +36,12 @@ public class UploadController extends AbstractBaseController {
 		RequestContext requestContext = new ServletRequestContext(request);
 		ModelAndView mv = new ModelAndView("upload");
 		if (FileUpload.isMultipartContent(requestContext) && request.getMethod().toLowerCase().equals("post")) {
+			String bucketName = "bucketName";
+			DigestAuthClient conn = new DigestAuthClient();
+			RSService rs = new RSService(conn, bucketName);
+
+			// 通过该实例化的资源表对象来进行文件上传
+		
 //			DiskFileItemFactory factory = new DiskFileItemFactory();
 //			ServletFileUpload upload = new ServletFileUpload(factory);
 //			upload.setSizeMax(2000000);

@@ -2,11 +2,16 @@
 <#escape x as x?html>
 <#assign pageName = "huodongList" />
 <#include "head.ftl">
-<style>
+<style type="text/css">
 html,body,#gmap{height:100%; margin:0;}
 body{font-size:83%;}
 #help{padding-top:20%; text-align:center;}
+.picture {
+  float: left;
+  clear behind;
+  }
 </style>
+
 <body>
 <h3 style="font-size: 20px;color: red;"><a href="/backend/index/">返回</a></h3>
 
@@ -29,11 +34,13 @@ body{font-size:83%;}
 
 <#if riddingList?exists>
 <div>
-<table border="1" cellspacing="0px" width="100%">
+<table border="1" cellspacing="0px" width="80%">
     <thead>
          <tr><td style="text-align: center;">id</td>
          <td style="text-align: center;">名称</td>
          <td style="text-align: center;">创建时间</td>
+         <td style="text-align: center;">创建人Id</td>
+         <td style="text-align: center;">创建人昵称</td>
          <td style="text-align: center;">路线封面</td>
          <td style="text-align: center;">图片列表</td>
          <td style="text-align: center;">队员数</td>
@@ -43,18 +50,27 @@ body{font-size:83%;}
          <td style="text-align: center;">关注数</td>
          <td style="text-align: center;">操作</td></tr>
     </thead>
+     <tbody>
     <#list riddingList as ridding>
-    <tbody>
+
          <tr>
-            <td style="text-align: center;" width="10%"><span>${ridding.id!0}</span></td>
+            <td style="text-align: center;" width="5%"><span>${ridding.id!0}</span></td>
             <td style="text-align: center;" width="10%"><a id="huodong_name_${ridding.id!0}" href="/Ridding/backend.do?action=backendHuodong&riddingId=${ridding.id!0}">${ridding.name!""}</a></td>
-            <td style="text-align: center;" width="10%"><span >${ridding.createTimeStr}</span></td>
+            <td style="text-align: center;" width="5%"><span >${ridding.createTimeStr}</span></td>
+            <td style="text-align: center;" width="5%"><span >${ridding.leaderUserId}</span></td>
+            <td style="text-align: center;" width="10%">
+            	<#if ridding.leaderProfile?exists>
+                   <span>${ridding.leaderProfile.userName!""}</span>
+				</#if> 
+            </td>
             <td style="text-align: center;" width="10%"><img style="width:100px;height:100px;" src="${cfg_imageHost}${ridding.firstPicUrl!""}" id="huodong_coverImg"/></td>
-            <td style="text-align: center;" width="25%">
-              <#if riddingPictures?exists>
-                <#list riddingPictures as picture>
-                   <img style="width:100px;height:100px;" src="${cfg_imageHost}${picture.photoUrl!""}" id="huodong_img_${picture.id!0}"/>
-                   <span>${picture.description!""}</span>
+            <td style="word-break:break-all; word-wrap:break-all; text-align: center; width="20%"">
+              <#if ridding.riddingPictureList?exists>
+                <#list ridding.riddingPictureList as picture>
+                	<div class="picture">
+						<img style="width:100px;height:100px;" src="${cfg_imageHost}${picture.photoUrl!""}" id="huodong_img_${picture.id!0}"/><br>
+						<span>${picture.description!""}</span>
+					</div>
                 </#list>
               </#if> 
             </td>
@@ -73,10 +89,12 @@ body{font-size:83%;}
             <td style="text-align: center;" width="5%">
                <div style="text-align: center;">${ridding.careCount!0}</div>
             </td>
-            <td><a href="javascript:void(0);;" id="huodong_delete" data-id="${ridding.id!0}">删除</a>||<a href="javascript:void(0);;" id="huodong_recom" data-id="${ridding.id!0}">设置为推荐</a></td>
+
+            <td style="text-align: center;" width="10%"><a href="javascript:void(0);;" class="huodong_delete" data-id="${ridding.id!0}">删除</a>||<a href="javascript:void(0);;" class="huodong_recom" data-id="${ridding.id!0}">设置为推荐</a></td>
          </tr>
-    </tbody>
+  
     </#list>
+      </tbody>
 </table>
 </div>
 </#if>

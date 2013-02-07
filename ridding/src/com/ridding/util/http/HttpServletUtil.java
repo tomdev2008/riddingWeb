@@ -20,6 +20,7 @@ import com.ridding.exception.RequestBodyIsNullException;
 import com.ridding.meta.Account;
 import com.ridding.meta.IMap;
 import com.ridding.meta.Profile;
+import com.ridding.meta.Public;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
@@ -358,7 +359,7 @@ public final class HttpServletUtil {
 					ridding.isPublic = 1;
 				}
 			}
-			if (jsonObject.get("isSyncSina") != null) {
+			if (jsonObject.get("issyncsina") != null) {
 				ridding.setIsSyncSina(jsonObject.getInt("issyncsina"));
 			}
 
@@ -376,15 +377,17 @@ public final class HttpServletUtil {
 			throw new RequestBodyIsNullException();
 		}
 		Ridding ridding = new Ridding();
+		Public public1=new Public();
+		ridding.setaPublic(public1);
 		try {
 			// 0表示进行中,1表示推荐
 			ridding.setIsRecom(jsonObject.getInt("type"));
 			if (ridding.getIsRecom() == 1) {
 				int weight = jsonObject.getInt("weight");
 				if (weight < 0) {
-					ridding.setWeight(9999);
+					ridding.getaPublic().setWeight(9999);
 				} else {
-					ridding.setWeight(weight);
+					ridding.getaPublic().setWeight(weight);
 				}
 			} else {
 				long time = jsonObject.getLong("lastupdatetime");
@@ -472,7 +475,7 @@ public final class HttpServletUtil {
 			throw new RequestBodyIsNullException();
 		}
 		Profile profile = new Profile();
-		if (jsonObject.get("url") != null){
+		if (jsonObject.get("url") != null) {
 			profile.setBackgroundUrl(jsonObject.getString("url"));
 		}
 		return profile;

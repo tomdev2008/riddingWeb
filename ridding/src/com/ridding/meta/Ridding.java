@@ -102,18 +102,14 @@ public class Ridding implements Serializable {
 	 * 同步
 	 */
 	public static int sync = 1;
-	/**
-	 * 第一张图的url
-	 */
-	public String firstPicUrl;
+//	/**
+//	 * 第一张图的url
+//	 */
+//	public String firstPicUrl;
 	/**
 	 * 距离
 	 */
 	public int distance;
-	/**
-	 * 权重，不存数据库
-	 */
-	private int weight;
 	/**
 	 * 骑行图片列表
 	 */
@@ -126,10 +122,8 @@ public class Ridding implements Serializable {
 	 * 创建时间
 	 */
 	private String createTimeStr;
-	/**
-	 * 广告id
-	 */
-	private long publicId;
+
+	private Public aPublic;
 
 	/**
 	 * 骑行状态
@@ -285,14 +279,14 @@ public class Ridding implements Serializable {
 	public void setIsPublic(int isPublic) {
 		this.isPublic = isPublic;
 	}
-
-	public String getFirstPicUrl() {
-		return firstPicUrl;
-	}
-
-	public void setFirstPicUrl(String firstPicUrl) {
-		this.firstPicUrl = firstPicUrl;
-	}
+//
+//	public String getFirstPicUrl() {
+//		return firstPicUrl;
+//	}
+//
+//	public void setFirstPicUrl(String firstPicUrl) {
+//		this.firstPicUrl = firstPicUrl;
+//	}
 
 	public int getDistance() {
 		return distance;
@@ -302,13 +296,6 @@ public class Ridding implements Serializable {
 		this.distance = distance;
 	}
 
-	public int getWeight() {
-		return weight;
-	}
-
-	public void setWeight(int weight) {
-		this.weight = weight;
-	}
 
 	public int getLikeCount() {
 		return likeCount;
@@ -374,12 +361,12 @@ public class Ridding implements Serializable {
 		this.createTimeStr = createTimeStr;
 	}
 
-	public long getPublicId() {
-		return publicId;
+	public Public getaPublic() {
+		return aPublic;
 	}
 
-	public void setPublicId(long publicId) {
-		this.publicId = publicId;
+	public void setaPublic(Public aPublic) {
+		this.aPublic = aPublic;
 	}
 
 }
