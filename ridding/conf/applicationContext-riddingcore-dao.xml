@@ -133,4 +133,8 @@
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 		<property name="mapperInterface" value="com.ridding.mapper.UserNearbyMapper" />
 	</bean>
+	<bean id="weiBoToBeSendMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.WeiBoToBeSendMapper" />
+	</bean>
 </beans>

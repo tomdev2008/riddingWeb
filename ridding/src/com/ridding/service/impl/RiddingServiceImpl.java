@@ -608,6 +608,9 @@ public class RiddingServiceImpl implements RiddingService {
 	 */
 	@Override
 	public int addRiddingPicture(RiddingPicture riddingPicture) {
+		if (riddingPicture.getTakePicDate() == 0) {
+			riddingPicture.setTakePicDate(new Date().getTime());
+		}
 		return riddingPictureMapper.addRiddingPicture(riddingPicture);
 	}
 

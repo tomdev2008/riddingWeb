@@ -20,39 +20,41 @@ body{font-size:83%;}
 <div style="height:300px;">
     <h3>新建一条记录</h3> 
     <div>
-    <input type="text" value="微博内容" style="width:900px;" id="weiboText"/>
+    <span>微博内容:</span><br>
+    <textarea rows="2" cols="60" name="WeiBoContext"></textarea>
     </div>
-    <div>
-     <span>微博发送时间:</span><input type="text" readonly="true" onfocus="jQuery(this).calendar()" maxlength="16" id="weiboSendTime">
-    </div>
-    <div id="calendar_div" style="position: absolute; left: 106px; top: 52px; display: none;"></div>
-    <form id="uploadFrame" action="/user/${visitUserId}/photoUpload/" target="uploadFrame" method="post" enctype="multipart/form-data" size="37" class="t" onsubmit="return saveReport();">
-         <input type="file" value="浏览" name="file" size="37" class="t file l "/>
-         <input type="submit" value="上传图片"/>
+    <span>微博图片:</span>
+    <form onsubmit="return saveReport();" class="t" size="37" enctype="multipart/form-data" method="post" target="uploadFrame" action="/user/54/photoUpload/" id="uploadFrame">
+         <input type="file" class="t file l " size="37" name="file" value="浏览">
+         <input type="submit" value="上传图片">
     </form>
-    <span>url:</span><input type="text" id="urlText"/><input type="button" value="确定" id="urlBtn"/>
     <div>
-        <img style="width: 100px; height: 100px;display:none;" src=""  id="image"/>
+     <span>发送时间 :</span><input type="text" id="weiboSendTime" maxlength="16" onfocus="jQuery(this).calendar()" readonly="true">
+    </div>
+    <div style="position: absolute; left: 106px; top: 52px; display: none;" id="calendar_div"></div>
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url&nbsp;　:</span><input type="text" id="urlText"><input type="button" id="urlBtn" value="确定">
+    <div>
+        <img id="image" src="" style="width: 100px; height: 100px;display:none;">
     </div>
     <div>
        <span>资源类型:</span>
        <select id="weiboSelector">
-          <option value ="1" selected>新浪微博</option>
-          <option value ="2">腾讯微博</option>
+          <option selected="" value="1">&nbsp;&nbsp;&nbsp;&nbsp;新浪微博&nbsp;&nbsp;&nbsp;&nbsp;</option>
+          <option value="2">&nbsp;&nbsp;&nbsp;&nbsp;腾讯微博&nbsp;&nbsp;&nbsp;&nbsp;</option>
         </select>
     </div>
     <div>
        <span>微博类型:</span>
        <select id="weiboTypeSelector">
-          <option value ="0" selected>普通微博</option>
-          <option value ="1">骑行地图微博</option>
+          <option selected="" value="0">&nbsp;&nbsp;&nbsp;&nbsp;普通微博</option>
+          <option value="1">骑行地图微博</option>
         </select>
         <div>
-           <span>骑行活动Id</span><input type="text" id="mapId"/>
+           <span>&nbsp;&nbsp;&nbsp;活动Id&nbsp;: </span><input type="text" id="mapId">
         </div>
     </div>
     <div>
-       <input type="button" id="submitWeiBo" value="提交微博"/>
+       <input type="button" value="提交微博" id="submitWeiBo">
     </div>
 </div>
 
