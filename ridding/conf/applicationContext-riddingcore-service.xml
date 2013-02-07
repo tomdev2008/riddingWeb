@@ -20,8 +20,8 @@
 				<!-- <ref bean="apnsTrigger"/> -->
 				<ref bean="sendWeiBoTrigger" />
 				<ref bean="repostWeiBoTrigger" />
-				<ref bean="getRiddingSinaWeiBoTrigger" />
-				<ref bean="sendWeiBoCommentTrigger" />
+			    <ref bean="getRiddingSinaWeiBoTrigger" />
+				<!--<ref bean="sendWeiBoCommentTrigger" />-->
 			</list>
 		</property>
 		<property name="startupDelay" value="0" />
@@ -152,7 +152,7 @@
 		<property name="jobDetail">
 			<ref bean="getRiddingSinaWeiBoDetail" />
 		</property>
-		<property name="cronExpression" value="0 0 4 ? * *" />
+		<property name="cronExpression" value="0 0 3 * * ?" />
 	</bean>
 	<!-- 定时发送需要推送的微博 -->
 	<bean id="sendWeiBoCommentDetail"

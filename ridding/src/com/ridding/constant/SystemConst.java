@@ -54,6 +54,7 @@ public class SystemConst {
 			constMap.put("IMAGEHOST", p.getProperty("IMAGEHOST"));
 			constMap.put("ADMINUSERSINAID", p.getProperty("ADMINUSERSINAID"));
 			constMap.put("SINAHOST", p.getProperty("SINAHOST"));
+			constMap.put("AppHref", p.getProperty("AppHref"));
 		} catch (IOException e) {
 			log.error("读取常量文件错误!", e);
 		} finally {

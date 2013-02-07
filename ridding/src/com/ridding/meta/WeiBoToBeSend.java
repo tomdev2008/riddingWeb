@@ -85,7 +85,7 @@ public class WeiBoToBeSend {
 		 */
 		NotSend {
 			public int getValue() {
-				return 1;
+				return 0;
 			}
 		},
 		/**
@@ -93,7 +93,7 @@ public class WeiBoToBeSend {
 		 */
 		Sended {
 			public int getValue() {
-				return 2;
+				return 1;
 			}
 		};
 

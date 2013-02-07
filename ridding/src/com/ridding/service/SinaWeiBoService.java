@@ -3,7 +3,6 @@ package com.ridding.service;
 import java.util.List;
 
 import com.ridding.meta.WeiBo;
-import com.ridding.meta.WeiBoToBeSend;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
