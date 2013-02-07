@@ -229,4 +229,17 @@ public class DwrBackendBean {
 	public boolean updatePublicFirstPicUrl(long id, String picUrl) {
 		return publicService.updatePublicFirstPicUrl(id, picUrl);
 	}
+
+	/**
+	 * 添加骑行照片
+	 * 
+	 * @param riddingId
+	 * @param url
+	 * @param desc
+	 * @param takePicDate
+	 * @return
+	 */
+	public boolean addRiddingPicture(long riddingId, String url, String desc, String takePicDate) {
+		return false;
+	}
 }
