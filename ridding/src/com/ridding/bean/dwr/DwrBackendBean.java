@@ -1,5 +1,10 @@
 package com.ridding.bean.dwr;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,6 +23,7 @@ import com.ridding.mapper.RiddingCommentMapper;
 import com.ridding.mapper.RiddingMapper;
 import com.ridding.meta.IMap;
 import com.ridding.meta.Public;
+import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.Source;
 import com.ridding.meta.WeiBo;
 import com.ridding.meta.Public.PublicContentType;
@@ -31,6 +37,7 @@ import com.ridding.service.RiddingService;
 import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
 import com.ridding.service.transaction.TransactionService;
+import com.ridding.util.FileUtil;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -113,7 +120,8 @@ public class DwrBackendBean {
 	 * @param sourceType
 	 * @return
 	 */
-	public boolean updateWeiBo(String text, String date, String photoUrl, int sourceType, int weiboType, long riddingId) {
+	public boolean updateWeiBo(String text, String date, String photoUrl,
+			int sourceType, int weiboType, long riddingId) {
 		WeiBo weiBo = new WeiBo();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date adate;
@@ -141,7 +149,8 @@ public class DwrBackendBean {
 	 * @return
 	 */
 	public void sendApns(String text) {
-		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder
+				.getContext().getAuthentication()).getDetails();
 		if (myUser.getUserId() == 54) {
 			iosApnsService.sendApns(text);
 		}
@@ -153,7 +162,9 @@ public class DwrBackendBean {
 	 * @param riddingId
 	 * @param userId
 	 */
-	public boolean addPublicRecom(long riddingId, int weight, String firstPicUrl, String linkText, String linkImageUrl, String linkUrl) {
+	public boolean addPublicRecom(long riddingId, int weight,
+			String firstPicUrl, String linkText, String linkImageUrl,
+			String linkUrl) {
 		Public public1 = new Public();
 		public1.setRiddingId(riddingId);
 		public1.setFirstPicUrl(firstPicUrl);
@@ -239,7 +250,21 @@ public class DwrBackendBean {
 	 * @param takePicDate
 	 * @return
 	 */
-	public boolean addRiddingPicture(long riddingId, String url, String desc, String takePicDate) {
+	public boolean addRiddingPicture(long riddingId, String url, String desc,
+			String takePicDate) {
+		if (url.contains("http://")) {
+			
+		}
+		RiddingPicture riddingPicture = new RiddingPicture();
+		riddingPicture.setRiddingId(riddingId);
+		riddingPicture.setPhotoUrl(url);
+		riddingPicture.setDescription(desc);
+		long createTime = new Date().parse(takePicDate);
+		riddingPicture.setCreateTime(createTime);
+		if (riddingService.addRiddingPicture(riddingPicture) > 0) {
+			return true;
+		}
 		return false;
+
 	}
 }
