@@ -13,24 +13,23 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.ridding.mapper.MapFixMapper;
-import com.ridding.mapper.RiddingCommentMapper;
-import com.ridding.mapper.RiddingMapper;
+import com.ridding.constant.SystemConst;
 import com.ridding.meta.IMap;
 import com.ridding.meta.Public;
+import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.Source;
 import com.ridding.meta.WeiBo;
 import com.ridding.meta.Public.PublicContentType;
 import com.ridding.meta.Public.PublicType;
 import com.ridding.security.MyUser;
 import com.ridding.service.IOSApnsService;
-import com.ridding.service.MapService;
 import com.ridding.service.PublicService;
 import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
 import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
 import com.ridding.service.transaction.TransactionService;
+import com.ridding.util.QiNiuUtil;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -54,20 +53,9 @@ public class DwrBackendBean {
 	private PublicService publicService;
 	@Resource
 	private RiddingService riddingService;
-	@Resource
-	private MapService mapService;
 
 	@Resource
 	private RiddingCommentService riddingCommentService;
-
-	@Resource
-	private RiddingCommentMapper riddingCommentMapper;
-
-	@Resource
-	private MapFixMapper mapFixMapper;
-
-	@Resource
-	private RiddingMapper riddingMapper;
 
 	/**
 	 * 更新非法的新浪微博
@@ -239,7 +227,41 @@ public class DwrBackendBean {
 	 * @param takePicDate
 	 * @return
 	 */
-	public boolean addRiddingPicture(long riddingId, String url, String desc, String takePicDate) {
+	public boolean addRiddingPicture(long riddingId, String url, String desc, String takePicDate, String takePicLocation) {
+		if (url.startsWith("http")) {
+			String key = QiNiuUtil.genKey(true, true);
+			try {
+				boolean succ = QiNiuUtil.uploadImageToQiniuFromUrl(url, key);
+				if (succ) {
+					url = SystemConst.returnPhotoUrl("/" + key);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		RiddingPicture riddingPicture = new RiddingPicture();
+		riddingPicture.setRiddingId(riddingId);
+		riddingPicture.setPhotoUrl(url);
+		riddingPicture.setDescription(desc);
+		long nowTime = new Date().getTime();
+		riddingPicture.setCreateTime(nowTime);
+		riddingPicture.setLastUpdateTime(nowTime);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date adate;
+		try {
+			adate = sdf.parse(takePicDate);
+			long sendTime = adate.getTime();
+			riddingPicture.setTakePicDate(sendTime);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		riddingPicture.setTakePicLocation(takePicLocation);
+
+		if (riddingService.addRiddingPicture(riddingPicture) > 0) {
+			return true;
+		}
 		return false;
+
 	}
 }
