@@ -33,6 +33,7 @@
     	    <script type="text/javascript" src="/js/backend/sendWeiBo.js" charset="utf-8"></script>
     	<#break>
     	<#case "huodongRecom">
+    	    <script type="text/javascript" src="/js/backend/jquery-calendar.js" charset="utf-8"></script>
     	    <script type="text/javascript" src="/js/backend/huodongRecom.js" charset="utf-8"></script>
     	<#break>
     	<#case "huodongList">

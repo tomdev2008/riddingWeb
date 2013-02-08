@@ -22,11 +22,15 @@ body{font-size:83%;}
 
 <div style="">
     <p style="font-size: 20px;color: red;">添加照片</p>
-    <span>骑行Id&nbsp;&nbsp;&nbsp;&nbsp;</span><input type="text" id="recom_riddingId" style="width:50px;"/><br>
-    <span>链接文本</span><input type="text" id="recom_ad_text" style="width:500px;" value="10个字以内"/><br>
-    <span>链接图片</span><input type="text" id="recom_ad_image_url" style="width:500px;" value="图片Url"/><br>
-    <span>添加时间</span><input type="text" id="recom_ad_time" style="width:500px;"/><br>
-    <input type="button" id="recom" value="确定"/>
+    <span>骑行Id&nbsp;&nbsp;&nbsp;&nbsp;</span><input type="text" id="recom_pic_riddingId" style="width:50px;"/><br>
+    <span>链接文本</span><input type="text" id="recom_pic_ad_text" style="width:500px;" value="10个字以内"/><br>
+    <span>链接图片</span><input type="text" id="recom_pic_ad_image_url" style="width:500px;" value="图片Url"/><br>
+    <div>
+    <span>添加时间</span><input type="text" readonly="true" onfocus="jQuery(this).calendar()" id="recom_pic_ad_time" style="width:500px;"/><br>
+    </div>
+    <div id="calendar_div" style="position: absolute; left: 106px; top: 52px; display: none;"></div>
+    <span>拍照地址</span><input type="text" id="recom_pic_ad_location" style="width:500px;"/><br>
+    <input type="button" id="recom_pic" value="确定"/>
 </div>
 
 <#if riddingList?exists>

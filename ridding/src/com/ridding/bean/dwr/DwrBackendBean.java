@@ -1,10 +1,5 @@
 package com.ridding.bean.dwr;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,9 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.ridding.mapper.MapFixMapper;
-import com.ridding.mapper.RiddingCommentMapper;
-import com.ridding.mapper.RiddingMapper;
+import com.ridding.constant.SystemConst;
 import com.ridding.meta.IMap;
 import com.ridding.meta.Public;
 import com.ridding.meta.RiddingPicture;
@@ -30,14 +23,13 @@ import com.ridding.meta.Public.PublicContentType;
 import com.ridding.meta.Public.PublicType;
 import com.ridding.security.MyUser;
 import com.ridding.service.IOSApnsService;
-import com.ridding.service.MapService;
 import com.ridding.service.PublicService;
 import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
 import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
 import com.ridding.service.transaction.TransactionService;
-import com.ridding.util.FileUtil;
+import com.ridding.util.QiNiuUtil;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -61,20 +53,9 @@ public class DwrBackendBean {
 	private PublicService publicService;
 	@Resource
 	private RiddingService riddingService;
-	@Resource
-	private MapService mapService;
 
 	@Resource
 	private RiddingCommentService riddingCommentService;
-
-	@Resource
-	private RiddingCommentMapper riddingCommentMapper;
-
-	@Resource
-	private MapFixMapper mapFixMapper;
-
-	@Resource
-	private RiddingMapper riddingMapper;
 
 	/**
 	 * 更新非法的新浪微博
@@ -120,8 +101,7 @@ public class DwrBackendBean {
 	 * @param sourceType
 	 * @return
 	 */
-	public boolean updateWeiBo(String text, String date, String photoUrl,
-			int sourceType, int weiboType, long riddingId) {
+	public boolean updateWeiBo(String text, String date, String photoUrl, int sourceType, int weiboType, long riddingId) {
 		WeiBo weiBo = new WeiBo();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date adate;
@@ -149,8 +129,7 @@ public class DwrBackendBean {
 	 * @return
 	 */
 	public void sendApns(String text) {
-		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder
-				.getContext().getAuthentication()).getDetails();
+		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
 		if (myUser.getUserId() == 54) {
 			iosApnsService.sendApns(text);
 		}
@@ -162,9 +141,7 @@ public class DwrBackendBean {
 	 * @param riddingId
 	 * @param userId
 	 */
-	public boolean addPublicRecom(long riddingId, int weight,
-			String firstPicUrl, String linkText, String linkImageUrl,
-			String linkUrl) {
+	public boolean addPublicRecom(long riddingId, int weight, String firstPicUrl, String linkText, String linkImageUrl, String linkUrl) {
 		Public public1 = new Public();
 		public1.setRiddingId(riddingId);
 		public1.setFirstPicUrl(firstPicUrl);
@@ -250,17 +227,37 @@ public class DwrBackendBean {
 	 * @param takePicDate
 	 * @return
 	 */
-	public boolean addRiddingPicture(long riddingId, String url, String desc,
-			String takePicDate) {
-		if (url.contains("http://")) {
-			
+	public boolean addRiddingPicture(long riddingId, String url, String desc, String takePicDate, String takePicLocation) {
+		if (url.startsWith("http")) {
+			String key = QiNiuUtil.genKey(true, true);
+			try {
+				boolean succ = QiNiuUtil.uploadImageToQiniuFromUrl(url, key);
+				if (succ) {
+					url = SystemConst.returnPhotoUrl("/" + key);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
 		}
 		RiddingPicture riddingPicture = new RiddingPicture();
 		riddingPicture.setRiddingId(riddingId);
 		riddingPicture.setPhotoUrl(url);
 		riddingPicture.setDescription(desc);
-		long createTime = new Date().parse(takePicDate);
-		riddingPicture.setCreateTime(createTime);
+		long nowTime = new Date().getTime();
+		riddingPicture.setCreateTime(nowTime);
+		riddingPicture.setLastUpdateTime(nowTime);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date adate;
+		try {
+			adate = sdf.parse(takePicDate);
+			long sendTime = adate.getTime();
+			riddingPicture.setTakePicDate(sendTime);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		riddingPicture.setTakePicLocation(takePicLocation);
+
 		if (riddingService.addRiddingPicture(riddingPicture) > 0) {
 			return true;
 		}

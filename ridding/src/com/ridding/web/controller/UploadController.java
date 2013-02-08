@@ -34,7 +34,7 @@ import com.ridding.util.QiNiuUtil;
 public class UploadController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(UploadController.class);
 
-	private static final String TEMPPATH = "/var/tmp/upload/";
+	private static final String TEMPPATH = "/Users/apple/Desktop/";
 
 	/**
 	 * 图片上传接口
@@ -72,9 +72,10 @@ public class UploadController extends AbstractBaseController {
 						String name = "" + new Date().getTime() + ".jpg";
 						File file = new File(TEMPPATH + name);
 						fileItem.write(file);
-						boolean succ = QiNiuUtil.uploadImageToQiniuFromLocalFile(TEMPPATH + name, QiNiuUtil.genKey(false, true));
+						String key = QiNiuUtil.genKey(false, true);
+						boolean succ = QiNiuUtil.uploadImageToQiniuFromLocalFile(TEMPPATH + name, key);
 						if (succ) {
-							mv.addObject("imageUrl", name);
+							mv.addObject("imageUrl", "/" + key);
 						}
 						if (file.isFile()) {
 							file.delete();
