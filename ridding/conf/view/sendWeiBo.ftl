@@ -2,10 +2,11 @@
 <#escape x as x?html>
 <#assign pageName = "sendWeiBo" />
 <#include "head.ftl">
-<style>
+<style type="text/css">
 html,body,#gmap{height:100%; margin:0;}
 body{font-size:83%;}
 #help{padding-top:20%; text-align:center;}
+table.topmargin {margin-top: 5cm}
 </style>
 
 <body>
@@ -29,13 +30,13 @@ body{font-size:83%;}
          <input type="submit" value="上传图片">
     </form>
     <div>
+        <img id="image" src="" style="width: 100px; height: 100px;display:none;">
+    </div>
+    <div>
      <span>发送时间 :</span><input type="text" id="weiboSendTime" maxlength="16" onfocus="jQuery(this).calendar()" readonly="true">
     </div>
     <div style="position: absolute; left: 106px; top: 52px; display: none;" id="calendar_div"></div>
     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url&nbsp;　:</span><input type="text" id="urlText"><input type="button" id="urlBtn" value="确定">
-    <div>
-        <img id="image" src="" style="width: 100px; height: 100px;display:none;">
-    </div>
     <div>
        <span>资源类型:</span>
        <select id="weiboSelector">
@@ -65,10 +66,7 @@ body{font-size:83%;}
     <input type="button" id="sendApns" value="发送"/>
 </div>
 
-
-
-
-<table border="1">
+<table class="topmargin" border="1">
 <thead>
 <tr><td>id</td><td>内容</td><td>图片</td><td>发送源</td><td>发送时间</td><td>状态</td><td>操作</td></tr>
 </thead>
@@ -87,6 +85,7 @@ body{font-size:83%;}
 </#if>
 </tbody>
 </table>
+
 <#include "footer.ftl">
 </body>
 <#include "js.ftl">
