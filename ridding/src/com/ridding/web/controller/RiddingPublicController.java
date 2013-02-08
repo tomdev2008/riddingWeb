@@ -43,6 +43,7 @@ import com.ridding.service.RiddingService;
 import com.ridding.service.UserRelationService;
 import com.ridding.util.HashMapMaker;
 import com.ridding.util.ListUtils;
+import com.ridding.util.QiNiuUtil;
 import com.ridding.util.http.HttpJsonUtil;
 import com.ridding.util.http.HttpServletUtil;
 import com.ridding.util.http.HttpServletUtil2;
@@ -340,6 +341,12 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		logger.info(returnObject);
+		try {
+			QiNiuUtil.uploadImageToQiniuFromLocalFile("/Users/apple/Desktop/1.jpg", "test.jpg");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return mv;
 	}
 

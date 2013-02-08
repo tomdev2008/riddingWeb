@@ -13,8 +13,6 @@ import java.net.URL;
  */
 public class FileUtil {
 
-	private static final String TEMPPATH = "/var/tmp/fileonline.jpg";
-
 	/**
 	 * 创建目录
 	 * 
@@ -33,12 +31,12 @@ public class FileUtil {
 	 * @param urlStr
 	 * @return
 	 */
-	public static File getFileFromUrl(String urlStr) {
+	public static File getFileFromUrl(String urlStr, String path) {
 		try {
 			URL url = new URL(urlStr);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			DataInputStream in = new DataInputStream(connection.getInputStream());
-			DataOutputStream out = new DataOutputStream(new FileOutputStream(TEMPPATH));
+			DataOutputStream out = new DataOutputStream(new FileOutputStream(path));
 			byte[] buffer = new byte[4096];
 			int count = 0;
 			while ((count = in.read(buffer)) > 0) {
@@ -46,7 +44,7 @@ public class FileUtil {
 			}
 			out.close();
 			in.close();
-			return new File(TEMPPATH);
+			return new File(path);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
