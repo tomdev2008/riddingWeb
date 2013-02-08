@@ -45,6 +45,7 @@
 	<select id="getUserNearbyList" parameterType="string" resultMap="userNearbyMap">
 		select * from
 		TB_User_Nearby
-		where geohash like CONCAT('${geohash}','%');
+		where geohash like
+		CONCAT('${geohash}','%');
 	</select>
 </mapper>

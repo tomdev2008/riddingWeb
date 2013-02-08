@@ -3,6 +3,8 @@ package com.ridding.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
@@ -27,23 +29,52 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 	@Resource
 	private ProfileMapper profileMapper;
 
+	private static ExecutorService executorService = Executors.newCachedThreadPool();
+
 	/**
 	 * 添加或更新附近用户
 	 * 
 	 */
-	public int addOrUpdateUsersNearby(long userId, double latitude,
-			double longitude) {
+	public boolean addOrUpdateUsersNearby(long userId, double latitude, double longitude) {
 		UserNearby userNearby = new UserNearby();
 		userNearby.setUserId(userId);
 		userNearby.setLatitude(latitude);
 		userNearby.setLongitude(longitude);
 		userNearby.setGeohash(GeohashUtil.encode(latitude, longitude));
 		userNearby.setLastUpdateTime(new Date().getTime());
-		if (userNearbyMapper.getUserNearby(userId) ==null ) {
-			return userNearbyMapper.addUserNearby(userNearby);
+		if (userNearbyMapper.getUserNearby(userId) == null) {
+			return userNearbyMapper.addUserNearby(userNearby) > 0;
 		} else {
-			return userNearbyMapper.updateUserNearby(userNearby);
+			return userNearbyMapper.updateUserNearby(userNearby) > 0;
 		}
+	}
+
+	/**
+	 * 异步执行
+	 * 
+	 * @param userId
+	 * @param latitude
+	 * @param longitude
+	 * @return
+	 */
+	public boolean asyncUpdateUserNearBy(final long userId, final double latitude, final double longitude) {
+		executorService.execute(new Runnable() {
+			@Override
+			public void run() {
+				UserNearby userNearby = new UserNearby();
+				userNearby.setUserId(userId);
+				userNearby.setLatitude(latitude);
+				userNearby.setLongitude(longitude);
+				userNearby.setGeohash(GeohashUtil.encode(latitude, longitude));
+				userNearby.setLastUpdateTime(new Date().getTime());
+				if (userNearbyMapper.getUserNearby(userId) == null) {
+					userNearbyMapper.addUserNearby(userNearby);
+				} else {
+					userNearbyMapper.updateUserNearby(userNearby);
+				}
+			}
+		});
+		return true;
 	}
 
 	/**
@@ -57,16 +88,14 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 		}
 		int offset = 0, endIndex = 2;
 		String geohash = userNearby.getGeohash().substring(offset, endIndex);
-		List<UserNearby> userNearbyList = userNearbyMapper
-				.getUserNearbyList(geohash);
-		List<Profile> userNearbyProfiles = new ArrayList<Profile>(
-				userNearbyList.size());
+		List<UserNearby> userNearbyList = userNearbyMapper.getUserNearbyList(geohash);
+		List<Profile> userNearbyProfiles = new ArrayList<Profile>(userNearbyList.size());
 		for (UserNearby userNearbies : userNearbyList) {
-			Profile profile = profileMapper
-					.getProfile(userNearbies.getUserId());
+			Profile profile = profileMapper.getProfile(userNearbies.getUserId());
 			userNearbyProfiles.add(profile);
 		}
 		return userNearbyProfiles;
 
 	}
+
 }

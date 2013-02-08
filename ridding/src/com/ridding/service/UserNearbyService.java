@@ -17,8 +17,17 @@ public interface UserNearbyService {
 	 * @param longitude
 	 * @return
 	 */
-	public int addOrUpdateUsersNearby(long userId, double latitude,
-			double longitude);
+	public boolean addOrUpdateUsersNearby(long userId, double latitude, double longitude);
+
+	/**
+	 * 异步执行更新操作
+	 * 
+	 * @param userId
+	 * @param latitude
+	 * @param longitude
+	 * @return
+	 */
+	public boolean asyncUpdateUserNearBy(final long userId, final double latitude, final double longitude);
 
 	/**
 	 * 获取附近用户列表
