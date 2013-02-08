@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.qiniu.qbox.auth.DigestAuthClient;
 import com.qiniu.qbox.rs.RSService;
+import com.ridding.constant.SystemConst;
 import com.ridding.util.QiNiuUtil;
 
 /**
@@ -33,8 +34,6 @@ import com.ridding.util.QiNiuUtil;
 @Controller("uploadController")
 public class UploadController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(UploadController.class);
-
-	private static final String TEMPPATH = "/Users/apple/Desktop/";
 
 	/**
 	 * 图片上传接口
@@ -70,10 +69,10 @@ public class UploadController extends AbstractBaseController {
 				} else {
 					if (fileItem.getName() != null && fileItem.getSize() != 0) {
 						String name = "" + new Date().getTime() + ".jpg";
-						File file = new File(TEMPPATH + name);
+						File file = new File(SystemConst.getValue("UploadTEMPPATH") + name);
 						fileItem.write(file);
 						String key = QiNiuUtil.genKey(false, true);
-						boolean succ = QiNiuUtil.uploadImageToQiniuFromLocalFile(TEMPPATH + name, key);
+						boolean succ = QiNiuUtil.uploadImageToQiniuFromLocalFile(SystemConst.getValue("UploadTEMPPATH") + name, key);
 						if (succ) {
 							mv.addObject("imageUrl", "/" + key);
 						}

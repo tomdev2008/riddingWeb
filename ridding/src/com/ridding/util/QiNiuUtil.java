@@ -23,8 +23,6 @@ public class QiNiuUtil {
 
 	private static final Logger logger = Logger.getLogger(RiddingController.class);
 
-	private static final String TEMPPATH = "/Users/apple/Desktop/";
-
 	/**
 	 * 生成七牛key
 	 * 
@@ -83,12 +81,12 @@ public class QiNiuUtil {
 	 */
 	public static boolean uploadImageToQiniuFromUrl(String url, String key) throws Exception {
 		String fileName = "" + new Date().getTime();
-		File file = FileUtil.getFileFromUrl(url, TEMPPATH + fileName);
+		File file = FileUtil.getFileFromUrl(url, SystemConst.getValue("UploadTEMPPATH") + fileName);
 		if (file == null) {
 			return false;
 		}
 		try {
-			return QiNiuUtil.uploadImageToQiniuFromLocalFile(TEMPPATH + fileName, key);
+			return QiNiuUtil.uploadImageToQiniuFromLocalFile(SystemConst.getValue("UploadTEMPPATH") + fileName, key);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
