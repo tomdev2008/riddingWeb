@@ -119,7 +119,7 @@ public class RiddingController extends AbstractBaseController {
 		List<RiddingUser> ridingUserList = riddingService.getAllRiddingUserList(riddingUser);
 		HttpJsonUtil.setShowRiddingView(returnObject, ridingUserList);
 
-		userNearbyService.asyncUpdateUserNearBy(userId, riddingUser.getLatitude(), riddingUser.getLongtitude());
+		userNearbyService.addOrUpdateUsersNearby(userId, riddingUser.getLatitude(), riddingUser.getLongtitude());
 		JSONArray dataArray = HttpServletUtil2.parseShowRiddingView(ridingUserList);
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
