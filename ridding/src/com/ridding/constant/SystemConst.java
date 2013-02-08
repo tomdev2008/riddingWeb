@@ -57,6 +57,7 @@ public class SystemConst {
 			constMap.put("QiNiuACCESS_KEY", p.getProperty("QiNiuACCESS_KEY"));
 			constMap.put("QiNiuSECRET_KEY", p.getProperty("QiNiuSECRET_KEY"));
 			constMap.put("QiNiuBucket", p.getProperty("QiNiuBucket"));
+			constMap.put("AppHref", p.getProperty("AppHref"));
 		} catch (IOException e) {
 			log.error("读取常量文件错误!", e);
 		} finally {
