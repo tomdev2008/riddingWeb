@@ -54,6 +54,9 @@ public class SystemConst {
 			constMap.put("IMAGEHOST", p.getProperty("IMAGEHOST"));
 			constMap.put("ADMINUSERSINAID", p.getProperty("ADMINUSERSINAID"));
 			constMap.put("SINAHOST", p.getProperty("SINAHOST"));
+			constMap.put("QiNiuACCESS_KEY", p.getProperty("QiNiuACCESS_KEY"));
+			constMap.put("QiNiuSECRET_KEY", p.getProperty("QiNiuSECRET_KEY"));
+			constMap.put("QiNiuBucket", p.getProperty("QiNiuBucket"));
 			constMap.put("AppHref", p.getProperty("AppHref"));
 		} catch (IOException e) {
 			log.error("读取常量文件错误!", e);
@@ -75,8 +78,13 @@ public class SystemConst {
 	 * @return
 	 */
 	public static String returnPhotoUrl(String key) {
-		if(key.contains(SystemConst.getValue("IMAGEHOST"))){
+
+		if (key.contains(SystemConst.getValue("IMAGEHOST"))) {
 			return key;
+		} else {
+			if (!key.startsWith("/")) {
+				key = "/" + key;
+			}
 		}
 		return SystemConst.getValue("IMAGEHOST") + key;
 	}

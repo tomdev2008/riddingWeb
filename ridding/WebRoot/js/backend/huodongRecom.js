@@ -9,6 +9,15 @@ $("#recom").click(function(){
 	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'addPublicRecom',_riddingId,_weight,_firstPicUrl,_linkText,_linkImageUrl,_linkUrl,submitWeiBoCB);
 });
 
+$("#recom_pic").click(function(){
+	_riddingId= $("#recom_pic_riddingId").val();
+	_text=$("#recom_pic_ad_text").val();
+	_imageurl=$("#recom_pic_ad_image_url").val();
+	_takepicdate=$("#recom_pic_ad_time").val();
+	_location=$("#recom_pic_ad_location").val();
+	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'addRiddingPicture',_riddingId,_imageurl,_text,_takepicdate,_location,submitWeiBoCB);
+});
+
 
 $(".recom_img_recom").click(function(){
 	_id= $(this).attr("data-id");
