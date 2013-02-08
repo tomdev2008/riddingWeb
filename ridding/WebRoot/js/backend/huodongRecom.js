@@ -1,27 +1,30 @@
-var _photoUrls=new Array()
-var _recom_photoUrl='';
+
 $("#recom").click(function(){
 	_riddingId= $("#recom_riddingId").val();
-	_userId=$("#recom_userId").val();
+	_firstPicUrl=$("#recom_firstpicurl").val();
+	_linkText=$("#recom_ad_text").val();
+	_linkImageUrl=$("#recom_ad_image_url").val();
+	_linkUrl=$("#recom_link_url").val();
 	_weight=$("#recom_weight").val();
-	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'addPublicRecom',_riddingId,_userId,_weight,_recom_photoUrl,submitWeiBoCB);
+	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'addPublicRecom',_riddingId,_weight,_firstPicUrl,_linkText,_linkImageUrl,_linkUrl,submitWeiBoCB);
 });
 
-function saveRecomReport(){
-$("#recom_uploadFrame").ajaxSubmit(function(message) {
-if(message!=''){
-	
-	$("#recom_coverimage").attr("src",cfg_imageHost+message);
-_recom_photoUrl=message
-$("#recom_coverimage").show();
-}
+$("#recom_pic").click(function(){
+	_riddingId= $("#recom_pic_riddingId").val();
+	_text=$("#recom_pic_ad_text").val();
+	_imageurl=$("#recom_pic_ad_image_url").val();
+	_takepicdate=$("#recom_pic_ad_time").val();
+	_location=$("#recom_pic_ad_location").val();
+	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'addRiddingPicture',_riddingId,_imageurl,_text,_takepicdate,_location,submitWeiBoCB);
 });
-return false;
-};
 
-function updateRecom(leaderUserId,riddingId){
-	//还没做
-};
+
+$(".recom_img_recom").click(function(){
+	_id= $(this).attr("data-id");
+	_picUrl=$(this).attr("data-url");
+	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'updatePublicFirstPicUrl',_id,_picUrl,submitWeiBoCB);
+});
+
 
 
 function submitWeiBoCB(_flag){

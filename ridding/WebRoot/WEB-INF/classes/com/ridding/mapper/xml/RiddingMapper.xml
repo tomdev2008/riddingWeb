@@ -115,12 +115,14 @@
 	<select id="getRiddingListByLastUpdateTime" resultMap="riddingMap">
 		SELECT * from TB_Ridding where isPublic = 0
 		<if test="isLarger==1">
-			and lastUpdateTime > #{lastUpdateTime} 
+			and lastUpdateTime > #{lastUpdateTime} order by
+			lastUpdateTime asc
 		</if>
 		<if test="isLarger==0">
-			and #{lastUpdateTime} > lastUpdateTime 
+			and #{lastUpdateTime} > lastUpdateTime order by
+			lastUpdateTime desc
 		</if>
-		order by lastUpdateTime desc limit #{limit};
+		limit #{limit};
 	</select>
 
 	<update id="incLikeCount" parameterType="long" flushCache="true"
@@ -148,4 +150,33 @@
 		where id
 		= #{riddingId} ;
 	</update>
+
+	<select id="getRiddingsbyLike" resultMap="riddingMap"
+		parameterType="hashMap">
+		select * from
+		TB_Ridding
+		order by likeCount desc
+		limit
+		#{limit}
+		offset #{offset};
+	</select>
+
+	<select id="getRiddingsbyComment" resultMap="riddingMap"
+		parameterType="hashMap">
+		select * from
+		TB_Ridding
+		order by commentCount desc
+		limit
+		#{limit}
+		offset #{offset};
+	</select>
+
+	<select id="getRiddingsbyUse" resultMap="riddingMap"
+		parameterType="hashMap">
+		select * from TB_Ridding
+		order by useCount desc
+		limti
+		#{limit}
+		offset #{offset};
+	</select>
 </mapper>

@@ -101,10 +101,6 @@
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 		<property name="mapperInterface" value="com.ridding.mapper.IosApnsMapper" />
 	</bean>
-	<bean id="photoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-		<property name="mapperInterface" value="com.ridding.mapper.PhotoMapper" />
-	</bean>
 	<bean id="riddingPictureMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 		<property name="mapperInterface" value="com.ridding.mapper.RiddingPictureMapper" />
@@ -136,5 +132,9 @@
 	<bean id="userNearbyMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 		<property name="mapperInterface" value="com.ridding.mapper.UserNearbyMapper" />
+	</bean>
+	<bean id="weiBoToBeSendMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.WeiBoToBeSendMapper" />
 	</bean>
 </beans>

@@ -17,16 +17,13 @@ import org.springframework.stereotype.Service;
 import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.constant.SourceType;
 import com.ridding.meta.IMap;
-import com.ridding.meta.Photo;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.SourceAccount;
 import com.ridding.meta.vo.Location;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.security.MyUser;
-import com.ridding.service.ImageUploadService;
 import com.ridding.service.MapService;
-import com.ridding.service.PhotoService;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingService;
 import com.ridding.service.transaction.TransactionService;
@@ -52,11 +49,6 @@ public class DwrRiddingBean {
 	@Resource
 	private ProfileService profileService;
 
-	@Resource
-	private PhotoService photoService;
-
-	@Resource
-	private ImageUploadService imageUploadService;
 
 	/**
 	 * 删除用户
@@ -173,62 +165,65 @@ public class DwrRiddingBean {
 		return riddingService.updateRiddingName(riddingId, myUser.getUserId(), name);
 	}
 
-	/**
-	 * 创建骑行活动
-	 * 
-	 * @param locations
-	 * @return
-	 */
-	public long createRidding(List<Location> locations, String name, String beginLocation, int distance, String points, String cityname,
-			String endLocation, String[] midLocations) {
-		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
-		if (myUser == null) {
-			return -1L;
-		}
-		JSONArray array = new JSONArray();
-		if (!ListUtils.isEmptyList(locations)) {
-			for (Location location : locations) {
-				array.add(location.getLatitude() + "," + location.getLongtitude());
-			}
-		}
-		JSONArray jsonArry = new JSONArray();
-		if (!ArrayUtils.isEmpty(midLocations)) {
-			for (String midLocation : midLocations) {
-				jsonArry.add(midLocation);
-			}
-		}
-
-		IMap iMap = new IMap();
-		iMap.setMidLocation(jsonArry.toString());
-		iMap.setMapTaps(array.toString());
-		iMap.setBeginLocation(beginLocation);
-		iMap.setStatus(IMap.Using);
-		iMap.setObjectType(SourceType.Web.getValue());
-		iMap.setObjectId(0);
-		iMap.setUserId(myUser.getUserId());
-		iMap.setDistance(distance);
-		JSONArray pointArray = new JSONArray();
-		pointArray.add(points);
-		iMap.setMapPoint(pointArray.toString());
-		iMap.setEndLocation(endLocation);
-		iMap.setCityId(mapService.getCityIdByName(cityname));
-		iMap.setCreateTime(new Date().getTime());
-
-		Ridding ridding = new Ridding();
-		ridding.setLeaderUserId(myUser.getUserId());
-		ridding.setName(name);
-		Photo photo = new Photo();
-		if (photoService.addPhoto(photo) < 0) {
-			return -1;
-		}
-		iMap.setAvatorPic(photo.getId());
-		if (imageUploadService.saveImageFromUrl(iMap.getStaticImgSrc(), photo.getId()) == null) {
-			return -1;
-		}
-		if (transactionService.insertANewRidding(iMap, ridding)) {
-			return ridding.getId();
-		}
-		return -1L;
-	}
+	// /**
+	// * 创建骑行活动
+	// *
+	// * @param locations
+	// * @return
+	// */
+	// public long createRidding(List<Location> locations, String name, String
+	// beginLocation, int distance, String points, String cityname,
+	// String endLocation, String[] midLocations) {
+	// MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken)
+	// SecurityContextHolder.getContext().getAuthentication()).getDetails();
+	// if (myUser == null) {
+	// return -1L;
+	// }
+	// JSONArray array = new JSONArray();
+	// if (!ListUtils.isEmptyList(locations)) {
+	// for (Location location : locations) {
+	// array.add(location.getLatitude() + "," + location.getLongtitude());
+	// }
+	// }
+	// JSONArray jsonArry = new JSONArray();
+	// if (!ArrayUtils.isEmpty(midLocations)) {
+	// for (String midLocation : midLocations) {
+	// jsonArry.add(midLocation);
+	// }
+	// }
+	//
+	// IMap iMap = new IMap();
+	// iMap.setMidLocation(jsonArry.toString());
+	// iMap.setMapTaps(array.toString());
+	// iMap.setBeginLocation(beginLocation);
+	// iMap.setStatus(IMap.Using);
+	// iMap.setObjectType(SourceType.Web.getValue());
+	// iMap.setObjectId(0);
+	// iMap.setUserId(myUser.getUserId());
+	// iMap.setDistance(distance);
+	// JSONArray pointArray = new JSONArray();
+	// pointArray.add(points);
+	// iMap.setMapPoint(pointArray.toString());
+	// iMap.setEndLocation(endLocation);
+	// iMap.setCityId(mapService.getCityIdByName(cityname));
+	// iMap.setCreateTime(new Date().getTime());
+	//
+	// Ridding ridding = new Ridding();
+	// ridding.setLeaderUserId(myUser.getUserId());
+	// ridding.setName(name);
+	// Photo photo = new Photo();
+	// if (photoService.addPhoto(photo) < 0) {
+	// return -1;
+	// }
+	// iMap.setAvatorPic(photo.getId());
+	// if (imageUploadService.saveImageFromUrl(iMap.getStaticImgSrc(),
+	// photo.getId()) == null) {
+	// return -1;
+	// }
+	// if (transactionService.insertANewRidding(iMap, ridding)) {
+	// return ridding.getId();
+	// }
+	// return -1L;
+	// }
 
 }

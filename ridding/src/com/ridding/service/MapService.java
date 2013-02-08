@@ -2,11 +2,8 @@ package com.ridding.service;
 
 import java.util.List;
 
-import net.sf.json.JSONArray;
-
 import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
-import com.ridding.meta.vo.Location;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -90,4 +87,19 @@ public interface MapService {
 	 * @return
 	 */
 	public MapFix getMapFix(double latitude, double longtitude);
+	/**
+	 * 获取所有地图
+	 * 
+	 * @return
+	 */
+	public List<IMap> getAllMaps();
+	
+	/**
+	 * 根据相应ID更新地图URL
+	 * 
+	 * @param url
+	 * @param mapId
+	 * @return
+	 */
+	public boolean updateImapAvatorPicUrl(String url,long mapId);
 }

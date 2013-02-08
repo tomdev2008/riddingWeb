@@ -7,6 +7,8 @@ import java.util.Map;
 
 import com.ridding.mapper.PublicMapper;
 import com.ridding.meta.Public;
+import com.ridding.meta.Ridding;
+import com.ridding.meta.Public.PublicType;
 
 import javax.annotation.Resource;
 
@@ -43,6 +45,15 @@ public class PublicServiceImpl implements PublicService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see com.ridding.service.PublicService#addPublic(com.ridding.meta.Public)
+	 */
+	public boolean addPublic(Public aPublic) {
+		return publicMapper.addPublic(aPublic) > 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ridding.service.PublicService#getPublicListByType(int, int, int)
 	 */
 	public List<Public> getPublicListByType(int type, int limit, int weight, boolean isLarger) {
@@ -52,5 +63,24 @@ public class PublicServiceImpl implements PublicService {
 		map.put("weight", weight);
 		map.put("isLarger", isLarger ? 1 : 0);
 		return publicMapper.getPublicListsByType(map);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.PublicService#updatePublicFirstPicUrl(long,
+	 * java.lang.String)
+	 */
+	public boolean updatePublicFirstPicUrl(long id, String picUrl) {
+		Public public1 = publicMapper.getPublicById(id);
+		if (public1 == null) {
+			return false;
+		}
+		if (PublicType.genPublicType(public1.getType()) != PublicType.PublicRecom) {
+			return false;
+		}
+		public1.setFirstPicUrl(picUrl);
+		public1.genJson();
+		return publicMapper.updateJsonById(id, public1.getJson()) > 0;
 	}
 }

@@ -1,11 +1,12 @@
 package com.ridding.web.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,9 +22,10 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ridding.meta.Photo;
-import com.ridding.service.ImageUploadService;
-import com.ridding.service.PhotoService;
+import com.qiniu.qbox.auth.DigestAuthClient;
+import com.qiniu.qbox.rs.RSService;
+import com.ridding.constant.SystemConst;
+import com.ridding.util.QiNiuUtil;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -32,10 +34,6 @@ import com.ridding.service.PhotoService;
 @Controller("uploadController")
 public class UploadController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(UploadController.class);
-	@Resource
-	private ImageUploadService imageUploadService;
-	@Resource
-	private PhotoService photoService;
 
 	/**
 	 * 图片上传接口
@@ -44,10 +42,16 @@ public class UploadController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView authUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public ModelAndView authUpload(HttpServletRequest request, HttpServletResponse response) throws Exception, IOException {
 		RequestContext requestContext = new ServletRequestContext(request);
 		ModelAndView mv = new ModelAndView("upload");
 		if (FileUpload.isMultipartContent(requestContext) && request.getMethod().toLowerCase().equals("post")) {
+			String bucketName = "bucketName";
+			DigestAuthClient conn = new DigestAuthClient();
+			RSService rs = new RSService(conn, bucketName);
+
+			// 通过该实例化的资源表对象来进行文件上传
+
 			DiskFileItemFactory factory = new DiskFileItemFactory();
 			ServletFileUpload upload = new ServletFileUpload(factory);
 			upload.setSizeMax(2000000);
@@ -64,13 +68,16 @@ public class UploadController extends AbstractBaseController {
 					logger.error("");
 				} else {
 					if (fileItem.getName() != null && fileItem.getSize() != 0) {
-						String name = "/" + imageUploadService.saveImageToQiniu(fileItem);
-						if (name != null) {
-							Photo photo = new Photo();
-							photo.setOriginalPath(name);
-							photoService.addPhoto(photo);
-							mv.addObject("imageUrl", name);
-							return mv;
+						String name = "" + new Date().getTime() + ".jpg";
+						File file = new File(SystemConst.getValue("UploadTEMPPATH") + name);
+						fileItem.write(file);
+						String key = QiNiuUtil.genKey(false, true);
+						boolean succ = QiNiuUtil.uploadImageToQiniuFromLocalFile(SystemConst.getValue("UploadTEMPPATH") + name, key);
+						if (succ) {
+							mv.addObject("imageUrl", "/" + key);
+						}
+						if (file.isFile()) {
+							file.delete();
 						}
 					} else {
 						logger.error("文件没有选择 或 文件内容为空");
@@ -80,5 +87,4 @@ public class UploadController extends AbstractBaseController {
 		}
 		return mv;
 	}
-
 }

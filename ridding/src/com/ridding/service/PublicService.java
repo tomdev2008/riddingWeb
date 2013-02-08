@@ -2,8 +2,6 @@ package com.ridding.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 import com.ridding.meta.Public;
 
 /**
@@ -31,4 +29,21 @@ public interface PublicService {
 	 * @return
 	 */
 	public List<Public> getPublicListByType(int type, int limit, int weight, boolean isLarger);
+
+	/**
+	 * 更新广告
+	 * 
+	 * @param riddingId
+	 * @param picUrl
+	 * @return
+	 */
+	public boolean updatePublicFirstPicUrl(long id, String picUrl);
+
+	/**
+	 * 添加
+	 * 
+	 * @param aPublic
+	 * @return
+	 */
+	public boolean addPublic(Public aPublic);
 }

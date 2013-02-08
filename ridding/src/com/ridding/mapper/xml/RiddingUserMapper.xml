@@ -125,10 +125,19 @@
 		</if>
 		;
 	</select>
-	
+
 	<delete id="deleteRiddingUserByRiddingId" parameterType="long"
 		flushCache="true" statementType="PREPARED">
 		delete from TB_Ridding_User where
 		riddingId=#{riddingId};
 	</delete>
+
+	<select id="getRiddingUsersByUserId" resultMap="riddingUserMap"
+		parameterType="hashMap">
+		select * from TB_Ridding_User
+		where userId=#{userId} and
+		userRole >=#{userRole}
+		order by
+		lastUpdateTime desc;
+	</select>
 </mapper>

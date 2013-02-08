@@ -2,8 +2,6 @@ package com.ridding.meta;
 
 import net.sf.json.JSONObject;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
  * @version CreateTime：2012-12-2 下午11:36:11 Class Description
@@ -33,6 +31,30 @@ public class Public {
 	 * 权重
 	 */
 	private int weight;
+	/**
+	 * 骑行id
+	 */
+	private long riddingId;
+	/**
+	 * 封面url
+	 */
+	private String firstPicUrl = "";
+	/**
+	 * 广告内容类型
+	 */
+	private int adContentType = PublicContentType.PublicNone.getValue();
+	/**
+	 * 文本内容
+	 */
+	private String adText = "";
+	/**
+	 * 链接
+	 */
+	private String linkUrl = "";
+	/**
+	 * 广告图片url
+	 */
+	private String adImageUrl = "";
 
 	public long getId() {
 		return id;
@@ -51,7 +73,17 @@ public class Public {
 	}
 
 	public String getJson() {
-		return json;
+		JSONObject jsonObject = JSONObject.fromObject(this.json);
+		if (jsonObject == null) {
+			return null;
+		}
+		this.riddingId = jsonObject.getLong("riddingid");
+		this.firstPicUrl = jsonObject.getString("firstpicurl");
+		this.adContentType = jsonObject.getInt("adcontenttype");
+		this.adText = jsonObject.getString("adtext");
+		this.linkUrl = jsonObject.getString("linkurl");
+		this.adImageUrl = jsonObject.getString("adimageurl");
+		return jsonObject.toString();
 	}
 
 	public void setJson(String json) {
@@ -97,35 +129,8 @@ public class Public {
 			public int getValue() {
 				return 1;
 			}
-
-			public Ridding getRidding(String json) {
-				JSONObject jsonObject = JSONObject.fromObject(json);
-				Ridding ridding = new Ridding();
-				ridding.setId(jsonObject.getLong("riddingId"));
-				ridding.setLeaderUserId(jsonObject.getLong("userId"));
-				
-				if (jsonObject.get("firstPicUrl")!=null) {
-					ridding.setFirstPicUrl(jsonObject.getString("firstPicUrl"));
-				}
-
-				return ridding;
-			}
-
-			public String setJson(long userId, long riddingId, String firstPicUrl) {
-				JSONObject jsonObject = new JSONObject();
-				jsonObject.put("riddingId", riddingId);
-				jsonObject.put("userId", userId);
-				if (!StringUtils.isEmpty(firstPicUrl)) {
-					jsonObject.put("firstPicUrl", firstPicUrl);
-				}
-				return jsonObject.toString();
-			}
 		};
 		public abstract int getValue();
-
-		public abstract Ridding getRidding(String json);
-
-		public abstract String setJson(long userId, long riddingId, String firstPicUrl);
 
 		public static PublicType genPublicType(int t) {
 			for (PublicType type : PublicType.values()) {
@@ -134,5 +139,110 @@ public class Public {
 			}
 			return null;
 		}
+	}
+
+	/**
+	 *广告类型
+	 * 
+	 * @author apple
+	 * 
+	 */
+	public enum PublicContentType {
+		/**
+		 * 什么都不是
+		 */
+		PublicNone {
+
+			public int getValue() {
+				return 0;
+			}
+		},
+		/**
+		 * 文字链接
+		 */
+		PublicText {
+
+			public int getValue() {
+				return 1;
+			}
+		},
+		/**
+		 * 图片链接
+		 */
+		PublicImage {
+
+			public int getValue() {
+				return 2;
+			}
+		};
+
+		public abstract int getValue();
+
+		public static PublicContentType genPublicContentType(int t) {
+			for (PublicContentType type : PublicContentType.values()) {
+				if (type.getValue() == t)
+					return type;
+			}
+			return null;
+		}
+	}
+
+	public long getRiddingId() {
+		return riddingId;
+	}
+
+	public void setRiddingId(long riddingId) {
+		this.riddingId = riddingId;
+	}
+
+	public String getFirstPicUrl() {
+		return firstPicUrl;
+	}
+
+	public void setFirstPicUrl(String firstPicUrl) {
+		this.firstPicUrl = firstPicUrl;
+	}
+
+	public String getLinkUrl() {
+		return linkUrl;
+	}
+
+	public void setLinkUrl(String linkUrl) {
+		this.linkUrl = linkUrl;
+	}
+
+	public String getAdImageUrl() {
+		return adImageUrl;
+	}
+
+	public void setAdImageUrl(String adImageUrl) {
+		this.adImageUrl = adImageUrl;
+	}
+
+	public int getAdContentType() {
+		return adContentType;
+	}
+
+	public void setAdContentType(int adContentType) {
+		this.adContentType = adContentType;
+	}
+
+	public String getAdText() {
+		return adText;
+	}
+
+	public void setAdText(String adText) {
+		this.adText = adText;
+	}
+
+	public void genJson() {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("riddingid", this.riddingId);
+		jsonObject.put("firstpicurl", this.firstPicUrl);
+		jsonObject.put("adcontenttype", this.adContentType);
+		jsonObject.put("linkurl", this.linkUrl);
+		jsonObject.put("adimageurl", this.adImageUrl);
+		jsonObject.put("adtext", this.adText);
+		this.setJson(jsonObject.toString());
 	}
 }

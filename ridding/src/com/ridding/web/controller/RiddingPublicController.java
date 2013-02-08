@@ -28,9 +28,11 @@ import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingAction;
 import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.SourceAccount;
+import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.meta.vo.UserRelationVO;
@@ -41,6 +43,7 @@ import com.ridding.service.RiddingService;
 import com.ridding.service.UserRelationService;
 import com.ridding.util.HashMapMaker;
 import com.ridding.util.ListUtils;
+import com.ridding.util.QiNiuUtil;
 import com.ridding.util.http.HttpJsonUtil;
 import com.ridding.util.http.HttpServletUtil;
 import com.ridding.util.http.HttpServletUtil2;
@@ -280,15 +283,22 @@ public class RiddingPublicController extends AbstractBaseController {
 			}
 			List<Profile> profileList = profileService.getProfileList(userids);
 			Map<Long, Profile> profileMap = HashMapMaker.listToMap(profileList, "getUserId", Profile.class);
+			List<RiddingAction> actions = riddingService.getRiddingActionsByType(riddingId, RiddingActions.LikePicture.getValue());
+			Map<Long, RiddingAction> riddingActionMap = HashMapMaker.listToMap(actions, "getObjectId", RiddingAction.class);
 			for (RiddingPicture riddingPicture : riddingPictures) {
 				Profile profile = profileMap.get(riddingPicture.getUserId());
 				if (profile != null) {
 					riddingPicture.setsAvatorUrl(profile.getsAvatorUrl());
 				}
+				RiddingAction action = riddingActionMap.get(riddingPicture.getId());
+				if (action != null) {
+					riddingPicture.setLiked(true);
+				} else {
+					riddingPicture.setLiked(false);
+				}
 			}
 		}
 		HttpJsonUtil.setupLoadedRiddingPicture(returnObject, riddingPictures);
-
 		JSONArray dataArray = HttpServletUtil2.parseGetuploadedPhotos(riddingPictures);
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
@@ -320,17 +330,23 @@ public class RiddingPublicController extends AbstractBaseController {
 		}
 		List<Ridding> riddingList = null;
 		if (ridding.isRecom == 1) {
-			riddingList = riddingService.getRecomRiddingList(ridding.getWeight(), ridding.getLimit(), ridding.isLarger());
+			riddingList = riddingService.getRecomRiddingList(ridding.getaPublic().getWeight(), ridding.getLimit(), ridding.isLarger());
 		} else {
 			riddingList = riddingService.getRiddingListByLastUpdateTime(ridding.getLastUpdateTime(), ridding.getLimit(), ridding.isLarger(),
 					ridding.isRecom);
 		}
-		// HttpJsonUtil.setRiddingByLastUpdateTime(returnObject, riddingList);
+		HttpJsonUtil.setRiddingByLastUpdateTime(returnObject, riddingList);
 		JSONArray dataArray = HttpServletUtil2.parseGetGoingRiddings(riddingList);
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		logger.info(returnObject);
+		try {
+			QiNiuUtil.uploadImageToQiniuFromLocalFile("/Users/apple/Desktop/1.jpg", "test.jpg");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return mv;
 	}
 
@@ -386,7 +402,5 @@ public class RiddingPublicController extends AbstractBaseController {
 		logger.info(returnObject);
 		return mv;
 	}
-	
-	
 
 }

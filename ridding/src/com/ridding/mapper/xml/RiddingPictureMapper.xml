@@ -17,6 +17,7 @@
 		<result property="takePicLocation" column="takePicLocation" />
 		<result property="width" column="width" />
 		<result property="height" column="height" />
+		<result property="likeCount" column="likeCount" />
 	</resultMap>
 
 	<insert id="addRiddingPicture" parameterType="RiddingPicture">
@@ -33,7 +34,8 @@
 		takePicDate,
 		takePicLocation,
 		width,
-		height
+		height,
+		likeCount
 		)VALUES(
 		#{riddingId},
 		#{photoUrl},
@@ -47,7 +49,8 @@
 		#{takePicDate},
 		#{takePicLocation},
 		#{width},
-		#{height}
+		#{height},
+		#{likeCount}
 		)
 		<selectKey keyProperty="id" resultType="long">
 			SELECT
@@ -73,4 +76,16 @@
 		riddingId=#{riddingId};
 	</delete>
 
+	<delete id="deleteRiddingPicture" parameterType="long"
+		flushCache="true" statementType="PREPARED">
+		delete from TB_Ridding_Picture where
+		id=#{id};
+	</delete>
+
+	<update id="incLikePicCount" parameterType="long" flushCache="true"
+		statementType="PREPARED">
+		update TB_Ridding_Picture set likeCount = likeCount + 1
+		where id
+		= #{pictureId} ;
+	</update>
 </mapper>

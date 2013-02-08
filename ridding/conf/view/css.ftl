@@ -26,5 +26,11 @@
     	<#case "sendWeiBo">
     	    <link type="text/css" rel="stylesheet" href="/css/backend/jquery-calendar.css"/>
     	<#break>
+    	<#case "backendComment">
+    	    <link type="text/css" rel="stylesheet" href="/css/backend/backendComment.css"/>
+    	<#break>
+    	<#case "huodongRecom">
+    	    <link type="text/css" rel="stylesheet" href="/css/backend/jquery-calendar.css"/>
+    	<#break>
     </#switch>
 </#if>

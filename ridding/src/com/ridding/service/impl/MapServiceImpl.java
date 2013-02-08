@@ -333,4 +333,24 @@ public class MapServiceImpl implements MapService {
 		}
 		return mapFix;
 	}
+
+	@Override
+	public List<IMap> getAllMaps() {
+		List<IMap> imapList = iMapMapper.getAll();
+		return imapList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ridding.service.MapService#updateImapAvatorPicUrl(java.lang.String,
+	 * long)
+	 */
+	public boolean updateImapAvatorPicUrl(String url, long mapId) {
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("avatorPicUrl", url);
+		hashMap.put("id", mapId);
+		return iMapMapper.updateImapAvatorPicUrl(hashMap) > 0;
+	}
 }

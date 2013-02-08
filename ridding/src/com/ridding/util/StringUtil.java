@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
- * @version CreateTime��2012-3-29 ����10:05:29 Class Description
+ * @version CreateTime 2012-3-29 10:05:29 Class Description
  */
 public class StringUtil {
 

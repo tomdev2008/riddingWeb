@@ -18,12 +18,23 @@ public interface RiddingCommentService {
 	public boolean addRiddingComment(RiddingComment riddingComment);
 
 	/**
-	 * 得到评论
+	 * 得到评论列表
 	 * 
 	 * @param createTime
 	 * @param limit
 	 * @param isLarger
 	 * @return
 	 */
-	public List<RiddingComment> getRiddingComments(long riddingId,long createTime, int limit, boolean isLarger);
+	public List<RiddingComment> getRiddingComments(long riddingId,
+			long createTime, int limit, boolean isLarger);
+	
+
+	/**
+	 * 递归删除骑行评论及其子评论
+	 * 
+	 * @param replyId
+	 * @param count
+	 * @return
+	 */
+	public void deleteRiddingCommentByReplyIdAndCount(long replyId);
 }

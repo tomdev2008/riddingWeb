@@ -10,6 +10,8 @@ public class RiddingAction {
 	private long userId;
 	private long riddingId;
 	private int type;
+	private long objectId;
+
 	/**
 	 * 用户喜欢了
 	 */
@@ -22,6 +24,10 @@ public class RiddingAction {
 	 * 用户使用了
 	 */
 	private boolean userUsed;
+	/**
+	 * 喜欢了照片
+	 */
+	private boolean pictureLiked;
 	/**
 	 * 创建时间
 	 */
@@ -80,7 +86,7 @@ public class RiddingAction {
 	}
 
 	/**
-	 *骑行操作
+	 * 骑行操作
 	 * 
 	 * @author apple
 	 * 
@@ -117,6 +123,14 @@ public class RiddingAction {
 			public int getValue() {
 				return 3;
 			}
+		},
+		/**
+		 * 喜欢了某张图(4)
+		 */
+		LikePicture {
+			public int getValue() {
+				return 4;
+			}
 		};
 		public abstract int getValue();
 
@@ -130,7 +144,7 @@ public class RiddingAction {
 	}
 
 	/**
-	 *骑行操作返回
+	 * 骑行操作返回
 	 * 
 	 * @author apple
 	 * 
@@ -171,7 +185,8 @@ public class RiddingAction {
 		public abstract int getValue();
 
 		public static RiddingActionResponse genRiddingActionResponse(int t) {
-			for (RiddingActionResponse response : RiddingActionResponse.values()) {
+			for (RiddingActionResponse response : RiddingActionResponse
+					.values()) {
 				if (response.getValue() == t)
 					return response;
 			}
@@ -201,6 +216,22 @@ public class RiddingAction {
 
 	public void setUserUsed(boolean userUsed) {
 		this.userUsed = userUsed;
+	}
+
+	public long getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(long objectId) {
+		this.objectId = objectId;
+	}
+
+	public boolean getPictureLiked() {
+		return pictureLiked;
+	}
+
+	public void setPictureLiked(boolean pictureLiked) {
+		this.pictureLiked = pictureLiked;
 	}
 
 }

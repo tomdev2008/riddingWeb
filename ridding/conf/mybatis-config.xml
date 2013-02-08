@@ -13,7 +13,6 @@
 		<typeAlias alias="Recom" type="com.ridding.meta.Recom" />
 		<typeAlias alias="MapFix" type="com.ridding.meta.MapFix" />
 		<typeAlias alias="Apns" type="com.ridding.meta.ApnsDevice" />
-		<typeAlias alias="Photo" type="com.ridding.meta.Photo" />
 		<typeAlias alias="RiddingPicture" type="com.ridding.meta.RiddingPicture" />
 		<typeAlias alias="WeiBo" type="com.ridding.meta.WeiBo" />
 		<typeAlias alias="RepostMap" type="com.ridding.meta.RepostMap" />
@@ -22,6 +21,7 @@
 		<typeAlias alias="RiddingComment" type="com.ridding.meta.RiddingComment" />
 		<typeAlias alias="UserRelation" type="com.ridding.meta.UserRelation" />
 		<typeAlias alias="UserNearby" type="com.ridding.meta.UserNearby" />
+		<typeAlias alias="WeiBoToBeSend" type="com.ridding.meta.WeiBoToBeSend" />
 	</typeAliases>
 	<mappers>
 		<mapper resource="com/ridding/mapper/xml/AccountMapper.xml" />
@@ -35,7 +35,6 @@
 		<mapper resource="com/ridding/mapper/xml/RecomMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/MapFixMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/IosApnsMapper.xml" />
-		<mapper resource="com/ridding/mapper/xml/PhotoMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/RiddingPictureMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/WeiBoMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/WeiBoMapper.xml" />
@@ -45,6 +44,7 @@
 		<mapper resource="com/ridding/mapper/xml/RiddingCommentMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/UserRelationMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/UserNearbyMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/WeiBoToBeSendMapper.xml" />
 	</mappers>
 </configuration>
 			

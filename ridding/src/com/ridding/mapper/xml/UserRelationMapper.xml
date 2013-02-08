@@ -12,7 +12,7 @@
 
 	<insert id="addUserRelation" parameterType="UserRelation">
 		INSERT INTO
-		TB_USER_RELATION(
+		TB_User_Relation(
 		userId,
 		toUserId,
 		createTime,
@@ -30,20 +30,20 @@
 	</insert>
 	
 	<select id="getUserRelations" resultMap="userRelationMap"  parameterType="long">
-		SELECT * from TB_USER_RELATION where 
+		SELECT * from TB_User_Relation where 
 		 userId = #{userId} and status =1 ;
 	</select>
 	
 	<select id="getUserRelation" resultMap="userRelationMap"
 	parameterType="hashMap">
-	SELECT * from TB_USER_RELATION where
+	SELECT * from TB_User_Relation where
 	userId = #{userId}
 	and toUserId= #{toUserId} ;
 	</select>
 	
 	<update id="updateUserRelation" parameterType="UserRelation" flushCache="true"
 		statementType="PREPARED">
-		update TB_USER_RELATION set 
+		update TB_User_Relation set 
 		status = #{status}
 		where userId = #{userId} and toUserId = #{toUserId};
 	</update>

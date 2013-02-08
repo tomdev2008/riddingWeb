@@ -26,7 +26,6 @@ import com.ridding.constant.SystemConst;
 import com.ridding.constant.returnCodeConstance;
 import com.ridding.meta.ApnsDevice;
 import com.ridding.meta.IMap;
-import com.ridding.meta.Photo;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingAction;
@@ -40,16 +39,13 @@ import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ProfileSourceFeed;
 import com.ridding.security.MyUser;
 import com.ridding.service.IOSApnsService;
-import com.ridding.service.ImageUploadService;
 import com.ridding.service.MapService;
-import com.ridding.service.PhotoService;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
 import com.ridding.service.UserNearbyService;
 import com.ridding.service.UserRelationService;
 import com.ridding.service.transaction.TransactionService;
-import com.ridding.service.UserNearbyService;
 import com.ridding.util.http.HttpJsonUtil;
 import com.ridding.util.http.HttpServletUtil;
 import com.ridding.util.http.HttpServletUtil2;
@@ -72,14 +68,11 @@ public class RiddingController extends AbstractBaseController {
 
 	@Resource
 	private ProfileService profileService;
-	@Resource
-	private PhotoService photoService;
+
 	@Resource
 	private IOSApnsService iosApnsService;
 	@Resource
 	private TransactionService transactionService;
-	@Resource
-	private ImageUploadService imageUploadService;
 	@Resource
 	private DwrRiddingShareBean dwrRiddingShareBean;
 	@Resource
@@ -231,7 +224,6 @@ public class RiddingController extends AbstractBaseController {
 		default:
 			break;
 		}
-
 		switch (actionResponse) {
 		case DoubleDo:
 			returnObject.put("code", returnCodeConstance.RiddingActionDouble);
@@ -255,6 +247,49 @@ public class RiddingController extends AbstractBaseController {
 		JSONObject dataObject = HttpServletUtil2.parseRiddingAction(ridding,
 				riddingAction);
 		returnObject.put("data", dataObject);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
+		return mv;
+	}
+
+	/**
+	 * 喜欢骑行中的某张图片
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView RiddingLikePic(HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		long riddingId = ServletRequestUtils.getLongParameter(request,
+				"riddingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId",
+				-1L);
+		long objectId = ServletRequestUtils.getLongParameter(request,
+				"objectId", -1L);
+		JSONObject returnObject = new JSONObject();
+		ModelAndView mv = new ModelAndView("return");
+		RiddingActionResponse actionResponse = riddingService.incPicLike(
+				riddingId, userId, objectId);
+		switch (actionResponse) {
+		case DoubleDo:
+			returnObject.put("code", returnCodeConstance.RiddingActionDouble);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		case InRidding:
+			returnObject.put("code",
+					returnCodeConstance.RiddingActionInMyRidding);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		case Fail:
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		default:
+			break;
+		}
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		logger.info(returnObject);
@@ -590,18 +625,6 @@ public class RiddingController extends AbstractBaseController {
 		iMap.setObjectType(SourceType.WebApi.getValue());
 		iMap.setObjectId(0);
 		iMap.setCreateTime(new Date().getTime());
-		Photo photo = new Photo();
-		photo.setOriginalPath(iMap.getUrlKey());
-		if (photoService.addPhoto(photo) < 0) {
-			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
-			mv.addObject("returnObject", returnObject.toString());
-			return mv;
-		}
-		iMap.setAvatorPic(photo.getId());
-		if (iMap.getMapUrl() == null) {
-			imageUploadService.saveImageFromUrl(iMap.getStaticImgSrc(),
-					photo.getId());
-		}
 		if (!transactionService.insertANewRidding(iMap, ridding)) {
 			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
 			mv.addObject("returnObject", returnObject.toString());
@@ -846,6 +869,40 @@ public class RiddingController extends AbstractBaseController {
 				latitude, longitude);
 		if (hasAddOrUpdate < 0) {
 			logger.error("addOrUpdateUsersNearby is failed!");
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 删除骑行照片
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView removeRiddingPicture(HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		ModelAndView mv = new ModelAndView("return");
+		JSONObject returnObject = new JSONObject();
+		long pictureId = ServletRequestUtils.getLongParameter(request,
+				"pictureId", -1L);
+		if (pictureId < 0) {
+			logger.error("The pictureId=" + pictureId + " is wrong!");
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+
+		boolean succ = riddingService.removeRiddingPicture(pictureId);
+		if (!succ) {
+			logger.error("deletePicture is failed! where pictureId="
+					+ pictureId);
 			returnObject.put("code", returnCodeConstance.FAILED);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;

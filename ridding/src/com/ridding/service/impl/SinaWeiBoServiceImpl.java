@@ -1,5 +1,7 @@
 package com.ridding.service.impl;
 
+import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,15 +27,20 @@ import weibo4j.Comments;
 import weibo4j.Weibo;
 import weibo4j.model.WeiboException;
 import weibo4j.org.json.JSONException;
+import weibo4j.util.URLEncodeUtils;
 
 import com.ridding.constant.SourceType;
 import com.ridding.constant.SystemConst;
 import com.ridding.mapper.RepostMapWeiBoMapper;
+import com.ridding.mapper.SourceAccountMapper;
 import com.ridding.mapper.WeiBoMapper;
+import com.ridding.mapper.WeiBoToBeSendMapper;
 import com.ridding.meta.RepostMap;
 import com.ridding.meta.SourceAccount;
 import com.ridding.meta.WeiBo;
+import com.ridding.meta.WeiBoToBeSend;
 import com.ridding.meta.WeiBo.WeiBoType;
+import com.ridding.meta.WeiBoToBeSend.SendStatus;
 import com.ridding.service.ProfileService;
 import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
@@ -68,6 +75,11 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 	private RepostMapWeiBoMapper repostMapWeiBoMapper;
 	@Resource
 	private TransactionService transactionService;
+	@Resource
+	private SourceAccountMapper sourceAccountMapper;
+
+	@Resource
+	private WeiBoToBeSendMapper weiBoToBeSendMapper;
 
 	/*
 	 * (non-Javadoc)
@@ -250,11 +262,12 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 		logger.info("sendWeiBoQuartz begin!");
 		SourceAccount sourceAccount = profileService.getSourceAccountByAccessUserId(Long.valueOf(SystemConst.getValue("ADMINUSERSINAID")),
 				SourceType.SINAWEIBO.getValue());
-		if(sourceAccount==null){
+		if (sourceAccount == null) {
 			return;
 		}
 		Weibo weibo = new Weibo();
-		weibo.setToken(sourceAccount.getAccessToken());
+		accessToken = sourceAccount.getAccessToken();
+		weibo.setToken(accessToken);
 		long time = new Date().getTime();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("status", WeiBo.notDeal);
@@ -264,9 +277,9 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 		if (weiBo == null) {
 			return;
 		}
-
+		accessToken = sourceAccount.getAccessToken();
 		StringBuilder sb = new StringBuilder("https://api.weibo.com/2/statuses/upload_url_text.json");
-		sb.append("?access_token=" + sourceAccount.getAccessToken());
+		sb.append("?access_token=" + accessToken);
 		sb.append("&source=" + SystemConst.getValue("WEBAPPKEY"));
 		int result = -1;
 		String response = null;
@@ -388,5 +401,129 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 			logger.error("getAtMeSinaWeiBo return code error and code=" + result + " and result=" + response);
 		}
 		return null;
+	}
+
+	/**
+	 * 定时获取有"骑行"字符的新浪微博
+	 */
+	public void getRiddingSinaWeiBoQuartz() {
+		logger.info("getRiddingSinaWeiBoQuartz begin");
+		int page = 10, days = 1;
+		int count = 20;
+		long lastCreateTime = TimeUtil.getDayBefore(new Date().getTime(), days);
+		int totalCount = 0;
+		int succInsertCount = 0;
+		while (page > 0) {
+			List<WeiBoToBeSend> weiBoToBeSendList = this.getSinaWeiBoFromSina("骑行", page, count);
+			if (ListUtils.isEmptyList(weiBoToBeSendList)) {
+				break;
+			}
+			totalCount += weiBoToBeSendList.size();
+			for (WeiBoToBeSend weiBoToBeSend : weiBoToBeSendList) {
+				if (weiBoToBeSend.getCreateTime() < lastCreateTime) {
+					break;
+				}
+				long accountId = weiBoToBeSend.getAccountId();
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("accessUserId", accountId);
+				map.put("sourceType", SourceType.SINAWEIBO.getValue());
+				if (sourceAccountMapper.getSourceAccountByAccessUserId(map) == null) {
+					List<WeiBoToBeSend> list = weiBoToBeSendMapper.getWeiBoToBeSendListByAccountId(accountId);
+					if (ListUtils.isEmptyList(list)) {
+						logger.info("get a getRiddingSinaWeiBoQuartz weibo could be send where text=" + weiBoToBeSend.getText() + " sourceAccountId="
+								+ weiBoToBeSend.getAccountId());
+						succInsertCount++;
+						weiBoToBeSend.setLastUpdateTime(new Date().getTime());
+						weiBoToBeSend.setSendStatus(SendStatus.NotSend.getValue());
+						weiBoToBeSendMapper.addWeiBoToBeSend(weiBoToBeSend);
+					}
+				}
+			}
+			page--;
+		}
+		logger.info("getRiddingSinaWeiBoQuartz end where totalCount=" + totalCount + "  succInsertCount=" + succInsertCount);
+	}
+
+	/**
+	 * 搜索相关内容的微博并且回调
+	 * 
+	 * @param q
+	 * @return
+	 */
+	private List<WeiBoToBeSend> getSinaWeiBoFromSina(String q, int page, int count) {
+
+		SourceAccount sourceAccount = profileService.getSourceAccountByAccessUserId(Long.valueOf(SystemConst.getValue("ADMINUSERSINAID")),
+				SourceType.SINAWEIBO.getValue());
+		if (sourceAccount == null) {
+			return null;
+		}
+		accessToken = sourceAccount.getAccessToken();
+		StringBuilder sb = new StringBuilder(SystemConst.getValue("SINAHOST") + "/search/topics.json");
+		sb.append("?source=" + SystemConst.getValue("WEBAPPKEY"));
+		sb.append("&access_token=" + sourceAccount.getAccessToken());
+		sb.append("&q=" + URLEncodeUtils.encodeURL(q));
+		sb.append("&count=" + count);
+		sb.append("&page=" + page);
+		int result = -1;
+		String response = null;
+		try {
+			HttpClient httpclient = new HttpClient();
+			GetMethod get = new GetMethod();
+			get.setURI(new URI(sb.toString(), true, "utf-8"));
+			result = httpclient.executeMethod(get);
+			response = get.getResponseBodyAsString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return null;
+		}
+		if (response != null) {
+			JSONObject jsonObject = JSONObject.fromObject(response);
+			JSONArray statuses = jsonObject.getJSONArray("statuses");
+			if (statuses.isEmpty()) {
+				return null;
+			}
+			List<WeiBoToBeSend> weiBoToBeSendList = new ArrayList<WeiBoToBeSend>(statuses.size());
+			for (int i = 0; i < statuses.size(); i++) {
+				JSONObject status = JSONObject.fromObject(statuses.get(i));
+
+				WeiBoToBeSend weiBoToBeSend = new WeiBoToBeSend();
+				String text = URLDecoder.decode(status.getString("text"));
+				weiBoToBeSend.setText(text);
+
+				String createTimeString = status.getString("created_at");
+				Date createTime = new Date(createTimeString);
+				weiBoToBeSend.setCreateTime(createTime.getTime());
+
+				JSONObject user = status.getJSONObject("user");
+				weiBoToBeSend.setAccountId(user.getLong("id"));
+
+				weiBoToBeSendList.add(weiBoToBeSend);
+			}
+			return weiBoToBeSendList;
+		}
+		return null;
+	}
+
+	/**
+	 * 发送需要推荐的微博评论
+	 */
+	public void sendWeiBoCommentQuartz() {
+		logger.info("sendWeiBoCommentQuartz begin");
+		List<WeiBoToBeSend> weiBoToBeSendList = weiBoToBeSendMapper.getWeiBoToBeSendList(WeiBoToBeSend.SendStatus.NotSend.getValue());
+		if (!ListUtils.isEmptyList(weiBoToBeSendList)) {
+			for (WeiBoToBeSend weiBoToBeSend : weiBoToBeSendList) {
+				long accountId = weiBoToBeSend.getAccountId();
+				this.sendSinaWeiBoCallBack(accountId, "还在骑行路上么?骑行者iphone版新版上线,计划您的骑行路线,记录您的骑行旅程。 @骑去哪儿 " + SystemConst.getValue("AppHref"));
+				weiBoToBeSend.setSendStatus(WeiBoToBeSend.SendStatus.Sended.getValue());
+				if (weiBoToBeSendMapper.updateWeiBoToBeSend(weiBoToBeSend) > 0) {
+					logger.info("Succeed to send comment to " + accountId + "!");
+				} else {
+					logger.error("Failed to send comment to " + accountId + "!");
+				}
+				logger.info("sendWeiBoCommentQuartz commentSend where text=" + weiBoToBeSend.getText() + " sourceAccountId=" + accountId);
+			}
+		}
+		logger.info("sendWeiBoCommentQuartz end");
 	}
 }
