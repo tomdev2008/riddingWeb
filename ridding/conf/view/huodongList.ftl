@@ -34,7 +34,7 @@ body{font-size:83%;}
 
 <#if riddingList?exists>
 <div>
-<table border="1" cellspacing="0px" width="80%">
+<table border="1" cellspacing="0px" width="100%">
     <thead>
          <tr><td style="text-align: center;">id</td>
          <td style="text-align: center;">名称</td>
@@ -64,7 +64,7 @@ body{font-size:83%;}
 				</#if> 
             </td>
             <td style="text-align: center;" width="10%"><img style="width:100px;height:100px;" src="${cfg_imageHost}${ridding.firstPicUrl!""}" id="huodong_coverImg"/></td>
-            <td style="word-break:break-all; word-wrap:break-all; text-align: center; width="20%"">
+            <td style="word-break:break-all; word-wrap:break-all; text-align: center; width="25%"">
               <#if ridding.riddingPictureList?exists>
                 <#list ridding.riddingPictureList as picture>
                 	<div class="picture">
@@ -74,19 +74,19 @@ body{font-size:83%;}
                 </#list>
               </#if> 
             </td>
-            <td style="text-align: center;" width="5%">
+            <td style="text-align: center;" width="4%">
                <div style="text-align: center;">${ridding.userCount!0}</div>
             </td>
-            <td style="text-align: center;" width="5%">
+            <td style="text-align: center;" width="4%">
                <div style="text-align: center;">${ridding.likeCount!0}</div>
             </td>
-            <td style="text-align: center;" width="5%">
+            <td style="text-align: center;" width="4%">
                <div style="text-align: center;">${ridding.commentCount!0}</div>
             </td>
-            <td style="text-align: center;" width="5%">
+            <td style="text-align: center;" width="4%">
                <div style="text-align: center;">${ridding.useCount!0}</div>
             </td>
-            <td style="text-align: center;" width="5%">
+            <td style="text-align: center;" width="4%">
                <div style="text-align: center;">${ridding.careCount!0}</div>
             </td>
 
