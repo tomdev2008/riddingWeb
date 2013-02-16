@@ -23,7 +23,6 @@ import weibo4j.Weibo;
 
 import com.ridding.constant.SystemConst;
 import com.ridding.constant.returnCodeConstance;
-import com.ridding.mapper.MapFixMapper;
 import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
 import com.ridding.meta.Profile;
@@ -57,9 +56,6 @@ public class RiddingPublicController extends AbstractBaseController {
 
 	@Resource
 	private ProfileService profileService;
-
-	@Resource
-	private MapFixMapper mapFixMapper;
 
 	@Resource
 	private RiddingService riddingService;

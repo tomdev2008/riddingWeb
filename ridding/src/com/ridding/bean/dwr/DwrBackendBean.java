@@ -233,7 +233,7 @@ public class DwrBackendBean {
 			try {
 				boolean succ = QiNiuUtil.uploadImageToQiniuFromUrl(url, key);
 				if (succ) {
-					url = SystemConst.returnPhotoUrl("/" + key);
+					url = "/" + key;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
