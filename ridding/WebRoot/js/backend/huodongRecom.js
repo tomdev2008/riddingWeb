@@ -26,6 +26,13 @@ $(".recom_img_recom").click(function(){
 });
 
 
+$("#recom_pic_mianbao").click(function(){
+	_riddingId= $("#recom_pic_mianbao_riddingId").val();
+	_url=$("#recom_pic_mianbao_url_text").val();
+	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'getRiddingPictureFromMianBao',_riddingId,_url,submitWeiBoCB);
+});
+
+
 
 function submitWeiBoCB(_flag){
 	if(_flag){
