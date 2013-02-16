@@ -98,4 +98,16 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.UserNearbyService#showUserNearByList(double,
+	 * double, int, int)
+	 */
+	@Override
+	public List<Profile> showUserNearByList(double latitude, double longitude, int limit, int offset) {
+		
+		return null;
+	}
+
 }

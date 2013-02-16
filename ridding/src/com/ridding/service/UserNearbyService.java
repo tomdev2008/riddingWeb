@@ -36,4 +36,13 @@ public interface UserNearbyService {
 	 * @return
 	 */
 	public List<Profile> showUserNearbyList(long userId);
+
+	/**
+	 * 通过经纬度获得附近用户
+	 * 
+	 * @param latitude
+	 * @param longitude
+	 * @return
+	 */
+	public List<Profile> showUserNearByList(double latitude, double longitude, int limit, int offset);
 }

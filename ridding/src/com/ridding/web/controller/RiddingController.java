@@ -119,7 +119,7 @@ public class RiddingController extends AbstractBaseController {
 		List<RiddingUser> ridingUserList = riddingService.getAllRiddingUserList(riddingUser);
 		HttpJsonUtil.setShowRiddingView(returnObject, ridingUserList);
 
-		userNearbyService.addOrUpdateUsersNearby(userId, riddingUser.getLatitude(), riddingUser.getLongtitude());
+		userNearbyService.asyncUpdateUserNearBy(userId, riddingUser.getLatitude(), riddingUser.getLongtitude());
 		JSONArray dataArray = HttpServletUtil2.parseShowRiddingView(ridingUserList);
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
@@ -809,4 +809,35 @@ public class RiddingController extends AbstractBaseController {
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}
+
+	/**
+	 * 显示附近的用户，骑行活动
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView showNearBy(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		ModelAndView mv = new ModelAndView("return");
+		JSONObject returnObject = new JSONObject();
+		double latitude = ServletRequestUtils.getDoubleParameter(request, "latitude", -1.0);
+		double longitutde = ServletRequestUtils.getDoubleParameter(request, "longitude", -1.0);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		int limit = ServletRequestUtils.getIntParameter(request, "limit", -1);
+		int offset = ServletRequestUtils.getIntParameter(request, "offset", -1);
+
+		userNearbyService.asyncUpdateUserNearBy(userId, latitude, longitutde);
+		boolean succ = riddingService.removeRiddingPicture(pictureId);
+		if (!succ) {
+			logger.error("deletePicture is failed! where pictureId=" + pictureId);
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
 }
