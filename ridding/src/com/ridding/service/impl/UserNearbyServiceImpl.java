@@ -3,19 +3,30 @@ package com.ridding.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
+import net.sf.json.JSONArray;
+
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.ProfileMapper;
+import com.ridding.mapper.RiddingMapper;
+import com.ridding.mapper.RiddingNearbyMapper;
 import com.ridding.mapper.UserNearbyMapper;
+import com.ridding.meta.IMap;
 import com.ridding.meta.Profile;
+import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingNearby;
 import com.ridding.meta.UserNearby;
 import com.ridding.service.UserNearbyService;
 import com.ridding.util.GeohashUtil;
+import com.ridding.util.ListUtils;
 
 /**
  * @author yunshang_734 E-mail:yunshang_734@163.com
@@ -23,19 +34,33 @@ import com.ridding.util.GeohashUtil;
  */
 @Service("userNearbyService")
 public class UserNearbyServiceImpl implements UserNearbyService {
+
+	private static final Logger logger = Logger
+			.getLogger(UserNearbyServiceImpl.class);
 	@Resource
 	private UserNearbyMapper userNearbyMapper;
 
 	@Resource
 	private ProfileMapper profileMapper;
 
-	private static ExecutorService executorService = Executors.newCachedThreadPool();
+	@Resource
+	private RiddingMapper riddingMapper;
+
+	@Resource
+	private IMapMapper iMapMapper;
+
+	@Resource
+	private RiddingNearbyMapper riddingNearbyMapper;
+
+	private static ExecutorService executorService = Executors
+			.newCachedThreadPool();
 
 	/**
 	 * 添加或更新附近用户
 	 * 
 	 */
-	public boolean addOrUpdateUsersNearby(long userId, double latitude, double longitude) {
+	public boolean addOrUpdateUsersNearby(long userId, double latitude,
+			double longitude) {
 		UserNearby userNearby = new UserNearby();
 		userNearby.setUserId(userId);
 		userNearby.setLatitude(latitude);
@@ -57,7 +82,8 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 	 * @param longitude
 	 * @return
 	 */
-	public boolean asyncUpdateUserNearBy(final long userId, final double latitude, final double longitude) {
+	public boolean asyncUpdateUserNearBy(final long userId,
+			final double latitude, final double longitude) {
 		executorService.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -88,14 +114,68 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 		}
 		int offset = 0, endIndex = 2;
 		String geohash = userNearby.getGeohash().substring(offset, endIndex);
-		List<UserNearby> userNearbyList = userNearbyMapper.getUserNearbyList(geohash);
-		List<Profile> userNearbyProfiles = new ArrayList<Profile>(userNearbyList.size());
+		List<UserNearby> userNearbyList = userNearbyMapper
+				.getUserNearbyList(geohash);
+		List<Profile> userNearbyProfiles = new ArrayList<Profile>(
+				userNearbyList.size());
 		for (UserNearby userNearbies : userNearbyList) {
-			Profile profile = profileMapper.getProfile(userNearbies.getUserId());
+			Profile profile = profileMapper
+					.getProfile(userNearbies.getUserId());
 			userNearbyProfiles.add(profile);
 		}
 		return userNearbyProfiles;
 
 	}
 
+	/*
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.UserNearbyService#addRiddingNearbyQuartz()
+	 */
+	public void addRiddingNearbyQuartz() {
+		logger.info("addRiddingNearbyQuartz begin");
+		int limit = 1;
+		List<RiddingNearby> riddingNearbyList = riddingNearbyMapper
+				.getRiddingNearbyList(limit);
+		List<Ridding> riddingList;
+		if (ListUtils.isEmptyList(riddingNearbyList)) {
+			riddingList = riddingMapper.getAllRidding();
+		} else {
+			riddingList = riddingMapper
+					.getRiddingListByStartRiddingId(riddingNearbyList.get(0)
+							.getRiddingId());
+		}
+		if (ListUtils.isEmptyList(riddingList)) {
+			logger.error("Cannot get any riddings!");
+		}
+		for (Ridding ridding : riddingList) {
+			long mapId = ridding.getMapId();
+			IMap iMap = iMapMapper.getRiddingMap(mapId);
+			if (iMap == null) {
+				break;
+			}
+			String mapTaps = iMap.getMapTaps();
+			JSONArray jsonArray = JSONArray.fromObject(mapTaps);
+			String mapFirstTap = jsonArray.getString(0);
+			int dividePoint = 0, i = 0;
+			for (i = 0; i < mapFirstTap.length(); i++) {
+				if (mapFirstTap.charAt(i) == ',') {
+					dividePoint = i;
+				}
+			}
+			String lat = mapFirstTap.substring(0, dividePoint);
+			double latitude = Double.valueOf(lat);
+			String lon = mapFirstTap.substring(dividePoint + 1,
+					mapFirstTap.length());
+			double longitude = Double.valueOf(lon);
+			RiddingNearby riddingNearby = new RiddingNearby();
+			riddingNearby.setRiddingId(ridding.getId());
+			riddingNearby.setMapId(mapId);
+			riddingNearby.setLatitude(latitude);
+			riddingNearby.setLongitude(longitude);
+			riddingNearby.setGeohash(GeohashUtil.encode(latitude, longitude));
+			riddingNearbyMapper.addRiddingNearby(riddingNearby);
+		}
+	}
 }

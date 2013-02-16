@@ -65,15 +65,18 @@
 		statementType="PREPARED">
 		update TB_Map set
 		MapTaps = #{mapTaps},
-		MapUrl = #{mapUrl},
+		MapUrl =
+		#{mapUrl},
 		MapPoint = #{mapPoint},
 		objectId =
 		#{objectId},
-		objectType = #{objectType},
+		objectType =
+		#{objectType},
 		userId = #{userId},
 		status =
 		#{status},
-		distance= #{distance},
+		distance=
+		#{distance},
 		beginLocation= #{beginLocation},
 		endLocation=#{endLocation},
 		midLocation=#{midLocation},
@@ -97,9 +100,10 @@
 	</delete>
 	<select id="getRiddingMap" resultMap="imapMap">
 		SELECT * from
-		TB_Map where id=#{id} ; 
+		TB_Map where
+		id=#{id} ; 
 	</select>
-	<!-- 查询地图列表列表-->
+	<!-- 查询地图列表列表 -->
 	<select id="getIMaplist" resultMap="imapMap">
 		SELECT * from TB_Map where
 		id in
@@ -144,7 +148,8 @@
 	<update id="updateImapAvatorPicUrl" parameterType="hashmap"
 		flushCache="true" statementType="PREPARED">
 		update TB_Map set
-		avatorPicUrl = #{avatorPicUrl}
+		avatorPicUrl =
+		#{avatorPicUrl}
 		where Id = #{id};
 	</update>
 </mapper>

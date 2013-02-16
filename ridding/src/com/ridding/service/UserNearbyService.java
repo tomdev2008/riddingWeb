@@ -17,7 +17,8 @@ public interface UserNearbyService {
 	 * @param longitude
 	 * @return
 	 */
-	public boolean addOrUpdateUsersNearby(long userId, double latitude, double longitude);
+	public boolean addOrUpdateUsersNearby(long userId, double latitude,
+			double longitude);
 
 	/**
 	 * 异步执行更新操作
@@ -27,7 +28,8 @@ public interface UserNearbyService {
 	 * @param longitude
 	 * @return
 	 */
-	public boolean asyncUpdateUserNearBy(final long userId, final double latitude, final double longitude);
+	public boolean asyncUpdateUserNearBy(final long userId,
+			final double latitude, final double longitude);
 
 	/**
 	 * 获取附近用户列表
@@ -36,4 +38,10 @@ public interface UserNearbyService {
 	 * @return
 	 */
 	public List<Profile> showUserNearbyList(long userId);
+
+	/**
+	 * 定时获取附近用户
+	 * 
+	 */
+	public void addRiddingNearbyQuartz();
 }

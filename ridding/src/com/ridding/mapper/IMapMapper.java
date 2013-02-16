@@ -3,6 +3,8 @@ package com.ridding.mapper;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.json.JSONArray;
+
 import com.ridding.meta.IMap;
 
 /**
@@ -27,7 +29,7 @@ public interface IMapMapper {
 	public int addRiddingMap(IMap iMap);
 
 	/**
-	 *通过状态得到地图,status，limit,offset
+	 * 通过状态得到地图,status，limit,offset
 	 * 
 	 * @return
 	 */
@@ -44,7 +46,7 @@ public interface IMapMapper {
 	public int updateRiddingMap(IMap iMap);
 
 	/**
-	 *删除骑行地图
+	 * 删除骑行地图
 	 * 
 	 * @param riddingId
 	 * @return
