@@ -17,8 +17,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.ridding.constant.SystemConst;
 import com.ridding.meta.IMap;
+import com.ridding.meta.ImageInfo;
 import com.ridding.meta.Public;
+import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.Source;
 import com.ridding.meta.WeiBo;
@@ -232,6 +235,10 @@ public class DwrBackendBean {
 	 * @return
 	 */
 	public boolean addRiddingPicture(long riddingId, String url, String desc, String takePicDate, String takePicLocation) {
+		Ridding ridding = riddingService.getRidding(riddingId);
+		if (ridding == null) {
+			return false;
+		}
 		if (url.startsWith("http")) {
 			String key = QiNiuUtil.genKey(true, true);
 			try {
@@ -244,7 +251,13 @@ public class DwrBackendBean {
 				return false;
 			}
 		}
+
 		RiddingPicture riddingPicture = new RiddingPicture();
+		riddingPicture.setUserId(ridding.getLeaderUserId());
+
+		ImageInfo imageInfo = QiNiuUtil.getImageInfoFromQiniu(SystemConst.returnPhotoUrl(url));
+		riddingPicture.setWidth(imageInfo.getWidth());
+		riddingPicture.setHeight(imageInfo.getHeight());
 		riddingPicture.setRiddingId(riddingId);
 		riddingPicture.setPhotoUrl(url);
 		riddingPicture.setDescription(desc);
