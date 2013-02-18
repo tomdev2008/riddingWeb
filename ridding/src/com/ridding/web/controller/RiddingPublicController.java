@@ -284,7 +284,7 @@ public class RiddingPublicController extends AbstractBaseController {
 			for (RiddingPicture riddingPicture : riddingPictures) {
 				Profile profile = profileMap.get(riddingPicture.getUserId());
 				if (profile != null) {
-					riddingPicture.setsAvatorUrl(profile.getsAvatorUrl());
+					riddingPicture.setProfile(profile);
 				}
 				RiddingAction action = riddingActionMap.get(riddingPicture.getId());
 				if (action != null) {

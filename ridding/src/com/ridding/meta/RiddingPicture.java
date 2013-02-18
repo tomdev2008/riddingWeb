@@ -70,9 +70,9 @@ public class RiddingPicture {
 	 */
 	private int height;
 	/**
-	 * 对应userid的小头像
+	 * 拍照用户信息
 	 */
-	private String sAvatorUrl;
+	private Profile profile;
 	/**
 	 * 是否已经喜欢过
 	 */
@@ -210,12 +210,12 @@ public class RiddingPicture {
 		this.height = height;
 	}
 
-	public String getsAvatorUrl() {
-		return sAvatorUrl;
+	public Profile getProfile() {
+		return profile;
 	}
 
-	public void setsAvatorUrl(String sAvatorUrl) {
-		this.sAvatorUrl = sAvatorUrl;
+	public void setProfile(Profile profile) {
+		this.profile = profile;
 	}
 
 	public boolean isLiked() {

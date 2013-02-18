@@ -222,7 +222,11 @@ public class HttpServletUtil2 {
 			pictureObject.put("likecount", riddingPicture.getLikeCount());
 			pictureObject.put("liked", riddingPicture.isLiked());
 			JSONObject userObject = new JSONObject();
-			userObject.put("savatorurl", riddingPicture.getsAvatorUrl());
+			if (riddingPicture.getProfile() != null) {
+				userObject.put("savatorurl", riddingPicture.getProfile().getsAvatorUrl());
+				userObject.put("username", riddingPicture.getProfile().getUserName());
+				userObject.put("nickname", riddingPicture.getProfile().getNickName());
+			}
 			pictureObject.put("user", userObject);
 			JSONObject returnObject = new JSONObject();
 			HttpServletUtil2.returnDataObject(pictureObject, "picture", returnObject);
