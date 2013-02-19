@@ -124,7 +124,7 @@ public class RiddingController extends AbstractBaseController {
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -165,7 +165,7 @@ public class RiddingController extends AbstractBaseController {
 		}
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -231,7 +231,7 @@ public class RiddingController extends AbstractBaseController {
 		returnObject.put("data", dataObject);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -268,7 +268,7 @@ public class RiddingController extends AbstractBaseController {
 		}
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -305,7 +305,7 @@ public class RiddingController extends AbstractBaseController {
 
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -340,7 +340,7 @@ public class RiddingController extends AbstractBaseController {
 		riddingService.deleteRiddingUsers(deleteList, ridingId);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -370,7 +370,7 @@ public class RiddingController extends AbstractBaseController {
 			returnObject.put("code", returnCodeConstance.FAILED);
 		}
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -403,7 +403,7 @@ public class RiddingController extends AbstractBaseController {
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -433,7 +433,7 @@ public class RiddingController extends AbstractBaseController {
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -456,7 +456,7 @@ public class RiddingController extends AbstractBaseController {
 		}
 		String cityName = ServletRequestUtils.getStringParameter(request, "cityname", null);
 		List<IMap> recomMaps = mapService.getRecomMaps(cityName);
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -489,7 +489,7 @@ public class RiddingController extends AbstractBaseController {
 			returnObject.put("code", returnCodeConstance.FAILED);
 		}
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -572,7 +572,7 @@ public class RiddingController extends AbstractBaseController {
 		returnObject.put("code", 200);
 		returnObject.put("code1", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -611,7 +611,7 @@ public class RiddingController extends AbstractBaseController {
 		returnObject.put("data", dataObject);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -636,7 +636,7 @@ public class RiddingController extends AbstractBaseController {
 		returnObject.put("data", dataObject);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -673,7 +673,7 @@ public class RiddingController extends AbstractBaseController {
 		returnObject.put("data", dataObject);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -706,7 +706,7 @@ public class RiddingController extends AbstractBaseController {
 		}
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 

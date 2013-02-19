@@ -118,7 +118,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		JSONObject dataObject = HttpServletUtil2.parseGetUserProfile(profile, sourceAccount, count);
 		returnObject.put("data", dataObject);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -152,7 +152,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("data", jsonArray.toString());
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -177,7 +177,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("data", dataObject.toString());
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -199,7 +199,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		JSONObject dataObject = HttpServletUtil2.parseGetFixedCoordinate(mapFix, latitude, longtitude);
 		returnObject.put("data", dataObject.toString());
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -239,7 +239,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		JSONArray dataArray = HttpServletUtil2.parseGetRiddingUserList(profileVOs);
 		returnObject.put("data", dataArray);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -299,7 +299,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -336,13 +336,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
-		try {
-			QiNiuUtil.uploadImageToQiniuFromLocalFile("/Users/apple/Desktop/1.jpg", "test.jpg");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -374,7 +368,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -395,7 +389,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
