@@ -110,7 +110,7 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 		if (apnsDevice2 != null) {
 			apnsDevice2.setToken(apnsDevice.getToken());
 			apnsDevice2.setLastUpdateTime(apnsDevice.getLastUpdateTime());
-			apnsDevice.setVersion(apnsDevice.getVersion());
+			apnsDevice2.setVersion(apnsDevice.getVersion());
 			return iosApnsMapper.updateApns(apnsDevice2) > 0;
 		}
 		return iosApnsMapper.addApnsDevice(apnsDevice) > 0;

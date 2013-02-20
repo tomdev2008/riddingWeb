@@ -9,13 +9,19 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.transaction.TransactionException;
 import org.apache.log4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ridding.constant.SystemConst;
 import com.ridding.meta.IMap;
+import com.ridding.meta.ImageInfo;
 import com.ridding.meta.Public;
+import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.Source;
 import com.ridding.meta.WeiBo;
@@ -30,6 +36,7 @@ import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
 import com.ridding.service.transaction.TransactionService;
 import com.ridding.util.QiNiuUtil;
+import com.ridding.util.UrlUtil;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -228,19 +235,29 @@ public class DwrBackendBean {
 	 * @return
 	 */
 	public boolean addRiddingPicture(long riddingId, String url, String desc, String takePicDate, String takePicLocation) {
+		Ridding ridding = riddingService.getRidding(riddingId);
+		if (ridding == null) {
+			return false;
+		}
 		if (url.startsWith("http")) {
 			String key = QiNiuUtil.genKey(true, true);
 			try {
 				boolean succ = QiNiuUtil.uploadImageToQiniuFromUrl(url, key);
 				if (succ) {
-					url = SystemConst.returnPhotoUrl("/" + key);
+					url = "/" + key;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
 			}
 		}
+
 		RiddingPicture riddingPicture = new RiddingPicture();
+		riddingPicture.setUserId(ridding.getLeaderUserId());
+
+		ImageInfo imageInfo = QiNiuUtil.getImageInfoFromQiniu(SystemConst.returnPhotoUrl(url));
+		riddingPicture.setWidth(imageInfo.getWidth());
+		riddingPicture.setHeight(imageInfo.getHeight());
 		riddingPicture.setRiddingId(riddingId);
 		riddingPicture.setPhotoUrl(url);
 		riddingPicture.setDescription(desc);
@@ -264,4 +281,52 @@ public class DwrBackendBean {
 		return false;
 
 	}
+
+	/**
+	 * 通过面包添加骑行照片
+	 * 
+	 * @param riddingId
+	 * @param mianbaoUrl
+	 * @return
+	 */
+	public boolean getRiddingPictureFromMianBao(long riddingId, String mianbaoUrl) {
+		StringBuffer sbBuffer = UrlUtil.getSourceCodeFromUrl(mianbaoUrl);
+		if (sbBuffer == null) {
+			return false;
+		}
+		Document doc = Jsoup.parse(sbBuffer.toString());
+		Elements contents = doc.getElementsByClass("waypoint");
+		if (!contents.isEmpty()) {
+			for (Element element : contents) {
+				String imageUrl = null;
+				String content = null;
+				String dateStr = null;
+				String locationStr = null;
+				Elements imageElements = element.getElementsByClass("photo-ctn");
+				if (imageElements.isEmpty()) {
+					continue;
+				}
+				for (Element image : imageElements) {
+					Element links = image.getElementsByTag("a").first();
+					imageUrl = links.attr("href");
+					logger.info(links.attr("href"));
+				}
+				Elements contentElements = element.getElementsByClass("photo-comment");
+				logger.info(contentElements.text());
+				content = contentElements.text();
+
+				Elements dateElements = element.getElementsByClass("time");
+				logger.info(dateElements.text());
+				dateStr = dateElements.text();
+
+				Elements locationElements = element.getElementsByClass("ellipsis_text");
+				logger.info(locationElements.text());
+				locationStr = locationElements.text();
+
+				this.addRiddingPicture(riddingId, imageUrl, content, dateStr, locationStr);
+			}
+		}
+		return true;
+	}
+
 }

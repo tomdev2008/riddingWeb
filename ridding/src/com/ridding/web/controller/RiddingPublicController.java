@@ -23,7 +23,6 @@ import weibo4j.Weibo;
 
 import com.ridding.constant.SystemConst;
 import com.ridding.constant.returnCodeConstance;
-import com.ridding.mapper.MapFixMapper;
 import com.ridding.meta.IMap;
 import com.ridding.meta.MapFix;
 import com.ridding.meta.Profile;
@@ -57,9 +56,6 @@ public class RiddingPublicController extends AbstractBaseController {
 
 	@Resource
 	private ProfileService profileService;
-
-	@Resource
-	private MapFixMapper mapFixMapper;
 
 	@Resource
 	private RiddingService riddingService;
@@ -122,7 +118,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		JSONObject dataObject = HttpServletUtil2.parseGetUserProfile(profile, sourceAccount, count);
 		returnObject.put("data", dataObject);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -156,7 +152,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("data", jsonArray.toString());
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -181,7 +177,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("data", dataObject.toString());
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -203,7 +199,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		JSONObject dataObject = HttpServletUtil2.parseGetFixedCoordinate(mapFix, latitude, longtitude);
 		returnObject.put("data", dataObject.toString());
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -243,7 +239,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		JSONArray dataArray = HttpServletUtil2.parseGetRiddingUserList(profileVOs);
 		returnObject.put("data", dataArray);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -288,7 +284,7 @@ public class RiddingPublicController extends AbstractBaseController {
 			for (RiddingPicture riddingPicture : riddingPictures) {
 				Profile profile = profileMap.get(riddingPicture.getUserId());
 				if (profile != null) {
-					riddingPicture.setsAvatorUrl(profile.getsAvatorUrl());
+					riddingPicture.setProfile(profile);
 				}
 				RiddingAction action = riddingActionMap.get(riddingPicture.getId());
 				if (action != null) {
@@ -303,7 +299,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -340,13 +336,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
-		try {
-			QiNiuUtil.uploadImageToQiniuFromLocalFile("/Users/apple/Desktop/1.jpg", "test.jpg");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -378,7 +368,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 
@@ -399,7 +389,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.info(returnObject);
+		logger.debug(returnObject);
 		return mv;
 	}
 

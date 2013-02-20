@@ -4,6 +4,13 @@ import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 
+import net.sf.json.JSONObject;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.qiniu.qbox.Config;
@@ -13,6 +20,7 @@ import com.qiniu.qbox.rs.PutFileRet;
 import com.qiniu.qbox.rs.RSClient;
 import com.qiniu.qbox.rs.RSService;
 import com.ridding.constant.SystemConst;
+import com.ridding.meta.ImageInfo;
 import com.ridding.web.controller.RiddingController;
 
 /**
@@ -44,6 +52,39 @@ public class QiNiuUtil {
 				return "source/" + new Date().getTime() + "_file.jpg";
 			}
 		}
+	}
+
+	/**
+	 * 得到图片信息
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public static ImageInfo getImageInfoFromQiniu(String url) {
+		HttpClient httpclient = new HttpClient();
+		PostMethod post = new PostMethod(url + "?imageInfo");
+		RequestEntity entity = new StringRequestEntity("");
+		post.setRequestEntity(entity);
+		try {
+			int result = httpclient.executeMethod(post);
+			if (result < 0) {
+				return null;
+			}
+			String responseStr = post.getResponseBodyAsString();
+			if (!StringUtils.isEmpty(responseStr)) {
+				JSONObject jsonObject = JSONObject.fromObject(responseStr);
+				ImageInfo imageInfo = new ImageInfo();
+				imageInfo.setWidth(jsonObject.getInt("width"));
+				imageInfo.setHeight(jsonObject.getInt("height"));
+				return imageInfo;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("error in post");
+		} finally {
+			post.releaseConnection();
+		}
+		return null;
 	}
 
 	/**
