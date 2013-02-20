@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ridding.mapper.ClubMemberMapper">
+
+	<resultMap type="ClubMember" id="clubMemberMap">
+		<id property="id" column="id" />
+		<result property="clubId" column="clubId" />
+		<result property="userId" column="userId" />
+		<result property="nickname" column="nickname" />
+		<result property="createTime" column="createTime" />
+		<result property="memberType" column="memberType" />
+	</resultMap>
+
+	<insert id="addClubMember" parameterType="ClubMember">
+		INSERT INTO
+		TB_Club_Member(
+		clubId,
+		userId,
+		nickname,
+		createTime,
+		memberType
+		)VALUES(
+		#{clubId},
+		#{userId},
+		#{nickname},
+		#{createTime},
+		#{memberType}
+		)
+		<selectKey keyProperty="id" resultType="long">
+			SELECT
+			LAST_INSERT_ID() AS VALUE
+		</selectKey>
+	</insert>
+
+	<select id="getClubMember" parameterType="hashMap" resultMap="clubMemberMap">
+		SELECT * from TB_Club_Member
+		where clubId=#{clubId}
+		and userId=#{userId};
+	</select>
+	
+	<update id="updateClubMember" parameterType="ClubMember"
+		flushCache="true" statementType="PREPARED">
+		update TB_Club_Member set
+		createTime=#{createTime},
+		memberType=#{memberType}
+		where id
+		= #{id} ;
+	</update>
+
+</mapper>

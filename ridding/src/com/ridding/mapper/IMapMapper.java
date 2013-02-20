@@ -3,8 +3,6 @@ package com.ridding.mapper;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-
 import com.ridding.meta.IMap;
 
 /**
