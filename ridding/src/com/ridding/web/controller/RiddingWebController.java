@@ -11,9 +11,6 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.qiniu.qbox.auth.DigestAuthClient;
-import com.qiniu.qbox.rs.PutAuthRet;
-import com.qiniu.qbox.rs.RSService;
 import com.ridding.security.MyUser;
 import com.ridding.service.MapService;
 import com.ridding.service.ProfileService;
