@@ -191,6 +191,6 @@
 		<property name="jobDetail">
 			<ref bean="addRiddingNearbyDetail" />
 		</property>
-		<property name="cronExpression" value="0 0/1 * * * ?" />
+		<property name="cronExpression" value="0 0 15 ? * *" />
 	</bean>
 </beans>
