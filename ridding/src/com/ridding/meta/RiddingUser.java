@@ -105,6 +105,7 @@ public class RiddingUser implements Serializable {
 		 * 还没开始 (0)
 		 */
 		NotBeginning {
+			@Override
 			public int getValue() {
 				return 0;
 			}
@@ -113,6 +114,7 @@ public class RiddingUser implements Serializable {
 		 * 正在进行(10)
 		 */
 		Beginning {
+			@Override
 			public int getValue() {
 				return 10;
 			}
@@ -121,6 +123,7 @@ public class RiddingUser implements Serializable {
 		 * 已经完成 (20)
 		 */
 		Finished {
+			@Override
 			public int getValue() {
 				return 20;
 			}
@@ -129,6 +132,7 @@ public class RiddingUser implements Serializable {
 		 *还没结束(30)
 		 */
 		NotFinished {
+			@Override
 			public int getValue() {
 				return 30;
 			}

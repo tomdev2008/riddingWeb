@@ -2,8 +2,6 @@ package com.ridding.meta;
 
 import java.util.Date;
 
-import com.ridding.constant.SourceType;
-
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
  * @version CreateTime：2012-10-22 下午11:56:48 Class Description 发送微博类
@@ -74,6 +72,7 @@ public class WeiBo {
 		 * 常规微博 (1)
 		 */
 		DEFAULT {
+			@Override
 			public int getValue() {
 				return 0;
 			}
@@ -82,6 +81,7 @@ public class WeiBo {
 		 * 地图微博
 		 */
 		RIDDING {
+			@Override
 			public int getValue() {
 				return 1;
 			}

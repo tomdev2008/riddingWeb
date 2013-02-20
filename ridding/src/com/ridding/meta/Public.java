@@ -126,6 +126,7 @@ public class Public {
 		 */
 		PublicRecom {
 
+			@Override
 			public int getValue() {
 				return 1;
 			}
@@ -153,6 +154,7 @@ public class Public {
 		 */
 		PublicNone {
 
+			@Override
 			public int getValue() {
 				return 0;
 			}
@@ -162,6 +164,7 @@ public class Public {
 		 */
 		PublicText {
 
+			@Override
 			public int getValue() {
 				return 1;
 			}
@@ -171,6 +174,7 @@ public class Public {
 		 */
 		PublicImage {
 
+			@Override
 			public int getValue() {
 				return 2;
 			}
