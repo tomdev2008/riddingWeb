@@ -70,6 +70,7 @@ public class SourceServiceImpl implements SourceService {
 	 * @param sourceType
 	 * @return
 	 */
+	@Override
 	public int addSource(long sourceId, long accessUserId, String text, int sourceType) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("sourceType", sourceType);
@@ -300,6 +301,7 @@ public class SourceServiceImpl implements SourceService {
 	 * com.ridding.service.SinaWeiBoService#updateInvalidedSinaWeiBo(java.lang
 	 * .Long[])
 	 */
+	@Override
 	public boolean updateSource(long sourceId, int status, int sourceType) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("sourceId", sourceId);
@@ -318,6 +320,7 @@ public class SourceServiceImpl implements SourceService {
 	 * 
 	 * @see com.ridding.service.SourceService#getSourceCountByStatus(int, int)
 	 */
+	@Override
 	public int getSourceCountByStatus(int status, int sourceType) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("sourceType", sourceType);
@@ -331,6 +334,7 @@ public class SourceServiceImpl implements SourceService {
 	 * @see com.ridding.service.SourceService#getSourceListWithAccount(int, int,
 	 * int, int)
 	 */
+	@Override
 	public List<Source> getSourceListWithAccount(int status, int limit, int offset, int sourceType) {
 		List<Source> sourceList = this.getSourceListBystatus(status, limit, offset, sourceType);
 		if (!ListUtils.isEmptyList(sourceList)) {
@@ -357,6 +361,7 @@ public class SourceServiceImpl implements SourceService {
 	 * @see com.ridding.service.SourceService#getDealedNotInMap(int, int, int,
 	 * int)
 	 */
+	@Override
 	public List<Source> getDealedNotInMap(int status, int limit, int offset, int sourceType) {
 		List<Source> dealedSourceList = this.getSourceListWithAccount(Source.Dealed, limit, offset, sourceType);
 		if (!ListUtils.isEmptyList(dealedSourceList)) {
@@ -383,6 +388,7 @@ public class SourceServiceImpl implements SourceService {
 	 * 
 	 * @see com.ridding.service.SourceService#getSourceBySourceId(long, int)
 	 */
+	@Override
 	public Source getSourceBySourceId(long sourceId, int sourceType) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("sourceType", sourceType);
@@ -395,6 +401,7 @@ public class SourceServiceImpl implements SourceService {
 	 * 
 	 * @see com.ridding.service.SourceService#getBigestId(int)
 	 */
+	@Override
 	public long getBigestId(int sourceType) {
 		if (SourceType.genSourceType(sourceType) == null) {
 			return -1L;
@@ -409,6 +416,7 @@ public class SourceServiceImpl implements SourceService {
 	 * @param objectId
 	 * @param objectType
 	 */
+	@Override
 	public void sendObjectCallBack(long objectId, int objectType, String comment) {
 		switch (SourceType.genSourceType(objectType)) {
 		case SINAWEIBO:
@@ -426,6 +434,7 @@ public class SourceServiceImpl implements SourceService {
 	 * @see com.ridding.service.SourceService#checkSourceUser(java.lang.String,
 	 * long, int)
 	 */
+	@Override
 	public boolean checkSourceUser(String accessToken, long accessUserId, int sourceType) {
 		switch (SourceType.genSourceType(sourceType)) {
 		case SINAWEIBO:

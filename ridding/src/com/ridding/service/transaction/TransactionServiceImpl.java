@@ -90,6 +90,7 @@ public class TransactionServiceImpl implements TransactionService {
 	 * com.ridding.service.transaction.TransactionService#insertMapCreateRidding
 	 * (com.ridding.meta.IMap)
 	 */
+	@Override
 	public boolean insertMap(IMap iMap, Source source)
 			throws TransactionException {
 		if (iMap == null) {
@@ -124,6 +125,7 @@ public class TransactionServiceImpl implements TransactionService {
 	 * com.ridding.service.transaction.TransactionService#insertANewRidding(
 	 * com.ridding.meta.IMap)
 	 */
+	@Override
 	public boolean insertANewRidding(IMap iMap, Ridding ridding) {
 		List<City> cityList = cityMapper.getCitybyName(iMap.getCityName());
 		if (!ListUtils.isEmptyList(cityList)) {
@@ -175,6 +177,7 @@ public class TransactionServiceImpl implements TransactionService {
 	 * com.ridding.service.transaction.TransactionService#insertRiddingUser(
 	 * long, java.util.List)
 	 */
+	@Override
 	public boolean insertRiddingUser(Ridding ridding, Profile profile,
 			int objectType, Profile leaderProfile) throws TransactionException {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
@@ -238,6 +241,7 @@ public class TransactionServiceImpl implements TransactionService {
 	 * com.ridding.service.transaction.TransactionService#insertSourceAccount
 	 * (com.ridding.meta.SourceAccount, com.ridding.meta.Profile)
 	 */
+	@Override
 	public Profile insertSourceAccount(SourceAccount sourceAccount,
 			Profile profile) throws TransactionException {
 		if (sourceAccount == null) {
@@ -382,6 +386,7 @@ public class TransactionServiceImpl implements TransactionService {
 	 * @see
 	 * com.ridding.service.RiddingService#deleteRiddingAndLinkedThings(long)
 	 */
+	@Override
 	public boolean deleteRiddingAndLinkedThings(long riddingId)
 			throws TransactionException {
 		if (riddingMapper.deleteRidding(riddingId) < 0) {

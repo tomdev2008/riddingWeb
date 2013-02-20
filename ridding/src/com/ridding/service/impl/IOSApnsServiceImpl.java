@@ -41,6 +41,7 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 	 * 
 	 * @see com.ridding.service.IOSApnsService#sendApns(java.lang.String)
 	 */
+	@Override
 	public void sendApns(String text) {
 		List<ApnsDevice> list = iosApnsMapper.getAllApnsDevice();
 		if (!ListUtils.isEmptyList(list)) {
@@ -86,7 +87,7 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 			File resourceFile = ResourceUtils.getFile("classpath:" + FILENAME);
 			payload.addCustomDictionary(messageName, message);
 			// true表示在production环境
-			Push.alert(message, (Object) resourceFile, PASSWORD, true, device);
+			Push.alert(message, resourceFile, PASSWORD, true, device);
 			logger.info("success send apsn where userid=" + device.getUserId());
 		} catch (JSONException e1) {
 			e1.printStackTrace();

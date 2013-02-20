@@ -3,7 +3,6 @@ package com.ridding.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -59,6 +58,7 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 	 * 添加或更新附近用户
 	 * 
 	 */
+	@Override
 	public boolean addOrUpdateUsersNearby(long userId, double latitude,
 			double longitude) {
 		UserNearby userNearby = new UserNearby();
@@ -82,6 +82,7 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 	 * @param longitude
 	 * @return
 	 */
+	@Override
 	public boolean asyncUpdateUserNearBy(final long userId,
 			final double latitude, final double longitude) {
 		executorService.execute(new Runnable() {
@@ -107,6 +108,7 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 	 * 显示附近用户
 	 * 
 	 */
+	@Override
 	public List<Profile> showUserNearbyList(long userId) {
 		UserNearby userNearby = userNearbyMapper.getUserNearby(userId);
 		if (userNearby == null) {
@@ -133,6 +135,7 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 	 * 
 	 * @see com.ridding.service.UserNearbyService#addRiddingNearbyQuartz()
 	 */
+	@Override
 	public void addRiddingNearbyQuartz() {
 		logger.info("addRiddingNearbyQuartz begin");
 		int limit = 1;

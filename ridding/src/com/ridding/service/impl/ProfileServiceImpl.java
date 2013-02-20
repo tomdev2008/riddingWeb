@@ -40,6 +40,7 @@ public class ProfileServiceImpl implements ProfileService {
 	 * @see
 	 * com.ridding.service.ProfileService#addAccount(com.ridding.meta.Account)
 	 */
+	@Override
 	public SourceAccount addAccount(SourceAccount sourceAccount) {
 		if (sourceAccount == null) {
 			return null;
@@ -58,6 +59,7 @@ public class ProfileServiceImpl implements ProfileService {
 	 * 
 	 * @see com.ridding.service.ProfileService#getProfile(long)
 	 */
+	@Override
 	public Profile getProfile(long userId) {
 		return profileMapper.getProfile(userId);
 	}
@@ -67,6 +69,7 @@ public class ProfileServiceImpl implements ProfileService {
 	 * 
 	 * @see com.ridding.service.ProfileService#incUserTotalDistance(long, int)
 	 */
+	@Override
 	public boolean incUserTotalDistance(long userId, int distance) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("userId", userId);
@@ -79,6 +82,7 @@ public class ProfileServiceImpl implements ProfileService {
 	 * 
 	 * @see com.ridding.service.ProfileService#getProfileList(java.util.List)
 	 */
+	@Override
 	public List<Profile> getProfileList(List<Long> userids) {
 		if (ListUtils.isEmptyList(userids)) {
 			return null;
@@ -93,6 +97,7 @@ public class ProfileServiceImpl implements ProfileService {
 	 * com.ridding.service.ProfileService#getAccountBySourceUserIds(java.util
 	 * .List, int)
 	 */
+	@Override
 	public List<SourceAccount> getAccountBySourceUserIds(List<Long> sourceUserids, int sourceType) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("sourceType", sourceType);
@@ -107,6 +112,7 @@ public class ProfileServiceImpl implements ProfileService {
 	 * com.ridding.service.ProfileService#getSourceAccountByAccessUserId(long,
 	 * int)
 	 */
+	@Override
 	public SourceAccount getSourceAccountByAccessUserId(long accessUserId, int sourceType) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("sourceType", sourceType);
