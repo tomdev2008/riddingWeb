@@ -20,6 +20,6 @@ public class UseMailSender {
 		// 这个类主要来发送邮件
 		SimpleMailSenderUtil sms = new SimpleMailSenderUtil();
 		sms.sendTextMail(mailInfo);// 发送文体格式
-		sms.sendHtmlMail(mailInfo);// 发送html格式
+		SimpleMailSenderUtil.sendHtmlMail(mailInfo);// 发送html格式
 	}
 }

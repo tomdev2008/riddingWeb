@@ -22,6 +22,11 @@
 		<typeAlias alias="UserRelation" type="com.ridding.meta.UserRelation" />
 		<typeAlias alias="UserNearby" type="com.ridding.meta.UserNearby" />
 		<typeAlias alias="WeiBoToBeSend" type="com.ridding.meta.WeiBoToBeSend" />
+		<typeAlias alias="RiddingNearby" type="com.ridding.meta.RiddingNearby" />
+		<typeAlias alias="Club" type="com.ridding.meta.Club" />
+		<typeAlias alias="ClubMember" type="com.ridding.meta.ClubMember" />
+		<typeAlias alias="ClubApply" type="com.ridding.meta.ClubApply" />
+		<typeAlias alias="ClubMemberApply" type="com.ridding.meta.ClubMemberApply" />
 	</typeAliases>
 	<mappers>
 		<mapper resource="com/ridding/mapper/xml/AccountMapper.xml" />
@@ -45,6 +50,11 @@
 		<mapper resource="com/ridding/mapper/xml/UserRelationMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/UserNearbyMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/WeiBoToBeSendMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/RiddingNearbyMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/ClubMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/ClubMemberMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/ClubApplyMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/ClubMemberApplyMapper.xml" />
 	</mappers>
 </configuration>
 			

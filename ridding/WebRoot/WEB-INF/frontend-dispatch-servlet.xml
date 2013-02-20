@@ -60,6 +60,7 @@
 				<prop key="**/riddingWebPub.do">riddingWebPubController</prop>
 				<prop key="**/riddingWeb.do">riddingWebController</prop>
 				<prop key="**/upload.do">uploadController</prop>
+				<prop key="**/riddingClub.do">riddingClubController</prop>
 			</props>
 		</property>
 	</bean>

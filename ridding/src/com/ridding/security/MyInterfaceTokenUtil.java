@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.springframework.web.bind.ServletRequestUtils;
 
 import com.ridding.util.DesUtil;
-import com.ridding.util.TimeUtil;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
