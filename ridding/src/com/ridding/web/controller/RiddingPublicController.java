@@ -42,7 +42,6 @@ import com.ridding.service.RiddingService;
 import com.ridding.service.UserRelationService;
 import com.ridding.util.HashMapMaker;
 import com.ridding.util.ListUtils;
-import com.ridding.util.QiNiuUtil;
 import com.ridding.util.http.HttpJsonUtil;
 import com.ridding.util.http.HttpServletUtil;
 import com.ridding.util.http.HttpServletUtil2;
@@ -97,9 +96,10 @@ public class RiddingPublicController extends AbstractBaseController {
 			Account am = new Account();
 			weibo4j.org.json.JSONObject uid = am.getUid();
 		} catch (Exception e) {
-			returnObject.put("code", returnCodeConstance.TOKENEXPIRED);
-			mv.addObject("returnObject", returnObject.toString());
-			return mv;
+			//获取其他用户信息是，可能这个用户的token已经失效了
+//			returnObject.put("code", returnCodeConstance.TOKENEXPIRED);
+//			mv.addObject("returnObject", returnObject.toString());
+//			return mv;
 		}
 
 		returnObject.put("userid", profile.getUserId());

@@ -223,6 +223,7 @@ public class HttpServletUtil2 {
 			pictureObject.put("liked", riddingPicture.isLiked());
 			JSONObject userObject = new JSONObject();
 			if (riddingPicture.getProfile() != null) {
+				userObject.put("userid", riddingPicture.getProfile().getUserId());
 				userObject.put("savatorurl", riddingPicture.getProfile().getsAvatorUrl());
 				userObject.put("username", riddingPicture.getProfile().getUserName());
 				userObject.put("nickname", riddingPicture.getProfile().getNickName());
