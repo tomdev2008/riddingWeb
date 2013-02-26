@@ -32,6 +32,10 @@ public class Profile implements Serializable {
 	 */
 	private String bAvatorUrl = "";
 	/**
+	 * 小图的灰色图地址
+	 */
+	private String graysAvatorUrl = "";
+	/**
 	 * 总的骑行距离
 	 */
 	private int totalDistance;
@@ -154,6 +158,14 @@ public class Profile implements Serializable {
 
 	public void setBackgroundUrl(String backgroundUrl) {
 		this.backgroundUrl = backgroundUrl;
+	}
+
+	public String getGraysAvatorUrl() {
+		return graysAvatorUrl;
+	}
+
+	public void setGraysAvatorUrl(String graysAvatorUrl) {
+		this.graysAvatorUrl = graysAvatorUrl;
 	}
 
 }

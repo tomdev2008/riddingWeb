@@ -27,6 +27,15 @@ public interface ProfileMapper {
 	public int updateProfile(Profile profile);
 
 	/**
+	 * 更新灰色图
+	 * 
+	 * @param userId
+	 * @param graySavatorUrl
+	 * @return
+	 */
+	public int updategraysAvator(Profile profile);
+
+	/**
 	 * 得到用户信息
 	 * 
 	 * @param userId
@@ -57,4 +66,6 @@ public interface ProfileMapper {
 	 * @return
 	 */
 	public int updateBackgroundUrl(Profile profile);
+	
+	public List<Profile> getAllProfile();
 }

@@ -36,6 +36,16 @@ public class ProfileVO {
 
 	private SourceAccount sourceAccount;
 
+	private String graySAvatorUrl;
+
+	public String getGraySAvatorUrl() {
+		return graySAvatorUrl;
+	}
+
+	public void setGraySAvatorUrl(String graySAvatorUrl) {
+		this.graySAvatorUrl = graySAvatorUrl;
+	}
+
 	public SourceAccount getSourceAccount() {
 		return sourceAccount;
 	}

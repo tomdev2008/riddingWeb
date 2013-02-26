@@ -329,6 +329,7 @@ public class RiddingServiceImpl implements RiddingService {
 				profileVO.setbAvatorUrl(profile.getbAvatorUrl());
 				profileVO.setsAvatorUrl(profile.getsAvatorUrl());
 				profileVO.setNickName(profile.getNickName());
+				profileVO.setGraySAvatorUrl(profile.getGraysAvatorUrl());
 			}
 			SourceAccount sourceAccount = sourceAccountMap.get(profileVO.getUserId());
 			if (sourceAccount != null) {

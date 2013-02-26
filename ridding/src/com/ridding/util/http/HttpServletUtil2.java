@@ -185,6 +185,7 @@ public class HttpServletUtil2 {
 			userObject.put("username", profileVO.getNickName());
 			userObject.put("bavatorurl", profileVO.getbAvatorUrl());
 			userObject.put("savatorurl", profileVO.getsAvatorUrl());
+			userObject.put("graysavatorurl", profileVO.getGraySAvatorUrl());
 			if (profileVO.getSourceAccount() != null) {
 				userObject.put("sourceid", profileVO.getSourceAccount().getAccessUserId());
 			}
