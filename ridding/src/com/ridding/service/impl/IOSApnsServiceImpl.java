@@ -26,7 +26,7 @@ import com.ridding.util.ListUtils;
 public class IOSApnsServiceImpl implements IOSApnsService {
 
 	private static final String PASSWORD = "13823381398";
-	// developerApns.p12  aps_product_identity.p12
+	// developerApns.p12  aps_product_identity.p12  推送的p12是直接用证书到处，不是用key导出
 	private static final String FILENAME = "aps_product_identity.p12";
 
 	private static final int THREAD = 10;
@@ -83,6 +83,7 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 			payload.addCustomAlertBody(title);
 			// payload.addBadge(totalCount);
 			payload.addCustomAlertActionLocKey("查看");
+			payload.addSound("default");
 			File resourceFile = ResourceUtils.getFile("classpath:" + FILENAME);
 			payload.addCustomDictionary(messageName, message);
 			// true表示在production环境

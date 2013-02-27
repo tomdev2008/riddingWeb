@@ -22,7 +22,7 @@ table.topmargin {margin-top: 5cm}
     <h3>新建一条记录</h3> 
     <div>
     <span>微博内容:</span><br>
-    <textarea rows="2" cols="60" name="WeiBoContext"></textarea>
+    <textarea rows="2" cols="60" name="WeiBoContext" id="weiboText"></textarea>
     </div>
     <span>微博图片:</span>
     <form onsubmit="return saveReport();" class="t" size="37" enctype="multipart/form-data" method="post" target="uploadFrame" action="/user/54/photoUpload/" id="uploadFrame">
