@@ -25,7 +25,7 @@ import com.ridding.util.ListUtils;
 @Service("iosApnsService")
 public class IOSApnsServiceImpl implements IOSApnsService {
 
-	private static final String PASSWORD = "123456";
+	private static final String PASSWORD = "13823381398";
 	// developerApns.p12  aps_product_identity.p12
 	private static final String FILENAME = "aps_product_identity.p12";
 

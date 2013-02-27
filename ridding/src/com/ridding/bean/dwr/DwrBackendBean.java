@@ -1,6 +1,5 @@
 package com.ridding.bean.dwr;
 
-import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,7 +37,6 @@ import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
 import com.ridding.service.transaction.TransactionService;
 import com.ridding.util.QiNiuUtil;
-import com.ridding.util.StringUtil;
 import com.ridding.util.UrlUtil;
 
 /**
@@ -361,5 +359,4 @@ public class DwrBackendBean {
 		}
 		return true;
 	}
-
 }
