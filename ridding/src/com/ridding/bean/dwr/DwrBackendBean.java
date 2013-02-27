@@ -1,7 +1,9 @@
 package com.ridding.bean.dwr;
 
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.annotation.Resource;
@@ -36,6 +38,7 @@ import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
 import com.ridding.service.transaction.TransactionService;
 import com.ridding.util.QiNiuUtil;
+import com.ridding.util.StringUtil;
 import com.ridding.util.UrlUtil;
 
 /**
@@ -234,7 +237,7 @@ public class DwrBackendBean {
 	 * @param takePicDate
 	 * @return
 	 */
-	public boolean addRiddingPicture(long riddingId, String url, String desc, String takePicDate, String takePicLocation) {
+	public boolean addRiddingPicture(long riddingId, String url, String desc, String takePicDate, String takePicLocation, String breadId) {
 		Ridding ridding = riddingService.getRidding(riddingId);
 		if (ridding == null) {
 			return false;
@@ -244,6 +247,7 @@ public class DwrBackendBean {
 			try {
 				boolean succ = QiNiuUtil.uploadImageToQiniuFromUrl(url, key);
 				if (succ) {
+					logger.info("QiNiuUtil.uploadImageToQiniuFromUrl succ where fromUrl=" + url + " and key=" + key);
 					url = "/" + key;
 				}
 			} catch (Exception e) {
@@ -256,23 +260,45 @@ public class DwrBackendBean {
 		riddingPicture.setUserId(ridding.getLeaderUserId());
 
 		ImageInfo imageInfo = QiNiuUtil.getImageInfoFromQiniu(SystemConst.returnPhotoUrl(url));
+		if (imageInfo == null) {
+			logger.error("imageInfo is null where url=" + url);
+		}
 		riddingPicture.setWidth(imageInfo.getWidth());
 		riddingPicture.setHeight(imageInfo.getHeight());
 		riddingPicture.setRiddingId(riddingId);
 		riddingPicture.setPhotoUrl(url);
-		riddingPicture.setDescription(desc);
+		try {
+			// String s2 = new String(desc.getBytes("utf8"),"gbk");
+			riddingPicture.setDescription(desc);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		long nowTime = new Date().getTime();
 		riddingPicture.setCreateTime(nowTime);
 		riddingPicture.setLastUpdateTime(nowTime);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		Date adate;
+		riddingPicture.setBreadId(breadId);
+		long sendTime = 0;
 		try {
-			adate = sdf.parse(takePicDate);
-			long sendTime = adate.getTime();
-			riddingPicture.setTakePicDate(sendTime);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			Date adate = sdf.parse(takePicDate);
+			sendTime = adate.getTime();
 		} catch (ParseException e) {
-			e.printStackTrace();
+
+			try {
+				Calendar cal = Calendar.getInstance();
+				int year = cal.get(Calendar.YEAR);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM月dd日 HH:mm");
+				Date adate = sdf.parse(year + takePicDate);
+				sendTime = adate.getTime();
+			} catch (ParseException e1) {
+				logger.error("addRiddingPicture date error where str=" + takePicDate);
+				e1.printStackTrace();
+				return false;
+			}
 		}
+
+		riddingPicture.setTakePicDate(sendTime);
 		riddingPicture.setTakePicLocation(takePicLocation);
 
 		if (riddingService.addRiddingPicture(riddingPicture) > 0) {
@@ -302,6 +328,13 @@ public class DwrBackendBean {
 				String content = null;
 				String dateStr = null;
 				String locationStr = null;
+
+				String breadId = element.attr("data-waypoint_id");
+
+				RiddingPicture picture = riddingService.getRiddingPictureByBreadId(breadId, riddingId);
+				if (picture != null) {
+					continue;
+				}
 				Elements imageElements = element.getElementsByClass("photo-ctn");
 				if (imageElements.isEmpty()) {
 					continue;
@@ -323,7 +356,7 @@ public class DwrBackendBean {
 				logger.info(locationElements.text());
 				locationStr = locationElements.text();
 
-				this.addRiddingPicture(riddingId, imageUrl, content, dateStr, locationStr);
+				this.addRiddingPicture(riddingId, imageUrl, content, dateStr, locationStr, breadId);
 			}
 		}
 		return true;

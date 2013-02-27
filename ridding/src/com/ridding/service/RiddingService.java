@@ -330,4 +330,13 @@ public interface RiddingService {
 	 * @return
 	 */
 	public boolean removeRiddingPicture(long pictureId);
+
+	/**
+	 * 通过面包旅行id得到
+	 * 
+	 * @param breadId
+	 * @param riddingId
+	 * @return
+	 */
+	public RiddingPicture getRiddingPictureByBreadId(String breadId, long riddingId);
 }

@@ -313,10 +313,6 @@ public class TransactionServiceImpl implements TransactionService {
 		if (sourceAccountMapper.addSourceAccount(sourceAccount) < 0) {
 			throw new TransactionException("insertSourceAccount addSourceAccount error ");
 		}
-//		List<Profile> list = profileMapper.getAllProfile();
-//		for (Profile profile2 : list) {
-//			this.asyncgrayAvator(profile2);
-//		}
 
 		return profile;
 	}

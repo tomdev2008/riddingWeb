@@ -1058,4 +1058,15 @@ public class RiddingServiceImpl implements RiddingService {
 	public boolean removeRiddingPicture(long pictureId) {
 		return riddingPictureMapper.deleteRiddingPicture(pictureId) > 0;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getRiddingPictureByBreadId(long,
+	 * long)
+	 */
+	@Override
+	public RiddingPicture getRiddingPictureByBreadId(String breadId, long riddingId) {
+		return riddingPictureMapper.getPictureByBreadId(breadId, riddingId);
+	}
 }

@@ -18,6 +18,7 @@
 		<result property="width" column="width" />
 		<result property="height" column="height" />
 		<result property="likeCount" column="likeCount" />
+		<result property="breadId" column="breadId" />
 	</resultMap>
 
 	<insert id="addRiddingPicture" parameterType="RiddingPicture">
@@ -35,7 +36,8 @@
 		takePicLocation,
 		width,
 		height,
-		likeCount
+		likeCount,
+		breadId
 		)VALUES(
 		#{riddingId},
 		#{photoUrl},
@@ -50,7 +52,8 @@
 		#{takePicLocation},
 		#{width},
 		#{height},
-		#{likeCount}
+		#{likeCount},
+		#{breadId}
 		)
 		<selectKey keyProperty="id" resultType="long">
 			SELECT
@@ -88,4 +91,12 @@
 		where id
 		= #{pictureId} ;
 	</update>
+
+
+	<select id="getPictureByBreadId" resultMap="riddingPictureMap">
+		SELECT * from TB_Ridding_Picture where
+		riddingId=#{riddingId} and
+		breadId = #{breadId}
+		;
+	</select>
 </mapper>
