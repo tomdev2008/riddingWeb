@@ -338,5 +338,5 @@ public interface RiddingService {
 	 * @param riddingId
 	 * @return
 	 */
-	public RiddingPicture getRiddingPictureByBreadId(String breadId, long riddingId);
+	public RiddingPicture getRiddingPictureByBreadId(long breadId, long riddingId);
 }

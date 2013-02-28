@@ -1066,7 +1066,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * long)
 	 */
 	@Override
-	public RiddingPicture getRiddingPictureByBreadId(String breadId, long riddingId) {
+	public RiddingPicture getRiddingPictureByBreadId(long breadId, long riddingId) {
 		return riddingPictureMapper.getPictureByBreadId(breadId, riddingId);
 	}
 }

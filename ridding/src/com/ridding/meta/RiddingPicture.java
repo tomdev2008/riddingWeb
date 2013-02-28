@@ -84,7 +84,7 @@ public class RiddingPicture {
 	/**
 	 * 面包id
 	 */
-	private String breadId;
+	private long breadId = 0;
 
 	public long getId() {
 		return id;
@@ -238,11 +238,11 @@ public class RiddingPicture {
 		this.likeCount = likeCount;
 	}
 
-	public String getBreadId() {
+	public long getBreadId() {
 		return breadId;
 	}
 
-	public void setBreadId(String breadId) {
+	public void setBreadId(long breadId) {
 		this.breadId = breadId;
 	}
 

@@ -58,5 +58,5 @@ public interface RiddingPictureMapper {
 	 * @param riddingId
 	 * @return
 	 */
-	public RiddingPicture getPictureByBreadId(@Param("breadId") String breadId, @Param("riddingId") long riddingId);
+	public RiddingPicture getPictureByBreadId(@Param("breadId") long breadId, @Param("riddingId") long riddingId);
 }

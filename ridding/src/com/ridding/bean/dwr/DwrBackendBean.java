@@ -235,7 +235,7 @@ public class DwrBackendBean {
 	 * @param takePicDate
 	 * @return
 	 */
-	public boolean addRiddingPicture(long riddingId, String url, String desc, String takePicDate, String takePicLocation, String breadId) {
+	public boolean addRiddingPicture(long riddingId, String url, String desc, String takePicDate, String takePicLocation, long breadId) {
 		Ridding ridding = riddingService.getRidding(riddingId);
 		if (ridding == null) {
 			return false;
@@ -327,7 +327,7 @@ public class DwrBackendBean {
 				String dateStr = null;
 				String locationStr = null;
 
-				String breadId = element.attr("data-waypoint_id");
+				Long breadId = Long.valueOf(element.attr("data-waypoint_id").toString());
 
 				RiddingPicture picture = riddingService.getRiddingPictureByBreadId(breadId, riddingId);
 				if (picture != null) {
