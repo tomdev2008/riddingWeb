@@ -51,13 +51,13 @@ public class RiddingWebPubController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(RiddingWebPubController.class);
 
 	public ModelAndView webIndex(HttpServletRequest request, HttpServletResponse response) {
-		String agent = request.getHeader("User-Agent");
-		if (agent.toLowerCase().contains("ipad") ||agent.toLowerCase().contains("iphone") || agent.toLowerCase().contains("android")) {
+//		String agent = request.getHeader("User-Agent");
+//		if (agent.toLowerCase().contains("ipad") ||agent.toLowerCase().contains("iphone") || agent.toLowerCase().contains("android")) {
 			return new ModelAndView("webIndex_Iphone");
 
-		} else {
-			return new ModelAndView("webIndex");
-		}
+//		} else {
+//			return new ModelAndView("webIndex");
+//		}
 	}
 
 	/**

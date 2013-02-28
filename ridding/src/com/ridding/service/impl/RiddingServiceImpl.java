@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.constant.SourceType;
-import com.ridding.constant.SystemConst;
 import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.MapFixMapper;
 import com.ridding.mapper.ProfileMapper;
@@ -36,7 +35,6 @@ import com.ridding.meta.RiddingAction;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
-import com.ridding.meta.Public.PublicContentType;
 import com.ridding.meta.Public.PublicType;
 import com.ridding.meta.Ridding.RiddingStatus;
 import com.ridding.meta.RiddingAction.RiddingActionResponse;

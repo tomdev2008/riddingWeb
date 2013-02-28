@@ -23,11 +23,12 @@ html { background:#EDEDED; }
 </head>
 <body id="mobile-guide" style="text-align:center; padding:0 0 10px; background:#EDEDED;">
     <div>
-        <h1 style="font-size:1.8em; text-shadow:1px 1px 1px #FFF; text-align:center; line-height:1.2; padding:25px 0 15px;">使用骑行者<br />属于你的骑行应用！</h1>
+        <h1 style="font-size:1.8em; text-shadow:1px 1px 1px #FFF; text-align:center; line-height:1.2; padding:25px 0 15px;">骑行者<br />属于你的骑行应用！</h1>
         <div style="background:url(/image/index/iphone_bg.png) no-repeat 15px 0;width:160px; padding:70px 0 0 160px; background-size:144px 269px; margin:0 auto; min-height:230px; text-align:center;">
             <h3 style="display:inline-block; width:140px; text-align:center; font-size:16px; font-weight:bold; color:#0391DC; text-shadow:1px 1px 1px #FFF;">骑行者客户端</h3>
             <p><a style="display:inline-block; width:140px; height:41px; background:url(/image/index/appstore.png) no-repeat; background-size:140px 41px; text-indent:-9999px; margin:10px 0 0; text-align:left;" gaevent="InnerLink|Click|touch/mobileGuide/download" style="btn" href="javascript:void(0);;">appStore下载</a></p>
-            <p><a style="display:inline-block; width:140px; height:41px; background-image:url(/image/index/download.png); background-size:140px 41px; text-indent:-9999px; margin:10px 0 0; text-align:left;" gaevent="InnerLink|Click|touch/mobileGuide/skip" style="skip" href="itms-services://?action=download-manifest&url=http://qiqunar.com.cn/app/qiqunar.plist">越狱版下载</a></p>
+            <p><span>越狱版下载</span><a style="display:inline-block; width:140px; height:41px; background-image:url(/image/index/download.png); background-size:140px 41px; text-indent:-9999px; margin:10px 0 0; text-align:left;" gaevent="InnerLink|Click|touch/mobileGuide/skip" style="skip" href="itms-services://?action=download-manifest&url=http://qiqunar.com.cn/app/qiqunar.plist">越狱版下载</a></p>
+            
         </div>
         <p style="font-size:12px; color:#999;">骑行者客户端</p>
     </div>

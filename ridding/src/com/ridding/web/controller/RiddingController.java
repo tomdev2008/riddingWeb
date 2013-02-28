@@ -24,6 +24,7 @@ import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.constant.SourceType;
 import com.ridding.constant.SystemConst;
 import com.ridding.constant.returnCodeConstance;
+import com.ridding.mapper.RiddingPictureMapper;
 import com.ridding.meta.ApnsDevice;
 import com.ridding.meta.IMap;
 import com.ridding.meta.Profile;
@@ -517,6 +518,7 @@ public class RiddingController extends AbstractBaseController {
 		}
 		riddingPicture.setUserId(userId);
 		riddingPicture.setRiddingId(riddingId);
+		riddingPicture.setBreadId(0);
 		if (riddingService.addRiddingPicture(riddingPicture) <= 0) {
 			returnObject.put("code", returnCodeConstance.FAILED);
 			mv.addObject("returnObject", returnObject.toString());
