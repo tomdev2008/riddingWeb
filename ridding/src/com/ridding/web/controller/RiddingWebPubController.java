@@ -52,7 +52,7 @@ public class RiddingWebPubController extends AbstractBaseController {
 
 	public ModelAndView webIndex(HttpServletRequest request, HttpServletResponse response) {
 		String agent = request.getHeader("User-Agent");
-		if (agent.toLowerCase().contains("iphone") || agent.toLowerCase().contains("android")) {
+		if (agent.toLowerCase().contains("ipad") ||agent.toLowerCase().contains("iphone") || agent.toLowerCase().contains("android")) {
 			return new ModelAndView("webIndex_Iphone");
 
 		} else {
