@@ -10,7 +10,7 @@ body{font-size:83%;}
 <body style="">
 <#include "base-topbar.ftl">
 <aside class="" style="height:590px;background:url('http://qiqunar.com.cn/image/index/index_bg.png?v=20121020') no-repeat scroll center top transparent;">
-   <!--<p style="position: absolute; background-color: rgb(255, 255, 224); border: 1px solid rgb(247, 203, 145); text-align: center; height: 25px; line-height: 25px; top: 35px; width: 750px; left: 20%;">目前,app正在审核中。iphone越狱用户，可直接通过手机使用浏览器登陆骑去哪儿网，即可下载《骑行者》</p>-->
+   <p style="position: absolute; background-color: rgb(255, 255, 224); border: 1px solid rgb(247, 203, 145); text-align: center; height: 25px; line-height: 25px; top: 35px; width: 750px; left: 20%;">越狱版请使用手机上的浏览器登录http://qiqunar.com.cn下载</p>-->
    <div style="padding-top: 200px; width: 500px;  margin-left: 53%;">
    <div style="width: 500px; height: 190px;">
       <h3 style="margin-bottom: 25px; margin-top: 10px; font-size: 16px; color: rgb(251, 251, 243); font-family: BebasNeueRegular; width: 400px;">你是否因为《转山》也埋下了征服川藏线的种子。也被一句“骑出去了，就要骑回来”所感动！和我们一起去实现这个梦想吧。</h3>
