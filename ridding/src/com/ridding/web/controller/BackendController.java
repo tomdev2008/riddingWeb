@@ -85,6 +85,11 @@ public class BackendController extends AbstractBaseController {
 		ModelAndView mv = new ModelAndView("sendWeiBo");
 		List<WeiBo> sendList = sinaWeiBoService.getWeiBoList();
 		long visitUserId = ServletRequestUtils.getLongParameter(request, "userId");
+		if (!ListUtils.isEmptyList(sendList)) {
+			for (WeiBo weiBo : sendList) {
+				weiBo.setPhotoUrl(SystemConst.returnPhotoUrl(weiBo.getPhotoUrl()));
+			}
+		}
 		mv.addObject("weiboList", sendList);
 		this.setUD(mv, visitUserId, visitUserId);
 		return mv;

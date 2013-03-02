@@ -110,7 +110,7 @@ public class RiddingController extends AbstractBaseController {
 			riddingUser = HttpServletUtil.parseToRidding4RiddingView(jsonString);
 		} catch (Exception e) {
 			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
-			e.printStackTrace();
+			logger.error("RiddingController showRiddingView parseToRidding4RiddingView error where json=" + jsonString);
 		}
 		long time = new Date().getTime();
 		riddingUser.setUserId(userId);
@@ -552,7 +552,6 @@ public class RiddingController extends AbstractBaseController {
 			ridding.setLeaderUserId(userId);
 		} catch (Exception e) {
 			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
-			e.printStackTrace();
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
