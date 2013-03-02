@@ -158,7 +158,7 @@ public class RiddingPublicController extends AbstractBaseController {
 	}
 
 	/**
-	 *得到骑行地图或者编译前地址
+	 * 得到骑行地图或者编译前地址
 	 * 
 	 * @return
 	 */
@@ -314,7 +314,9 @@ public class RiddingPublicController extends AbstractBaseController {
 	public ModelAndView getGoingRiddings(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		JSONObject returnObject = new JSONObject();
+
 		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8").trim();
+
 		ModelAndView mv = new ModelAndView("return");
 		Ridding ridding = null;
 		try {
@@ -385,7 +387,8 @@ public class RiddingPublicController extends AbstractBaseController {
 		JSONObject returnObject = new JSONObject();
 		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
 		ModelAndView mv = new ModelAndView("return");
-		List<UserRelationVO> list = userRelationService.getUserRelations(userId);
+		int limit = 100, offset = 0;
+		List<UserRelationVO> list = userRelationService.getUserRelations(userId, limit, offset);
 		JSONArray dataArray = HttpServletUtil2.parseUserRelationVOs(list);
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
@@ -393,5 +396,4 @@ public class RiddingPublicController extends AbstractBaseController {
 		logger.debug(returnObject);
 		return mv;
 	}
-
 }

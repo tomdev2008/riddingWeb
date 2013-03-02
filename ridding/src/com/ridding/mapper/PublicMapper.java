@@ -29,7 +29,7 @@ public interface PublicMapper {
 	public List<Public> getPublicListsByType(Map<String, Object> map);
 
 	/**
-	 * 通过
+	 * 通过id取广告
 	 * 
 	 * @param id
 	 * @return
@@ -43,4 +43,20 @@ public interface PublicMapper {
 	 * @return
 	 */
 	public int updateJsonById(@Param(value = "id") long id, @Param(value = "json") String json);
+
+	/**
+	 * 更新广告内容
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public boolean updatePublic(Map<String, Object> map);
+
+	/**
+	 * 删除广告
+	 * 
+	 * @param publicId
+	 * @return
+	 */
+	public boolean deletePublicByPublicId(long publicId);
 }
