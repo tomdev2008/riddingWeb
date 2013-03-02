@@ -216,7 +216,6 @@ public class DwrBackendBean {
 	}
 
 	/**
-	 * 更新firstPic
 	 * 
 	 * @param id
 	 * @param picUrl
@@ -266,7 +265,6 @@ public class DwrBackendBean {
 		riddingPicture.setRiddingId(riddingId);
 		riddingPicture.setPhotoUrl(url);
 		try {
-			// String s2 = new String(desc.getBytes("utf8"),"gbk");
 			riddingPicture.setDescription(desc);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -358,5 +356,44 @@ public class DwrBackendBean {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * 更新广告内容
+	 * 
+	 * @param publicId
+	 * @param pictureId
+	 * @return
+	 */
+	public boolean setFirstPicUrl(long publicId, long pictureId) {
+		if (publicId < 0 || pictureId < 0) {
+			return false;
+		}
+		RiddingPicture riddingPicture = riddingService.getRiddingPictureById(pictureId);
+		if (riddingPicture == null) {
+			return false;
+		}
+
+		Public public1 = publicService.getPublicById(publicId);
+		if (public1 == null) {
+			return false;
+		}
+		public1.getJson();
+		public1.setFirstPicUrl(riddingPicture.getPhotoUrl());
+		public1.genJson();
+		return publicService.updatePublic(publicId, public1.getJson());
+	}
+
+	/**
+	 * 通过Id删除广告
+	 * 
+	 * @param publicId
+	 * @return
+	 */
+	public boolean deletePublicByPublicId(long publicId) {
+		if (publicId < 0) {
+			return false;
+		}
+		return publicService.deletePublicByPublicId(publicId);
 	}
 }

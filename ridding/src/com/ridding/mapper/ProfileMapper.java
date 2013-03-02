@@ -3,6 +3,8 @@ package com.ridding.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.ridding.meta.Profile;
 
 /**
@@ -57,7 +59,7 @@ public interface ProfileMapper {
 	 * @param userids
 	 * @return
 	 */
-	public List<Profile> getProfileList(List<Long> userids);
+	public List<Profile> getProfileList(@Param("userids") List<Long> userids);
 
 	/**
 	 * 更新手机背景url

@@ -28,24 +28,35 @@
 			LAST_INSERT_ID() AS VALUE
 		</selectKey>
 	</insert>
-	
-	<select id="getUserRelations" resultMap="userRelationMap"  parameterType="long">
-		SELECT * from TB_User_Relation where 
-		 userId = #{userId} and status =1 ;
+
+	<select id="getUserRelations" resultMap="userRelationMap"
+		parameterType="long">
+		SELECT * from TB_User_Relation where
+		userId = #{userId}
+		and status =1
+		limit #{limit}
+		offset #{offset};
 	</select>
-	
+
 	<select id="getUserRelation" resultMap="userRelationMap"
-	parameterType="hashMap">
-	SELECT * from TB_User_Relation where
-	userId = #{userId}
-	and toUserId= #{toUserId} ;
+		parameterType="hashMap">
+		SELECT * from TB_User_Relation where
+		userId = #{userId}
+		and toUserId= #{toUserId} ;
 	</select>
-	
-	<update id="updateUserRelation" parameterType="UserRelation" flushCache="true"
-		statementType="PREPARED">
-		update TB_User_Relation set 
-		status = #{status}
+
+	<update id="updateUserRelation" parameterType="UserRelation"
+		flushCache="true" statementType="PREPARED">
+		update TB_User_Relation set
+		status =
+		#{status}
 		where userId = #{userId} and toUserId = #{toUserId};
 	</update>
-	
+
+	<delete id="deleteUserRelation" parameterType="hashMap">
+		delete from
+		TB_User_Relation
+		where userId = #{userId} and toUserId = #{toUserId};
+	</delete>
+
 </mapper>

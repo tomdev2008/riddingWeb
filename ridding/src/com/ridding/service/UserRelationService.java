@@ -3,6 +3,7 @@ package com.ridding.service;
 import java.util.List;
 
 import com.ridding.meta.UserRelation;
+import com.ridding.meta.RiddingAction.RiddingActionResponse;
 import com.ridding.meta.vo.UserRelationVO;
 
 /**
@@ -17,7 +18,7 @@ public interface UserRelationService {
 	 * @param toUserId
 	 * @return
 	 */
-	public UserRelation addUserRelation(long userId, long toUserId);
+	public RiddingActionResponse addUserRelation(long userId, long toUserId);
 
 	/**
 	 * 得到某个用户的用户关系
@@ -25,7 +26,8 @@ public interface UserRelationService {
 	 * @param userId
 	 * @return
 	 */
-	public List<UserRelationVO> getUserRelations(long userId);
+	public List<UserRelationVO> getUserRelations(long userId, int limit,
+			int offset);
 
 	/**
 	 * 删除用户关系
@@ -34,7 +36,7 @@ public interface UserRelationService {
 	 * @param toUserId
 	 * @return
 	 */
-	public boolean removeUserRelation(long userId, long toUserId);
+	public int deleteUserRelation(long userId, long toUserId);
 
 	/**
 	 * 更新用户关系
@@ -43,4 +45,15 @@ public interface UserRelationService {
 	 * @return
 	 */
 	public boolean updateUserRelation(UserRelation userRelation);
+
+	/**
+	 * 添加或删除用户关系
+	 * 
+	 * @param userId
+	 * @param toUserId
+	 * @param status
+	 * @return
+	 */
+	public RiddingActionResponse removeOrAddUserRelation(long userId,
+			long toUserId, int status);
 }

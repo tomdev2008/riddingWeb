@@ -38,6 +38,7 @@ import com.ridding.meta.UserRelation;
 import com.ridding.meta.RiddingAction.RiddingActionResponse;
 import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ProfileSourceFeed;
+import com.ridding.meta.vo.UserRelationVO;
 import com.ridding.security.MyUser;
 import com.ridding.service.IOSApnsService;
 import com.ridding.service.MapService;
@@ -679,6 +680,29 @@ public class RiddingController extends AbstractBaseController {
 	}
 
 	/**
+	 * 好友申请
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView requestToAddRelation(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		JSONObject returnObject = new JSONObject();
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		ModelAndView mv = new ModelAndView("return");
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		long toUserId = ServletRequestUtils.getLongParameter(request, "toUserId", -1L);
+		if (userRelationService.addUserRelation(userId, toUserId) == RiddingActionResponse.SUCC) {
+			returnObject.put("code", returnCodeConstance.SUCCESS);
+		}
+		returnObject.put("code", returnCodeConstance.FAILED);
+		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
+		return mv;
+	}
+
+	/**
 	 * 添加或者删除用户关系
 	 * 
 	 * @param request
@@ -690,21 +714,40 @@ public class RiddingController extends AbstractBaseController {
 		JSONObject returnObject = new JSONObject();
 		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
 		ModelAndView mv = new ModelAndView("return");
-		UserRelation userRelation = null;
-		try {
-			userRelation = HttpServletUtil.parseRemoveOrAddUserRelation(jsonString);
-		} catch (Exception e) {
-			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
-			e.printStackTrace();
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		long toUserId = ServletRequestUtils.getLongParameter(request, "toUserId", -1L);
+		int status = ServletRequestUtils.getIntParameter(request, "status", 0);
+		RiddingActionResponse actionResponse = userRelationService.removeOrAddUserRelation(userId, toUserId, status);
+		if (actionResponse == RiddingActionResponse.SUCC) {
+			returnObject.put("code", returnCodeConstance.SUCCESS);
 			mv.addObject("returnObject", returnObject.toString());
+			logger.info(returnObject);
 			return mv;
 		}
-		boolean succ = userRelationService.updateUserRelation(userRelation);
-		if (!succ) {
-			returnObject.put("code", returnCodeConstance.FAILED);
-			mv.addObject("returnObject", returnObject.toString());
-			return mv;
-		}
+		returnObject.put("code", returnCodeConstance.FAILED);
+		mv.addObject("returnObject", returnObject.toString());
+		logger.info(returnObject);
+		return mv;
+	}
+
+	/**
+	 * 获取好友列表
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView getUserRelationList(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		JSONObject returnObject = new JSONObject();
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		ModelAndView mv = new ModelAndView("return");
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		int limit = ServletRequestUtils.getIntParameter(request, "limit", 0);
+		int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
+		List<UserRelationVO> userRelationVOs = userRelationService.getUserRelations(userId, limit, offset);
+		JSONArray dataArray = HttpServletUtil2.parseUserRelationVOs(userRelationVOs);
+		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		logger.debug(returnObject);
@@ -768,6 +811,7 @@ public class RiddingController extends AbstractBaseController {
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
+
 		boolean hasAddOrUpdate = userNearbyService.addOrUpdateUsersNearby(userId, latitude, longitude);
 		if (!hasAddOrUpdate) {
 			logger.error("addOrUpdateUsersNearby is failed!");

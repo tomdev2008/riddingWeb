@@ -10,14 +10,17 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.ridding.constant.returnCodeConstance;
 import com.ridding.mapper.ProfileMapper;
 import com.ridding.mapper.UserRelationMapper;
 import com.ridding.meta.Profile;
+import com.ridding.meta.RiddingAction.RiddingActionResponse;
 import com.ridding.meta.UserRelation;
 import com.ridding.meta.vo.UserRelationVO;
 import com.ridding.service.UserRelationService;
 import com.ridding.util.HashMapMaker;
 import com.ridding.util.ListUtils;
+import com.sun.mail.imap.protocol.Status;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -38,26 +41,27 @@ public class UserRelationServiceImpl implements UserRelationService {
 	 * @see com.ridding.service.UserRelationService#addUserRelation(long, long)
 	 */
 	@Override
-	public UserRelation addUserRelation(long userId, long toUserId) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", userId);
-		map.put("toUserId", toUserId);
-		UserRelation relation = userRelationMapper.getUserRelation(map);
-		UserRelation userRelation = new UserRelation();
-		userRelation.setUserId(userId);
-		userRelation.setToUserId(toUserId);
-		userRelation.setCreateTime(new Date().getTime());
-		userRelation.setStatus(UserRelation.Valid);
-		if (relation != null) {
-			if (userRelationMapper.updateUserRelation(userRelation) > 0) {
-				return userRelation;
-			}
-		} else {
-			if (userRelationMapper.addUserRelation(userRelation) > 0) {
-				return userRelation;
-			}
+	public RiddingActionResponse addUserRelation(long userId, long toUserId) {
+		if (userId < 0 || toUserId < 0) {
+			return RiddingActionResponse.Fail;
 		}
-		return null;
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("userId", userId);
+		hashMap.put("toUserId", toUserId);
+		if (userRelationMapper.getUserRelation(hashMap) != null) {
+			return RiddingActionResponse.Fail;
+		} else {
+			int status = 0;
+			UserRelation userRelation = new UserRelation();
+			userRelation.setUserId(userId);
+			userRelation.setToUserId(toUserId);
+			userRelation.setStatus(status);
+			userRelation.setCreateTime(new Date().getTime());
+			if (userRelationMapper.addUserRelation(userRelation) > 0) {
+				return RiddingActionResponse.SUCC;
+			}
+			return RiddingActionResponse.Fail;
+		}
 	}
 
 	/*
@@ -65,11 +69,17 @@ public class UserRelationServiceImpl implements UserRelationService {
 	 * 
 	 * @see com.ridding.service.UserRelationService#getUserRelations(long)
 	 */
-	public List<UserRelationVO> getUserRelations(long userId) {
+	public List<UserRelationVO> getUserRelations(long userId, int limit,
+			int offset) {
 		if (userId <= 0) {
 			return null;
 		}
-		List<UserRelation> userRelationList = userRelationMapper.getUserRelations(userId);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("limit", limit);
+		map.put("offset", offset);
+		List<UserRelation> userRelationList = userRelationMapper
+				.getUserRelations(map);
 		return this.getUserRelationVO(userRelationList);
 	}
 
@@ -79,23 +89,28 @@ public class UserRelationServiceImpl implements UserRelationService {
 	 * @param userRelationList
 	 * @return
 	 */
-	private List<UserRelationVO> getUserRelationVO(List<UserRelation> userRelationList) {
+	private List<UserRelationVO> getUserRelationVO(
+			List<UserRelation> userRelationList) {
 		if (!ListUtils.isEmptyList(userRelationList)) {
 			List<Long> userIdList = new ArrayList<Long>();
 			for (UserRelation userRelation : userRelationList) {
 				userIdList.add(userRelation.getUserId());
 				userIdList.add(userRelation.getToUserId());
 			}
-			List<Profile> profileList = profileMapper.getProfileList(userIdList);
-			Map<Long, Profile> profileMap = HashMapMaker.listToMap(profileList, "getUserId", Profile.class);
-			List<UserRelationVO> userRelationVOs = new ArrayList<UserRelationVO>(userRelationList.size());
+			List<Profile> profileList = profileMapper
+					.getProfileList(userIdList);
+			Map<Long, Profile> profileMap = HashMapMaker.listToMap(profileList,
+					"getUserId", Profile.class);
+			List<UserRelationVO> userRelationVOs = new ArrayList<UserRelationVO>(
+					userRelationList.size());
 			for (UserRelation userRelation : userRelationList) {
 				UserRelationVO userRelationVO = new UserRelationVO();
 				Profile userProfile = profileMap.get(userRelation.getUserId());
 				if (userProfile != null) {
 					userRelationVO.setUserProfile(userProfile);
 				}
-				Profile toUserProfile = profileMap.get(userRelation.getUserId());
+				Profile toUserProfile = profileMap
+						.get(userRelation.getUserId());
 				if (toUserProfile != null) {
 					userRelationVO.setToUserProfile(toUserProfile);
 				}
@@ -115,12 +130,11 @@ public class UserRelationServiceImpl implements UserRelationService {
 	 * @see com.ridding.service.UserRelationService#removeUserRelation(long,
 	 * long)
 	 */
-	public boolean removeUserRelation(long userId, long toUserId) {
-		UserRelation userRelation = new UserRelation();
-		userRelation.setUserId(userId);
-		userRelation.setToUserId(toUserId);
-		userRelation.setStatus(UserRelation.notValid);
-		return userRelationMapper.updateUserRelation(userRelation) > 0;
+	public int deleteUserRelation(long userId, long toUserId) {
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("userId", userId);
+		hashMap.put("toUserId", toUserId);
+		return userRelationMapper.deleteUserRelation(hashMap);
 	}
 
 	/*
@@ -138,4 +152,47 @@ public class UserRelationServiceImpl implements UserRelationService {
 		return userRelationMapper.updateUserRelation(userRelation) > 0;
 	}
 
+	public RiddingActionResponse removeOrAddUserRelation(long userId,
+			long toUserId, int status) {
+		if (status == 0) {
+			int delete1 = 0, delete2 = 0;
+			Map<String, Object> hashMap = new HashMap<String, Object>();
+			hashMap.put("userId", userId);
+			hashMap.put("toUserId", toUserId);
+			delete1 = userRelationMapper.deleteUserRelation(hashMap);
+			hashMap.put("userId", toUserId);
+			hashMap.put("toUserId", userId);
+			delete2 = userRelationMapper.deleteUserRelation(hashMap);
+			if (delete1 > 0 || delete2 > 0) {
+				return RiddingActionResponse.SUCC;
+			}
+			return RiddingActionResponse.Fail;
+		}
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("userId", toUserId);
+		hashMap.put("toUserId", userId);
+		if (userRelationMapper.getUserRelation(hashMap) == null) {
+			return RiddingActionResponse.Fail;
+		}
+		UserRelation userRelation = new UserRelation();
+		userRelation.setUserId(toUserId);
+		userRelation.setToUserId(userId);
+		userRelation.setCreateTime(new Date().getTime());
+		userRelation.setStatus(status);
+		int update = userRelationMapper.updateUserRelation(userRelation);
+		userRelation.setUserId(userId);
+		userRelation.setToUserId(toUserId);
+		hashMap.put("userId", userId);
+		hashMap.put("toUserId", toUserId);
+		int add = 0;
+		if (userRelationMapper.getUserRelation(hashMap) == null) {
+			add = userRelationMapper.addUserRelation(userRelation);
+		} else {
+			update = userRelationMapper.updateUserRelation(userRelation);
+		}
+		if (add > 0 && update > 0) {
+			return RiddingActionResponse.SUCC;
+		}
+		return RiddingActionResponse.Fail;
+	}
 }
