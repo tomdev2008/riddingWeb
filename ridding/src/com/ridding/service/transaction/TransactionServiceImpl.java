@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -47,6 +48,7 @@ import com.ridding.meta.RiddingUser.SelfRiddingStatus;
 import com.ridding.service.IOSApnsService;
 import com.ridding.util.FileUtil;
 import com.ridding.util.ListUtils;
+import com.ridding.util.MD5Util;
 import com.ridding.util.QiNiuUtil;
 import com.ridding.util.ThumbnailUtil;
 import com.ridding.web.controller.RiddingController;
@@ -311,6 +313,10 @@ public class TransactionServiceImpl implements TransactionService {
 		if (profileMapper.addProfile(profile) < 0) {
 			throw new TransactionException("insertSourceAccount addProfile error ");
 		}
+		// 生成taobaoCode，并且添加
+		this.genCode(profile);
+		profileMapper.updateProfileTaobaoCode(profile.getTaobaoCode(), profile.getUserId());
+
 		if (!StringUtils.isEmpty(profile.getsAvatorUrl())) {
 			this.asyncgrayAvator(profile);
 		}
@@ -438,5 +444,34 @@ public class TransactionServiceImpl implements TransactionService {
 					"TransactionException deleteRiddingAndLinkedThings deleteRiddingActionByRiddingId error ! where riddingId=" + riddingId);
 		}
 		return true;
+	}
+
+	@Override
+	public void updateTaobaoCode() {
+		List<Profile> profiles = profileMapper.getAllProfile();
+		for (Profile profile : profiles) {
+			this.genCode(profile);
+			profileMapper.updateProfileTaobaoCode(profile.getTaobaoCode(), profile.getUserId());
+		}
+	}
+
+	private void genCode(Profile profile) {
+		StringBuilder sb = new StringBuilder();
+		long time = new Date().getTime();
+		Random random = new Random(1000000);
+		int key = random.nextInt();
+		long userId = profile.getUserId();
+		String userName = profile.getUserName();
+
+		sb.append(time);
+		sb.append("_");
+		sb.append(key);
+		sb.append("_");
+		sb.append(userId);
+		sb.append("_");
+		sb.append(userName);
+		sb.append("_");
+		String code = MD5Util.getMD5(sb.toString().getBytes());
+		profile.setTaobaoCode(code);
 	}
 }

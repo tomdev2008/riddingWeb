@@ -24,7 +24,6 @@ import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.constant.SourceType;
 import com.ridding.constant.SystemConst;
 import com.ridding.constant.returnCodeConstance;
-import com.ridding.mapper.RiddingPictureMapper;
 import com.ridding.meta.ApnsDevice;
 import com.ridding.meta.IMap;
 import com.ridding.meta.Profile;
@@ -34,7 +33,6 @@ import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
-import com.ridding.meta.UserRelation;
 import com.ridding.meta.RiddingAction.RiddingActionResponse;
 import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ProfileSourceFeed;
@@ -140,7 +138,7 @@ public class RiddingController extends AbstractBaseController {
 	 */
 	public ModelAndView setRidingMapLocation(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
-		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8").trim();
 		logger.info(jsonString);
 		long ridingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
 		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
@@ -854,4 +852,6 @@ public class RiddingController extends AbstractBaseController {
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}
+
+
 }

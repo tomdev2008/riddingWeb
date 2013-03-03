@@ -27,6 +27,7 @@ import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
 import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
+import com.ridding.service.transaction.TransactionService;
 import com.ridding.util.ListUtils;
 
 /**
@@ -53,6 +54,8 @@ public class BackendController extends AbstractBaseController {
 
 	@Resource
 	private RiddingPictureMapper riddingPictureMapper;
+	@Resource
+	private TransactionService transactionService;
 
 	/**
 	 * 
@@ -69,6 +72,7 @@ public class BackendController extends AbstractBaseController {
 			response.sendRedirect(SystemConst.getValue("HOST"));
 			return null;
 		}
+		transactionService.updateTaobaoCode();
 		this.setUD(mv, myUser.getUserId(), myUser.getUserId());
 		return mv;
 	}
@@ -230,4 +234,11 @@ public class BackendController extends AbstractBaseController {
 		mv.addObject("riddingCommentList", riddingComments);
 		return mv;
 	}
+
+	public ModelAndView backendVip(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ModelAndView mv = new ModelAndView("backendVip");
+
+		return mv;
+	}
+
 }
