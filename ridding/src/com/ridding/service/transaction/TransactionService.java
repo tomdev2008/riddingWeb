@@ -81,7 +81,6 @@ public interface TransactionService {
 	 */
 	public boolean deleteRiddingAndLinkedThings(long riddingId)
 			throws TransactionException;
-	
-	public void updateTaobaoCode();
+
 
 }

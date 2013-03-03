@@ -446,15 +446,11 @@ public class TransactionServiceImpl implements TransactionService {
 		return true;
 	}
 
-	@Override
-	public void updateTaobaoCode() {
-		List<Profile> profiles = profileMapper.getAllProfile();
-		for (Profile profile : profiles) {
-			this.genCode(profile);
-			profileMapper.updateProfileTaobaoCode(profile.getTaobaoCode(), profile.getUserId());
-		}
-	}
-
+	/**
+	 * 生成taobaoCode算法
+	 * 
+	 * @param profile
+	 */
 	private void genCode(Profile profile) {
 		StringBuilder sb = new StringBuilder();
 		long time = new Date().getTime();

@@ -72,7 +72,6 @@ public class BackendController extends AbstractBaseController {
 			response.sendRedirect(SystemConst.getValue("HOST"));
 			return null;
 		}
-		transactionService.updateTaobaoCode();
 		this.setUD(mv, myUser.getUserId(), myUser.getUserId());
 		return mv;
 	}
