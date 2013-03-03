@@ -36,6 +36,13 @@ alert('请输入升级Type');
 }else if(_long==''){
 alert('请输入升级时间长度');
 }else{
-	dwr.engine._execute(cfg_host+"/ridding", 'UserPayBackendBean', 'addUserPay',_code,_type,_long,CBCodeSearch);
+	dwr.engine._execute(cfg_host+"/ridding", 'UserPayBackendBean', 'addUserPay',_code,_type,_long,CBadd_btn);
 }
 });
+
+
+function CBCodeSearch(_flag){
+	if(_flag){
+		alert('成功');
+	}
+};
