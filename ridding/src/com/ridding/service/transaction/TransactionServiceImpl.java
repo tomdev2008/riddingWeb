@@ -310,6 +310,7 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		profile.setCreateTime(sourceAccount.getCreateTime());
 		profile.setLastUpdateTime(sourceAccount.getCreateTime());
+		profile.setTaobaoCode("");
 		if (profileMapper.addProfile(profile) < 0) {
 			throw new TransactionException("insertSourceAccount addProfile error ");
 		}
