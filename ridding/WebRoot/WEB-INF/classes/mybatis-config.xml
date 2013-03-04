@@ -22,6 +22,7 @@
 		<typeAlias alias="UserRelation" type="com.ridding.meta.UserRelation" />
 		<typeAlias alias="UserNearby" type="com.ridding.meta.UserNearby" />
 		<typeAlias alias="WeiBoToBeSend" type="com.ridding.meta.WeiBoToBeSend" />
+		<typeAlias alias="UserPay" type="com.ridding.meta.UserPay" />
 	</typeAliases>
 	<mappers>
 		<mapper resource="com/ridding/mapper/xml/AccountMapper.xml" />
@@ -45,6 +46,7 @@
 		<mapper resource="com/ridding/mapper/xml/UserRelationMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/UserNearbyMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/WeiBoToBeSendMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/UserPayMapper.xml" />
 	</mappers>
 </configuration>
 			

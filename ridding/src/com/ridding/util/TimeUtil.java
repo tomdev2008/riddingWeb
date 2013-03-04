@@ -115,4 +115,20 @@ public class TimeUtil {
 	public static long getDayBefore(long startTime, long days) {
 		return startTime - days * DAY_TIME;
 	}
+
+	/**
+	 * 得到当天凌晨的时间戳
+	 * 
+	 * @author Herbert
+	 * @return
+	 */
+	public static long getDaybreakTime() {
+		Calendar cal = Calendar.getInstance();
+		// cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		return cal.getTimeInMillis();
+	}
 }

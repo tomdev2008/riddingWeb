@@ -27,6 +27,7 @@ import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
 import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
+import com.ridding.service.transaction.TransactionService;
 import com.ridding.util.ListUtils;
 
 /**
@@ -53,6 +54,8 @@ public class BackendController extends AbstractBaseController {
 
 	@Resource
 	private RiddingPictureMapper riddingPictureMapper;
+	@Resource
+	private TransactionService transactionService;
 
 	/**
 	 * 
@@ -85,6 +88,11 @@ public class BackendController extends AbstractBaseController {
 		ModelAndView mv = new ModelAndView("sendWeiBo");
 		List<WeiBo> sendList = sinaWeiBoService.getWeiBoList();
 		long visitUserId = ServletRequestUtils.getLongParameter(request, "userId");
+		if (!ListUtils.isEmptyList(sendList)) {
+			for (WeiBo weiBo : sendList) {
+				weiBo.setPhotoUrl(SystemConst.returnPhotoUrl(weiBo.getPhotoUrl()));
+			}
+		}
 		mv.addObject("weiboList", sendList);
 		this.setUD(mv, visitUserId, visitUserId);
 		return mv;
@@ -225,4 +233,11 @@ public class BackendController extends AbstractBaseController {
 		mv.addObject("riddingCommentList", riddingComments);
 		return mv;
 	}
+
+	public ModelAndView backendVip(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ModelAndView mv = new ModelAndView("backendVip");
+
+		return mv;
+	}
+
 }

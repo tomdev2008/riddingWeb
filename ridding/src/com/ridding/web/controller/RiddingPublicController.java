@@ -96,10 +96,10 @@ public class RiddingPublicController extends AbstractBaseController {
 			Account am = new Account();
 			weibo4j.org.json.JSONObject uid = am.getUid();
 		} catch (Exception e) {
-			//获取其他用户信息是，可能这个用户的token已经失效了
-//			returnObject.put("code", returnCodeConstance.TOKENEXPIRED);
-//			mv.addObject("returnObject", returnObject.toString());
-//			return mv;
+			// 获取其他用户信息是，可能这个用户的token已经失效了
+			// returnObject.put("code", returnCodeConstance.TOKENEXPIRED);
+			// mv.addObject("returnObject", returnObject.toString());
+			// return mv;
 		}
 
 		returnObject.put("userid", profile.getUserId());
@@ -132,7 +132,7 @@ public class RiddingPublicController extends AbstractBaseController {
 	public ModelAndView getRiddingList(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
-		logger.info(jsonString);
+
 		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
@@ -140,6 +140,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		try {
 			ridding = HttpServletUtil.parseToRidding(jsonString);
 		} catch (Exception e) {
+			logger.error(jsonString);
 			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
 			e.printStackTrace();
 			return mv;
@@ -157,7 +158,7 @@ public class RiddingPublicController extends AbstractBaseController {
 	}
 
 	/**
-	 *得到骑行地图或者编译前地址
+	 * 得到骑行地图或者编译前地址
 	 * 
 	 * @return
 	 */
@@ -313,13 +314,15 @@ public class RiddingPublicController extends AbstractBaseController {
 	public ModelAndView getGoingRiddings(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		JSONObject returnObject = new JSONObject();
-		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
-		logger.info(jsonString);
+
+		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8").trim();
+
 		ModelAndView mv = new ModelAndView("return");
 		Ridding ridding = null;
 		try {
 			ridding = HttpServletUtil.parseToRiddingByLastUpdateTime(jsonString);
 		} catch (Exception e) {
+			logger.error("riddingPublicController getGoingRiddings where input str=" + jsonString);
 			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
 			e.printStackTrace();
 			return mv;
@@ -384,7 +387,8 @@ public class RiddingPublicController extends AbstractBaseController {
 		JSONObject returnObject = new JSONObject();
 		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
 		ModelAndView mv = new ModelAndView("return");
-		List<UserRelationVO> list = userRelationService.getUserRelations(userId);
+		int limit = 100, offset = 0;
+		List<UserRelationVO> list = userRelationService.getUserRelations(userId, limit, offset);
 		JSONArray dataArray = HttpServletUtil2.parseUserRelationVOs(list);
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
@@ -392,5 +396,4 @@ public class RiddingPublicController extends AbstractBaseController {
 		logger.debug(returnObject);
 		return mv;
 	}
-
 }

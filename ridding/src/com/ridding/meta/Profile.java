@@ -63,6 +63,10 @@ public class Profile implements Serializable {
 	 * 对应的sourceaccount
 	 */
 	private SourceAccount sourceAccount;
+	/**
+	 * 淘宝账号
+	 */
+	private String taobaoCode;
 
 	public SourceAccount getSourceAccount() {
 		return sourceAccount;
@@ -166,6 +170,14 @@ public class Profile implements Serializable {
 
 	public void setGraysAvatorUrl(String graysAvatorUrl) {
 		this.graysAvatorUrl = graysAvatorUrl;
+	}
+
+	public String getTaobaoCode() {
+		return taobaoCode;
+	}
+
+	public void setTaobaoCode(String taobaoCode) {
+		this.taobaoCode = taobaoCode;
 	}
 
 }

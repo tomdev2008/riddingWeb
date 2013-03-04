@@ -1,30 +1,22 @@
 package com.ridding.service.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import com.ridding.constant.SystemConst;
 import com.ridding.mapper.ProfileMapper;
 import com.ridding.mapper.SourceAccountMapper;
 import com.ridding.meta.Profile;
 import com.ridding.meta.SourceAccount;
-import com.ridding.meta.UserNearby;
 import com.ridding.service.ProfileService;
 import com.ridding.service.transaction.TransactionService;
-import com.ridding.util.GeohashUtil;
 import com.ridding.util.ListUtils;
-import com.ridding.util.QiNiuUtil;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@corp.netease.com
@@ -42,8 +34,6 @@ public class ProfileServiceImpl implements ProfileService {
 	private TransactionService transactionService;
 
 	private static final Logger logger = Logger.getLogger(ProfileServiceImpl.class);
-
-
 
 	/*
 	 * (non-Javadoc)
@@ -63,7 +53,6 @@ public class ProfileServiceImpl implements ProfileService {
 			return null;
 		}
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -142,7 +131,7 @@ public class ProfileServiceImpl implements ProfileService {
 		profile.setsAvatorUrl(savatorUrl);
 		profile.setUserName(userName);
 		profile.setNickName(userName);
-		
+
 		if (profileMapper.updateProfile(profile) > 0) {
 			return profile;
 		}
@@ -199,4 +188,17 @@ public class ProfileServiceImpl implements ProfileService {
 		profile.setBackgroundUrl(url);
 		return profileMapper.updateBackgroundUrl(profile) > 0;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ridding.service.ProfileService#getProfileByTaobaoCode(java.lang.String
+	 * )
+	 */
+	@Override
+	public Profile getProfileByTaobaoCode(String taobaoCode) {
+		return profileMapper.getProfileBytaobaoCode(taobaoCode);
+	}
+
 }

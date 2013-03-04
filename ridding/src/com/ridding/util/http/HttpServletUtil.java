@@ -377,7 +377,7 @@ public final class HttpServletUtil {
 			throw new RequestBodyIsNullException();
 		}
 		Ridding ridding = new Ridding();
-		Public public1=new Public();
+		Public public1 = new Public();
 		ridding.setaPublic(public1);
 		try {
 			// 0表示进行中,1表示推荐

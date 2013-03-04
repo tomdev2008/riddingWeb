@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ridding.mapper.UserPayMapper">
+
+	<resultMap type="UserPay" id="userPayMap">
+		<id property="id" column="id" />
+		<result property="userId" column="userId" />
+		<result property="typeId" column="typeId" />
+		<result property="createTime" column="createTime" />
+		<result property="beginTime" column="beginTime" />
+		<result property="status" column="status" />
+		<result property="dayLong" column="dayLong" />
+	</resultMap>
+
+	<insert id="addUserPay" parameterType="UserPay">
+		INSERT INTO
+		TB_User_Pay(
+		userId,
+		typeId,
+		createTime,
+		beginTime,
+		status,
+		dayLong
+		)VALUES(
+		#{userId},
+		#{typeId},
+		#{createTime},
+		#{beginTime},
+		#{status},
+		#{dayLong}
+		)
+	</insert>
+
+	<select id="getUserPayByUserId" resultMap="userPayMap">
+		SELECT * from
+		TB_User_Pay where
+		userId=#{userId} and typeId= #{typeId}; 
+	</select>
+
+	<update id="updateUserPayByUserId" parameterType="UserPay"
+		flushCache="true" statementType="PREPARED">
+		update TB_User_Pay set
+		beginTime =
+		#{beginTime},
+		status = #{status},
+		dayLong = #{dayLong}
+		where userId =
+		#{userId} and typeId = #{typeId};
+	</update>
+
+	<select id="getUserPaysValid" resultMap="userPayMap">
+		SELECT * from
+		TB_User_Pay where
+		userId=#{userId} and status > 0; 
+	</select>
+</mapper>
