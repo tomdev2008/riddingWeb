@@ -21,12 +21,12 @@
 			<param name="beanName" value="dwrUserPayBackendBean" />
 		</create>
 		<convert converter="bean" match="com.ridding.meta.vo.Location" />
-		<convert converter="bean" match="com.ridding.meta.vo.Location" />
 		<convert converter="bean" match="net.sf.json.JSONArray" />
 		<convert converter="bean" match="com.ridding.meta.vo.ProfileVO" />
 		<convert converter="bean" match="com.ridding.meta.Profile" />
 		<convert converter="bean" match="com.ridding.meta.UserPay" />
 		<convert converter="bean" match="com.ridding.meta.vo.ProfileTaobaoVO" />
+		<convert converter="bean" match="com.ridding.meta.SourceAccount" />
 
 
 	</allow>
