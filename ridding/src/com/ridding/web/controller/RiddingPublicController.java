@@ -268,7 +268,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		int limit = ServletRequestUtils.getIntParameter(request, "limit", -1);
 		long lastUpdateTime = ServletRequestUtils.getLongParameter(request, "lastupdatetime", -1);
 		if (lastUpdateTime < 0) {
-			lastUpdateTime = new Date().getTime();
+			lastUpdateTime = 0;
 		}
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
