@@ -735,7 +735,7 @@ public class RiddingServiceImpl implements RiddingService {
 				}
 
 				map.put("riddingId", ridding.getId());
-				map.put("createTime", new Date().getTime());
+				map.put("createTime", 0);
 				map.put("limit", 1);
 				IMap iMap = iMapMap.get(ridding.getMapId());
 				if (iMap != null) {
