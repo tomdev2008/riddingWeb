@@ -24,7 +24,7 @@ public interface UserRelationMapper {
 	 * @param userId
 	 * @return
 	 */
-	public List<UserRelation> getUserRelations(long userId);
+	public List<UserRelation> getUserRelations(Map<String, Object> map);
 
 	/**
 	 * 得到用户关系
@@ -41,4 +41,12 @@ public interface UserRelationMapper {
 	 * @return
 	 */
 	public int updateUserRelation(UserRelation userRelation);
+
+	/**
+	 * 删除用户关系
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public int deleteUserRelation(Map<String, Object> map);
 }

@@ -46,5 +46,5 @@ public class returnCodeConstance {
 	 * 自己的骑行活动不能操作
 	 */
 	public static final int RiddingActionInMyRidding = -311;
-
+	
 }

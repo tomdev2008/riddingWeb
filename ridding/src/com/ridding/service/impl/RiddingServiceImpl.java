@@ -20,6 +20,7 @@ import com.ridding.constant.SourceType;
 import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.MapFixMapper;
 import com.ridding.mapper.ProfileMapper;
+import com.ridding.mapper.PublicMapper;
 import com.ridding.mapper.RiddingActionMapper;
 import com.ridding.mapper.RiddingCommentMapper;
 import com.ridding.mapper.RiddingMapper;
@@ -637,8 +638,9 @@ public class RiddingServiceImpl implements RiddingService {
 	 */
 	public List<Ridding> getRecomRiddingList(int weight, int limit, Boolean isLarger) {
 		List<Public> publicList = publicService.getPublicListByType(PublicType.PublicRecom.getValue(), limit, weight, isLarger);
-		List<Ridding> riddingList = new ArrayList<Ridding>(publicList.size());
+
 		if (!ListUtils.isEmptyList(publicList)) {
+			List<Ridding> riddingList = new ArrayList<Ridding>(publicList.size());
 			for (Public aPublic : publicList) {
 				aPublic.getJson();
 				Ridding newRidding = riddingMapper.getRidding(aPublic.getRiddingId());
@@ -649,9 +651,10 @@ public class RiddingServiceImpl implements RiddingService {
 				riddingList.add(newRidding);
 			}
 			this.insertRiddingInfo(riddingList);
+			return riddingList;
 		}
 
-		return riddingList;
+		return null;
 	}
 
 	/*
@@ -704,10 +707,10 @@ public class RiddingServiceImpl implements RiddingService {
 		return riddingList;
 	}
 
-	/*
+	/**
+	 * 插入骑行信息
 	 * 
-	 * 
-	 * 
+	 * @param riddingList
 	 */
 	private void insertRiddingInfo(List<Ridding> riddingList) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -732,7 +735,7 @@ public class RiddingServiceImpl implements RiddingService {
 				}
 
 				map.put("riddingId", ridding.getId());
-				map.put("createTime", new Date().getTime());
+				map.put("createTime", 0);
 				map.put("limit", 1);
 				IMap iMap = iMapMap.get(ridding.getMapId());
 				if (iMap != null) {
@@ -1051,6 +1054,8 @@ public class RiddingServiceImpl implements RiddingService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * <<<<<<< HEAD
+	 * 
 	 * @see com.ridding.service.RiddingService#removeRiddingPicture(long)
 	 */
 	public boolean removeRiddingPicture(long pictureId) {
@@ -1066,5 +1071,14 @@ public class RiddingServiceImpl implements RiddingService {
 	@Override
 	public RiddingPicture getRiddingPictureByBreadId(long breadId, long riddingId) {
 		return riddingPictureMapper.getPictureByBreadId(breadId, riddingId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getRiddingPictureById(long)
+	 */
+	public RiddingPicture getRiddingPictureById(long pictureId) {
+		return riddingPictureMapper.getRiddingPicturesById(pictureId);
 	}
 }

@@ -27,6 +27,7 @@ import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
 import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
+import com.ridding.service.transaction.TransactionService;
 import com.ridding.util.ListUtils;
 
 /**
@@ -53,6 +54,8 @@ public class BackendController extends AbstractBaseController {
 
 	@Resource
 	private RiddingPictureMapper riddingPictureMapper;
+	@Resource
+	private TransactionService transactionService;
 
 	/**
 	 * 
@@ -85,6 +88,11 @@ public class BackendController extends AbstractBaseController {
 		ModelAndView mv = new ModelAndView("sendWeiBo");
 		List<WeiBo> sendList = sinaWeiBoService.getWeiBoList();
 		long visitUserId = ServletRequestUtils.getLongParameter(request, "userId");
+		if (!ListUtils.isEmptyList(sendList)) {
+			for (WeiBo weiBo : sendList) {
+				weiBo.setPhotoUrl(SystemConst.returnPhotoUrl(weiBo.getPhotoUrl()));
+			}
+		}
 		mv.addObject("weiboList", sendList);
 		this.setUD(mv, visitUserId, visitUserId);
 		return mv;
@@ -107,7 +115,7 @@ public class BackendController extends AbstractBaseController {
 		List<Ridding> riddingList = riddingService.getRecomRiddingList(weight, 50, false);
 		if (!ListUtils.isEmptyList(riddingList)) {
 			for (Ridding ridding : riddingList) {
-				List<RiddingPicture> pictureList = riddingService.getRiddingPictureByRiddingId(ridding.getId(), 50, new Date().getTime());
+				List<RiddingPicture> pictureList = riddingService.getRiddingPictureByRiddingId(ridding.getId(), 50, 0);
 				for (RiddingPicture riddingPicture : pictureList) {
 					riddingPicture.setPhotoUrl(SystemConst.returnPhotoUrl(riddingPicture.getPhotoUrl()));
 				}
@@ -165,7 +173,7 @@ public class BackendController extends AbstractBaseController {
 		int pictureLimit = 3;
 		for (Ridding ridding : riddings) {
 			long riddingId = ridding.getId();
-			List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, pictureLimit, requestTime);
+			List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, pictureLimit, 0);
 			if (!ListUtils.isEmptyList(riddingPictures)) {
 				ridding.setRiddingPictureList(riddingPictures);
 			}
@@ -195,9 +203,7 @@ public class BackendController extends AbstractBaseController {
 		if (ridding == null) {
 			return mv;
 		}
-		Date data = new Date();
-		long requestTime = data.getTime();
-		List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, 0, requestTime);
+		List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, 0, 0);
 		mv.addObject("riddingPictures", riddingPictures);
 		mv.addObject("ridding", ridding);
 		return mv;
@@ -225,4 +231,11 @@ public class BackendController extends AbstractBaseController {
 		mv.addObject("riddingCommentList", riddingComments);
 		return mv;
 	}
+
+	public ModelAndView backendVip(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ModelAndView mv = new ModelAndView("backendVip");
+
+		return mv;
+	}
+
 }

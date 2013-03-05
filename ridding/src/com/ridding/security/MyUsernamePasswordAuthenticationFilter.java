@@ -161,6 +161,10 @@ public class MyUsernamePasswordAuthenticationFilter extends UsernamePasswordAuth
 		String code = ServletRequestUtils.getStringParameter(request, "code", null);
 		Oauth oauth = new Oauth();
 		AccessToken accessToken = oauth.getAccessTokenByCode(code);
+		if (accessToken == null) {
+
+			throw new Exception("getSourceAccountFromRequest error where accessToken =null ");
+		}
 		Weibo weibo = new Weibo();
 		weibo.setToken(accessToken.getAccessToken());
 		Account am = new Account();
@@ -264,7 +268,7 @@ public class MyUsernamePasswordAuthenticationFilter extends UsernamePasswordAuth
 		try {
 			Users users = new Users();
 			User user = users.showUserById(String.valueOf(accessUserId));
-			
+
 			Profile profile = new Profile();
 			profile.setNickName(user.getScreenName());
 			profile.setbAvatorUrl(user.getavatarLarge());

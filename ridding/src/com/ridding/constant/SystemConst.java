@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -80,7 +81,7 @@ public class SystemConst {
 	 */
 	public static String returnPhotoUrl(String key) {
 
-		if (key.contains(SystemConst.getValue("IMAGEHOST"))) {
+		if (key.contains(SystemConst.getValue("IMAGEHOST")) || key.indexOf("http://") == 0) {
 			return key;
 		} else {
 			if (!key.startsWith("/")) {

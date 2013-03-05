@@ -39,5 +39,8 @@
     	<#case "huodongList">
     	    <script type="text/javascript" src="/js/backend/huodongList.js" charset="utf-8"></script>
     	<#break>
+    	<#case "backendVip">
+    	    <script type="text/javascript" src="/js/backend/backendVip.js" charset="utf-8"></script>
+    	<#break>
     </#switch>
 </#if>

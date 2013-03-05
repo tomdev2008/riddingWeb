@@ -115,8 +115,7 @@ public class DwrBackendBean {
 	 * @param sourceType
 	 * @return
 	 */
-	public boolean updateWeiBo(String text, String date, String photoUrl,
-			int sourceType, int weiboType, long riddingId) {
+	public boolean updateWeiBo(String text, String date, String photoUrl, int sourceType, int weiboType, long riddingId) {
 		WeiBo weiBo = new WeiBo();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date adate;
@@ -144,8 +143,7 @@ public class DwrBackendBean {
 	 * @return
 	 */
 	public void sendApns(String text) {
-		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder
-				.getContext().getAuthentication()).getDetails();
+		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
 		if (myUser.getUserId() == 54) {
 			iosApnsService.sendApns(text);
 		}
@@ -157,9 +155,7 @@ public class DwrBackendBean {
 	 * @param riddingId
 	 * @param userId
 	 */
-	public boolean addPublicRecom(long riddingId, int weight,
-			String firstPicUrl, String linkText, String linkImageUrl,
-			String linkUrl) {
+	public boolean addPublicRecom(long riddingId, int weight, String firstPicUrl, String linkText, String linkImageUrl, String linkUrl) {
 		Public public1 = new Public();
 		public1.setRiddingId(riddingId);
 		public1.setFirstPicUrl(firstPicUrl);
@@ -226,7 +222,6 @@ public class DwrBackendBean {
 	}
 
 	/**
-	 * 更新firstPic
 	 * 
 	 * @param id
 	 * @param picUrl
@@ -245,8 +240,7 @@ public class DwrBackendBean {
 	 * @param takePicDate
 	 * @return
 	 */
-	public boolean addRiddingPicture(long riddingId, String url, String desc,
-			String takePicDate, String takePicLocation, long breadId) {
+	public boolean addRiddingPicture(long riddingId, String url, String desc, String takePicDate, String takePicLocation, long breadId) {
 		Ridding ridding = riddingService.getRidding(riddingId);
 		if (ridding == null) {
 			return false;
@@ -256,8 +250,7 @@ public class DwrBackendBean {
 			try {
 				boolean succ = QiNiuUtil.uploadImageToQiniuFromUrl(url, key);
 				if (succ) {
-					logger.info("QiNiuUtil.uploadImageToQiniuFromUrl succ where fromUrl="
-							+ url + " and key=" + key);
+					logger.info("QiNiuUtil.uploadImageToQiniuFromUrl succ where fromUrl=" + url + " and key=" + key);
 					url = "/" + key;
 				}
 			} catch (Exception e) {
@@ -269,8 +262,7 @@ public class DwrBackendBean {
 		RiddingPicture riddingPicture = new RiddingPicture();
 		riddingPicture.setUserId(ridding.getLeaderUserId());
 
-		ImageInfo imageInfo = QiNiuUtil.getImageInfoFromQiniu(SystemConst
-				.returnPhotoUrl(url));
+		ImageInfo imageInfo = QiNiuUtil.getImageInfoFromQiniu(SystemConst.returnPhotoUrl(url));
 		if (imageInfo == null) {
 			logger.error("imageInfo is null where url=" + url);
 		}
@@ -279,7 +271,6 @@ public class DwrBackendBean {
 		riddingPicture.setRiddingId(riddingId);
 		riddingPicture.setPhotoUrl(url);
 		try {
-			// String s2 = new String(desc.getBytes("utf8"),"gbk");
 			riddingPicture.setDescription(desc);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -303,8 +294,7 @@ public class DwrBackendBean {
 				Date adate = sdf.parse(year + takePicDate);
 				sendTime = adate.getTime();
 			} catch (ParseException e1) {
-				logger.error("addRiddingPicture date error where str="
-						+ takePicDate);
+				logger.error("addRiddingPicture date error where str=" + takePicDate);
 				e1.printStackTrace();
 				return false;
 			}
@@ -327,8 +317,7 @@ public class DwrBackendBean {
 	 * @param mianbaoUrl
 	 * @return
 	 */
-	public boolean getRiddingPictureFromMianBao(long riddingId,
-			String mianbaoUrl) {
+	public boolean getRiddingPictureFromMianBao(long riddingId, String mianbaoUrl) {
 		StringBuffer sbBuffer = UrlUtil.getSourceCodeFromUrl(mianbaoUrl);
 		if (sbBuffer == null) {
 			return false;
@@ -342,16 +331,13 @@ public class DwrBackendBean {
 				String dateStr = null;
 				String locationStr = null;
 
-				Long breadId = Long.valueOf(element.attr("data-waypoint_id")
-						.toString());
+				Long breadId = Long.valueOf(element.attr("data-waypoint_id").toString());
 
-				RiddingPicture picture = riddingService
-						.getRiddingPictureByBreadId(breadId, riddingId);
+				RiddingPicture picture = riddingService.getRiddingPictureByBreadId(breadId, riddingId);
 				if (picture != null) {
 					continue;
 				}
-				Elements imageElements = element
-						.getElementsByClass("photo-ctn");
+				Elements imageElements = element.getElementsByClass("photo-ctn");
 				if (imageElements.isEmpty()) {
 					continue;
 				}
@@ -360,8 +346,7 @@ public class DwrBackendBean {
 					imageUrl = links.attr("href");
 					logger.info(links.attr("href"));
 				}
-				Elements contentElements = element
-						.getElementsByClass("photo-comment");
+				Elements contentElements = element.getElementsByClass("photo-comment");
 				logger.info(contentElements.text());
 				content = contentElements.text();
 
@@ -369,13 +354,11 @@ public class DwrBackendBean {
 				logger.info(dateElements.text());
 				dateStr = dateElements.text();
 
-				Elements locationElements = element
-						.getElementsByClass("ellipsis_text");
+				Elements locationElements = element.getElementsByClass("ellipsis_text");
 				logger.info(locationElements.text());
 				locationStr = locationElements.text();
 
-				this.addRiddingPicture(riddingId, imageUrl, content, dateStr,
-						locationStr, breadId);
+				this.addRiddingPicture(riddingId, imageUrl, content, dateStr, locationStr, breadId);
 			}
 		}
 		return true;
@@ -400,5 +383,44 @@ public class DwrBackendBean {
 	 */
 	public boolean replyFeedback(long id, long userId, String reply) {
 		return feedbackService.replyFeedback(id, userId, reply);
+	}
+
+	/**
+	 * 更新广告内容
+	 * 
+	 * @param publicId
+	 * @param pictureId
+	 * @return
+	 */
+	public boolean setFirstPicUrl(long publicId, long pictureId) {
+		if (publicId < 0 || pictureId < 0) {
+			return false;
+		}
+		RiddingPicture riddingPicture = riddingService.getRiddingPictureById(pictureId);
+		if (riddingPicture == null) {
+			return false;
+		}
+
+		Public public1 = publicService.getPublicById(publicId);
+		if (public1 == null) {
+			return false;
+		}
+		public1.getJson();
+		public1.setFirstPicUrl(riddingPicture.getPhotoUrl());
+		public1.genJson();
+		return publicService.updatePublic(publicId, public1.getJson());
+	}
+
+	/**
+	 * 通过Id删除广告
+	 * 
+	 * @param publicId
+	 * @return
+	 */
+	public boolean deletePublicByPublicId(long publicId) {
+		if (publicId < 0) {
+			return false;
+		}
+		return publicService.deletePublicByPublicId(publicId);
 	}
 }

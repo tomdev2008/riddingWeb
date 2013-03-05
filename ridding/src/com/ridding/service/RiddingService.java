@@ -339,4 +339,12 @@ public interface RiddingService {
 	 * @return
 	 */
 	public RiddingPicture getRiddingPictureByBreadId(long breadId, long riddingId);
+
+	/**
+	 * 通过id得到照片
+	 * 
+	 * @param pictureId
+	 * @return
+	 */
+	public RiddingPicture getRiddingPictureById(long pictureId);
 }

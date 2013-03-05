@@ -1,4 +1,4 @@
-var _photoUrl;
+var _photoUrl="";
 var _recom_photoUrl;
 /**
  * 异步发送action

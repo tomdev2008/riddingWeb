@@ -56,6 +56,7 @@ table.topmargin {margin-top: 5cm}
     </div>
     <div>
        <input type="button" value="提交微博" id="submitWeiBo">
+       
     </div>
 </div>
 
@@ -76,7 +77,7 @@ table.topmargin {margin-top: 5cm}
 <tr id="${weibo.id!0}">
 <td>${weibo.id!0}</td>
 <td>${weibo.text!0}</td>
-<td><a href="" target="_blank"><img style="max-width: 200px; max-height: 200px;" src="${cfg_imageHost}${weibo.photoUrl!""}"/></a></td>
+<td><a href="" target="_blank"><img style="max-width: 200px; max-height: 200px;" src="${weibo.photoUrl!""}"/></a></td>
 <td><#if weibo.sourceType==1>新浪微博</#if></td>
 <td width="300">${weibo.sendTimeStr!""}</td>
 <td ><span style="color:red"><#if weibo.status==0>未发布<#else>已发布</#if></span></td>

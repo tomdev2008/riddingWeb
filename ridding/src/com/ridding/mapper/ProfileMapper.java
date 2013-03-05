@@ -3,6 +3,8 @@ package com.ridding.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.ridding.meta.Profile;
 
 /**
@@ -57,7 +59,7 @@ public interface ProfileMapper {
 	 * @param userids
 	 * @return
 	 */
-	public List<Profile> getProfileList(List<Long> userids);
+	public List<Profile> getProfileList(@Param("userids") List<Long> userids);
 
 	/**
 	 * 更新手机背景url
@@ -66,6 +68,28 @@ public interface ProfileMapper {
 	 * @return
 	 */
 	public int updateBackgroundUrl(Profile profile);
-	
+
+	/**
+	 * 
+	 * 
+	 * @return
+	 */
 	public List<Profile> getAllProfile();
+
+	/**
+	 * 淘宝id获取用户信息
+	 * 
+	 * @param taobaoCode
+	 * @return
+	 */
+	public Profile getProfileBytaobaoCode(@Param(value = "taobaoCode") String taobaoCode);
+
+	/**
+	 * 更新淘宝码
+	 * 
+	 * @param taobaoCode
+	 * @param userId
+	 * @return
+	 */
+	public int updateProfileTaobaoCode(@Param(value = "taobaoCode") String taobaoCode, @Param(value = "userId") long userId);
 }
