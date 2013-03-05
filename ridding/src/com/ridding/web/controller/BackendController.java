@@ -115,7 +115,7 @@ public class BackendController extends AbstractBaseController {
 		List<Ridding> riddingList = riddingService.getRecomRiddingList(weight, 50, false);
 		if (!ListUtils.isEmptyList(riddingList)) {
 			for (Ridding ridding : riddingList) {
-				List<RiddingPicture> pictureList = riddingService.getRiddingPictureByRiddingId(ridding.getId(), 50, new Date().getTime());
+				List<RiddingPicture> pictureList = riddingService.getRiddingPictureByRiddingId(ridding.getId(), 50, 0);
 				for (RiddingPicture riddingPicture : pictureList) {
 					riddingPicture.setPhotoUrl(SystemConst.returnPhotoUrl(riddingPicture.getPhotoUrl()));
 				}
@@ -140,7 +140,7 @@ public class BackendController extends AbstractBaseController {
 		ModelAndView mv = new ModelAndView("huodongList");
 		long requestTime = ServletRequestUtils.getLongParameter(request, "requestTime", -1L);
 		if (requestTime < 0) {
-			requestTime = new Date().getTime();
+			requestTime = 0;
 		}
 		int nextOrBefore = ServletRequestUtils.getIntParameter(request, "nextOrBefore", 0);
 		boolean isLarge = nextOrBefore > 0;
@@ -203,9 +203,7 @@ public class BackendController extends AbstractBaseController {
 		if (ridding == null) {
 			return mv;
 		}
-		Date data = new Date();
-		long requestTime = data.getTime();
-		List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, 0, requestTime);
+		List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, 0, 0);
 		mv.addObject("riddingPictures", riddingPictures);
 		mv.addObject("ridding", ridding);
 		return mv;
