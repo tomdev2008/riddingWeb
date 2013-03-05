@@ -140,7 +140,7 @@ public class BackendController extends AbstractBaseController {
 		ModelAndView mv = new ModelAndView("huodongList");
 		long requestTime = ServletRequestUtils.getLongParameter(request, "requestTime", -1L);
 		if (requestTime < 0) {
-			requestTime = 0;
+			requestTime = new Date().getTime();
 		}
 		int nextOrBefore = ServletRequestUtils.getIntParameter(request, "nextOrBefore", 0);
 		boolean isLarge = nextOrBefore > 0;
@@ -173,7 +173,7 @@ public class BackendController extends AbstractBaseController {
 		int pictureLimit = 3;
 		for (Ridding ridding : riddings) {
 			long riddingId = ridding.getId();
-			List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, pictureLimit, requestTime);
+			List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, pictureLimit, 0);
 			if (!ListUtils.isEmptyList(riddingPictures)) {
 				ridding.setRiddingPictureList(riddingPictures);
 			}
