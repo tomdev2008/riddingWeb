@@ -48,9 +48,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 					mailSenderInfo.setMailServerHost("smtp.163.com");
 					mailSenderInfo.setMailServerPort("25");
 					mailSenderInfo.setValidate(true);
-					mailSenderInfo.setUserName("yunshang_734@163.com");
-					mailSenderInfo.setPassword("Qby771234");
-					mailSenderInfo.setFromAddress("yunshang_734@163.com");
+					mailSenderInfo.setUserName("zyslovely@163.com");
+					mailSenderInfo.setPassword("zyslovely138233");
+					mailSenderInfo.setFromAddress("zyslovely@163.com");
 					mailSenderInfo.setToAddress("riddingapp@gmail.com");
 					mailSenderInfo.setSubject("Feedback with userId = "
 							+ userId);

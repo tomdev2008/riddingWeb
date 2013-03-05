@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -406,9 +407,14 @@ public class RiddingPublicController extends AbstractBaseController {
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
 		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
-		long userQQ = ServletRequestUtils.getLongParameter(request, "userQQ", -1L);
-		String userMail = ServletRequestUtils.getStringParameter(request, "userMail", "");
+		long userQQ = ServletRequestUtils.getLongParameter(request, "qq", -1L);
+		String userMail = ServletRequestUtils.getStringParameter(request, "mail", "");
 		String description = ServletRequestUtils.getStringParameter(request, "description", "");
+		if (StringUtils.isEmpty(description)) {
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
 		if (feedbackService.addFeedback(userId, userQQ, userMail, description)) {
 			returnObject.put("code", returnCodeConstance.SUCCESS);
 			mv.addObject("returnObject", returnObject.toString());
