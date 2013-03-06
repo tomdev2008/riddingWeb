@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ridding.constant.SystemConst;
+import com.ridding.constant.returnCodeConstance;
 import com.ridding.meta.IMap;
 import com.ridding.meta.ImageInfo;
 import com.ridding.meta.Public;
@@ -109,7 +110,8 @@ public class DwrBackendBean {
 	 * @param sourceType
 	 * @return
 	 */
-	public boolean updateWeiBo(String text, String date, String photoUrl, int sourceType, int weiboType, long riddingId) {
+	public boolean updateWeiBo(String text, String date, String photoUrl,
+			int sourceType, int weiboType, long riddingId) {
 		WeiBo weiBo = new WeiBo();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date adate;
@@ -137,7 +139,8 @@ public class DwrBackendBean {
 	 * @return
 	 */
 	public void sendApns(String text) {
-		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder
+				.getContext().getAuthentication()).getDetails();
 		if (myUser.getUserId() == 54) {
 			iosApnsService.sendApns(text);
 		}
@@ -149,7 +152,9 @@ public class DwrBackendBean {
 	 * @param riddingId
 	 * @param userId
 	 */
-	public boolean addPublicRecom(long riddingId, int weight, String firstPicUrl, String linkText, String linkImageUrl, String linkUrl) {
+	public boolean addPublicRecom(long riddingId, int weight,
+			String firstPicUrl, String linkText, String linkImageUrl,
+			String linkUrl) {
 		Public public1 = new Public();
 		public1.setRiddingId(riddingId);
 		public1.setFirstPicUrl(firstPicUrl);
@@ -234,7 +239,8 @@ public class DwrBackendBean {
 	 * @param takePicDate
 	 * @return
 	 */
-	public boolean addRiddingPicture(long riddingId, String url, String desc, String takePicDate, String takePicLocation, long breadId) {
+	public boolean addRiddingPicture(long riddingId, String url, String desc,
+			String takePicDate, String takePicLocation, long breadId) {
 		Ridding ridding = riddingService.getRidding(riddingId);
 		if (ridding == null) {
 			return false;
@@ -244,7 +250,8 @@ public class DwrBackendBean {
 			try {
 				boolean succ = QiNiuUtil.uploadImageToQiniuFromUrl(url, key);
 				if (succ) {
-					logger.info("QiNiuUtil.uploadImageToQiniuFromUrl succ where fromUrl=" + url + " and key=" + key);
+					logger.info("QiNiuUtil.uploadImageToQiniuFromUrl succ where fromUrl="
+							+ url + " and key=" + key);
 					url = "/" + key;
 				}
 			} catch (Exception e) {
@@ -256,7 +263,8 @@ public class DwrBackendBean {
 		RiddingPicture riddingPicture = new RiddingPicture();
 		riddingPicture.setUserId(ridding.getLeaderUserId());
 
-		ImageInfo imageInfo = QiNiuUtil.getImageInfoFromQiniu(SystemConst.returnPhotoUrl(url));
+		ImageInfo imageInfo = QiNiuUtil.getImageInfoFromQiniu(SystemConst
+				.returnPhotoUrl(url));
 		if (imageInfo == null) {
 			logger.error("imageInfo is null where url=" + url);
 		}
@@ -288,7 +296,8 @@ public class DwrBackendBean {
 				Date adate = sdf.parse(year + takePicDate);
 				sendTime = adate.getTime();
 			} catch (ParseException e1) {
-				logger.error("addRiddingPicture date error where str=" + takePicDate);
+				logger.error("addRiddingPicture date error where str="
+						+ takePicDate);
 				e1.printStackTrace();
 				return false;
 			}
@@ -297,10 +306,7 @@ public class DwrBackendBean {
 		riddingPicture.setTakePicDate(sendTime);
 		riddingPicture.setTakePicLocation(takePicLocation);
 
-		if (riddingService.addRiddingPicture(riddingPicture) > 0) {
-			return true;
-		}
-		return false;
+		return riddingService.addRiddingPicture(riddingPicture);
 
 	}
 
@@ -311,7 +317,8 @@ public class DwrBackendBean {
 	 * @param mianbaoUrl
 	 * @return
 	 */
-	public boolean getRiddingPictureFromMianBao(long riddingId, String mianbaoUrl) {
+	public boolean getRiddingPictureFromMianBao(long riddingId,
+			String mianbaoUrl) {
 		StringBuffer sbBuffer = UrlUtil.getSourceCodeFromUrl(mianbaoUrl);
 		if (sbBuffer == null) {
 			return false;
@@ -325,13 +332,16 @@ public class DwrBackendBean {
 				String dateStr = null;
 				String locationStr = null;
 
-				Long breadId = Long.valueOf(element.attr("data-waypoint_id").toString());
+				Long breadId = Long.valueOf(element.attr("data-waypoint_id")
+						.toString());
 
-				RiddingPicture picture = riddingService.getRiddingPictureByBreadId(breadId, riddingId);
+				RiddingPicture picture = riddingService
+						.getRiddingPictureByBreadId(breadId, riddingId);
 				if (picture != null) {
 					continue;
 				}
-				Elements imageElements = element.getElementsByClass("photo-ctn");
+				Elements imageElements = element
+						.getElementsByClass("photo-ctn");
 				if (imageElements.isEmpty()) {
 					continue;
 				}
@@ -340,7 +350,8 @@ public class DwrBackendBean {
 					imageUrl = links.attr("href");
 					logger.info(links.attr("href"));
 				}
-				Elements contentElements = element.getElementsByClass("photo-comment");
+				Elements contentElements = element
+						.getElementsByClass("photo-comment");
 				logger.info(contentElements.text());
 				content = contentElements.text();
 
@@ -348,11 +359,13 @@ public class DwrBackendBean {
 				logger.info(dateElements.text());
 				dateStr = dateElements.text();
 
-				Elements locationElements = element.getElementsByClass("ellipsis_text");
+				Elements locationElements = element
+						.getElementsByClass("ellipsis_text");
 				logger.info(locationElements.text());
 				locationStr = locationElements.text();
 
-				this.addRiddingPicture(riddingId, imageUrl, content, dateStr, locationStr, breadId);
+				this.addRiddingPicture(riddingId, imageUrl, content, dateStr,
+						locationStr, breadId);
 			}
 		}
 		return true;
@@ -369,7 +382,8 @@ public class DwrBackendBean {
 		if (publicId < 0 || pictureId < 0) {
 			return false;
 		}
-		RiddingPicture riddingPicture = riddingService.getRiddingPictureById(pictureId);
+		RiddingPicture riddingPicture = riddingService
+				.getRiddingPictureById(pictureId);
 		if (riddingPicture == null) {
 			return false;
 		}
