@@ -18,6 +18,7 @@
 		<result property="commentCount" column="commentCount" />
 		<result property="useCount" column="useCount" />
 		<result property="careCount" column="careCount" />
+		<result property="pictureCount" column="pictureCount" />
 		<result property="isSyncSina" column="isSyncSina" />
 
 	</resultMap>
@@ -37,6 +38,7 @@
 		commentCount,
 		careCount,
 		useCount,
+		pictureCount,
 		isSyncSina
 		)VALUES(
 		#{leaderUserId},
@@ -53,6 +55,7 @@
 		#{commentCount},
 		#{careCount},
 		#{useCount},
+		#{pictureCount},
 		#{isSyncSina}
 		)
 		<selectKey keyProperty="id" resultType="long">
@@ -147,6 +150,20 @@
 	<update id="incCommentCount" parameterType="long" flushCache="true"
 		statementType="PREPARED">
 		update TB_Ridding set commentCount = commentCount + 1
+		where id
+		= #{riddingId} ;
+	</update>
+
+	<update id="incPictureCount" parameterType="long" flushCache="true"
+		statementType="PREPARED">
+		update TB_Ridding set pictureCount = pictureCount + 1
+		where id
+		= #{riddingId} ;
+	</update>
+
+	<update id="decPictureCount" parameterType="long" flushCache="true"
+		statementType="PREPARED">
+		update TB_Ridding set pictureCount = pictureCount - 1
 		where id
 		= #{riddingId} ;
 	</update>
