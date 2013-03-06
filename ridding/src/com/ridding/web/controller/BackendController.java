@@ -115,7 +115,7 @@ public class BackendController extends AbstractBaseController {
 		List<Ridding> riddingList = riddingService.getRecomRiddingList(weight, 50, false);
 		if (!ListUtils.isEmptyList(riddingList)) {
 			for (Ridding ridding : riddingList) {
-				List<RiddingPicture> pictureList = riddingService.getRiddingPictureByRiddingId(ridding.getId(), 50, new Date().getTime());
+				List<RiddingPicture> pictureList = riddingService.getRiddingPictureByRiddingId(ridding.getId(), 50, 0);
 				for (RiddingPicture riddingPicture : pictureList) {
 					riddingPicture.setPhotoUrl(SystemConst.returnPhotoUrl(riddingPicture.getPhotoUrl()));
 				}
@@ -173,7 +173,7 @@ public class BackendController extends AbstractBaseController {
 		int pictureLimit = 3;
 		for (Ridding ridding : riddings) {
 			long riddingId = ridding.getId();
-			List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, pictureLimit, requestTime);
+			List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, pictureLimit, 0);
 			if (!ListUtils.isEmptyList(riddingPictures)) {
 				ridding.setRiddingPictureList(riddingPictures);
 			}
@@ -203,9 +203,7 @@ public class BackendController extends AbstractBaseController {
 		if (ridding == null) {
 			return mv;
 		}
-		Date data = new Date();
-		long requestTime = data.getTime();
-		List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, 0, requestTime);
+		List<RiddingPicture> riddingPictures = riddingService.getRiddingPictureByRiddingId(riddingId, 0, 0);
 		mv.addObject("riddingPictures", riddingPictures);
 		mv.addObject("ridding", ridding);
 		return mv;

@@ -15,7 +15,7 @@ $("#recom_pic").click(function(){
 	_imageurl=$("#recom_pic_ad_image_url").val();
 	_takepicdate=$("#recom_pic_ad_time").val();
 	_location=$("#recom_pic_ad_location").val();
-	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'addRiddingPicture',_riddingId,_imageurl,_text,_takepicdate,_location,submitWeiBoCB);
+	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'addRiddingPicture',_riddingId,_imageurl,_text,_takepicdate,_location,0,submitWeiBoCB);
 });
 
 
