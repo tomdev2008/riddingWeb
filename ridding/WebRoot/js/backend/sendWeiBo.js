@@ -58,9 +58,11 @@ function submitWeiBoCB(_flag){
 
 $("#sendApns").click(function(){
 	__text=$("#apnsValue").val();
+	_userId=$("#apnsValue_UserId").val();
+	_version=$("#apnsValue_Version").val();
 	if(__text==''){
 		alert('发送内容');
 		return;
 	}
-	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'sendApns',__text,submitWeiBoCB);
+	dwr.engine._execute(cfg_host+"/ridding", 'BackendBean', 'sendApns',__text,_userId,_version,submitWeiBoCB);
 });

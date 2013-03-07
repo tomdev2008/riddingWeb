@@ -142,10 +142,10 @@ public class DwrBackendBean {
 	 * @param text
 	 * @return
 	 */
-	public void sendApns(String text) {
+	public void sendApns(String text, long userId, String version) {
 		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
 		if (myUser.getUserId() == 54) {
-			iosApnsService.sendApns(text);
+			iosApnsService.sendApns(text, userId, version);
 		}
 	}
 

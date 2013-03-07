@@ -63,7 +63,9 @@ table.topmargin {margin-top: 5cm}
 
 <div style="display:none;">
     <p style="font-size: 20px;color: red;">发送iphone推送信息</p>
-    <input type="text" id="apnsValue" style="width:200px;"/>
+    <span>内容</span><input type="text" id="apnsValue" style="width:200px;"/>
+    <span>用户id,不填就是群发,要谨慎</span><input type="text" id="apnsValue_UserId" style="width:200px;"/>
+    <span>不发的版本号，输入的版本号不发的</span><input type="text" id="apnsValue_Version" style="width:200px;"/>
     <input type="button" id="sendApns" value="发送"/>
 </div>
 

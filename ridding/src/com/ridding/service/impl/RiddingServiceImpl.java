@@ -608,6 +608,16 @@ public class RiddingServiceImpl implements RiddingService {
 	 */
 	@Override
 	public int addRiddingPicture(RiddingPicture riddingPicture) {
+		
+		Profile profile = profileMapper.getProfile(riddingPicture.getUserId());
+		Ridding ridding = riddingMapper.getRidding(riddingPicture.getRiddingId());
+		List<RiddingAction> actions = riddingActionMapper.getRiddingActionsByType(riddingPicture.getRiddingId(), RiddingActions.Care.getValue());
+		if (!ListUtils.isEmptyList(actions)) {
+			for (RiddingAction action : actions) {
+				iosApnsService.sendUserApns(action.getUserId(), profile.getUserName() + "更新了他的骑行活动:" + ridding.getName() + "赶快去看下吧^^");
+			}
+		}
+		
 		if (riddingPicture.getTakePicDate() == 0) {
 			riddingPicture.setTakePicDate(new Date().getTime());
 		}
