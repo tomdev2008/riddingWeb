@@ -13,16 +13,13 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
 import org.springframework.stereotype.Service;
 
 import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.constant.SourceType;
-import com.ridding.constant.returnCodeConstance;
 import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.MapFixMapper;
 import com.ridding.mapper.ProfileMapper;
-import com.ridding.mapper.PublicMapper;
 import com.ridding.mapper.RiddingActionMapper;
 import com.ridding.mapper.RiddingCommentMapper;
 import com.ridding.mapper.RiddingMapper;
