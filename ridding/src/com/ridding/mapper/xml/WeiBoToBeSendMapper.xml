@@ -33,7 +33,7 @@
 		select * from
 		TB_WeiBo_ToBeSend
 		where
-		sendStatus=#{sendStatus};
+		sendStatus=#{sendStatus} limit 20;
 	</select>
 
 	<update id="updateWeiBoToBeSend" parameterType="WeiBoToBeSend"

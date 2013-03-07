@@ -21,7 +21,7 @@
 				<ref bean="sendWeiBoTrigger" />
 				<ref bean="repostWeiBoTrigger" />
 			    <ref bean="getRiddingSinaWeiBoTrigger" />
-				<!--<ref bean="sendWeiBoCommentTrigger" />-->
+				<ref bean="sendWeiBoCommentTrigger" />
 			</list>
 		</property>
 		<property name="startupDelay" value="0" />

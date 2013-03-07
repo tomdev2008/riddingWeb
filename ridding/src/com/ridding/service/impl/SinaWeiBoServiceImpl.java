@@ -514,7 +514,7 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 		if (!ListUtils.isEmptyList(weiBoToBeSendList)) {
 			for (WeiBoToBeSend weiBoToBeSend : weiBoToBeSendList) {
 				long accountId = weiBoToBeSend.getAccountId();
-				this.sendSinaWeiBoCallBack(accountId, "还在骑行路上么?骑行者iphone版新版上线,计划您的骑行路线,记录您的骑行旅程。 @骑去哪儿 " + SystemConst.getValue("AppHref"));
+				this.sendSinaWeiBoCallBack(accountId, "还在骑行路上么?骑行者V1.3[属于你的骑行应用]新版上线,计划您的骑行路线,记录您的骑行旅程。快去下载吧 @骑行者rider " + SystemConst.getValue("AppHref"));
 				weiBoToBeSend.setSendStatus(WeiBoToBeSend.SendStatus.Sended.getValue());
 				if (weiBoToBeSendMapper.updateWeiBoToBeSend(weiBoToBeSend) > 0) {
 					logger.info("Succeed to send comment to " + accountId + "!");
