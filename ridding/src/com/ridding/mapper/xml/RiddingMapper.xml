@@ -125,7 +125,9 @@
 			and #{lastUpdateTime} > lastUpdateTime order by
 			lastUpdateTime desc
 		</if>
-		limit #{limit};
+		<if test="limit>0">
+			limit #{limit};
+		</if>
 	</select>
 
 	<update id="incLikeCount" parameterType="long" flushCache="true"

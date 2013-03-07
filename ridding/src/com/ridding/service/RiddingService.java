@@ -301,7 +301,7 @@ public interface RiddingService {
 	 * @return
 	 */
 	public List<Ridding> getRiddingsbyUse(int limit, int offset);
-	
+
 	/**
 	 * 通过照片数获取骑行活动
 	 * 
@@ -368,4 +368,11 @@ public interface RiddingService {
 	 * @return
 	 */
 	public RiddingPicture getRiddingPictureById(long pictureId);
+
+	/**
+	 * 修复pictureCount
+	 * 
+	 * @return
+	 */
+	public boolean fixPictureCount();
 }

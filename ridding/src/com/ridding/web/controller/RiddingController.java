@@ -968,5 +968,4 @@ public class RiddingController extends AbstractBaseController {
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}
-
 }

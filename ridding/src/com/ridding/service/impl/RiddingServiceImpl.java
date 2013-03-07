@@ -13,10 +13,12 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
 import org.springframework.stereotype.Service;
 
 import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.constant.SourceType;
+import com.ridding.constant.returnCodeConstance;
 import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.MapFixMapper;
 import com.ridding.mapper.ProfileMapper;
@@ -52,6 +54,7 @@ import com.ridding.util.HashMapMaker;
 import com.ridding.util.ListUtils;
 import com.ridding.util.TimeUtil;
 import com.ridding.util.http.RiddingUserCache;
+import com.sun.org.glassfish.external.statistics.Statistic;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@corp.netease.com
@@ -1149,5 +1152,44 @@ public class RiddingServiceImpl implements RiddingService {
 	 */
 	public RiddingPicture getRiddingPictureById(long pictureId) {
 		return riddingPictureMapper.getRiddingPicturesById(pictureId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#fixPictureCount()
+	 */
+	public boolean fixPictureCount() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("isLarger", 1);
+		map.put("lastUpdateTime", 0);
+		List<Ridding> riddingList = riddingMapper
+				.getRiddingListByLastUpdateTime(map);
+		if (ListUtils.isEmptyList(riddingList)) {
+			logger.error("Failed to get riddingList!");
+			return false;
+		}
+		logger.info("Success to get riddingList!");
+		for (Ridding ridding : riddingList) {
+			Map<String, Object> hashMap = new HashMap<String, Object>();
+			hashMap.put("riddingId", ridding.getId());
+			hashMap.put("createTime", 0);
+			List<RiddingPicture> riddingPictureList = riddingPictureMapper
+					.getRiddingPicturesByRiddingId(hashMap);
+			if (ListUtils.isEmptyList(riddingPictureList)) {
+				logger.error("Failed to get riddingPictureList with riddingId = "
+						+ ridding.getId());
+				continue;
+			}
+			int pictureCount = 0;
+			for (RiddingPicture riddingPicture : riddingPictureList) {
+				if (riddingPicture != null) {
+					pictureCount++;
+				}
+			}
+			ridding.setPictureCount(pictureCount);
+		}
+		logger.info("Success to fix the pictureCount!");
+		return true;
 	}
 }
