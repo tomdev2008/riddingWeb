@@ -116,6 +116,22 @@ public interface RiddingMapper {
 	public int incCommentCount(long riddingId);
 
 	/**
+	 * 照片数增加
+	 * 
+	 * @param riddingId
+	 * @return
+	 */
+	public int incPictureCount(long riddingId);
+
+	/**
+	 * 照片数减少
+	 * 
+	 * @param riddingId
+	 * @return
+	 */
+	public int decPictureCount(long riddingId);
+
+	/**
 	 * 取出喜欢数排行骑行
 	 * 
 	 * @param map
@@ -138,4 +154,12 @@ public interface RiddingMapper {
 	 * @return
 	 */
 	public List<Ridding> getRiddingsbyUse(Map<String, Object> map);
+
+	/**
+	 * 取出照片数排行骑行
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public List<Ridding> getRiddingsbyPicture(Map<String, Object> map);
 }

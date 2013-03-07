@@ -65,7 +65,7 @@
 		parameterType="hashMap">
 		SELECT * from TB_Ridding_Picture where
 		riddingId=#{riddingId} and
-		createTime > #{createTime}  order by
+		createTime > #{createTime} order by
 		createTime asc
 		<if test="limit>0">
 			limit #{limit}

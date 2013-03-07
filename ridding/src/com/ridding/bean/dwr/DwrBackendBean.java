@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ridding.constant.SystemConst;
+
 import com.ridding.meta.Feedback;
 import com.ridding.meta.IMap;
 import com.ridding.meta.ImageInfo;
@@ -303,10 +304,7 @@ public class DwrBackendBean {
 		riddingPicture.setTakePicDate(sendTime);
 		riddingPicture.setTakePicLocation(takePicLocation);
 
-		if (riddingService.addRiddingPicture(riddingPicture) > 0) {
-			return true;
-		}
-		return false;
+		return riddingService.addRiddingPicture(riddingPicture);
 
 	}
 

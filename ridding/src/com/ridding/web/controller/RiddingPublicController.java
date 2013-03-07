@@ -402,6 +402,13 @@ public class RiddingPublicController extends AbstractBaseController {
 		return mv;
 	}
 
+	/**
+	 * 添加反馈
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	public ModelAndView addFeedback(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		JSONObject returnObject = new JSONObject();

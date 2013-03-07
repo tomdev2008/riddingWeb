@@ -13,10 +13,12 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
 import org.springframework.stereotype.Service;
 
 import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.constant.SourceType;
+import com.ridding.constant.returnCodeConstance;
 import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.MapFixMapper;
 import com.ridding.mapper.ProfileMapper;
@@ -607,8 +609,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * .RiddingPicture)
 	 */
 	@Override
-	public int addRiddingPicture(RiddingPicture riddingPicture) {
-		
+	public boolean addRiddingPicture(RiddingPicture riddingPicture) {
 		Profile profile = profileMapper.getProfile(riddingPicture.getUserId());
 		Ridding ridding = riddingMapper.getRidding(riddingPicture.getRiddingId());
 		List<RiddingAction> actions = riddingActionMapper.getRiddingActionsByType(riddingPicture.getRiddingId(), RiddingActions.Care.getValue());
@@ -617,11 +618,13 @@ public class RiddingServiceImpl implements RiddingService {
 				iosApnsService.sendUserApns(action.getUserId(), profile.getUserName() + "更新了他的骑行活动:" + ridding.getName() + "赶快去看下吧^^");
 			}
 		}
-		
 		if (riddingPicture.getTakePicDate() == 0) {
 			riddingPicture.setTakePicDate(new Date().getTime());
 		}
-		return riddingPictureMapper.addRiddingPicture(riddingPicture);
+		if (riddingPictureMapper.addRiddingPicture(riddingPicture) > 0) {
+			return true;
+		}
+		return false;
 	}
 
 	/*
@@ -1006,7 +1009,7 @@ public class RiddingServiceImpl implements RiddingService {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("limit", limit);
 		hashMap.put("offset", offset);
-		List<Ridding> riddingList = riddingMapper.getRiddingsbyLike(hashMap);
+		List<Ridding> riddingList = riddingMapper.getRiddingsbyComment(hashMap);
 		this.insertRiddingInfo(riddingList);
 		return riddingList;
 	}
@@ -1021,7 +1024,16 @@ public class RiddingServiceImpl implements RiddingService {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("limit", limit);
 		hashMap.put("offset", offset);
-		List<Ridding> riddingList = riddingMapper.getRiddingsbyLike(hashMap);
+		List<Ridding> riddingList = riddingMapper.getRiddingsbyUse(hashMap);
+		this.insertRiddingInfo(riddingList);
+		return riddingList;
+	}
+
+	public List<Ridding> getRiddingsbyPicture(int limit, int offset) {
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("limit", limit);
+		hashMap.put("offset", offset);
+		List<Ridding> riddingList = riddingMapper.getRiddingsbyPicture(hashMap);
 		this.insertRiddingInfo(riddingList);
 		return riddingList;
 	}
@@ -1090,5 +1102,41 @@ public class RiddingServiceImpl implements RiddingService {
 	 */
 	public RiddingPicture getRiddingPictureById(long pictureId) {
 		return riddingPictureMapper.getRiddingPicturesById(pictureId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#fixPictureCount()
+	 */
+	public boolean fixPictureCount() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("isLarger", 1);
+		map.put("lastUpdateTime", 0);
+		List<Ridding> riddingList = riddingMapper.getRiddingListByLastUpdateTime(map);
+		if (ListUtils.isEmptyList(riddingList)) {
+			logger.error("Failed to get riddingList!");
+			return false;
+		}
+		logger.info("Success to get riddingList!");
+		for (Ridding ridding : riddingList) {
+			Map<String, Object> hashMap = new HashMap<String, Object>();
+			hashMap.put("riddingId", ridding.getId());
+			hashMap.put("createTime", 0);
+			List<RiddingPicture> riddingPictureList = riddingPictureMapper.getRiddingPicturesByRiddingId(hashMap);
+			if (ListUtils.isEmptyList(riddingPictureList)) {
+				logger.error("Failed to get riddingPictureList with riddingId = " + ridding.getId());
+				continue;
+			}
+			int pictureCount = 0;
+			for (RiddingPicture riddingPicture : riddingPictureList) {
+				if (riddingPicture != null) {
+					pictureCount++;
+				}
+			}
+			ridding.setPictureCount(pictureCount);
+		}
+		logger.info("Success to fix the pictureCount!");
+		return true;
 	}
 }

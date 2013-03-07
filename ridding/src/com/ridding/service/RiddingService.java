@@ -80,7 +80,8 @@ public interface RiddingService {
 	 * @param createTime
 	 * @return
 	 */
-	public List<ActivityRidding> getSelfRiddingUserList(long userId, int limit, long createTime, boolean isLarger);
+	public List<ActivityRidding> getSelfRiddingUserList(long userId, int limit,
+			long createTime, boolean isLarger);
 
 	/**
 	 * 通过骑行id得到所有用户信息
@@ -90,7 +91,8 @@ public interface RiddingService {
 	 * @param createTime
 	 * @return
 	 */
-	public List<ProfileVO> getRiddingUserListToProfile(long riddingId, int limit, int createTime);
+	public List<ProfileVO> getRiddingUserListToProfile(long riddingId,
+			int limit, int createTime);
 
 	/**
 	 * 添加骑行用户
@@ -98,7 +100,8 @@ public interface RiddingService {
 	 * @param sinaIdList
 	 * @return
 	 */
-	public boolean insertRiddingUsers(List<Profile> profileList, long riddingId, int sourceType, long userId);
+	public boolean insertRiddingUsers(List<Profile> profileList,
+			long riddingId, int sourceType, long userId);
 
 	/**
 	 * 删除骑行用户
@@ -134,7 +137,8 @@ public interface RiddingService {
 	 * @param offset
 	 * @return
 	 */
-	public List<ActivityRidding> getRiddingListbyUserId(long userId, int limit, int offset);
+	public List<ActivityRidding> getRiddingListbyUserId(long userId, int limit,
+			int offset);
 
 	/**
 	 * 
@@ -161,7 +165,7 @@ public interface RiddingService {
 	 * @param riddingPicture
 	 * @return
 	 */
-	public int addRiddingPicture(RiddingPicture riddingPicture);
+	public boolean addRiddingPicture(RiddingPicture riddingPicture);
 
 	/**
 	 * 得到骑行图片
@@ -170,7 +174,8 @@ public interface RiddingService {
 	 * @param userid
 	 * @return
 	 */
-	public List<RiddingPicture> getRiddingPictureByRiddingId(long riddingId, int limit, long lastUpdateTime);
+	public List<RiddingPicture> getRiddingPictureByRiddingId(long riddingId,
+			int limit, long lastUpdateTime);
 
 	/**
 	 * 根据最近更新的骑行活动
@@ -179,7 +184,8 @@ public interface RiddingService {
 	 * @param limit
 	 * @return
 	 */
-	public List<Ridding> getRiddingListByLastUpdateTime(long lastUpdateTime, int limit, Boolean isLarger, int isRecom);
+	public List<Ridding> getRiddingListByLastUpdateTime(long lastUpdateTime,
+			int limit, Boolean isLarger, int isRecom);
 
 	/**
 	 * 得到推荐的骑行活动
@@ -189,7 +195,8 @@ public interface RiddingService {
 	 * @param isLarger
 	 * @return
 	 */
-	public List<Ridding> getRecomRiddingList(int weight, int limit, Boolean isLarger);
+	public List<Ridding> getRecomRiddingList(int weight, int limit,
+			Boolean isLarger);
 
 	/**
 	 * 设置骑行活动为推荐
@@ -240,7 +247,8 @@ public interface RiddingService {
 	 * @param action
 	 * @return
 	 */
-	public boolean checkIsInRiddingAction(long riddingId, long userId, RiddingActions action, long objectId);
+	public boolean checkIsInRiddingAction(long riddingId, long userId,
+			RiddingActions action, long objectId);
 
 	/**
 	 * 检查用户是否在骑行活动中
@@ -258,7 +266,8 @@ public interface RiddingService {
 	 * @param userId
 	 * @return
 	 */
-	public List<RiddingPicture> getRiddingPictureList(long riddingId, long userId, int limit, long createTime);
+	public List<RiddingPicture> getRiddingPictureList(long riddingId,
+			long userId, int limit, long createTime);
 
 	/**
 	 * 得到用户操作记录,判断用户是否喜欢过，使用过，关注过
@@ -294,6 +303,15 @@ public interface RiddingService {
 	public List<Ridding> getRiddingsbyUse(int limit, int offset);
 
 	/**
+	 * 通过照片数获取骑行活动
+	 * 
+	 * @param limit
+	 * @param offset
+	 * @return
+	 */
+	public List<Ridding> getRiddingsbyPicture(int limit, int offset);
+
+	/**
 	 * 增加照片喜欢
 	 * 
 	 * @param riddingId
@@ -301,7 +319,8 @@ public interface RiddingService {
 	 * @param objectId
 	 * @return
 	 */
-	public RiddingActionResponse incPicLike(long riddingId, long userId, long objectId);
+	public RiddingActionResponse incPicLike(long riddingId, long userId,
+			long objectId);
 
 	/**
 	 * 检查是否在骑行活动中
@@ -311,7 +330,8 @@ public interface RiddingService {
 	 * @param action
 	 * @return
 	 */
-	public boolean checkIsInRiddingAction(long riddingId, long userId, RiddingActions action);
+	public boolean checkIsInRiddingAction(long riddingId, long userId,
+			RiddingActions action);
 
 	/**
 	 * 通过类型得到操作记录
@@ -338,7 +358,8 @@ public interface RiddingService {
 	 * @param riddingId
 	 * @return
 	 */
-	public RiddingPicture getRiddingPictureByBreadId(long breadId, long riddingId);
+	public RiddingPicture getRiddingPictureByBreadId(long breadId,
+			long riddingId);
 
 	/**
 	 * 通过id得到照片
@@ -347,4 +368,11 @@ public interface RiddingService {
 	 * @return
 	 */
 	public RiddingPicture getRiddingPictureById(long pictureId);
+
+	/**
+	 * 修复pictureCount
+	 * 
+	 * @return
+	 */
+	public boolean fixPictureCount();
 }
