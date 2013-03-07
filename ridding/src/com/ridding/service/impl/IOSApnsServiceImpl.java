@@ -25,7 +25,7 @@ import com.ridding.util.ListUtils;
 @Service("iosApnsService")
 public class IOSApnsServiceImpl implements IOSApnsService {
 
-	private static final String PASSWORD = "13823381398";
+	private static final String PASSWORD = "138233";
 	// developerApns.p12  aps_product_identity.p12  推送的p12是直接用证书到处，不是用key导出
 	private static final String FILENAME = "aps_product_identity.p12";
 
