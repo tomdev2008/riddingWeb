@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -19,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ridding.constant.SystemConst;
+import com.ridding.meta.Feedback;
 import com.ridding.meta.IMap;
 import com.ridding.meta.ImageInfo;
 import com.ridding.meta.Public;
@@ -29,6 +31,7 @@ import com.ridding.meta.WeiBo;
 import com.ridding.meta.Public.PublicContentType;
 import com.ridding.meta.Public.PublicType;
 import com.ridding.security.MyUser;
+import com.ridding.service.FeedbackService;
 import com.ridding.service.IOSApnsService;
 import com.ridding.service.PublicService;
 import com.ridding.service.RiddingCommentService;
@@ -64,6 +67,9 @@ public class DwrBackendBean {
 
 	@Resource
 	private RiddingCommentService riddingCommentService;
+
+	@Resource
+	private FeedbackService feedbackService;
 
 	/**
 	 * 更新非法的新浪微博
@@ -356,6 +362,27 @@ public class DwrBackendBean {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * 获取反馈列表
+	 * 
+	 * @return
+	 */
+	public List<Feedback> getFeedbackList() {
+		return feedbackService.getFeedbackList();
+	}
+
+	/**
+	 * 回复反馈
+	 * 
+	 * @param id
+	 * @param userId
+	 * @param reply
+	 * @return
+	 */
+	public boolean replyFeedback(long id, long userId, String reply) {
+		return feedbackService.replyFeedback(id, userId, reply);
 	}
 
 	/**
