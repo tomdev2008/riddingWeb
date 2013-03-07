@@ -1077,7 +1077,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#removeRiddingPicture(long)
 	 */
 	public boolean removeRiddingPicture(long pictureId) {
-		this.fixPictureCount();
+		
 		return riddingPictureMapper.deleteRiddingPicture(pictureId) > 0;
 	}
 
@@ -1103,10 +1103,10 @@ public class RiddingServiceImpl implements RiddingService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 * 修复程序
 	 * @see com.ridding.service.RiddingService#fixPictureCount()
 	 */
-	public boolean fixPictureCount() {
+	private  boolean fixPictureCount() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("isLarger", 1);
 		map.put("lastUpdateTime", 0);

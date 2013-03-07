@@ -369,10 +369,4 @@ public interface RiddingService {
 	 */
 	public RiddingPicture getRiddingPictureById(long pictureId);
 
-	/**
-	 * 修复pictureCount
-	 * 
-	 * @return
-	 */
-	public boolean fixPictureCount();
 }
