@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -35,7 +34,6 @@ import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.meta.vo.UserRelationVO;
-import com.ridding.service.FeedbackService;
 import com.ridding.service.MapService;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingCommentService;
@@ -68,9 +66,6 @@ public class RiddingPublicController extends AbstractBaseController {
 
 	@Resource
 	private UserRelationService userRelationService;
-
-	@Resource
-	private FeedbackService feedbackService;
 
 	/**
 	 * 得到用户信息
@@ -402,33 +397,4 @@ public class RiddingPublicController extends AbstractBaseController {
 		return mv;
 	}
 
-	/**
-	 * 添加反馈
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	public ModelAndView addFeedback(HttpServletRequest request, HttpServletResponse response) {
-		response.setContentType("text/html;charset=UTF-8");
-		JSONObject returnObject = new JSONObject();
-		ModelAndView mv = new ModelAndView("return");
-		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
-		long userQQ = ServletRequestUtils.getLongParameter(request, "qq", -1L);
-		String userMail = ServletRequestUtils.getStringParameter(request, "mail", "");
-		String description = ServletRequestUtils.getStringParameter(request, "description", "");
-		if (StringUtils.isEmpty(description)) {
-			returnObject.put("code", returnCodeConstance.FAILED);
-			mv.addObject("returnObject", returnObject.toString());
-			return mv;
-		}
-		if (feedbackService.addFeedback(userId, userQQ, userMail, description)) {
-			returnObject.put("code", returnCodeConstance.SUCCESS);
-			mv.addObject("returnObject", returnObject.toString());
-			return mv;
-		}
-		returnObject.put("code", returnCodeConstance.FAILED);
-		mv.addObject("returnObject", returnObject.toString());
-		return mv;
-	}
 }

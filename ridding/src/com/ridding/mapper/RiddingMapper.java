@@ -3,6 +3,8 @@ package com.ridding.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.ridding.meta.Ridding;
 
 /**
@@ -80,8 +82,7 @@ public interface RiddingMapper {
 	 * @param hashMap
 	 * @return
 	 */
-	public List<Ridding> getRiddingListByLastUpdateTime(
-			Map<String, Object> hashMap);
+	public List<Ridding> getRiddingListByLastUpdateTime(Map<String, Object> hashMap);
 
 	/**
 	 * 喜欢数
@@ -162,4 +163,13 @@ public interface RiddingMapper {
 	 * @return
 	 */
 	public List<Ridding> getRiddingsbyPicture(Map<String, Object> map);
+
+	/**
+	 * 更新照片数量
+	 * 
+	 * @param riddingId
+	 * @param pictureCount
+	 * @return
+	 */
+	public int updateRiddingPictureCount(@Param(value = "riddingId") long riddingId, @Param(value = "pictureCount") int pictureCount);
 }

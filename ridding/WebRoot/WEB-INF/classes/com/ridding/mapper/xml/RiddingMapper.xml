@@ -207,4 +207,11 @@
 		#{limit}
 		offset #{offset};
 	</select>
+	
+	<update id="updateRiddingPictureCount" parameterType="long" flushCache="true"
+		statementType="PREPARED">
+		update TB_Ridding set pictureCount = #{pictureCount}
+		where id
+		= #{riddingId} ;
+	</update>
 </mapper>

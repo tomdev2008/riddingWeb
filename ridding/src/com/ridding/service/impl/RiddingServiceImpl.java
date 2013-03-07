@@ -1073,11 +1073,11 @@ public class RiddingServiceImpl implements RiddingService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * <<<<<<< HEAD
 	 * 
 	 * @see com.ridding.service.RiddingService#removeRiddingPicture(long)
 	 */
 	public boolean removeRiddingPicture(long pictureId) {
+		this.fixPictureCount();
 		return riddingPictureMapper.deleteRiddingPicture(pictureId) > 0;
 	}
 
@@ -1125,13 +1125,7 @@ public class RiddingServiceImpl implements RiddingService {
 				logger.error("Failed to get riddingPictureList with riddingId = " + ridding.getId());
 				continue;
 			}
-			int pictureCount = 0;
-			for (RiddingPicture riddingPicture : riddingPictureList) {
-				if (riddingPicture != null) {
-					pictureCount++;
-				}
-			}
-			ridding.setPictureCount(pictureCount);
+			riddingMapper.updateRiddingPictureCount(ridding.getId(), riddingPictureList.size());
 		}
 		logger.info("Success to fix the pictureCount!");
 		return true;
