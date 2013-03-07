@@ -196,4 +196,13 @@
 		#{limit}
 		offset #{offset};
 	</select>
+
+	<select id="getRiddingsbyPicture" resultMap="riddingMap"
+		parameterType="hashMap">
+		select * from TB_Ridding
+		order by pictureCount desc
+		limit
+		#{limit}
+		offset #{offset};
+	</select>
 </mapper>

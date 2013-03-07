@@ -301,6 +301,15 @@ public interface RiddingService {
 	 * @return
 	 */
 	public List<Ridding> getRiddingsbyUse(int limit, int offset);
+	
+	/**
+	 * 通过照片数获取骑行活动
+	 * 
+	 * @param limit
+	 * @param offset
+	 * @return
+	 */
+	public List<Ridding> getRiddingsbyPicture(int limit, int offset);
 
 	/**
 	 * 增加照片喜欢

@@ -1052,7 +1052,7 @@ public class RiddingServiceImpl implements RiddingService {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("limit", limit);
 		hashMap.put("offset", offset);
-		List<Ridding> riddingList = riddingMapper.getRiddingsbyLike(hashMap);
+		List<Ridding> riddingList = riddingMapper.getRiddingsbyComment(hashMap);
 		this.insertRiddingInfo(riddingList);
 		return riddingList;
 	}
@@ -1067,7 +1067,16 @@ public class RiddingServiceImpl implements RiddingService {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("limit", limit);
 		hashMap.put("offset", offset);
-		List<Ridding> riddingList = riddingMapper.getRiddingsbyLike(hashMap);
+		List<Ridding> riddingList = riddingMapper.getRiddingsbyUse(hashMap);
+		this.insertRiddingInfo(riddingList);
+		return riddingList;
+	}
+
+	public List<Ridding> getRiddingsbyPicture(int limit, int offset) {
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("limit", limit);
+		hashMap.put("offset", offset);
+		List<Ridding> riddingList = riddingMapper.getRiddingsbyPicture(hashMap);
 		this.insertRiddingInfo(riddingList);
 		return riddingList;
 	}

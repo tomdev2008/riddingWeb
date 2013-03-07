@@ -154,4 +154,12 @@ public interface RiddingMapper {
 	 * @return
 	 */
 	public List<Ridding> getRiddingsbyUse(Map<String, Object> map);
+
+	/**
+	 * 取出照片数排行骑行
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public List<Ridding> getRiddingsbyPicture(Map<String, Object> map);
 }
