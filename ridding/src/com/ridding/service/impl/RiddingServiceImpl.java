@@ -619,6 +619,7 @@ public class RiddingServiceImpl implements RiddingService {
 			riddingPicture.setTakePicDate(new Date().getTime());
 		}
 		if (riddingPictureMapper.addRiddingPicture(riddingPicture) > 0) {
+			riddingMapper.incPictureCount(riddingPicture.getRiddingId());
 			return true;
 		}
 		return false;
@@ -1077,7 +1078,11 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#removeRiddingPicture(long)
 	 */
 	public boolean removeRiddingPicture(long pictureId) {
-		
+		RiddingPicture riddingPicture = riddingPictureMapper.getRiddingPicturesById(pictureId);
+		if (riddingPicture == null) {
+			return false;
+		}
+		riddingMapper.decPictureCount(riddingPicture.getRiddingId());
 		return riddingPictureMapper.deleteRiddingPicture(pictureId) > 0;
 	}
 
@@ -1102,11 +1107,11 @@ public class RiddingServiceImpl implements RiddingService {
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 修复程序
+	 * (non-Javadoc) 修复程序
+	 * 
 	 * @see com.ridding.service.RiddingService#fixPictureCount()
 	 */
-	private  boolean fixPictureCount() {
+	private boolean fixPictureCount() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("isLarger", 1);
 		map.put("lastUpdateTime", 0);
