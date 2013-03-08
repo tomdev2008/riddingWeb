@@ -178,6 +178,7 @@ public class DwrBackendBean {
 	}
 
 	/**
+	 * 删除骑行评论
 	 * 
 	 * @param riddingId
 	 * @param commentId
@@ -223,6 +224,7 @@ public class DwrBackendBean {
 	}
 
 	/**
+	 * 更新推荐头图
 	 * 
 	 * @param id
 	 * @param picUrl
