@@ -28,7 +28,8 @@ public interface PublicService {
 	 * @param weight
 	 * @return
 	 */
-	public List<Public> getPublicListByType(int type, int limit, int weight, boolean isLarger);
+	public List<Public> getPublicListByType(int type, int limit, int weight,
+			boolean isLarger);
 
 	/**
 	 * 更新广告

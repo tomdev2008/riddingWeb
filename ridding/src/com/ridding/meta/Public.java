@@ -1,5 +1,7 @@
 package com.ridding.meta;
 
+import com.ridding.constant.returnCodeConstance;
+
 import net.sf.json.JSONObject;
 
 /**
@@ -115,12 +117,17 @@ public class Public {
 	}
 
 	/**
-	 *广告类型
+	 * 广告类型
 	 * 
 	 * @author apple
 	 * 
 	 */
 	public enum PublicType {
+		NotPublicRecom {
+			public int getValue() {
+				return 0;
+			}
+		},
 		/**
 		 * 广场推荐
 		 */
@@ -142,7 +149,7 @@ public class Public {
 	}
 
 	/**
-	 *广告类型
+	 * 广告类型
 	 * 
 	 * @author apple
 	 * 

@@ -205,6 +205,14 @@ public interface RiddingService {
 	public boolean setRiddingIsRecom(long riddingId);
 
 	/**
+	 * 取消骑行活动推荐
+	 * 
+	 * @param riddingId
+	 * @return
+	 */
+	public boolean setRiddingIsNotRecom(long publicId, long riddingId);
+
+	/**
 	 * 增加喜欢
 	 * 
 	 * @param riddingId
