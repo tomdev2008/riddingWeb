@@ -96,68 +96,34 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 	 * @return
 	 */
 	public boolean asyncSendOneMessages(final ApnsDevice device, final String messageName, final String message, final String title) {
-		// executorService.execute(new Runnable() {
-		// @Override
-		// public void run() {
-		try {
-			PayLoad payLoad = new PayLoad();
-			payLoad.addAlert(message);
-			payLoad.addSound("default");
-			// payLoad.addCustomDictionary(messageName, message);
+		executorService.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					logger.info("asyncSendOneMessages beginSend where device userId=" + device.getUserId() + " message=" + message);
+					PayLoad payLoad = new PayLoad();
+					payLoad.addAlert(message);
+					payLoad.addSound("default");
 
-			PushNotificationManager pushManager = PushNotificationManager.getInstance();
-			pushManager.addDevice("iPhone", device.getToken());
-			File resourceFile = ResourceUtils.getFile("classpath:" + FILENAME);
-			pushManager.initializeConnection(HOST, 2195, resourceFile.getPath(), PASSWORD, SSLConnectionHelper.KEYSTORE_TYPE_PKCS12);
+					PushNotificationManager pushManager = PushNotificationManager.getInstance();
+					pushManager.addDevice("iPhone", device.getToken());
+					File resourceFile = ResourceUtils.getFile("classpath:" + FILENAME);
+					pushManager.initializeConnection(HOST, 2195, resourceFile.getPath(), PASSWORD, SSLConnectionHelper.KEYSTORE_TYPE_PKCS12);
 
-			// Send Push
-			Device client = pushManager.getDevice("iPhone");
-			pushManager.sendNotification(client, payLoad);
-			pushManager.stopConnection();
+					// Send Push
+					Device client = pushManager.getDevice(String.valueOf(device.getUserId()));
+					pushManager.sendNotification(client, payLoad);
+					pushManager.stopConnection();
 
-			pushManager.removeDevice("iPhone");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		// }
-		// });
+					pushManager.removeDevice(String.valueOf(device.getUserId()));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		return true;
 	}
 
-	/**
-	 * 发送一条信息
-	 * 
-	 * @param device
-	 * @param messageName
-	 * @param message
-	 * @param title
-	 * @return
-	 */
-	public boolean sendOneMessages(ApnsDevice device, String messageName, String message, String title) {
-		try {
-			PayLoad payLoad = new PayLoad();
-			payLoad.addAlert(message);
-			payLoad.addSound("default");
-			payLoad.addCustomDictionary(messageName, message);
-
-			PushNotificationManager pushManager = PushNotificationManager.getInstance();
-			pushManager.addDevice("iPhone", "22992a6fd4df59991bec9338ed3550b1286fe938555fd46b478dda98933d454b");
-			File resourceFile = ResourceUtils.getFile("classpath:" + FILENAME);
-
-			pushManager.initializeConnection(HOST, 2195, resourceFile.getPath(), PASSWORD, SSLConnectionHelper.KEYSTORE_TYPE_PKCS12);
-
-			// Send Push
-			Device client = pushManager.getDevice("iPhone");
-			pushManager.sendNotification(client, payLoad);
-			pushManager.stopConnection();
-
-			pushManager.removeDevice("iPhone");
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
 
 	/*
 	 * (non-Javadoc)
