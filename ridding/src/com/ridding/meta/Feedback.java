@@ -45,6 +45,18 @@ public class Feedback {
 	 * 回复内容
 	 */
 	private String reply;
+	/**
+	 * 设备型号
+	 */
+	private String deviceVersion;
+	/**
+	 * 系统版本
+	 */
+	private String version;
+	/**
+	 * 软件版本
+	 */
+	private String appVersion;
 
 	public enum FeedbackStatus {
 		/**
@@ -147,5 +159,29 @@ public class Feedback {
 
 	public void setReply(String reply) {
 		this.reply = reply;
+	}
+
+	public String getDeviceVersion() {
+		return deviceVersion;
+	}
+
+	public void setDeviceVersion(String deviceVersion) {
+		this.deviceVersion = deviceVersion;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getAppVersion() {
+		return appVersion;
+	}
+
+	public void setAppVersion(String appVersion) {
+		this.appVersion = appVersion;
 	}
 }
