@@ -39,7 +39,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 			.newCachedThreadPool();
 
 	public boolean asyncgrayMailAvator(final long userId, final long userQQ,
-			final String userMail, final String description) {
+			final String userMail, final String description,
+			final String deviceVersion, final String version,
+			final String appVersion) {
 		executorService.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -56,7 +58,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 							+ userId);
 					mailSenderInfo.setContent("userQQ = " + userQQ
 							+ ",userMail = " + userMail + ",description = "
-							+ description);
+							+ description + ",deviceVersion = " + deviceVersion
+							+ ",version = " + version + ",appVersion = "
+							+ appVersion);
 					SimpleMailSenderUtil simpleMailSenderUtil = new SimpleMailSenderUtil();
 					simpleMailSenderUtil.sendTextMail(mailSenderInfo);
 				} catch (Exception e) {
@@ -78,7 +82,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 	 */
 	@Override
 	public boolean addFeedback(long userId, long userQQ, String userMail,
-			String description) {
+			String description, String deviceVersion, String version,
+			String appVersion) {
 		if (userId < 0) {
 			logger.error("Error to add feedback with uerId = " + userId);
 			return false;
@@ -92,7 +97,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 		feedback.setStatus(Feedback.FeedbackStatus.Undone.getValue());
 		feedback.setReplyTime(-1);
 		feedback.setReply("");
-		this.asyncgrayMailAvator(userId, userQQ, userMail, description);
+		feedback.setDeviceVersion(deviceVersion);
+		feedback.setVersion(version);
+		feedback.setAppVersion(appVersion);
+		this.asyncgrayMailAvator(userId, userQQ, userMail, description,
+				deviceVersion, version, appVersion);
 		if (feedbackMapper.addFeedback(feedback) > 0) {
 			return true;
 		}
