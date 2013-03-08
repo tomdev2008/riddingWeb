@@ -1,24 +1,20 @@
 package com.ridding.service.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javapns.Push;
 import javapns.back.PushNotificationManager;
 import javapns.back.SSLConnectionHelper;
 import javapns.data.Device;
 import javapns.data.PayLoad;
-import javapns.notification.PushNotificationPayload;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.json.JSONException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
@@ -107,7 +103,7 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 					PayLoad payLoad = new PayLoad();
 					payLoad.addAlert(message);
 					payLoad.addSound("default");
-					payLoad.addCustomDictionary(messageName, message);
+					//payLoad.addCustomDictionary(messageName, message);
 
 					PushNotificationManager pushManager = PushNotificationManager.getInstance();
 					pushManager.addDevice("iPhone", device.getToken());

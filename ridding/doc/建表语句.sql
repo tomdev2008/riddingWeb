@@ -243,6 +243,7 @@ width int(11) DEFAULT 0  COMMENT '宽度',
 height int(11) DEFAULT 0 COMMENT '高度',
 likeCount int(11) DEFAULT '0' COMMENT '喜欢这张照片的数量',
 breadId bigint(20) NOT NULL DEFAULT '0' COMMENT '面包id',
+pictureCount  int(11) NOT NULL DEFAULT 0 COMMENT '照片数量',
 PRIMARY KEY  (`Id`)
 )   DEFAULT CHARSET=UTF8 COMMENT '骑行照片表';
 
@@ -301,3 +302,17 @@ status tinyint(4) NOT NULL DEFAULT '0' COMMENT '0表示无效状态，1表示试
 dayLong int(11) DEFAULT 0  COMMENT '时间长度按天算',
 PRIMARY KEY  (`id`)
 ) DEFAULT CHARSET=UTF8 COMMENT  '用户付费记录表';
+
+
+CREATE TABLE TB_Feedback(
+id bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+userId bigint(20) NOT NULL DEFAULT '0' COMMENT '反馈人Id',
+userQQ bigint(20) NOT NULL DEFAULT '0' COMMENT '反馈人QQ',
+userMail varchar(50) NOT NULL DEFAULT '' COMMENT '反馈人邮箱',
+createTime bigint(20) NOT NULL DEFAULT '0' COMMENT '反馈时间',
+description varchar(512) NOT NULL DEFAULT '' COMMENT '反馈内容',
+status tinyint(4) NOT NULL DEFAULT '0' COMMENT '处理状态,0待处理，1已处理',
+replyTime bigint(20) NOT NULL DEFAULT '0' COMMENT '回复时间',
+reply varchar(512) NOT NULL DEFAULT '' COMMENT '回复内容',
+PRIMARY KEY  (`id`)
+) DEFAULT CHARSET=UTF8 COMMENT '骑行反馈表';
