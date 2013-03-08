@@ -1,24 +1,20 @@
 package com.ridding.service.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javapns.Push;
 import javapns.back.PushNotificationManager;
 import javapns.back.SSLConnectionHelper;
 import javapns.data.Device;
 import javapns.data.PayLoad;
-import javapns.notification.PushNotificationPayload;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.json.JSONException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
@@ -104,10 +100,10 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 			@Override
 			public void run() {
 				try {
+					logger.info("asyncSendOneMessages beginSend where device userId=" + device.getUserId() + " message=" + message);
 					PayLoad payLoad = new PayLoad();
 					payLoad.addAlert(message);
 					payLoad.addSound("default");
-					payLoad.addCustomDictionary(messageName, message);
 
 					PushNotificationManager pushManager = PushNotificationManager.getInstance();
 					pushManager.addDevice("iPhone", device.getToken());
@@ -115,11 +111,11 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 					pushManager.initializeConnection(HOST, 2195, resourceFile.getPath(), PASSWORD, SSLConnectionHelper.KEYSTORE_TYPE_PKCS12);
 
 					// Send Push
-					Device client = pushManager.getDevice("iPhone");
+					Device client = pushManager.getDevice(String.valueOf(device.getUserId()));
 					pushManager.sendNotification(client, payLoad);
 					pushManager.stopConnection();
 
-					pushManager.removeDevice("iPhone");
+					pushManager.removeDevice(String.valueOf(device.getUserId()));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -128,40 +124,6 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 		return true;
 	}
 
-	/**
-	 * 发送一条信息
-	 * 
-	 * @param device
-	 * @param messageName
-	 * @param message
-	 * @param title
-	 * @return
-	 */
-	public boolean sendOneMessages(ApnsDevice device, String messageName, String message, String title) {
-		try {
-			PayLoad payLoad = new PayLoad();
-			payLoad.addAlert(message);
-			payLoad.addSound("default");
-			payLoad.addCustomDictionary(messageName, message);
-
-			PushNotificationManager pushManager = PushNotificationManager.getInstance();
-			pushManager.addDevice("iPhone", "22992a6fd4df59991bec9338ed3550b1286fe938555fd46b478dda98933d454b");
-			File resourceFile = ResourceUtils.getFile("classpath:" + FILENAME);
-
-			pushManager.initializeConnection(HOST, 2195, resourceFile.getPath(), PASSWORD, SSLConnectionHelper.KEYSTORE_TYPE_PKCS12);
-
-			// Send Push
-			Device client = pushManager.getDevice("iPhone");
-			pushManager.sendNotification(client, payLoad);
-			pushManager.stopConnection();
-
-			pushManager.removeDevice("iPhone");
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
 
 	/*
 	 * (non-Javadoc)
