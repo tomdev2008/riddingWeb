@@ -7,6 +7,7 @@ import java.util.HashMap;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
@@ -62,27 +63,27 @@ public class QiNiuUtil {
 	 */
 	public static ImageInfo getImageInfoFromQiniu(String url) {
 		HttpClient httpclient = new HttpClient();
-		PostMethod post = new PostMethod(url + "?imageInfo");
-		RequestEntity entity = new StringRequestEntity("");
-		post.setRequestEntity(entity);
+		GetMethod get = new GetMethod(url + "?imageInfo");
 		try {
-			int result = httpclient.executeMethod(post);
+			int result = httpclient.executeMethod(get);
 			if (result < 0) {
 				return null;
 			}
-			String responseStr = post.getResponseBodyAsString();
+			String responseStr = get.getResponseBodyAsString();
 			if (!StringUtils.isEmpty(responseStr)) {
 				JSONObject jsonObject = JSONObject.fromObject(responseStr);
 				ImageInfo imageInfo = new ImageInfo();
-				imageInfo.setWidth(jsonObject.getInt("width"));
-				imageInfo.setHeight(jsonObject.getInt("height"));
+				String width = jsonObject.getString("width");
+				imageInfo.setWidth(Integer.valueOf(width));
+				String height = jsonObject.getString("height");
+				imageInfo.setHeight(Integer.valueOf(height));
 				return imageInfo;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("error in post");
 		} finally {
-			post.releaseConnection();
+			get.releaseConnection();
 		}
 		return null;
 	}

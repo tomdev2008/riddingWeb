@@ -334,6 +334,7 @@ public class RiddingServiceImpl implements RiddingService {
 				profileVO.setbAvatorUrl(profile.getbAvatorUrl());
 				profileVO.setsAvatorUrl(profile.getsAvatorUrl());
 				profileVO.setNickName(profile.getNickName());
+				profileVO.setGraySAvatorUrl(profile.getGraysAvatorUrl());
 			}
 			SourceAccount sourceAccount = sourceAccountMap.get(profileVO.getUserId());
 			if (sourceAccount != null) {
@@ -616,11 +617,23 @@ public class RiddingServiceImpl implements RiddingService {
 	 * .RiddingPicture)
 	 */
 	@Override
-	public int addRiddingPicture(RiddingPicture riddingPicture) {
+	public boolean addRiddingPicture(RiddingPicture riddingPicture) {
+		Profile profile = profileMapper.getProfile(riddingPicture.getUserId());
+		Ridding ridding = riddingMapper.getRidding(riddingPicture.getRiddingId());
+		List<RiddingAction> actions = riddingActionMapper.getRiddingActionsByType(riddingPicture.getRiddingId(), RiddingActions.Care.getValue());
+		if (!ListUtils.isEmptyList(actions)) {
+			for (RiddingAction action : actions) {
+				iosApnsService.sendUserApns(action.getUserId(), profile.getUserName() + "更新了他的骑行活动:" + ridding.getName() + "赶快去看下吧^^");
+			}
+		}
 		if (riddingPicture.getTakePicDate() == 0) {
 			riddingPicture.setTakePicDate(new Date().getTime());
 		}
-		return riddingPictureMapper.addRiddingPicture(riddingPicture);
+		if (riddingPictureMapper.addRiddingPicture(riddingPicture) > 0) {
+			riddingMapper.incPictureCount(riddingPicture.getRiddingId());
+			return true;
+		}
+		return false;
 	}
 
 	/*
@@ -648,8 +661,9 @@ public class RiddingServiceImpl implements RiddingService {
 	@Override
 	public List<Ridding> getRecomRiddingList(int weight, int limit, Boolean isLarger) {
 		List<Public> publicList = publicService.getPublicListByType(PublicType.PublicRecom.getValue(), limit, weight, isLarger);
-		List<Ridding> riddingList = new ArrayList<Ridding>(publicList.size());
+
 		if (!ListUtils.isEmptyList(publicList)) {
+			List<Ridding> riddingList = new ArrayList<Ridding>(publicList.size());
 			for (Public aPublic : publicList) {
 				aPublic.getJson();
 				Ridding newRidding = riddingMapper.getRidding(aPublic.getRiddingId());
@@ -660,9 +674,10 @@ public class RiddingServiceImpl implements RiddingService {
 				riddingList.add(newRidding);
 			}
 			this.insertRiddingInfo(riddingList);
+			return riddingList;
 		}
 
-		return riddingList;
+		return null;
 	}
 
 	/*
@@ -716,10 +731,10 @@ public class RiddingServiceImpl implements RiddingService {
 		return riddingList;
 	}
 
-	/*
+	/**
+	 * 插入骑行信息
 	 * 
-	 * 
-	 * 
+	 * @param riddingList
 	 */
 	private void insertRiddingInfo(List<Ridding> riddingList) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -744,7 +759,7 @@ public class RiddingServiceImpl implements RiddingService {
 				}
 
 				map.put("riddingId", ridding.getId());
-				map.put("createTime", new Date().getTime());
+				map.put("createTime", 0);
 				map.put("limit", 1);
 				IMap iMap = iMapMap.get(ridding.getMapId());
 				if (iMap != null) {
@@ -1010,7 +1025,7 @@ public class RiddingServiceImpl implements RiddingService {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("limit", limit);
 		hashMap.put("offset", offset);
-		List<Ridding> riddingList = riddingMapper.getRiddingsbyLike(hashMap);
+		List<Ridding> riddingList = riddingMapper.getRiddingsbyComment(hashMap);
 		this.insertRiddingInfo(riddingList);
 		return riddingList;
 	}
@@ -1026,7 +1041,21 @@ public class RiddingServiceImpl implements RiddingService {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("limit", limit);
 		hashMap.put("offset", offset);
-		List<Ridding> riddingList = riddingMapper.getRiddingsbyLike(hashMap);
+		List<Ridding> riddingList = riddingMapper.getRiddingsbyUse(hashMap);
+		this.insertRiddingInfo(riddingList);
+		return riddingList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getRiddingsbyPicture(int, int)
+	 */
+	public List<Ridding> getRiddingsbyPicture(int limit, int offset) {
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("limit", limit);
+		hashMap.put("offset", offset);
+		List<Ridding> riddingList = riddingMapper.getRiddingsbyPicture(hashMap);
 		this.insertRiddingInfo(riddingList);
 		return riddingList;
 	}
@@ -1070,10 +1099,66 @@ public class RiddingServiceImpl implements RiddingService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * 
 	 * @see com.ridding.service.RiddingService#removeRiddingPicture(long)
 	 */
 	@Override
 	public boolean removeRiddingPicture(long pictureId) {
+		RiddingPicture riddingPicture = riddingPictureMapper.getRiddingPicturesById(pictureId);
+		if (riddingPicture == null) {
+			return false;
+		}
+		riddingMapper.decPictureCount(riddingPicture.getRiddingId());
 		return riddingPictureMapper.deleteRiddingPicture(pictureId) > 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getRiddingPictureByBreadId(long,
+	 * long)
+	 */
+	@Override
+	public RiddingPicture getRiddingPictureByBreadId(long breadId, long riddingId) {
+		return riddingPictureMapper.getPictureByBreadId(breadId, riddingId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getRiddingPictureById(long)
+	 */
+	public RiddingPicture getRiddingPictureById(long pictureId) {
+		return riddingPictureMapper.getRiddingPicturesById(pictureId);
+	}
+
+	/*
+	 * (non-Javadoc) 修复程序
+	 * 
+	 * @see com.ridding.service.RiddingService#fixPictureCount()
+	 */
+	private boolean fixPictureCount() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("isLarger", 1);
+		map.put("lastUpdateTime", 0);
+		List<Ridding> riddingList = riddingMapper.getRiddingListByLastUpdateTime(map);
+		if (ListUtils.isEmptyList(riddingList)) {
+			logger.error("Failed to get riddingList!");
+			return false;
+		}
+		logger.info("Success to get riddingList!");
+		for (Ridding ridding : riddingList) {
+			Map<String, Object> hashMap = new HashMap<String, Object>();
+			hashMap.put("riddingId", ridding.getId());
+			hashMap.put("createTime", 0);
+			List<RiddingPicture> riddingPictureList = riddingPictureMapper.getRiddingPicturesByRiddingId(hashMap);
+			if (ListUtils.isEmptyList(riddingPictureList)) {
+				logger.error("Failed to get riddingPictureList with riddingId = " + ridding.getId());
+				continue;
+			}
+			riddingMapper.updateRiddingPictureCount(ridding.getId(), riddingPictureList.size());
+		}
+		logger.info("Success to fix the pictureCount!");
+		return true;
 	}
 }

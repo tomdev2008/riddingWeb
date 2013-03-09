@@ -54,4 +54,20 @@
 		update TB_Public set json= #{json}
 		where id = #{id};
 	</update>
+
+	<update id="updatePublic" parameterType="hashMap" flushCache="true"
+		statementType="PREPARED">
+		update TB_Public set
+		json =
+		#{jsonStr}
+		where
+		id=#{publicId};
+	</update>
+
+	<delete id="deletePublicByPublicId" parameterType="long"
+		flushCache="true" statementType="PREPARED">
+		delete from TB_Public where
+		id=
+		#{publicId};
+	</delete>
 </mapper>

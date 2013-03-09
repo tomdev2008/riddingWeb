@@ -3,6 +3,8 @@ package com.ridding.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.ridding.meta.RiddingPicture;
 
 /**
@@ -34,13 +36,13 @@ public interface RiddingPictureMapper {
 	 * @return
 	 */
 	public List<RiddingPicture> getRiddingPicturesByRiddingId(Map<String, Object> map);
-	
+
 	/**
 	 * 通过riddingId删除骑行图片
 	 * 
 	 */
 	public int deleteRiddingPicByRiddingId(long riddingId);
-	
+
 	/**
 	 * 增加对照片的喜欢
 	 * 
@@ -48,4 +50,21 @@ public interface RiddingPictureMapper {
 	 * @return
 	 */
 	public int incLikePicCount(long pictureId);
+
+	/**
+	 * 通过面包id得到
+	 * 
+	 * @param breadId
+	 * @param riddingId
+	 * @return
+	 */
+	public RiddingPicture getPictureByBreadId(@Param(value = "breadId") long breadId, @Param(value = "riddingId") long riddingId);
+
+	/**
+	 * 通过ID获取图片
+	 * 
+	 * @param pictureId
+	 * @return
+	 */
+	public RiddingPicture getRiddingPicturesById(long pictureId);
 }

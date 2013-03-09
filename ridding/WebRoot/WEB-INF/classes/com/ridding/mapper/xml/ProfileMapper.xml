@@ -13,6 +13,8 @@
 		<result property="lastUpdateTime" column="lastUpdateTime" />
 		<result property="level" column="level" />
 		<result property="backgroundUrl" column="backgroundUrl" />
+		<result property="graysAvatorUrl" column="graysAvatorUrl" />
+		<result property="taobaoCode" column="taobaoCode" />
 	</resultMap>
 	<insert id="addProfile" parameterType="Profile">
 		INSERT INTO TB_Profile(
@@ -24,7 +26,9 @@
 		sAvatorUrl,
 		bAvatorUrl,
 		level,
-		backgroundUrl
+		backgroundUrl,
+		graysAvatorUrl,
+		taobaoCode
 		)VALUES(
 		#{userName},
 		#{nickName},
@@ -34,7 +38,9 @@
 		#{sAvatorUrl},
 		#{bAvatorUrl},
 		#{level},
-		#{backgroundUrl}
+		#{backgroundUrl},
+		#{graysAvatorUrl},
+		#{taobaoCode}
 		)
 		<selectKey keyProperty="userId" resultType="long">
 			SELECT
@@ -59,8 +65,17 @@
 		bAvatorUrl =
 		#{bAvatorUrl},
 		backgroundUrl = #{backgroundUrl},
+		graysAvatorUrl =
+		#{graysAvatorUrl}
 		where userId =
 		#{userId};
+	</update>
+
+	<update id="updategraysAvator" parameterType="Profile"
+		flushCache="true" statementType="PREPARED">
+		update TB_Profile set graysAvatorUrl =
+		#{graysAvatorUrl}
+		where userId = #{userId};
 	</update>
 
 	<update id="incUserTotalDistance" parameterType="hashMap"
@@ -70,10 +85,11 @@
 		where userId = #{userId} ;
 	</update>
 
-	<select id="getProfileList" resultMap="profileMap">
+	<select id="getProfileList" resultMap="profileMap"
+		parameterType="list">
 		SELECT * from TB_Profile where
 		userId in
-		<foreach item="item" collection="list" index="index" open="("
+		<foreach item="item" collection="userids" index="index" open="("
 			separator="," close=")">
 			#{item} 
 	</foreach>
@@ -87,4 +103,22 @@
 		#{backgroundUrl}
 		where userId = #{userId};
 	</update>
+
+	<select id="getAllProfile" resultMap="profileMap">
+		SELECT * from
+		TB_Profile ;
+	</select>
+
+	<select id="getProfileBytaobaoCode" resultMap="profileMap" >
+		SELECT * from
+		TB_Profile where taobaoCode = #{taobaoCode};
+	</select>
+	
+	<update id="updateProfileTaobaoCode" flushCache="true"
+		statementType="PREPARED">
+		update TB_Profile set taobaoCode = #{taobaoCode}
+		where userId =
+		#{userId};
+	</update>
+
 </mapper>

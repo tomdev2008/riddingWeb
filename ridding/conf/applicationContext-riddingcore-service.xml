@@ -15,13 +15,16 @@
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-				<!-- <ref bean="sinaWeiBoTrigger" /> <ref bean="sourceToGoogleUrlTrigger" 
-					/> <ref bean="googleUrlToTapsTrigger" /> -->
+				<!--
+					<ref bean="sinaWeiBoTrigger" /> <ref
+					bean="sourceToGoogleUrlTrigger" /> <ref
+					bean="googleUrlToTapsTrigger" />
+				-->
 				<!-- <ref bean="apnsTrigger"/> -->
 				<ref bean="sendWeiBoTrigger" />
 				<ref bean="repostWeiBoTrigger" />
-			    <ref bean="getRiddingSinaWeiBoTrigger" />
-				<!--<ref bean="sendWeiBoCommentTrigger" />-->
+				<ref bean="getRiddingSinaWeiBoTrigger" />
+				<ref bean="sendWeiBoCommentTrigger" />
 				<ref bean="addRiddingNearbyTrigger" />
 			</list>
 		</property>
@@ -91,13 +94,17 @@
 		<property name="cronExpression" value="0 0/1 * * * ?" />
 	</bean>
 	<!-- 消息推送任务 -->
-	<!-- 将google url转为标点 <bean id="apnsDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> 
-		<property name="targetObject"> <ref bean="iosApnsService" /> </property> 
-		<property name="targetMethod"> <value>quartz</value> </property> <property 
-		name="concurrent"> <value>false</value> </property> </bean> <bean id="apnsTrigger" 
-		class="org.springframework.scheduling.quartz.CronTriggerBean"> <property 
-		name="jobDetail"> <ref bean="apnsDetail" /> </property> <property name="cronExpression" 
-		value="0 0/1 * * * ?" /> </bean> -->
+	<!--
+		将google url转为标点 <bean id="apnsDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject"> <ref bean="iosApnsService" />
+		</property> <property name="targetMethod"> <value>quartz</value>
+		</property> <property name="concurrent"> <value>false</value>
+		</property> </bean> <bean id="apnsTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail"> <ref bean="apnsDetail" /> </property>
+		<property name="cronExpression" value="0 0/1 * * * ?" /> </bean>
+	-->
 	<!-- 定时发送微博 -->
 	<bean id="sendWeiBoDetail"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

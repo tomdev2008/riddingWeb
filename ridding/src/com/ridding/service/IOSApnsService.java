@@ -10,7 +10,7 @@ public interface IOSApnsService {
 
 	public boolean addIosApns(ApnsDevice apnsDevice);
 
-	public void sendApns(String text);
+	public void sendApns(String text, long userId, String version);
 
 	/**
 	 * 发送用户评论

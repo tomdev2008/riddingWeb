@@ -25,6 +25,7 @@ body{font-size:83%;}
     <h3><a href="/Ridding/backend.do?action=huodongList&orderByLike=1">喜欢数排序</a></h3>
     <h3><a href="/Ridding/backend.do?action=huodongList&orderByComment=1">评论数排序</a></h3>
     <h3><a href="/Ridding/backend.do?action=huodongList&orderByUse=1">使用数排序</a></h3>
+    <h3><a href="/Ridding/backend.do?action=huodongList&orderByPicture=1">照片数排序</a></h3>
 </div>
 
 <div>
@@ -48,6 +49,7 @@ body{font-size:83%;}
          <td style="text-align: center;">评论数</td>
          <td style="text-align: center;">使用数</td>
          <td style="text-align: center;">关注数</td>
+         <td style="text-align: center;">照片数</td>
          <td style="text-align: center;">操作</td></tr>
     </thead>
      <tbody>
@@ -55,10 +57,10 @@ body{font-size:83%;}
 
          <tr>
             <td style="text-align: center;" width="5%"><span>${ridding.id!0}</span></td>
-            <td style="text-align: center;" width="10%"><a id="huodong_name_${ridding.id!0}" href="/Ridding/backend.do?action=backendHuodong&riddingId=${ridding.id!0}">${ridding.name!""}</a></td>
+            <td style="text-align: center;" width="8%"><a id="huodong_name_${ridding.id!0}" href="/Ridding/backend.do?action=backendHuodong&riddingId=${ridding.id!0}">${ridding.name!""}</a></td>
             <td style="text-align: center;" width="5%"><span >${ridding.createTimeStr}</span></td>
             <td style="text-align: center;" width="5%"><span >${ridding.leaderUserId}</span></td>
-            <td style="text-align: center;" width="10%">
+            <td style="text-align: center;" width="8%">
             	<#if ridding.leaderProfile?exists>
                    <span>${ridding.leaderProfile.userName!""}</span>
 				</#if> 
@@ -89,7 +91,9 @@ body{font-size:83%;}
             <td style="text-align: center;" width="4%">
                <div style="text-align: center;">${ridding.careCount!0}</div>
             </td>
-
+            <td style="text-align: center;" width="4%">
+              <div style="text-align: center;">${ridding.pictureCount!0}</div>
+            </td>
             <td style="text-align: center;" width="10%"><a href="javascript:void(0);;" class="huodong_delete" data-id="${ridding.id!0}">删除</a>||<a href="javascript:void(0);;" class="huodong_recom" data-id="${ridding.id!0}">设置为推荐</a></td>
          </tr>
   

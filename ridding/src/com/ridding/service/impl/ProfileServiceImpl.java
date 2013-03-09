@@ -32,6 +32,7 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Resource
 	private TransactionService transactionService;
+
 	private static final Logger logger = Logger.getLogger(ProfileServiceImpl.class);
 
 	/*
@@ -136,6 +137,7 @@ public class ProfileServiceImpl implements ProfileService {
 		profile.setsAvatorUrl(savatorUrl);
 		profile.setUserName(userName);
 		profile.setNickName(userName);
+
 		if (profileMapper.updateProfile(profile) > 0) {
 			return profile;
 		}
@@ -184,7 +186,7 @@ public class ProfileServiceImpl implements ProfileService {
 	 */
 	@Override
 	public boolean updateBackgroundUrl(String url, long userId) {
-		if(url==null){
+		if (url == null) {
 			return false;
 		}
 		Profile profile = new Profile();
@@ -192,4 +194,17 @@ public class ProfileServiceImpl implements ProfileService {
 		profile.setBackgroundUrl(url);
 		return profileMapper.updateBackgroundUrl(profile) > 0;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ridding.service.ProfileService#getProfileByTaobaoCode(java.lang.String
+	 * )
+	 */
+	@Override
+	public Profile getProfileByTaobaoCode(String taobaoCode) {
+		return profileMapper.getProfileBytaobaoCode(taobaoCode);
+	}
+
 }

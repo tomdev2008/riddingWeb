@@ -81,6 +81,10 @@ public class RiddingPicture {
 	 * 喜欢这张照片的数量
 	 */
 	private int likeCount;
+	/**
+	 * 面包id
+	 */
+	private long breadId = 0;
 
 	public long getId() {
 		return id;
@@ -232,6 +236,14 @@ public class RiddingPicture {
 
 	public void setLikeCount(int likeCount) {
 		this.likeCount = likeCount;
+	}
+
+	public long getBreadId() {
+		return breadId;
+	}
+
+	public void setBreadId(long breadId) {
+		this.breadId = breadId;
 	}
 
 }

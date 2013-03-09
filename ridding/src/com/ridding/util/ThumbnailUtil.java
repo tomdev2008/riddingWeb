@@ -1,9 +1,16 @@
 package com.ridding.util;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import javax.imageio.ImageIO;
 
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
@@ -439,5 +446,48 @@ public final class ThumbnailUtil {
 		File in = new File("D:/TDDOWNLOAD/origin.jpg");
 		File out = new File("D:/TDDOWNLOAD/1.jpg");
 		ThumbnailUtil.cutImage(in, out, ImageCutPosition.TOP_LEFT, 2020, 200);
+	}
+
+	/**
+	 * 对彩色照片黑白处理
+	 * 
+	 * @param srcImg
+	 * @return
+	 */
+	public static BufferedImage grayImage(final BufferedImage srcImg) {
+		int iw = srcImg.getWidth();
+		int ih = srcImg.getHeight();
+		Graphics2D srcG = srcImg.createGraphics();
+		RenderingHints rhs = srcG.getRenderingHints();
+
+		ColorSpace cs = ColorSpace.getInstance(ColorSpace.CS_GRAY);
+		ColorConvertOp theOp = new ColorConvertOp(cs, rhs);
+		BufferedImage dstImg = new BufferedImage(iw, ih, BufferedImage.TYPE_INT_RGB);
+
+		theOp.filter(srcImg, dstImg);
+		return dstImg;
+	}
+
+	/**
+	 * 对某路径下的图片去色
+	 * 
+	 * @param fromPath
+	 * @param toPath
+	 * @return
+	 */
+	public static boolean grayImageToPath(String fromPath, String toPath) {
+		BufferedImage oldImage;
+		try {
+			oldImage = ImageIO.read(new File(fromPath));
+			if (oldImage == null) {
+				return false;
+			}
+			BufferedImage image = ThumbnailUtil.grayImage(oldImage);
+			ImageIO.write(image, "jpg", new File(toPath));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 }

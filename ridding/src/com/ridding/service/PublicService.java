@@ -46,4 +46,28 @@ public interface PublicService {
 	 * @return
 	 */
 	public boolean addPublic(Public aPublic);
+
+	/**
+	 * 通过Id获得广告
+	 * 
+	 * @param publicId
+	 * @return
+	 */
+	public Public getPublicById(long publicId);
+
+	/**
+	 * 更新广告内容
+	 * 
+	 * @param jsonStr
+	 * @return
+	 */
+	public boolean updatePublic(long publicId, String jsonStr);
+
+	/**
+	 * 删除广告
+	 * 
+	 * @param publicId
+	 * @return
+	 */
+	public boolean deletePublicByPublicId(long publicId);
 }

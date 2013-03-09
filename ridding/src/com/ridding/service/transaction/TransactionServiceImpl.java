@@ -1,14 +1,19 @@
 package com.ridding.service.transaction;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.transaction.TransactionException;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -17,6 +22,7 @@ import weibo4j.Users;
 import weibo4j.model.User;
 import weibo4j.model.WeiboException;
 
+import com.ridding.constant.SystemConst;
 import com.ridding.mapper.CityMapper;
 import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.ProfileMapper;
@@ -40,7 +46,11 @@ import com.ridding.meta.Ridding.RiddingStatus;
 import com.ridding.meta.RiddingUser.RiddingUserRoleType;
 import com.ridding.meta.RiddingUser.SelfRiddingStatus;
 import com.ridding.service.IOSApnsService;
+import com.ridding.util.FileUtil;
 import com.ridding.util.ListUtils;
+import com.ridding.util.MD5Util;
+import com.ridding.util.QiNiuUtil;
+import com.ridding.util.ThumbnailUtil;
 import com.ridding.web.controller.RiddingController;
 
 /**
@@ -80,8 +90,57 @@ public class TransactionServiceImpl implements TransactionService {
 	@Resource
 	private IOSApnsService iosApnsService;
 
-	private static final Logger logger = Logger
-			.getLogger(RiddingController.class);
+	private static ExecutorService executorService = Executors.newCachedThreadPool();
+
+	private static final Logger logger = Logger.getLogger(RiddingController.class);
+
+	/**
+	 * 异步讲小图变灰并且上传
+	 * 
+	 * @param userId
+	 * @param latitude
+	 * @param longitude
+	 * @return
+	 */
+	public boolean asyncgrayAvator(final Profile profile) {
+		executorService.execute(new Runnable() {
+			@Override
+			public void run() {
+				String key = QiNiuUtil.genKey(true, true);
+				try {
+					String originPath = "TransactionServiceImpl" + new Date().getTime() + "_old.jpg";
+					String newPath = "TransactionServiceImpl" + new Date().getTime() + "_new.jpg";
+					File file = FileUtil.getFileFromUrl(profile.getsAvatorUrl(), originPath);
+					if (file == null) {
+						return;
+					}
+					boolean succ = ThumbnailUtil.grayImageToPath(originPath, newPath);
+					if (!succ) {
+						return;
+					}
+					succ = false;
+					succ = QiNiuUtil.uploadImageToQiniuFromLocalFile(newPath, key);
+					if (succ) {
+						profile.setGraysAvatorUrl(SystemConst.returnPhotoUrl("/" + key));
+						profileMapper.updategraysAvator(profile);
+					}
+					if (file.isFile()) {
+						file.delete();
+					}
+					file = new File(newPath);
+					if (file.isFile()) {
+						file.delete();
+					}
+				} catch (Exception e) {
+					logger.error("ProfileServiceImpl asyncgrayAvator where url=" + profile.getsAvatorUrl());
+					e.printStackTrace();
+					return;
+				}
+
+			}
+		});
+		return true;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -90,17 +149,14 @@ public class TransactionServiceImpl implements TransactionService {
 	 * com.ridding.service.transaction.TransactionService#insertMapCreateRidding
 	 * (com.ridding.meta.IMap)
 	 */
-	@Override
-	public boolean insertMap(IMap iMap, Source source)
-			throws TransactionException {
+	public boolean insertMap(IMap iMap, Source source) throws TransactionException {
 		if (iMap == null) {
 			return false;
 		}
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("sourceType", source.getSourceType());
 		hashMap.put("accessUserId", source.getAccessUserId());
-		SourceAccount account = sourceAccountMapper
-				.getSourceAccountByAccessUserId(hashMap);
+		SourceAccount account = sourceAccountMapper.getSourceAccountByAccessUserId(hashMap);
 		if (account == null) {
 			account = new SourceAccount();
 			account.setAccessUserId(source.getAccessUserId());
@@ -111,8 +167,7 @@ public class TransactionServiceImpl implements TransactionService {
 		iMap.setUserId(account.getUserId());
 		iMap.setStatus(IMap.NotUsing);
 		if (iMapMapper.addRiddingMap(iMap) <= 0) {
-			throw new TransactionException(
-					"insertMapCreateRidding iMapMapper error");
+			throw new TransactionException("insertMapCreateRidding iMapMapper error");
 		}
 
 		return true;
@@ -135,12 +190,10 @@ public class TransactionServiceImpl implements TransactionService {
 
 		if (iMap.getId() == 0) {
 			if (iMapMapper.addRiddingMap(iMap) < 0) {
-				throw new TransactionException(
-						"insertANewRidding iMapMapper addRiddingMap error");
+				throw new TransactionException("insertANewRidding iMapMapper addRiddingMap error");
 			}
 		} else if (iMapMapper.updateRiddingMap(iMap) < 0) {
-			throw new TransactionException(
-					"insertANewRidding iMapMapper updateRiddingMap error");
+			throw new TransactionException("insertANewRidding iMapMapper updateRiddingMap error");
 		}
 		if (ridding == null) {
 			return false;
@@ -166,7 +219,12 @@ public class TransactionServiceImpl implements TransactionService {
 		if (riddingUserMapper.addRiddingUser(riddingUser) < 0) {
 			throw new TransactionException("insertANewRidding iMapMapper error");
 		}
-
+		List<Profile> profiles = profileMapper.getAllProfile();
+		for (Profile profile : profiles) {
+			if (StringUtils.isEmpty(profile.getGraysAvatorUrl())) {
+				this.asyncgrayAvator(profile);
+			}
+		}
 		return true;
 	}
 
@@ -177,14 +235,11 @@ public class TransactionServiceImpl implements TransactionService {
 	 * com.ridding.service.transaction.TransactionService#insertRiddingUser(
 	 * long, java.util.List)
 	 */
-	@Override
-	public boolean insertRiddingUser(Ridding ridding, Profile profile,
-			int objectType, Profile leaderProfile) throws TransactionException {
+	public boolean insertRiddingUser(Ridding ridding, Profile profile, int objectType, Profile leaderProfile) throws TransactionException {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("sourceType", objectType);
 		hashMap.put("accessUserId", profile.getAccessUserId());
-		SourceAccount sourceAccount = sourceAccountMapper
-				.getSourceAccountByAccessUserId(hashMap);
+		SourceAccount sourceAccount = sourceAccountMapper.getSourceAccountByAccessUserId(hashMap);
 		if (sourceAccount == null) {
 			sourceAccount = new SourceAccount();
 			sourceAccount.setAccessUserId(profile.getAccessUserId());
@@ -193,8 +248,7 @@ public class TransactionServiceImpl implements TransactionService {
 			this.insertSourceAccount(sourceAccount, profile);
 		} else {
 			if (leaderProfile != null) {
-				String message = leaderProfile.getUserName() + "把你加入了骑行活动:"
-						+ ridding.getName() + ",快去看看吧";
+				String message = leaderProfile.getUserName() + "把你加入了骑行活动:" + ridding.getName() + ",快去看看吧";
 				iosApnsService.sendUserApns(sourceAccount.getUserId(), message);
 			}
 		}
@@ -215,21 +269,18 @@ public class TransactionServiceImpl implements TransactionService {
 			riddingUser.setUserId(sourceAccount.getUserId());
 			riddingUser.setLastUpdateTime(nowTime);
 			riddingUser.setCreateTime(nowTime);
-			riddingUser
-					.setRiddingStatus(SelfRiddingStatus.Beginning.getValue());
+			riddingUser.setRiddingStatus(SelfRiddingStatus.Beginning.getValue());
 			riddingUser.setSelfName(ridding.getName());
 			riddingUser.setUserRole(RiddingUserRoleType.User.intValue());
 			if (riddingUserMapper.addRiddingUser(riddingUser) < 0) {
-				throw new TransactionException(
-						"insertRiddingUser addRiddingUser error ");
+				throw new TransactionException("insertRiddingUser addRiddingUser error ");
 			}
 		}
 		hashMap.put("id", ridding.getId());
 		hashMap.put("count", 1);
 
 		if (riddingMapper.increaseUserCount(hashMap) < 0) {
-			throw new TransactionException(
-					"insertRiddingUser increaseUserCount error ");
+			throw new TransactionException("insertRiddingUser increaseUserCount error ");
 		}
 		return true;
 	}
@@ -241,9 +292,7 @@ public class TransactionServiceImpl implements TransactionService {
 	 * com.ridding.service.transaction.TransactionService#insertSourceAccount
 	 * (com.ridding.meta.SourceAccount, com.ridding.meta.Profile)
 	 */
-	@Override
-	public Profile insertSourceAccount(SourceAccount sourceAccount,
-			Profile profile) throws TransactionException {
+	public Profile insertSourceAccount(SourceAccount sourceAccount, Profile profile) throws TransactionException {
 		if (sourceAccount == null) {
 			return null;
 		}
@@ -252,8 +301,7 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		try {
 			Users users = new Users();
-			User user = users.showUserById(String.valueOf(sourceAccount
-					.getAccessUserId()));
+			User user = users.showUserById(String.valueOf(sourceAccount.getAccessUserId()));
 			profile.setUserName(user.getName());
 			profile.setNickName(user.getName());
 			profile.setsAvatorUrl(user.getProfileImageUrl());
@@ -263,14 +311,20 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		profile.setCreateTime(sourceAccount.getCreateTime());
 		profile.setLastUpdateTime(sourceAccount.getCreateTime());
+		profile.setTaobaoCode("");
 		if (profileMapper.addProfile(profile) < 0) {
-			throw new TransactionException(
-					"insertSourceAccount addProfile error ");
+			throw new TransactionException("insertSourceAccount addProfile error ");
+		}
+		// 生成taobaoCode，并且添加
+		this.genCode(profile);
+		profileMapper.updateProfileTaobaoCode(profile.getTaobaoCode(), profile.getUserId());
+
+		if (!StringUtils.isEmpty(profile.getsAvatorUrl())) {
+			this.asyncgrayAvator(profile);
 		}
 		sourceAccount.setUserId(profile.getUserId());
 		if (sourceAccountMapper.addSourceAccount(sourceAccount) < 0) {
-			throw new TransactionException(
-					"insertSourceAccount addSourceAccount error ");
+			throw new TransactionException("insertSourceAccount addSourceAccount error ");
 		}
 
 		return profile;
@@ -284,31 +338,26 @@ public class TransactionServiceImpl implements TransactionService {
 	 * (long)
 	 */
 	@Override
-	public boolean updateEndRiddingByLeader(long riddingId, int distance)
-			throws TransactionException {
+	public boolean updateEndRiddingByLeader(long riddingId, int distance) throws TransactionException {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("id", riddingId);
 		hashMap.put("riddingStatus", RiddingStatus.Finished.getValue());
 		if (riddingMapper.updateRiddingStatus(hashMap) < 0) {
-			throw new TransactionException(
-					"endRiddingByLeader updateRiddingStatus error !");
+			throw new TransactionException("endRiddingByLeader updateRiddingStatus error !");
 		}
 		hashMap.put("riddingId", riddingId);
 		hashMap.put("userRole", RiddingUserRoleType.User.intValue());
 		hashMap.put("createTime", 0);
 		hashMap.put("limit", -1);
-		List<RiddingUser> riddingUsers = riddingUserMapper
-				.getRiddingUserListByRiddingId(hashMap);
+		List<RiddingUser> riddingUsers = riddingUserMapper.getRiddingUserListByRiddingId(hashMap);
 		if (!ListUtils.isEmptyList(riddingUsers)) {
 			for (RiddingUser riddingUser : riddingUsers) {
 				hashMap.put("totalDistance", distance);
 				hashMap.put("userId", riddingUser.getUserId());
 				riddingUserMapper.updateRiddingStatus(hashMap);
 				if (profileMapper.incUserTotalDistance(hashMap) < 0) {
-					throw new TransactionException(
-							"endRiddingByLeader incUserTotalDistance error ! where userId="
-									+ riddingUser.getUserId() + " riddingId="
-									+ riddingId);
+					throw new TransactionException("endRiddingByLeader incUserTotalDistance error ! where userId=" + riddingUser.getUserId()
+							+ " riddingId=" + riddingId);
 				}
 			}
 		}
@@ -323,8 +372,7 @@ public class TransactionServiceImpl implements TransactionService {
 	 * .lang.String, com.ridding.meta.WeiBo)
 	 */
 	@Override
-	public long insertRepostMap(WeiBo weiBo, JSONObject jsonObject2)
-			throws TransactionException {
+	public long insertRepostMap(WeiBo weiBo, JSONObject jsonObject2) throws TransactionException {
 		long nowTime = new Date().getTime();
 		RepostMap repostMap = new RepostMap();
 		// 用户对象
@@ -336,8 +384,7 @@ public class TransactionServiceImpl implements TransactionService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("accessUserId", sourceUserId);
 		map.put("sourceType", weiBo.getSourceType());
-		SourceAccount sourceAccount = sourceAccountMapper
-				.getSourceAccountByAccessUserId(map);
+		SourceAccount sourceAccount = sourceAccountMapper.getSourceAccountByAccessUserId(map);
 		if (sourceAccount == null) {
 			sourceAccount = new SourceAccount();
 			sourceAccount.setAccessUserId(sourceUserId);
@@ -353,29 +400,21 @@ public class TransactionServiceImpl implements TransactionService {
 		long repostWeiBoId = jsonObject2.getLong("id");
 		repostMap.setRespostWeiBoId(repostWeiBoId);
 		if (repostMapWeiBoMapper.addRepostMap(repostMap) < 0) {
-			throw new TransactionException(
-					"TransactionException insertRepostMap addRepostMap error ! where weiBo.id="
-							+ weiBo.getWeiboId());
+			throw new TransactionException("TransactionException insertRepostMap addRepostMap error ! where weiBo.id=" + weiBo.getWeiboId());
 		}
 		Ridding ridding = riddingMapper.getRidding(weiBo.getRiddingId());
 		if (ridding == null) {
-			throw new TransactionException(
-					"TransactionException insertRepostMap getRiddingMap error ! where weiBo.id="
-							+ weiBo.getWeiboId());
+			throw new TransactionException("TransactionException insertRepostMap getRiddingMap error ! where weiBo.id=" + weiBo.getWeiboId());
 		}
 		IMap iMap = iMapMapper.getRiddingMap(ridding.getMapId());
 		if (iMap == null) {
-			throw new TransactionException(
-					"TransactionException insertRepostMap getRiddingMap error ! where weiBo.id="
-							+ weiBo.getWeiboId());
+			throw new TransactionException("TransactionException insertRepostMap getRiddingMap error ! where weiBo.id=" + weiBo.getWeiboId());
 		}
 		Ridding newRidding = new Ridding();
 		newRidding.setName(ridding.getName());
 		newRidding.setLeaderUserId(sourceAccount.getUserId());
 		if (!this.insertANewRidding(iMap, newRidding)) {
-			throw new TransactionException(
-					"TransactionException insertRepostMap insertANewRidding error ! where weiBo.id="
-							+ weiBo.getWeiboId());
+			throw new TransactionException("TransactionException insertRepostMap insertANewRidding error ! where weiBo.id=" + weiBo.getWeiboId());
 		}
 		return repostMap.getRespostWeiBoId();
 	}
@@ -386,34 +425,51 @@ public class TransactionServiceImpl implements TransactionService {
 	 * @see
 	 * com.ridding.service.RiddingService#deleteRiddingAndLinkedThings(long)
 	 */
-	@Override
-	public boolean deleteRiddingAndLinkedThings(long riddingId)
-			throws TransactionException {
+	public boolean deleteRiddingAndLinkedThings(long riddingId) throws TransactionException {
 		if (riddingMapper.deleteRidding(riddingId) < 0) {
-			throw new TransactionException(
-					"TransactionException deleteRiddingAndLinkedThings deleteRidding error ! where riddingId="
-							+ riddingId);
+			throw new TransactionException("TransactionException deleteRiddingAndLinkedThings deleteRidding error ! where riddingId=" + riddingId);
 		}
 		if (riddingUserMapper.deleteRiddingUserByRiddingId(riddingId) < 0) {
-			throw new TransactionException(
-					"TransactionException deleteRiddingAndLinkedThings deleteRiddingUserByRiddingId error ! where riddingId="
-							+ riddingId);
+			throw new TransactionException("TransactionException deleteRiddingAndLinkedThings deleteRiddingUserByRiddingId error ! where riddingId="
+					+ riddingId);
 		}
 		if (riddingPictureMapper.deleteRiddingPicByRiddingId(riddingId) < 0) {
-			throw new TransactionException(
-					"TransactionException deleteRiddingAndLinkedThings deleteRiddingPicByRiddingId error ! where riddingId="
-							+ riddingId);
+			throw new TransactionException("TransactionException deleteRiddingAndLinkedThings deleteRiddingPicByRiddingId error ! where riddingId="
+					+ riddingId);
 		}
 		if (riddingCommentMapper.deleteRiddingCommentByRiddingId(riddingId) < 0) {
 			throw new TransactionException(
-					"TransactionException deleteRiddingAndLinkedThings deleteRiddingCommentByRiddingId error ! where riddingId="
-							+ riddingId);
+					"TransactionException deleteRiddingAndLinkedThings deleteRiddingCommentByRiddingId error ! where riddingId=" + riddingId);
 		}
 		if (riddingActionMapper.deleteRiddingActionByRiddingId(riddingId) < 0) {
 			throw new TransactionException(
-					"TransactionException deleteRiddingAndLinkedThings deleteRiddingActionByRiddingId error ! where riddingId="
-							+ riddingId);
+					"TransactionException deleteRiddingAndLinkedThings deleteRiddingActionByRiddingId error ! where riddingId=" + riddingId);
 		}
 		return true;
+	}
+
+	/**
+	 * 生成taobaoCode算法
+	 * 
+	 * @param profile
+	 */
+	private void genCode(Profile profile) {
+		StringBuilder sb = new StringBuilder();
+		long time = new Date().getTime();
+		Random random = new Random(1000000);
+		int key = random.nextInt();
+		long userId = profile.getUserId();
+		String userName = profile.getUserName();
+
+		sb.append(time);
+		sb.append("_");
+		sb.append(key);
+		sb.append("_");
+		sb.append(userId);
+		sb.append("_");
+		sb.append(userName);
+		sb.append("_");
+		String code = MD5Util.getMD5(sb.toString().getBytes());
+		profile.setTaobaoCode(code);
 	}
 }

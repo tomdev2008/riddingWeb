@@ -32,6 +32,10 @@ public class Profile implements Serializable {
 	 */
 	private String bAvatorUrl = "";
 	/**
+	 * 小图的灰色图地址
+	 */
+	private String graysAvatorUrl = "";
+	/**
 	 * 总的骑行距离
 	 */
 	private int totalDistance;
@@ -59,6 +63,10 @@ public class Profile implements Serializable {
 	 * 对应的sourceaccount
 	 */
 	private SourceAccount sourceAccount;
+	/**
+	 * 淘宝账号
+	 */
+	private String taobaoCode;
 
 	public SourceAccount getSourceAccount() {
 		return sourceAccount;
@@ -154,6 +162,22 @@ public class Profile implements Serializable {
 
 	public void setBackgroundUrl(String backgroundUrl) {
 		this.backgroundUrl = backgroundUrl;
+	}
+
+	public String getGraysAvatorUrl() {
+		return graysAvatorUrl;
+	}
+
+	public void setGraysAvatorUrl(String graysAvatorUrl) {
+		this.graysAvatorUrl = graysAvatorUrl;
+	}
+
+	public String getTaobaoCode() {
+		return taobaoCode;
+	}
+
+	public void setTaobaoCode(String taobaoCode) {
+		this.taobaoCode = taobaoCode;
 	}
 
 }

@@ -95,4 +95,13 @@ public interface ProfileService {
 	 * @return
 	 */
 	public boolean updateBackgroundUrl(String url, long userId);
+
+	/**
+	 * 淘宝id
+	 * 
+	 * @param taobaCode
+	 * @return
+	 */
+	public Profile getProfileByTaobaoCode(String taobaoCode);
+	
 }

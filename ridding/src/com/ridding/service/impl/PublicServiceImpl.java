@@ -5,14 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ridding.mapper.PublicMapper;
-import com.ridding.meta.Public;
-import com.ridding.meta.Public.PublicType;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.ridding.mapper.PublicMapper;
+import com.ridding.meta.Public;
+import com.ridding.meta.Public.PublicType;
 import com.ridding.service.PublicService;
 
 /**
@@ -85,5 +84,37 @@ public class PublicServiceImpl implements PublicService {
 		public1.setFirstPicUrl(picUrl);
 		public1.genJson();
 		return publicMapper.updateJsonById(id, public1.getJson()) > 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.PublicService#getPublicById(long)
+	 */
+	public Public getPublicById(long publicId) {
+		return publicMapper.getPublicById(publicId);
+	}
+
+	/*
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.PublicService#updatePublic(long,
+	 * java.lang.String)
+	 */
+	public boolean updatePublic(long publicId, String jsonStr) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("publicId", publicId);
+		map.put("jsonStr", jsonStr);
+		return publicMapper.updatePublic(map);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.PublicService#deletePublicByPublicId(long)
+	 */
+	public boolean deletePublicByPublicId(long publicId) {
+		return publicMapper.deletePublicByPublicId(publicId);
 	}
 }

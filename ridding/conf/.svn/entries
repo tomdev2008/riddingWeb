@@ -318,8 +318,8 @@ file
 
 
 
+replace
 
-2012-07-02T08:10:51.000000Z
 0c53602bcf100f91a8672f2033748d33
 2012-07-02T15:32:56.835218Z
 193
@@ -332,27 +332,16 @@ has-props
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-375
+copied
+https://riddingapp.googlecode.com/svn/trunk/conf/mysql.properties
+403
 
 productionApns.p12
 file
 424
 
 
-
+delete
 2012-11-22T14:33:20.000000Z
 c3bc781fdb22711b5cde6b07c91e8f1b
 2012-11-23T03:02:47.817723Z

@@ -185,6 +185,7 @@ public class HttpServletUtil2 {
 			userObject.put("username", profileVO.getNickName());
 			userObject.put("bavatorurl", profileVO.getbAvatorUrl());
 			userObject.put("savatorurl", profileVO.getsAvatorUrl());
+			userObject.put("graysavatorurl", profileVO.getGraySAvatorUrl());
 			if (profileVO.getSourceAccount() != null) {
 				userObject.put("sourceid", profileVO.getSourceAccount().getAccessUserId());
 			}
@@ -223,6 +224,7 @@ public class HttpServletUtil2 {
 			pictureObject.put("liked", riddingPicture.isLiked());
 			JSONObject userObject = new JSONObject();
 			if (riddingPicture.getProfile() != null) {
+				userObject.put("userid", riddingPicture.getProfile().getUserId());
 				userObject.put("savatorurl", riddingPicture.getProfile().getsAvatorUrl());
 				userObject.put("username", riddingPicture.getProfile().getUserName());
 				userObject.put("nickname", riddingPicture.getProfile().getNickName());

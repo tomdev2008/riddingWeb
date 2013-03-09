@@ -298,7 +298,7 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 			post.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "utf-8");
 			post.setParameter("status", weiBo.getText());
 			post.setParameter("access_token", sourceAccount.getAccessToken());
-			post.setParameter("url", SystemConst.getValue("IMAGEHOST") + weiBo.getPhotoUrl());
+			post.setParameter("url", SystemConst.returnPhotoUrl(weiBo.getPhotoUrl()));
 			result = httpclient.executeMethod(post);
 			response = post.getResponseBodyAsString();
 			logger.info("sb=" + sb.toString() + " status=" + weiBo.getText() + " access_Token=" + sourceAccount.getAccessToken() + " url="
@@ -315,7 +315,7 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 			map.put("weiboId", jsonObject.get("id"));
 			weiBoMapper.updateWeiBoStatus(map);
 		} else {
-			logger.error("getAtMeSinaWeiBo return code error and code=" + result + " and result=" + response);
+			logger.error("sendWeiBoQuartz return code error and code=" + result + " and result=" + response);
 		}
 		logger.info("sendWeiBoQuartz end!");
 	}
@@ -521,7 +521,7 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 		if (!ListUtils.isEmptyList(weiBoToBeSendList)) {
 			for (WeiBoToBeSend weiBoToBeSend : weiBoToBeSendList) {
 				long accountId = weiBoToBeSend.getAccountId();
-				this.sendSinaWeiBoCallBack(accountId, "还在骑行路上么?骑行者iphone版新版上线,计划您的骑行路线,记录您的骑行旅程。 @骑去哪儿 " + SystemConst.getValue("AppHref"));
+				this.sendSinaWeiBoCallBack(accountId, "还在骑行路上么?骑行者V1.3[属于你的骑行应用]新版上线,计划您的骑行路线,记录您的骑行旅程。快去下载吧 @骑行者rider " + SystemConst.getValue("AppHref"));
 				weiBoToBeSend.setSendStatus(WeiBoToBeSend.SendStatus.Sended.getValue());
 				if (weiBoToBeSendMapper.updateWeiBoToBeSend(weiBoToBeSend) > 0) {
 					logger.info("Succeed to send comment to " + accountId + "!");

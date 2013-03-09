@@ -22,7 +22,7 @@ table.topmargin {margin-top: 5cm}
     <h3>新建一条记录</h3> 
     <div>
     <span>微博内容:</span><br>
-    <textarea rows="2" cols="60" name="WeiBoContext"></textarea>
+    <textarea rows="2" cols="60" name="WeiBoContext" id="weiboText"></textarea>
     </div>
     <span>微博图片:</span>
     <form onsubmit="return saveReport();" class="t" size="37" enctype="multipart/form-data" method="post" target="uploadFrame" action="/user/54/photoUpload/" id="uploadFrame">
@@ -56,13 +56,16 @@ table.topmargin {margin-top: 5cm}
     </div>
     <div>
        <input type="button" value="提交微博" id="submitWeiBo">
+       
     </div>
 </div>
 
 
 <div style="display:none;">
     <p style="font-size: 20px;color: red;">发送iphone推送信息</p>
-    <input type="text" id="apnsValue" style="width:200px;"/>
+    <span>内容</span><input type="text" id="apnsValue" style="width:200px;"/>
+    <span>用户id,不填就是群发,要谨慎</span><input type="text" id="apnsValue_UserId" style="width:200px;"/>
+    <span>不发的版本号，输入的版本号不发的</span><input type="text" id="apnsValue_Version" style="width:200px;"/>
     <input type="button" id="sendApns" value="发送"/>
 </div>
 
@@ -76,7 +79,7 @@ table.topmargin {margin-top: 5cm}
 <tr id="${weibo.id!0}">
 <td>${weibo.id!0}</td>
 <td>${weibo.text!0}</td>
-<td><a href="" target="_blank"><img style="max-width: 200px; max-height: 200px;" src="${cfg_imageHost}${weibo.photoUrl!""}"/></a></td>
+<td><a href="" target="_blank"><img style="max-width: 200px; max-height: 200px;" src="${weibo.photoUrl!""}"/></a></td>
 <td><#if weibo.sourceType==1>新浪微博</#if></td>
 <td width="300">${weibo.sendTimeStr!""}</td>
 <td ><span style="color:red"><#if weibo.status==0>未发布<#else>已发布</#if></span></td>

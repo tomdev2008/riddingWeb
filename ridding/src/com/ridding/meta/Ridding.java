@@ -67,6 +67,10 @@ public class Ridding implements Serializable {
 	 */
 	private int careCount;
 	/**
+	 * 照片数
+	 */
+	private int pictureCount;
+	/**
 	 * 是否同步到新浪
 	 */
 	private int isSyncSina;
@@ -102,10 +106,10 @@ public class Ridding implements Serializable {
 	 * 同步
 	 */
 	public static int sync = 1;
-//	/**
-//	 * 第一张图的url
-//	 */
-//	public String firstPicUrl;
+	// /**
+	// * 第一张图的url
+	// */
+	// public String firstPicUrl;
 	/**
 	 * 距离
 	 */
@@ -283,14 +287,15 @@ public class Ridding implements Serializable {
 	public void setIsPublic(int isPublic) {
 		this.isPublic = isPublic;
 	}
-//
-//	public String getFirstPicUrl() {
-//		return firstPicUrl;
-//	}
-//
-//	public void setFirstPicUrl(String firstPicUrl) {
-//		this.firstPicUrl = firstPicUrl;
-//	}
+
+	//
+	// public String getFirstPicUrl() {
+	// return firstPicUrl;
+	// }
+	//
+	// public void setFirstPicUrl(String firstPicUrl) {
+	// this.firstPicUrl = firstPicUrl;
+	// }
 
 	public int getDistance() {
 		return distance;
@@ -299,7 +304,6 @@ public class Ridding implements Serializable {
 	public void setDistance(int distance) {
 		this.distance = distance;
 	}
-
 
 	public int getLikeCount() {
 		return likeCount;
@@ -331,6 +335,14 @@ public class Ridding implements Serializable {
 
 	public void setCareCount(int careCount) {
 		this.careCount = careCount;
+	}
+
+	public int getPictureCount() {
+		return pictureCount;
+	}
+
+	public void setPictureCount(int pictureCount) {
+		this.pictureCount = pictureCount;
 	}
 
 	public List<RiddingPicture> getRiddingPictureList() {
