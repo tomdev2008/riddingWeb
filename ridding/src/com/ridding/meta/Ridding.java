@@ -136,6 +136,7 @@ public class Ridding implements Serializable {
 		 * 还没开始
 		 */
 		NotBeginning {
+			@Override
 			public int getValue() {
 				return 0;
 			}
@@ -144,6 +145,7 @@ public class Ridding implements Serializable {
 		 * 正在进行
 		 */
 		Beginning {
+			@Override
 			public int getValue() {
 				return 10;
 			}
@@ -152,6 +154,7 @@ public class Ridding implements Serializable {
 		 * 已经完成
 		 */
 		Finished {
+			@Override
 			public int getValue() {
 				return 20;
 			}
@@ -160,6 +163,7 @@ public class Ridding implements Serializable {
 		 * 已删除
 		 */
 		Deleted {
+			@Override
 			public int getValue() {
 				return 30;
 			}

@@ -9,6 +9,7 @@ public enum SourceType {
 	 * 新浪微博 (1)
 	 */
 	SINAWEIBO {
+		@Override
 		public int getValue() {
 			return 1;
 		}
@@ -17,6 +18,7 @@ public enum SourceType {
 	 * 来自内部web系统
 	 */
 	Web {
+		@Override
 		public int getValue() {
 			return 2;
 		}
@@ -26,6 +28,7 @@ public enum SourceType {
 	 * 来自内部web系统
 	 */
 	WebApi {
+		@Override
 		public int getValue() {
 			return 3;
 		}

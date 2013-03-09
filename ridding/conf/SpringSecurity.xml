@@ -73,6 +73,7 @@
 				<beans:value>/**/backend.do*</beans:value>
 				<beans:value>/**/riddingWeb.do*</beans:value>
 				<beans:value>/**/upload.do*</beans:value>
+				<beans:value>/**/riddingClub.do*</beans:value>
 				<beans:value>/**/*.dwr</beans:value>
 			</beans:list>
 		</beans:property>

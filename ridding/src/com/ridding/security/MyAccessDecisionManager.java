@@ -21,6 +21,7 @@ import org.springframework.web.bind.ServletRequestUtils;
 public class MyAccessDecisionManager implements AccessDecisionManager {
 	private static final Logger logger = Logger.getLogger(MyAccessDecisionManager.class);
 
+	@Override
 	public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException,
 			InsufficientAuthenticationException {
 		if (configAttributes == null) {
@@ -50,10 +51,12 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
 		throw new AccessDeniedException("no right");
 	}
 
+	@Override
 	public boolean supports(ConfigAttribute arg0) {
 		return true;
 	}
 
+	@Override
 	public boolean supports(Class<?> arg0) {
 		return true;
 	}

@@ -33,6 +33,16 @@ body{font-size:83%;}
     <input type="button" id="recom_pic" value="确定"/>
 </div>
 
+
+<div style="">
+    <p style="font-size: 20px;color: red;">添加面包旅行照片</p>
+    <span>骑行Id&nbsp;&nbsp;&nbsp;&nbsp;</span><input type="text" id="recom_pic_mianbao_riddingId" style="width:50px;"/><br>
+    <span>面包地址</span><input type="text" id="recom_pic_mianbao_url_text" style="width:500px;" /><br>
+
+    <input type="button" id="recom_pic_mianbao" value="确定"/>
+</div>
+
+
 <#if riddingList?exists>
 <div>
 <#list riddingList as ridding>

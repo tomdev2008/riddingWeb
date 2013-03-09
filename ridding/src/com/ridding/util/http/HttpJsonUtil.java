@@ -182,7 +182,10 @@ public class HttpJsonUtil {
 			jsonObject.put("description", riddingPicture.getDescription());
 			jsonObject.put("width", riddingPicture.getWidth());
 			jsonObject.put("height", riddingPicture.getHeight());
-			jsonObject.put("savatorurl", riddingPicture.getsAvatorUrl());
+			if (riddingPicture.getProfile() != null) {
+				jsonObject.put("savatorurl", riddingPicture.getProfile().getsAvatorUrl());
+			}
+
 			jsonArray.add(jsonObject);
 		}
 		object.put("riddingpictures", jsonArray);

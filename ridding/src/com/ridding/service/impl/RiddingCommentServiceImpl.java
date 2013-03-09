@@ -90,6 +90,7 @@ public class RiddingCommentServiceImpl implements RiddingCommentService {
 	 * @see com.ridding.service.RiddingCommentService#getRiddingComments(long,
 	 * int, java.lang.Boolean)
 	 */
+	@Override
 	public List<RiddingComment> getRiddingComments(long riddingId,
 			long createTime, int limit, boolean isLarger) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -132,6 +133,7 @@ public class RiddingCommentServiceImpl implements RiddingCommentService {
 			}
 		}
 	}
+	@Override
 	public void deleteRiddingCommentByReplyIdAndCount(long replyId) {
 		riddingCommentMapper.deleteRiddingComment(replyId);
 		List<RiddingComment> riddingCommentList = riddingCommentMapper

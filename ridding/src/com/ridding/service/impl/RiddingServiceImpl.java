@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.constant.SourceType;
-import com.ridding.constant.SystemConst;
 import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.MapFixMapper;
 import com.ridding.mapper.ProfileMapper;
@@ -36,7 +35,6 @@ import com.ridding.meta.RiddingAction;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
-import com.ridding.meta.Public.PublicContentType;
 import com.ridding.meta.Public.PublicType;
 import com.ridding.meta.Ridding.RiddingStatus;
 import com.ridding.meta.RiddingAction.RiddingActionResponse;
@@ -103,6 +101,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#getAllRiddingUserList(long,
 	 * com.ridding.meta.RiddingUser)
 	 */
+	@Override
 	public List<RiddingUser> getAllRiddingUserList(RiddingUser riddingUser) {
 		if (riddingUser == null) {
 			return null;
@@ -123,7 +122,7 @@ public class RiddingServiceImpl implements RiddingService {
 			}
 			Iterator<RiddingUser> iterator = map.values().iterator();
 			while (iterator.hasNext()) {
-				RiddingUser user = (RiddingUser) iterator.next();
+				RiddingUser user = iterator.next();
 				user.setTimeBefore(TimeUtil.getTimeago(user.getCacheTime(), false));
 				user.setState();
 				riddingUserList.add(user);
@@ -161,6 +160,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @see com.ridding.service.RiddingService#getRiddingUser(long, long)
 	 */
+	@Override
 	public RiddingUser getRiddingUser(long riddingId, long userId) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("riddingId", riddingId);
@@ -175,6 +175,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#updateRiddingName(long, long,
 	 * java.lang.String)
 	 */
+	@Override
 	public boolean updateRiddingName(long ridingId, long userId, String name) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("userId", userId);
@@ -188,6 +189,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @see com.ridding.service.RiddingService#endRidding(long, long)
 	 */
+	@Override
 	public boolean endRidding(long ridingId, long userId) {
 		Ridding ridding = riddingMapper.getRidding(ridingId);
 		if (ridding == null) {
@@ -214,6 +216,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @see com.ridding.service.RiddingService#getRidding(long)
 	 */
+	@Override
 	public Ridding getRidding(long id) {
 		return riddingMapper.getRidding(id);
 	}
@@ -242,6 +245,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @see com.ridding.service.RiddingService#getRiddingList(long, int, long)
 	 */
+	@Override
 	public List<ActivityRidding> getSelfRiddingUserList(long userId, int limit, long createTime, boolean isLarger) {
 		List<RiddingUser> riddingUsers = this.getRiddingUserList(userId, limit, createTime, isLarger);
 		if (ListUtils.isEmptyList(riddingUsers)) {
@@ -307,6 +311,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#getRiddingUserList(long, int,
 	 * int)
 	 */
+	@Override
 	public List<ProfileVO> getRiddingUserListToProfile(long riddingId, int limit, int createTime) {
 		List<ProfileVO> profileVOs = new ArrayList<ProfileVO>();
 		List<Long> userIdList = this.getProfileByRiddingUserList(riddingId, limit, createTime, profileVOs);
@@ -374,6 +379,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * com.ridding.service.RiddingService#updateRiddingUsers(java.util.List,
 	 * long)
 	 */
+	@Override
 	public boolean insertRiddingUsers(List<Profile> profileList, long riddingId, int sourceType, long userId) {
 		if (ListUtils.isEmptyList(profileList)) {
 			return true;
@@ -405,6 +411,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * com.ridding.service.RiddingService#deleteRiddingUsers(java.util.List,
 	 * long)
 	 */
+	@Override
 	public boolean deleteRiddingUsers(List<Long> userIdList, long riddingId) {
 		if (ListUtils.isEmptyList(userIdList)) {
 			logger.info("deleteRiddingUsers no sinaUseridList");
@@ -436,6 +443,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @see com.ridding.service.RiddingService#quitRidding(long, long)
 	 */
+	@Override
 	public RiddingQuitConstant quitRidding(long userId, long riddingId) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("userId", userId);
@@ -552,6 +560,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @see com.ridding.service.RiddingService#getRiddingsbyUserId(long)
 	 */
+	@Override
 	public List<Ridding> getRiddingsbyUserId(long userId) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("userId", userId);
@@ -636,6 +645,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#getRecomRiddingList(int, int,
 	 * java.lang.Boolean)
 	 */
+	@Override
 	public List<Ridding> getRecomRiddingList(int weight, int limit, Boolean isLarger) {
 		List<Public> publicList = publicService.getPublicListByType(PublicType.PublicRecom.getValue(), limit, weight, isLarger);
 		List<Ridding> riddingList = new ArrayList<Ridding>(publicList.size());
@@ -660,6 +670,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @see com.ridding.service.RiddingService#setRiddingIsRecom(long)
 	 */
+	@Override
 	public boolean setRiddingIsRecom(long riddingId) {
 		Public public1 = new Public();
 		long nowTime = new Date().getTime();
@@ -826,6 +837,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#checkIsInRiddingAction(long,
 	 * long, com.ridding.meta.RiddingAction.RiddingActions)
 	 */
+	@Override
 	public boolean checkIsInRiddingAction(long riddingId, long userId, RiddingActions action, long objectId) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("riddingId", riddingId);
@@ -838,6 +850,7 @@ public class RiddingServiceImpl implements RiddingService {
 		return false;
 	}
 
+	@Override
 	public boolean checkIsInRiddingAction(long riddingId, long userId, RiddingActions action) {
 		return this.checkIsInRiddingAction(riddingId, userId, action, 0);
 	}
@@ -847,6 +860,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @see com.ridding.service.RiddingService#checkIsInRidding(long, long)
 	 */
+	@Override
 	public boolean checkIsInRidding(long riddingId, long userId) {
 		List<RiddingUser> riddingUsers = this.getAllRiddingUsers(riddingId);
 		if (ListUtils.isEmptyList(riddingUsers)) {
@@ -975,6 +989,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @see com.ridding.service.RiddingService#getRiddingsbyLike(int)
 	 */
+	@Override
 	public List<Ridding> getRiddingsbyLike(int limit, int offset) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("limit", limit);
@@ -990,6 +1005,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @see com.ridding.service.RiddingService#getRiddingsbyComment(int)
 	 */
+	@Override
 	public List<Ridding> getRiddingsbyComment(int limit, int offset) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("limit", limit);
@@ -1005,6 +1021,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @see com.ridding.service.RiddingService#getRiddingsbyUse(int)
 	 */
+	@Override
 	public List<Ridding> getRiddingsbyUse(int limit, int offset) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("limit", limit);
@@ -1020,6 +1037,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @see com.ridding.service.RiddingService#incPicLike(long, long, long)
 	 */
+	@Override
 	public RiddingActionResponse incPicLike(long riddingId, long userId, long objectId) {
 		if (this.checkIsInRiddingAction(riddingId, userId, RiddingActions.LikePicture, objectId)) {
 			return RiddingActionResponse.DoubleDo;
@@ -1054,6 +1072,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * 
 	 * @see com.ridding.service.RiddingService#removeRiddingPicture(long)
 	 */
+	@Override
 	public boolean removeRiddingPicture(long pictureId) {
 		return riddingPictureMapper.deleteRiddingPicture(pictureId) > 0;
 	}

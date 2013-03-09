@@ -65,6 +65,7 @@ public class UserRelationServiceImpl implements UserRelationService {
 	 * 
 	 * @see com.ridding.service.UserRelationService#getUserRelations(long)
 	 */
+	@Override
 	public List<UserRelationVO> getUserRelations(long userId) {
 		if (userId <= 0) {
 			return null;
@@ -115,6 +116,7 @@ public class UserRelationServiceImpl implements UserRelationService {
 	 * @see com.ridding.service.UserRelationService#removeUserRelation(long,
 	 * long)
 	 */
+	@Override
 	public boolean removeUserRelation(long userId, long toUserId) {
 		UserRelation userRelation = new UserRelation();
 		userRelation.setUserId(userId);

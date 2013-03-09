@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.ridding.mapper.PublicMapper;
 import com.ridding.meta.Public;
-import com.ridding.meta.Ridding;
 import com.ridding.meta.Public.PublicType;
 
 import javax.annotation.Resource;
@@ -31,6 +30,7 @@ public class PublicServiceImpl implements PublicService {
 	 * @see com.ridding.service.PublicService#addPublic(int, java.lang.String,
 	 * int)
 	 */
+	@Override
 	public boolean addPublic(int type, String jsonStr, int weight) {
 		Public p = new Public();
 		p.setType(type);
@@ -47,6 +47,7 @@ public class PublicServiceImpl implements PublicService {
 	 * 
 	 * @see com.ridding.service.PublicService#addPublic(com.ridding.meta.Public)
 	 */
+	@Override
 	public boolean addPublic(Public aPublic) {
 		return publicMapper.addPublic(aPublic) > 0;
 	}
@@ -56,6 +57,7 @@ public class PublicServiceImpl implements PublicService {
 	 * 
 	 * @see com.ridding.service.PublicService#getPublicListByType(int, int, int)
 	 */
+	@Override
 	public List<Public> getPublicListByType(int type, int limit, int weight, boolean isLarger) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("type", type);
@@ -71,6 +73,7 @@ public class PublicServiceImpl implements PublicService {
 	 * @see com.ridding.service.PublicService#updatePublicFirstPicUrl(long,
 	 * java.lang.String)
 	 */
+	@Override
 	public boolean updatePublicFirstPicUrl(long id, String picUrl) {
 		Public public1 = publicMapper.getPublicById(id);
 		if (public1 == null) {

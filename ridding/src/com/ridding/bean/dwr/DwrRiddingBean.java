@@ -94,6 +94,7 @@ public class DwrRiddingBean {
 	 * @param userIds
 	 * @return
 	 */
+	@Deprecated
 	public List<ProfileVO> getSourceIdList(List<Long> userIds) {
 		List<SourceAccount> sourceAccounts = profileService.getSourceAccountByUserIdsSourceType(userIds, SourceType.SINAWEIBO.getValue());
 		Map<Long, SourceAccount> map = HashMapMaker.listToMap(sourceAccounts, "getUserId", SourceAccount.class);

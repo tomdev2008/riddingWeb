@@ -45,4 +45,12 @@ public interface UserNearbyService {
 	 * @return
 	 */
 	public List<Profile> showUserNearByList(double latitude, double longitude, int limit, int offset);
+
+	/**
+	 * 添加附近骑行活动定时任务
+	 * 
+	 * @auther zyslovely@gmail.com
+	 */
+	public void addRiddingNearbyQuartz();
+
 }

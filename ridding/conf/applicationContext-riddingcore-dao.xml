@@ -137,4 +137,24 @@
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 		<property name="mapperInterface" value="com.ridding.mapper.WeiBoToBeSendMapper" />
 	</bean>
+	<bean id="riddingNearbyMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.RiddingNearbyMapper" />
+	</bean>
+	<bean id="clubMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.ClubMapper" />
+	</bean>
+	<bean id="clubMemberMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.ClubMemberMapper" />
+	</bean>
+	<bean id="clubApplyMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.ClubApplyMapper" />
+	</bean>
+	<bean id="clubMemberApplyMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.ClubMemberApplyMapper" />
+	</bean>
 </beans>

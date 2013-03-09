@@ -98,6 +98,7 @@ public class MapServiceImpl implements MapService {
 	/**
 	 * 提取出google地图
 	 */
+	@Override
 	public String extraGoogleMapUrl(String mapUrl) {
 		logger.info("extraGoogleMapUrl begin mapUrl=" + mapUrl);
 		List<String> matchList = StringUtil.pattern("http://.*.google.*/maps\\?saddr=.*&daddr=.*", mapUrl);
@@ -213,6 +214,7 @@ public class MapServiceImpl implements MapService {
 	 * 
 	 * @see com.ridding.service.MapService#deleteRiddingMap(long)
 	 */
+	@Override
 	public int deleteRiddingMap(long id) {
 		return iMapMapper.deleteRiddingMap(id);
 	}
@@ -223,6 +225,7 @@ public class MapServiceImpl implements MapService {
 	 * @see
 	 * com.ridding.service.MapService#updateRiddingMap(com.ridding.meta.IMap)
 	 */
+	@Override
 	public boolean updateRiddingMap(IMap iMap) {
 		if (iMap == null) {
 			return false;
@@ -235,6 +238,7 @@ public class MapServiceImpl implements MapService {
 	 * 
 	 * @see com.ridding.service.MapService#getMapByRiddingId(long)
 	 */
+	@Override
 	public IMap getMapByRiddingId(long riddingId) {
 		Ridding ridding = riddingMapper.getRidding(riddingId);
 		if (ridding == null || ridding.getMapId() == 0) {
@@ -246,6 +250,7 @@ public class MapServiceImpl implements MapService {
 	/**
 	 * ͨ通过id得到地图
 	 */
+	@Override
 	public IMap getMapById(long id, int status) {
 		IMap iMap = iMapMapper.getRiddingMap(id);
 		if (iMap.getStatus() != status || iMap == null) {
@@ -260,6 +265,7 @@ public class MapServiceImpl implements MapService {
 	 * @see com.ridding.service.MapService#getImapByObject(java.util.List, int,
 	 * int, int)
 	 */
+	@Override
 	public List<IMap> getImapByObject(List<Long> objectIdList, int objectType, int limit, int offset) {
 		if (ListUtils.isEmptyList(objectIdList)) {
 			return null;
@@ -302,6 +308,7 @@ public class MapServiceImpl implements MapService {
 	 * 
 	 * @see com.ridding.service.MapService#getCityIdByName(java.lang.String)
 	 */
+	@Override
 	public long getCityIdByName(String name) {
 		List<City> cities = cityDao.getCitybyName(name);
 		if (ListUtils.isEmptyList(cities)) {
@@ -322,6 +329,7 @@ public class MapServiceImpl implements MapService {
 	 * 
 	 * @see com.ridding.service.MapService#getMapFix(float, float)
 	 */
+	@Override
 	public MapFix getMapFix(double latitude, double longtitude) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("latitude", MapFix.getLatPrefix(latitude));
@@ -347,6 +355,7 @@ public class MapServiceImpl implements MapService {
 	 * com.ridding.service.MapService#updateImapAvatorPicUrl(java.lang.String,
 	 * long)
 	 */
+	@Override
 	public boolean updateImapAvatorPicUrl(String url, long mapId) {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("avatorPicUrl", url);

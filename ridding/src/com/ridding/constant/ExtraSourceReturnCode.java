@@ -9,6 +9,7 @@ public enum ExtraSourceReturnCode {
 	 * 地址无法连接(0)
 	 */
 	UrlCanNotConnect {
+		@Override
 		public int getValue() {
 			return 0;
 		}
@@ -17,6 +18,7 @@ public enum ExtraSourceReturnCode {
 	 * 插入地址错误，连接有问题(1)
 	 */
 	InsertError {
+		@Override
 		public int getValue() {
 			return 1;
 		}
@@ -25,6 +27,7 @@ public enum ExtraSourceReturnCode {
 	 * 失败(2)
 	 */
 	Failed {
+		@Override
 		public int getValue() {
 			return 2;
 		}
@@ -33,6 +36,7 @@ public enum ExtraSourceReturnCode {
 	 * 成功(4)
 	 */
 	Succeed {
+		@Override
 		public int getValue() {
 			return 3;
 		}

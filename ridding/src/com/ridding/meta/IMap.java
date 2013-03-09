@@ -8,8 +8,6 @@ import org.apache.commons.lang.StringUtils;
 
 import com.ridding.constant.SystemConst;
 import com.ridding.meta.vo.Location;
-import com.ridding.util.StringUtil;
-
 import net.sf.json.JSONArray;
 
 /**
@@ -224,7 +222,8 @@ public class IMap implements Serializable {
 	}
 
 	public List<String> getMidLocationList() {
-		JSONArray jsonArray = new JSONArray().fromObject(this.midLocation);
+		new JSONArray();
+		JSONArray jsonArray = JSONArray.fromObject(this.midLocation);
 		if (jsonArray == null) {
 			return null;
 		}
@@ -262,7 +261,8 @@ public class IMap implements Serializable {
 		if (this.mapTaps.startsWith("\"")) {
 			trimMapTaps = mapTaps.substring(1, mapTaps.length() - 1);
 		}
-		JSONArray jsonArray = new JSONArray().fromObject(trimMapTaps);
+		new JSONArray();
+		JSONArray jsonArray = JSONArray.fromObject(trimMapTaps);
 		if (jsonArray == null) {
 			return;
 		}
@@ -302,7 +302,8 @@ public class IMap implements Serializable {
 			trimMapTaps = mapTaps.substring(1, mapTaps.length() - 1);
 		}
 
-		JSONArray jsonArray = new JSONArray().fromObject(trimMapTaps);
+		new JSONArray();
+		JSONArray jsonArray = JSONArray.fromObject(trimMapTaps);
 		if (jsonArray == null) {
 			return null;
 		}
@@ -329,7 +330,8 @@ public class IMap implements Serializable {
 	 * @return
 	 */
 	public List<String> getMapTapsList() {
-		JSONArray jsonArray = new JSONArray().fromObject(this.mapTaps);
+		new JSONArray();
+		JSONArray jsonArray = JSONArray.fromObject(this.mapTaps);
 		if (jsonArray == null) {
 			return null;
 		}

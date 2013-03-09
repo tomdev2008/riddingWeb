@@ -8,14 +8,24 @@ import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
+import net.sf.json.JSONArray;
+
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.ProfileMapper;
+import com.ridding.mapper.RiddingMapper;
+import com.ridding.mapper.RiddingNearbyMapper;
 import com.ridding.mapper.UserNearbyMapper;
+import com.ridding.meta.IMap;
 import com.ridding.meta.Profile;
+import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingNearby;
 import com.ridding.meta.UserNearby;
 import com.ridding.service.UserNearbyService;
 import com.ridding.util.GeohashUtil;
+import com.ridding.util.ListUtils;
 
 /**
  * @author yunshang_734 E-mail:yunshang_734@163.com
@@ -23,11 +33,22 @@ import com.ridding.util.GeohashUtil;
  */
 @Service("userNearbyService")
 public class UserNearbyServiceImpl implements UserNearbyService {
+
+	private static final Logger logger = Logger.getLogger(UserNearbyServiceImpl.class);
 	@Resource
 	private UserNearbyMapper userNearbyMapper;
 
 	@Resource
 	private ProfileMapper profileMapper;
+
+	@Resource
+	private RiddingMapper riddingMapper;
+
+	@Resource
+	private IMapMapper iMapMapper;
+
+	@Resource
+	private RiddingNearbyMapper riddingNearbyMapper;
 
 	private static ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -35,6 +56,7 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 	 * 添加或更新附近用户
 	 * 
 	 */
+	@Override
 	public boolean addOrUpdateUsersNearby(long userId, double latitude, double longitude) {
 		UserNearby userNearby = new UserNearby();
 		userNearby.setUserId(userId);
@@ -57,6 +79,7 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 	 * @param longitude
 	 * @return
 	 */
+	@Override
 	public boolean asyncUpdateUserNearBy(final long userId, final double latitude, final double longitude) {
 		executorService.execute(new Runnable() {
 			@Override
@@ -81,6 +104,7 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 	 * 显示附近用户
 	 * 
 	 */
+	@Override
 	public List<Profile> showUserNearbyList(long userId) {
 		UserNearby userNearby = userNearbyMapper.getUserNearby(userId);
 		if (userNearby == null) {
@@ -106,8 +130,62 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 	 */
 	@Override
 	public List<Profile> showUserNearByList(double latitude, double longitude, int limit, int offset) {
-		
+
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.UserNearbyService#addRiddingNearbyQuartz()
+	 */
+	@Override
+	public void addRiddingNearbyQuartz() {
+		logger.info("addRiddingNearbyQuartz begin");
+		int limit = 1;
+		List<RiddingNearby> riddingNearbyList = riddingNearbyMapper.getRiddingNearbyList(limit);
+		List<Ridding> riddingList;
+		if (ListUtils.isEmptyList(riddingNearbyList)) {
+			riddingList = riddingMapper.getAllRidding();
+		} else {
+			riddingList = riddingMapper.getRiddingListByStartRiddingId(riddingNearbyList.get(0).getRiddingId());
+		}
+		if (ListUtils.isEmptyList(riddingList)) {
+			logger.error("Cannot get any riddings!");
+			return;
+		}
+		for (Ridding ridding : riddingList) {
+			long mapId = ridding.getMapId();
+			IMap iMap = iMapMapper.getRiddingMap(mapId);
+			if (iMap == null) {
+				continue;
+			}
+			String mapTaps = iMap.getMapTaps();
+			RiddingNearby riddingNearby = new RiddingNearby();
+			try {
+				JSONArray jsonArray = JSONArray.fromObject(mapTaps);
+				String mapFirstTap = jsonArray.getString(0);
+				int dividePoint = 0, i = 0;
+				for (i = 0; i < mapFirstTap.length(); i++) {
+					if (mapFirstTap.charAt(i) == ',') {
+						dividePoint = i;
+					}
+				}
+				String lat = mapFirstTap.substring(0, dividePoint);
+				double latitude = Double.valueOf(lat);
+				String lon = mapFirstTap.substring(dividePoint + 1, mapFirstTap.length());
+				double longitude = Double.valueOf(lon);
+				riddingNearby.setLatitude(latitude);
+				riddingNearby.setLongitude(longitude);
+				riddingNearby.setGeohash(GeohashUtil.encode(latitude, longitude));
+			} catch (Exception e) {
+				logger.error("addRiddingNearbyQuartz error where mapTaps=" + mapTaps);
+				e.printStackTrace();
+				continue;
+			}
+			riddingNearby.setRiddingId(ridding.getId());
+			riddingNearby.setMapId(mapId);
+			riddingNearbyMapper.addRiddingNearby(riddingNearby);
+		}
+	}
 }

@@ -1,7 +1,5 @@
 package com.ridding.meta;
 
-import com.ridding.constant.SourceType;
-
 public class WeiBoToBeSend {
 	/**
 	 * 账户Id
@@ -84,6 +82,7 @@ public class WeiBoToBeSend {
 		 * 尚未发送
 		 */
 		NotSend {
+			@Override
 			public int getValue() {
 				return 0;
 			}
@@ -92,6 +91,7 @@ public class WeiBoToBeSend {
 		 * 已经发送
 		 */
 		Sended {
+			@Override
 			public int getValue() {
 				return 1;
 			}
