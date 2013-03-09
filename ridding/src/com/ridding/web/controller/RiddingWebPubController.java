@@ -128,6 +128,7 @@ public class RiddingWebPubController extends AbstractBaseController {
 			MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
 			visitorUserId = myUser.getUserId();
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		this.setUD(mv, userId, visitorUserId);

@@ -19,7 +19,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.ridding.mapper.ProfileMapper;
 import com.ridding.mapper.SourceAccountMapper;
-import com.ridding.meta.Profile;
 import com.ridding.meta.SourceAccount;
 
 /**
@@ -34,6 +33,7 @@ public class MyUserDetailService implements UserDetailsService {
 	@Resource
 	private ProfileMapper profileMapper;
 
+	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
 		String[] splits = StringUtils.split(username, "#");
 		// 说明是外域资源

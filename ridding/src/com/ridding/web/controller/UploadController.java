@@ -7,12 +7,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUpload;
+import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -45,7 +44,7 @@ public class UploadController extends AbstractBaseController {
 	public ModelAndView authUpload(HttpServletRequest request, HttpServletResponse response) throws Exception, IOException {
 		RequestContext requestContext = new ServletRequestContext(request);
 		ModelAndView mv = new ModelAndView("upload");
-		if (FileUpload.isMultipartContent(requestContext) && request.getMethod().toLowerCase().equals("post")) {
+		if (FileUploadBase.isMultipartContent(requestContext) && request.getMethod().toLowerCase().equals("post")) {
 			String bucketName = "bucketName";
 			DigestAuthClient conn = new DigestAuthClient();
 			RSService rs = new RSService(conn, bucketName);

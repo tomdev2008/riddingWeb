@@ -7,11 +7,17 @@ import java.io.FileOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.apache.log4j.Logger;
+
+import com.ridding.web.controller.RiddingController;
+
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
  * @version CreateTime：2012-9-11 下午02:50:00 Class Description
  */
 public class FileUtil {
+
+	private static final Logger logger = Logger.getLogger(FileUtil.class);
 
 	/**
 	 * 创建目录
@@ -46,6 +52,7 @@ public class FileUtil {
 			in.close();
 			return new File(path);
 		} catch (Exception e) {
+			logger.error("FileUtil getFileFromUrl where url=" + urlStr + " path=" + path);
 			e.printStackTrace();
 			return null;
 		}

@@ -24,6 +24,7 @@ public class MyInvocationSecurityMetadataSource implements FilterInvocationSecur
 	 * @seeorg.springframework.security.access.SecurityMetadataSource#
 	 * getAllConfigAttributes()
 	 */
+	@Override
 	public Collection<ConfigAttribute> getAllConfigAttributes() {
 		return null;
 	}
@@ -35,6 +36,7 @@ public class MyInvocationSecurityMetadataSource implements FilterInvocationSecur
 	 * org.springframework.security.access.SecurityMetadataSource#getAttributes
 	 * (java.lang.Object)
 	 */
+	@Override
 	public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
 		// guess object is a URL. 
 		String url = ((FilterInvocation) object).getRequestUrl();
@@ -54,6 +56,7 @@ public class MyInvocationSecurityMetadataSource implements FilterInvocationSecur
 	 * org.springframework.security.access.SecurityMetadataSource#supports(java
 	 * .lang.Class)
 	 */
+	@Override
 	public boolean supports(Class<?> arg0) {
 		return true;
 	}

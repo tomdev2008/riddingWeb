@@ -1,10 +1,8 @@
 package com.ridding.mapper;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingUser;
 
 /**

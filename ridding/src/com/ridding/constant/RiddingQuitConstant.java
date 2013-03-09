@@ -11,6 +11,7 @@ public enum RiddingQuitConstant {
 	 * 是队长，队员还有，不能退出 (0)
 	 */
 	Leader {
+		@Override
 		public int getValue() {
 			return 0;
 		}
@@ -19,6 +20,7 @@ public enum RiddingQuitConstant {
 	 * 退出失败(1)
 	 */
 	Failed {
+		@Override
 		public int getValue() {
 			return 1;
 		}
@@ -27,6 +29,7 @@ public enum RiddingQuitConstant {
 	 * 已经完成 (2)
 	 */
 	Success {
+		@Override
 		public int getValue() {
 			return 2;
 		}

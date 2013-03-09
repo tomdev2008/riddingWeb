@@ -180,6 +180,7 @@ public class TransactionServiceImpl implements TransactionService {
 	 * com.ridding.service.transaction.TransactionService#insertANewRidding(
 	 * com.ridding.meta.IMap)
 	 */
+	@Override
 	public boolean insertANewRidding(IMap iMap, Ridding ridding) {
 		List<City> cityList = cityMapper.getCitybyName(iMap.getCityName());
 		if (!ListUtils.isEmptyList(cityList)) {

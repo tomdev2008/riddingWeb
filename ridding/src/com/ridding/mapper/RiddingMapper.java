@@ -157,6 +157,22 @@ public interface RiddingMapper {
 	public List<Ridding> getRiddingsbyUse(Map<String, Object> map);
 
 	/**
+	 * 获取所有骑行
+	 * 
+	 * @return
+	 */
+	public List<Ridding> getAllRidding();
+
+	/**
+	 * 获取限定骑行Id后的骑行
+	 * 
+	 * @param riddingId
+	 * @return
+	 */
+	public List<Ridding> getRiddingListByStartRiddingId(long riddingId);
+
+	/**
+	 * 
 	 * 取出照片数排行骑行
 	 * 
 	 * @param map

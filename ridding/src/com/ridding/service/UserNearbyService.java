@@ -36,4 +36,21 @@ public interface UserNearbyService {
 	 * @return
 	 */
 	public List<Profile> showUserNearbyList(long userId);
+
+	/**
+	 * 通过经纬度获得附近用户
+	 * 
+	 * @param latitude
+	 * @param longitude
+	 * @return
+	 */
+	public List<Profile> showUserNearByList(double latitude, double longitude, int limit, int offset);
+
+	/**
+	 * 添加附近骑行活动定时任务
+	 * 
+	 * @auther zyslovely@gmail.com
+	 */
+	public void addRiddingNearbyQuartz();
+
 }

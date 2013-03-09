@@ -96,6 +96,7 @@ public class RiddingAction {
 		 * 喜欢(0)
 		 */
 		Like {
+			@Override
 			public int getValue() {
 				return 0;
 			}
@@ -104,6 +105,7 @@ public class RiddingAction {
 		 * 关注(1)
 		 */
 		Care {
+			@Override
 			public int getValue() {
 				return 1;
 			}
@@ -112,6 +114,7 @@ public class RiddingAction {
 		 * 完成(2)
 		 */
 		Finished {
+			@Override
 			public int getValue() {
 				return 2;
 			}
@@ -120,6 +123,7 @@ public class RiddingAction {
 		 * 使用(3)
 		 */
 		Use {
+			@Override
 			public int getValue() {
 				return 3;
 			}
@@ -128,6 +132,7 @@ public class RiddingAction {
 		 * 喜欢了某张图(4)
 		 */
 		LikePicture {
+			@Override
 			public int getValue() {
 				return 4;
 			}
@@ -154,6 +159,7 @@ public class RiddingAction {
 		 * 重复了(0)
 		 */
 		DoubleDo {
+			@Override
 			public int getValue() {
 				return 0;
 			}
@@ -162,6 +168,7 @@ public class RiddingAction {
 		 * 自己的(1)
 		 */
 		InRidding {
+			@Override
 			public int getValue() {
 				return 1;
 			}
@@ -170,6 +177,7 @@ public class RiddingAction {
 		 * 成功(2)
 		 */
 		SUCC {
+			@Override
 			public int getValue() {
 				return 2;
 			}
@@ -178,6 +186,7 @@ public class RiddingAction {
 		 * 失败(3)
 		 */
 		Fail {
+			@Override
 			public int getValue() {
 				return 3;
 			}

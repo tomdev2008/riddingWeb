@@ -199,6 +199,18 @@
 		offset #{offset};
 	</select>
 
+	<select id="getAllRidding" resultMap="riddingMap">
+		SELECT * from TB_Ridding;
+	</select>
+
+	<select id="getRiddingListByStartRiddingId" resultMap="riddingMap">
+		SELECT *
+		from TB_Ridding
+		where
+		id >#{riddingId}
+		order by createTime desc;
+	</select>
+
 	<select id="getRiddingsbyPicture" resultMap="riddingMap"
 		parameterType="hashMap">
 		select * from TB_Ridding
@@ -207,10 +219,11 @@
 		#{limit}
 		offset #{offset};
 	</select>
-	
-	<update id="updateRiddingPictureCount" parameterType="long" flushCache="true"
-		statementType="PREPARED">
-		update TB_Ridding set pictureCount = #{pictureCount}
+
+	<update id="updateRiddingPictureCount" parameterType="long"
+		flushCache="true" statementType="PREPARED">
+		update TB_Ridding set pictureCount =
+		#{pictureCount}
 		where id
 		= #{riddingId} ;
 	</update>

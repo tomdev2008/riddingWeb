@@ -26,8 +26,7 @@ public interface UserRelationService {
 	 * @param userId
 	 * @return
 	 */
-	public List<UserRelationVO> getUserRelations(long userId, int limit,
-			int offset);
+	public List<UserRelationVO> getUserRelations(long userId, int limit, int offset);
 
 	/**
 	 * 删除用户关系
@@ -36,7 +35,7 @@ public interface UserRelationService {
 	 * @param toUserId
 	 * @return
 	 */
-	public int deleteUserRelation(long userId, long toUserId);
+	public boolean deleteUserRelation(long userId, long toUserId);
 
 	/**
 	 * 更新用户关系
@@ -54,6 +53,5 @@ public interface UserRelationService {
 	 * @param status
 	 * @return
 	 */
-	public RiddingActionResponse removeOrAddUserRelation(long userId,
-			long toUserId, int status);
+	public RiddingActionResponse removeOrAddUserRelation(long userId, long toUserId, int status);
 }

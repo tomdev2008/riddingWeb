@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ridding.mapper.RiddingNearbyMapper">
+
+	<resultMap type="RiddingNearby" id="riddingNearbyMap">
+		<id property="riddingId" column="riddingId" />
+		<result property="mapId" column="mapId" />
+		<result property="latitude" column="latitude" />
+		<result property="longitude" column="longitude" />
+		<result property="geohash" column="geohash" />
+	</resultMap>
+
+	<insert id="addRiddingNearby" parameterType="RiddingNearby">
+		INSERT INTO
+		TB_Ridding_Nearby(
+		riddingId,
+		mapId,
+		latitude,
+		longitude,
+		geohash
+		)VALUES(
+		#{riddingId},
+		#{mapId},
+		#{latitude},
+		#{longitude},
+		#{geohash}
+		)
+	</insert>
+
+	<select id="getRiddingNearbyList" resultMap="riddingNearbyMap">
+		SELECT * from
+		TB_Ridding_Nearby
+		order by riddingId desc
+		limit #{limit};
+	</select>
+</mapper>

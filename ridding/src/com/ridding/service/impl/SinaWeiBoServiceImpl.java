@@ -61,8 +61,6 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 
 	private static Weibo weibo = new Weibo();
 
-	private static String accessToken = "2.00lAUquCYpMUcE29a73d45e7qhlkMB";
-
 	@Resource
 	private SourceService sourceService;
 
@@ -98,8 +96,7 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 			logger.error("get @riddingapp sinaweibo error where accessToken=null");
 			return;
 		}
-		accessToken = sourceAccount.getAccessToken();
-		this.getAtMeSinaWeiBo(Long.valueOf(SystemConst.getValue("ADMINUSERSINAID")), accessToken, biggestId, 0, 0, 0, 50, 1); // 每50个取一次
+		this.getAtMeSinaWeiBo(Long.valueOf(SystemConst.getValue("ADMINUSERSINAID")), sourceAccount.getAccessToken(), biggestId, 0, 0, 0, 50, 1); // 每50个取一次
 		logger.info("get @riddingapp sinaweibo end!");
 	}
 
@@ -188,7 +185,14 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 			// 如果没有结束，继续
 			if (!end) {
 				page++;
-				this.getAtMeSinaWeiBo(Long.valueOf(SystemConst.getValue("ADMINUSERSINAID")), accessToken, biggestId, 0, 0, 0, 50, page);
+				SourceAccount sourceAccount = profileService.getSourceAccountByAccessUserId(Long.valueOf(SystemConst.getValue("ADMINUSERSINAID")),
+						SourceType.SINAWEIBO.getValue());
+				if (sourceAccount == null || StringUtils.isEmpty(sourceAccount.getAccessToken())) {
+					logger.error("get @riddingapp sinaweibo error where accessToken=null");
+					return;
+				}
+				this.getAtMeSinaWeiBo(Long.valueOf(SystemConst.getValue("ADMINUSERSINAID")), sourceAccount.getAccessToken(), biggestId, 0, 0, 0, 50,
+						page);
 			}
 		}
 	}
@@ -199,11 +203,18 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 	 * @see com.ridding.service.SinaWeiBoService#sendSinaWeiBoCallBack(long)
 	 */
 	public boolean sendSinaWeiBoCallBack(long sinaWeiBo, String comment) {
-		weibo.setToken(accessToken);
+		SourceAccount sourceAccount = profileService.getSourceAccountByAccessUserId(Long.valueOf(SystemConst.getValue("ADMINUSERSINAID")),
+				SourceType.SINAWEIBO.getValue());
+		if (sourceAccount == null || StringUtils.isEmpty(sourceAccount.getAccessToken())) {
+			logger.error("get @riddingapp sinaweibo error where accessToken=null");
+			return false;
+		}
+		weibo.setToken(sourceAccount.getAccessToken());
 		Comments comments = new Comments();
 		try {
 			comments.createComment(comment, String.valueOf(sinaWeiBo), 0);
 		} catch (WeiboException e) {
+
 			e.printStackTrace();
 			return false;
 		}
@@ -265,9 +276,7 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 		if (sourceAccount == null) {
 			return;
 		}
-		Weibo weibo = new Weibo();
-		accessToken = sourceAccount.getAccessToken();
-		weibo.setToken(accessToken);
+		weibo.setToken(sourceAccount.getAccessToken());
 		long time = new Date().getTime();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("status", WeiBo.notDeal);
@@ -277,9 +286,8 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 		if (weiBo == null) {
 			return;
 		}
-		accessToken = sourceAccount.getAccessToken();
 		StringBuilder sb = new StringBuilder("https://api.weibo.com/2/statuses/upload_url_text.json");
-		sb.append("?access_token=" + accessToken);
+		sb.append("?access_token=" + sourceAccount.getAccessToken());
 		sb.append("&source=" + SystemConst.getValue("WEBAPPKEY"));
 		int result = -1;
 		String response = null;
@@ -457,7 +465,6 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 		if (sourceAccount == null) {
 			return null;
 		}
-		accessToken = sourceAccount.getAccessToken();
 		StringBuilder sb = new StringBuilder(SystemConst.getValue("SINAHOST") + "/search/topics.json");
 		sb.append("?source=" + SystemConst.getValue("WEBAPPKEY"));
 		sb.append("&access_token=" + sourceAccount.getAccessToken());

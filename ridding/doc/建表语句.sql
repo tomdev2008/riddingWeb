@@ -316,3 +316,59 @@ replyTime bigint(20) NOT NULL DEFAULT '0' COMMENT '回复时间',
 reply varchar(512) NOT NULL DEFAULT '' COMMENT '回复内容',
 PRIMARY KEY  (`id`)
 ) DEFAULT CHARSET=UTF8 COMMENT '骑行反馈表';
+
+//俱乐部表
+CREATE TABLE TB_Club (
+clubId bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'clubId',
+clubName varchar(50) NOT NULL DEFAULT '' COMMENT '俱乐部的名称',
+createTime bigint(20) NOT NULL DEFAULT '0' COMMENT '俱乐部创建时间',
+clubLocation varchar(128) NOT NULL DEFAULT '' COMMENT '俱乐部地点',
+clubLevel tinyint(4) NOT NULL DEFAULT '0' COMMENT '俱乐部等级,0普通俱乐部，1高级俱乐部',
+maxMembership int(11) DEFAULT '0' COMMENT '俱乐部最大人数',
+managerId bigint(20) NOT NULL DEFAULT '0' COMMENT '管理员Id',
+clubCoverUrl varchar(256) NOT NULL DEFAULT '' COMMENT '俱乐部封面Url',
+clubDescription varchar(512) NOT NULL DEFAULT '' COMMENT '俱乐部描述',
+PRIMARY KEY (`clubId`)
+) DEFAULT CHARSET=UTF8 COMMENT '俱乐部表';
+//俱乐部会员表
+CREATE TABLE TB_Club_Member (
+id bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+clubId bigint(20) NOT NULL DEFAULT '0' COMMENT 'clubId',
+userId bigint(20) NOT NULL DEFAULT '0' COMMENT 'userId',
+nickname varchar(50) NOT NULL DEFAULT '' COMMENT '会员昵称',
+createTime bigint(20) NOT NULL DEFAULT '0' COMMENT '会员创建时间',
+memberType tinyint(4) NOT NULL DEFAULT '0' COMMENT '会员类型,0非会员，1普通会员，2管理员',
+PRIMARY KEY (`id`)
+) DEFAULT CHARSET=UTF8 COMMENT '俱乐部会员表';
+//俱乐部申请表
+CREATE TABLE TB_Club_Apply(
+id bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+userId bigint(20) NOT NULL DEFAULT '0' COMMENT '申请人Id',
+clubName varchar(50) NOT NULL DEFAULT '' COMMENT '俱乐部的名称',
+clubLocation varchar(128) NOT NULL DEFAULT '' COMMENT '俱乐部地点',
+clubDescription varchar(512) NOT NULL DEFAULT '' COMMENT '俱乐部描述',
+createTime bigint(20) NOT NULL DEFAULT '0' COMMENT '俱乐部申请时间',
+lastUpdateTime bigint(20) NOT NULL DEFAULT '0' COMMENT '更新时间',
+status tinyint(4) NOT NULL DEFAULT '0' COMMENT '申请状态,0待通过，1已通过，2拒绝',
+PRIMARY KEY (`id`)
+) DEFAULT CHARSET=UTF8 COMMENT '俱乐部申请表';
+//会员申请表
+CREATE TABLE TB_Club_MemberApply(
+id bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+userId bigint(20) NOT NULL DEFAULT '0' COMMENT '申请人Id',
+clubId bigint(20) NOT NULL DEFAULT '0' COMMENT 'clubId',
+createTime bigint(20) NOT NULL DEFAULT '0' COMMENT '俱乐部会员申请时间',
+lastUpdateTime bigint(20) NOT NULL DEFAULT '0' COMMENT '更新时间',
+status tinyint(4) NOT NULL DEFAULT '0' COMMENT '申请状态,0待通过，1已通过，2拒绝',
+PRIMARY KEY (`id`)
+) DEFAULT CHARSET=UTF8 COMMENT '会员申请表';
+
+
+CREATE TABLE TB_Ridding_Nearby (
+riddingId bigint(20) NOT NULL DEFAULT '0' COMMENT '骑行id',
+mapId bigint(20) NOT NULL DEFAULT 0 COMMENT '地图id',
+latitude double(11,8) NOT NULL DEFAULT '0.0' COMMENT '经度',
+longitude double(11,8) NOT NULL DEFAULT '0.0' COMMENT '经度',
+geohash varchar(512) NOT NULL DEFAULT '' COMMENT 'geo内容',
+PRIMARY KEY (`riddingId`)
+) DEFAULT CHARSET=UTF8 COMMENT '骑行活动附近表';

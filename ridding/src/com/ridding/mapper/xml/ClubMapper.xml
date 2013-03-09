@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ridding.mapper.ClubMapper">
+
+	<resultMap type="Club" id="clubMap">
+		<id property="clubId" column="clubId" />
+		<result property="clubName" column="clubName" />
+		<result property="createTime" column="createTime" />
+		<result property="clubLocation" column="clubLocation" />
+		<result property="clubLevel" column="clubLevel" />
+		<result property="maxMembership" column="maxMembership" />
+		<result property="managerId" column="managerId" />
+		<result property="clubCoverUrl" column="clubCoverUrl" />
+		<result property="clubDescription" column="clubDescription" />
+	</resultMap>
+
+	<insert id="addClub" parameterType="Club">
+		INSERT INTO TB_Club(
+		clubName,
+		createTime,
+		clubLocation,
+		clubLevel,
+		maxMembership,
+		managerId,
+		clubCoverUrl,
+		clubDescription
+		)VALUES(
+		#{clubName},
+		#{createTime},
+		#{clubLocation},
+		#{clubLevel},
+		#{maxMembership},
+		#{managerId},
+		#{clubCoverUrl},
+		#{clubDescription}
+		)
+		<selectKey keyProperty="clubId" resultType="long">
+			SELECT
+			LAST_INSERT_ID() AS VALUE
+		</selectKey>
+	</insert>
+
+	<select id="getClubByName" resultMap="clubMap">
+		SELECT * from TB_Club
+		where
+		clubName=#{clubName};
+	</select>
+
+	<select id="getClubByClubId" resultMap="clubMap">
+		SELECT * from TB_Club
+		where
+		clubId=#{clubId};
+	</select>
+</mapper>
