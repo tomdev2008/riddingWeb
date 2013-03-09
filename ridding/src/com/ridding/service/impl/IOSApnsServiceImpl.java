@@ -106,7 +106,7 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 					payLoad.addSound("default");
 
 					PushNotificationManager pushManager = PushNotificationManager.getInstance();
-					pushManager.addDevice("iPhone", device.getToken());
+					pushManager.addDevice(String.valueOf(device.getUserId()), device.getToken());
 					File resourceFile = ResourceUtils.getFile("classpath:" + FILENAME);
 					pushManager.initializeConnection(HOST, 2195, resourceFile.getPath(), PASSWORD, SSLConnectionHelper.KEYSTORE_TYPE_PKCS12);
 

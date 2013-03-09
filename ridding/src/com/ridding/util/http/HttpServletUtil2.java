@@ -398,7 +398,7 @@ public class HttpServletUtil2 {
 			commentObject.put("text", riddingComment.getText());
 			commentObject.put("usepicurl", riddingComment.getUsePicUrl());
 			commentObject.put("commenttype", riddingComment.getCommentType());
-			commentObject.put("replyId", riddingComment.getReplyId());
+			commentObject.put("replyid", riddingComment.getReplyId());
 			commentObject.put("createtime", riddingComment.getCreateTime());
 			commentObject.put("createtimestr", TimeUtil.getFormatTime(riddingComment.getCreateTime()));
 			commentObject.put("beforetime", TimeUtil.getTimeago(riddingComment.getCreateTime(), true));
