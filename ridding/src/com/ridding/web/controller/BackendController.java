@@ -249,12 +249,13 @@ public class BackendController extends AbstractBaseController {
 		long riddingId = ServletRequestUtils.getLongParameter(request,
 				"riddingId", -1L);
 		int limit = ServletRequestUtils.getIntParameter(request, "limit", 0);
+		long requestTime = new Date().getTime();
 		if (riddingId < 0) {
-			logger.error("riddingId<0!");
+			List<RiddingComment> riddingComments = riddingCommentService
+					.getRiddingComments(riddingId, requestTime, 20, false);
+			mv.addObject("riddingCommentList", riddingComments);
 			return mv;
 		}
-		Date data = new Date();
-		long requestTime = data.getTime();
 		List<RiddingComment> riddingComments = riddingCommentService
 				.getRiddingComments(riddingId, requestTime, limit, false);
 		mv.addObject("riddingCommentList", riddingComments);

@@ -89,9 +89,6 @@ public class RiddingServiceImpl implements RiddingService {
 	private RiddingActionMapper riddingActionMapper;
 
 	@Resource
-	private RiddingCommentMapper riddingCommentMapper;
-
-	@Resource
 	private IOSApnsService iosApnsService;
 	private static final Logger logger = Logger.getLogger(RiddingServiceImpl.class);
 
@@ -699,6 +696,19 @@ public class RiddingServiceImpl implements RiddingService {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("id", riddingId);
 		hashMap.put("isRecom", Ridding.PublicOrRecom);
+		return riddingMapper.updateRecomStatus(hashMap) > 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#setRiddingIsNotRecom(long, long)
+	 */
+	public boolean setRiddingIsNotRecom(long publicId, long riddingId) {
+		publicService.deletePublicByPublicId(publicId);
+		Map<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("id", riddingId);
+		hashMap.put("isRecom", Ridding.notPublicOrRecom);
 		return riddingMapper.updateRecomStatus(hashMap) > 0;
 	}
 

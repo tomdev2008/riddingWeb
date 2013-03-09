@@ -16,7 +16,8 @@ public interface FeedbackService {
 	 * @return
 	 */
 	public boolean addFeedback(long userId, long userQQ, String userMail,
-			String description);
+			String description, String deviceVersion, String version,
+			String appVersion);
 
 	/**
 	 * 获取反馈列表

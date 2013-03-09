@@ -122,7 +122,6 @@ public class RiddingController extends AbstractBaseController {
 
 		List<RiddingUser> ridingUserList = riddingService.getAllRiddingUserList(riddingUser);
 		HttpJsonUtil.setShowRiddingView(returnObject, ridingUserList);
-
 		userNearbyService.asyncUpdateUserNearBy(userId, riddingUser.getLatitude(), riddingUser.getLongtitude());
 		JSONArray dataArray = HttpServletUtil2.parseShowRiddingView(ridingUserList);
 		returnObject.put("data", dataArray);
@@ -581,6 +580,7 @@ public class RiddingController extends AbstractBaseController {
 	}
 
 	/**
+	 * 添加骑行评论
 	 * 
 	 * @param request
 	 * @param response
@@ -881,6 +881,14 @@ public class RiddingController extends AbstractBaseController {
 		return mv;
 	}
 
+	/**
+	 * 添加反馈
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	public ModelAndView addFeedback(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		JSONObject returnObject = new JSONObject();
@@ -889,13 +897,16 @@ public class RiddingController extends AbstractBaseController {
 		long userQQ = ServletRequestUtils.getLongParameter(request, "qq", -1L);
 		String userMail = ServletRequestUtils.getStringParameter(request, "mail", "");
 		String description = ServletRequestUtils.getStringParameter(request, "description", "");
+		String deviceVersion = ServletRequestUtils.getStringParameter(request, "deviceVersion", "");
+		String version = ServletRequestUtils.getStringParameter(request, "version", "");
+		String appVersion = ServletRequestUtils.getStringParameter(request, "appVersion", "");
 
 		if (StringUtils.isEmpty(description)) {
 			returnObject.put("code", returnCodeConstance.FAILED);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
-		if (feedbackService.addFeedback(userId, userQQ, userMail, description)) {
+		if (feedbackService.addFeedback(userId, userQQ, userMail, description, deviceVersion, version, appVersion)) {
 			returnObject.put("code", returnCodeConstance.SUCCESS);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
