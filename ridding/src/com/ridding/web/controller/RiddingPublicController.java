@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -34,6 +36,7 @@ import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.meta.vo.UserRelationVO;
+import com.ridding.security.MyUser;
 import com.ridding.service.MapService;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingCommentService;
@@ -287,9 +290,15 @@ public class RiddingPublicController extends AbstractBaseController {
 					riddingPicture.setProfile(profile);
 				}
 				RiddingAction action = riddingActionMap.get(riddingPicture.getId());
-				if (action != null) {
-					riddingPicture.setLiked(true);
-				} else {
+				try {
+					MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication())
+							.getDetails();
+					if (action != null && myUser.getUserId() != myUser.getUserId()) {
+						riddingPicture.setLiked(true);
+					} else {
+						riddingPicture.setLiked(false);
+					}
+				} catch (Exception e) {
 					riddingPicture.setLiked(false);
 				}
 			}
