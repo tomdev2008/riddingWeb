@@ -299,6 +299,7 @@ public class RiddingPublicController extends AbstractBaseController {
 						riddingPicture.setLiked(false);
 					}
 				} catch (Exception e) {
+					logger.error("riddingPublicController getuploadedPhotos userId can not be found");
 					riddingPicture.setLiked(false);
 				}
 			}
