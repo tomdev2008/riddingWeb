@@ -187,8 +187,14 @@ public class RiddingController extends AbstractBaseController {
 		long riddingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
 		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
 		int type = ServletRequestUtils.getIntParameter(request, "type", -1);
-		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
+		JSONObject returnObject = new JSONObject();
+		Profile profile = profileService.getProfile(userId);
+		if (profile == null) {
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
 		RiddingActionResponse actionResponse = RiddingActionResponse.Fail;
 		switch (RiddingActions.genRiddingAction(type)) {
 		case Like:
@@ -908,9 +914,9 @@ public class RiddingController extends AbstractBaseController {
 		long userQQ = ServletRequestUtils.getLongParameter(request, "qq", -1L);
 		String userMail = ServletRequestUtils.getStringParameter(request, "mail", "");
 		String description = ServletRequestUtils.getStringParameter(request, "description", "");
-		String deviceVersion = ServletRequestUtils.getStringParameter(request, "deviceVersion", "");
-		String version = ServletRequestUtils.getStringParameter(request, "version", "");
-		String appVersion = ServletRequestUtils.getStringParameter(request, "appVersion", "");
+		String deviceVersion = ServletRequestUtils.getStringParameter(request, "deviceversion", "");
+		String version = ServletRequestUtils.getStringParameter(request, "iosversion", "");
+		String appVersion = ServletRequestUtils.getStringParameter(request, "appversion", "");
 
 		if (StringUtils.isEmpty(description)) {
 			returnObject.put("code", returnCodeConstance.FAILED);

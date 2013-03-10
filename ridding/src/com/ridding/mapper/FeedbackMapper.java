@@ -26,6 +26,15 @@ public interface FeedbackMapper {
 	public List<Feedback> getFeedbackList();
 
 	/**
+	 * 通过id得到反馈
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param id
+	 * @return
+	 */
+	public Feedback getFeedbackById(long id);
+
+	/**
 	 * 更新反馈
 	 * 
 	 * @param hashMap

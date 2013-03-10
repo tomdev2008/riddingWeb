@@ -51,6 +51,11 @@
 		createTime desc;
 	</select>
 
+	<select id="getFeedbackById" parameterType="long" resultMap="feedbackMap">
+		SELECT * from TB_Feedback
+		where id=#{id}
+	</select>
+
 	<update id="updateFeedback" parameterType="hashMap" flushCache="true"
 		statementType="PREPARED">
 		update TB_Feedback set reply=#{reply},

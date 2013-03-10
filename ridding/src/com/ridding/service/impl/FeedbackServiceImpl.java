@@ -13,10 +13,12 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.ridding.mapper.FeedbackMapper;
+import com.ridding.mapper.IosApnsMapper;
 import com.ridding.mapper.ProfileMapper;
 import com.ridding.meta.Feedback;
 import com.ridding.meta.Profile;
 import com.ridding.service.FeedbackService;
+import com.ridding.service.IOSApnsService;
 import com.ridding.util.MailSenderInfo;
 import com.ridding.util.SimpleMailSenderUtil;
 
@@ -26,8 +28,7 @@ import com.ridding.util.SimpleMailSenderUtil;
  */
 @Service("feedbackService")
 public class FeedbackServiceImpl implements FeedbackService {
-	private static final Logger logger = Logger
-			.getLogger(FeedbackServiceImpl.class);
+	private static final Logger logger = Logger.getLogger(FeedbackServiceImpl.class);
 
 	@Resource
 	private FeedbackMapper feedbackMapper;
@@ -35,13 +36,13 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Resource
 	private ProfileMapper profileMapper;
 
-	private static ExecutorService executorService = Executors
-			.newCachedThreadPool();
+	@Resource
+	private IOSApnsService iosApnsService;
 
-	public boolean asyncgrayMailAvator(final long userId, final long userQQ,
-			final String userMail, final String description,
-			final String deviceVersion, final String version,
-			final String appVersion) {
+	private static ExecutorService executorService = Executors.newCachedThreadPool();
+
+	public boolean asyncgrayMailAvator(final long userId, final long userQQ, final String userMail, final String description,
+			final String deviceVersion, final String version, final String appVersion) {
 		executorService.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -54,13 +55,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 					mailSenderInfo.setPassword("zyslovely138233");
 					mailSenderInfo.setFromAddress("zyslovely@163.com");
 					mailSenderInfo.setToAddress("riddingapp@gmail.com");
-					mailSenderInfo.setSubject("Feedback with userId = "
-							+ userId);
-					mailSenderInfo.setContent("userQQ = " + userQQ
-							+ ",userMail = " + userMail + ",description = "
-							+ description + ",deviceVersion = " + deviceVersion
-							+ ",version = " + version + ",appVersion = "
-							+ appVersion);
+					mailSenderInfo.setSubject("Feedback with userId = " + userId);
+					mailSenderInfo.setContent("userQQ = " + userQQ + ",userMail = " + userMail + ",description = " + description
+							+ ",deviceVersion = " + deviceVersion + ",version = " + version + ",appVersion = " + appVersion);
 					SimpleMailSenderUtil simpleMailSenderUtil = new SimpleMailSenderUtil();
 					simpleMailSenderUtil.sendTextMail(mailSenderInfo);
 				} catch (Exception e) {
@@ -81,9 +78,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	 * )
 	 */
 	@Override
-	public boolean addFeedback(long userId, long userQQ, String userMail,
-			String description, String deviceVersion, String version,
-			String appVersion) {
+	public boolean addFeedback(long userId, long userQQ, String userMail, String description, String deviceVersion, String version, String appVersion) {
 		if (userId < 0) {
 			logger.error("Error to add feedback with uerId = " + userId);
 			return false;
@@ -100,8 +95,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		feedback.setDeviceVersion(deviceVersion);
 		feedback.setVersion(version);
 		feedback.setAppVersion(appVersion);
-		this.asyncgrayMailAvator(userId, userQQ, userMail, description,
-				deviceVersion, version, appVersion);
+		this.asyncgrayMailAvator(userId, userQQ, userMail, description, deviceVersion, version, appVersion);
 		if (feedbackMapper.addFeedback(feedback) > 0) {
 			return true;
 		}
@@ -126,10 +120,15 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public boolean replyFeedback(long id, long userId, String reply) {
 		Profile profile = profileMapper.getProfile(userId);
 		if (profile.getLevel() != 1) {
-			logger.error("Error to reply feedback with userId = " + userId
-					+ " which is not a manager's id!");
+			logger.error("Error to reply feedback with userId = " + userId + " which is not a manager's id!");
 			return false;
 		}
+		Feedback feedback = feedbackMapper.getFeedbackById(id);
+		if (feedback == null) {
+			logger.error("FeedbackServiceImpl replyFeedback error where feedBack=null id=" + id);
+			return false;
+		}
+
 		long nowTime = new Date().getTime();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", id);
@@ -137,6 +136,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		map.put("replyTime", nowTime);
 		map.put("status", Feedback.FeedbackStatus.Done.getValue());
 		if (feedbackMapper.updateFeedback(map) > 0) {
+			iosApnsService.sendUserApns(userId, "您的意见反馈回复内容:" + reply);
 			return true;
 		}
 		return false;
