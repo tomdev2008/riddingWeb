@@ -890,7 +890,7 @@ public class RiddingController extends AbstractBaseController {
 			JSONArray jsonArray = HttpServletUtil2.parseGetRiddingList(riddingUserList);
 			returnObject.put("data", jsonArray.toString());
 		} else {
-
+			
 		}
 
 		returnObject.put("code", returnCodeConstance.SUCCESS);

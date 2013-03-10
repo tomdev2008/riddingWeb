@@ -47,6 +47,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 			@Override
 			public void run() {
 				try {
+					Profile profile = profileMapper.getProfile(userId);
 					MailSenderInfo mailSenderInfo = new MailSenderInfo();
 					mailSenderInfo.setMailServerHost("smtp.163.com");
 					mailSenderInfo.setMailServerPort("25");
@@ -55,9 +56,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 					mailSenderInfo.setPassword("zyslovely138233");
 					mailSenderInfo.setFromAddress("zyslovely@163.com");
 					mailSenderInfo.setToAddress("riddingapp@gmail.com");
-					mailSenderInfo.setSubject("Feedback with userId = " + userId);
-					mailSenderInfo.setContent("userQQ = " + userQQ + ",userMail = " + userMail + ",description = " + description
-							+ ",deviceVersion = " + deviceVersion + ",version = " + version + ",appVersion = " + appVersion);
+					mailSenderInfo.setSubject("来自用户 " + profile.getUserName() + " 的反馈");
+					mailSenderInfo.setContent("内容:" + description + "  \n  qq联系 : " + userQQ + "\n 邮箱联系 :" + userMail + "\n 手机设备版本 : "
+							+ deviceVersion + " \n 操作系统版本 :  " + version + " \n app版本 = " + appVersion);
 					SimpleMailSenderUtil simpleMailSenderUtil = new SimpleMailSenderUtil();
 					simpleMailSenderUtil.sendTextMail(mailSenderInfo);
 				} catch (Exception e) {
