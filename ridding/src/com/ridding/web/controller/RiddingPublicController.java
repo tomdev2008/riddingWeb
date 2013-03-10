@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -36,7 +34,6 @@ import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.meta.vo.UserRelationVO;
-import com.ridding.security.MyUser;
 import com.ridding.service.MapService;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingCommentService;
@@ -267,7 +264,7 @@ public class RiddingPublicController extends AbstractBaseController {
 	public ModelAndView getuploadedPhotos(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
-		//V1.3及以下版本 没有userId。
+		// V1.3及以下版本 没有userId。
 		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
 		int limit = ServletRequestUtils.getIntParameter(request, "limit", -1);
 		long lastUpdateTime = ServletRequestUtils.getLongParameter(request, "lastupdatetime", -1);
@@ -329,6 +326,11 @@ public class RiddingPublicController extends AbstractBaseController {
 			logger.error("riddingPublicController getGoingRiddings where input str=" + jsonString);
 			returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
 			e.printStackTrace();
+			return mv;
+		}
+		if (ridding == null) {
+			logger.error("riddingPublicController getGoingRiddings is null where jsonString=" + jsonString);
+			returnObject.put("code", returnCodeConstance.FAILED);
 			return mv;
 		}
 		List<Ridding> riddingList = null;

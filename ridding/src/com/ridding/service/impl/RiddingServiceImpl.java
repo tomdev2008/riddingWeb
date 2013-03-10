@@ -21,8 +21,8 @@ import com.ridding.mapper.IMapMapper;
 import com.ridding.mapper.MapFixMapper;
 import com.ridding.mapper.ProfileMapper;
 import com.ridding.mapper.RiddingActionMapper;
-import com.ridding.mapper.RiddingCommentMapper;
 import com.ridding.mapper.RiddingMapper;
+import com.ridding.mapper.RiddingNearbyMapper;
 import com.ridding.mapper.RiddingPictureMapper;
 import com.ridding.mapper.RiddingUserMapper;
 import com.ridding.mapper.SourceAccountMapper;
@@ -32,6 +32,7 @@ import com.ridding.meta.Profile;
 import com.ridding.meta.Public;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingAction;
+import com.ridding.meta.RiddingNearby;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
@@ -46,6 +47,7 @@ import com.ridding.meta.vo.ProfileVO;
 import com.ridding.service.IOSApnsService;
 import com.ridding.service.PublicService;
 import com.ridding.service.RiddingService;
+import com.ridding.service.UserNearbyService;
 import com.ridding.service.transaction.TransactionService;
 import com.ridding.util.HashMapMaker;
 import com.ridding.util.ListUtils;
@@ -78,6 +80,9 @@ public class RiddingServiceImpl implements RiddingService {
 	private TransactionService transactionService;
 
 	@Resource
+	private RiddingNearbyMapper riddingNearbyMapper;
+
+	@Resource
 	private RiddingPictureMapper riddingPictureMapper;
 
 	@Resource
@@ -87,6 +92,9 @@ public class RiddingServiceImpl implements RiddingService {
 
 	@Resource
 	private RiddingActionMapper riddingActionMapper;
+
+	@Resource
+	private UserNearbyService userNearbyService;
 
 	@Resource
 	private IOSApnsService iosApnsService;
@@ -264,6 +272,48 @@ public class RiddingServiceImpl implements RiddingService {
 		return activityList;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ridding.service.RiddingService#getRiddingListByRiddingId(java.util
+	 * .List)
+	 */
+	public List<ActivityRidding> getRiddingListByRiddingId(List<Long> ids) {
+		List<Ridding> riddingList = riddingMapper.getRiddingList(ids);
+		if (ListUtils.isEmptyList(riddingList)) {
+			return null;
+		}
+		List<ActivityRidding> activityList = new ArrayList<ActivityRidding>(riddingList.size());
+		List<Long> mapIds = new ArrayList<Long>(riddingList.size());
+		List<Long> leaderUserIds = new ArrayList<Long>(riddingList.size());
+		for (Ridding ridding : riddingList) {
+			ActivityRidding activityRidding = new ActivityRidding();
+			activityRidding.setRidding(ridding);
+			activityList.add(activityRidding);
+			mapIds.add(ridding.getMapId());
+			leaderUserIds.add(ridding.getLeaderUserId());
+		}
+		List<Profile> leaderProfileList = profileMapper.getProfileList(leaderUserIds);
+		List<IMap> iMapList = mapMapper.getIMaplist(mapIds);
+		Map<Long, IMap> iMapMap = HashMapMaker.listToMap(iMapList, "getId", IMap.class);
+		Map<Long, Profile> profileMap = HashMapMaker.listToMap(leaderProfileList, "getUserId", Profile.class);
+		for (ActivityRidding activityRidding : activityList) {
+			IMap iMap = iMapMap.get(activityRidding.getRidding().getMapId());
+			if (iMap != null) {
+				if (StringUtils.isEmpty(iMap.getAvatorPicUrl())) {
+					iMap.setAvatorPicUrl(iMap.getStaticImgSrc());
+				}
+				activityRidding.setiMap(iMap);
+			}
+			Profile profile = profileMap.get(activityRidding.getRidding().getLeaderUserId());
+			if (profile != null) {
+				activityRidding.setLeaderProfile(profile);
+			}
+		}
+		return activityList;
+	}
+
 	/**
 	 * 插入骑行的地图信息,骑行信息
 	 * 
@@ -279,7 +329,6 @@ public class RiddingServiceImpl implements RiddingService {
 		}
 		List<Profile> leaderProfileList = profileMapper.getProfileList(leaderUserIds);
 		List<IMap> iMapList = mapMapper.getIMaplist(mapIds);
-		List<Long> photoIds = new ArrayList<Long>(riddingList.size());
 		Map<Long, IMap> iMapMap = HashMapMaker.listToMap(iMapList, "getId", IMap.class);
 		Map<Long, Ridding> riddingMap = HashMapMaker.listToMap(riddingList, "getId", Ridding.class);
 		Map<Long, Profile> profileMap = HashMapMaker.listToMap(leaderProfileList, "getUserId", Profile.class);
@@ -469,14 +518,11 @@ public class RiddingServiceImpl implements RiddingService {
 					return RiddingQuitConstant.Leader;
 				}
 				// 队长自身在ridding_User中退出，就是删除
-				// hashMap.put("userRole",
-				// RiddingUserRoleType.Nothing.intValue());
 				hashMap.put("riddingStatus", RiddingStatus.Deleted.getValue());
-				// hashMap.put("count", -1);
-				// riddingMapper.increaseUserCount(hashMap);
 				if (riddingUserMapper.updateRiddingStatus(hashMap) < 0) {
 					return RiddingQuitConstant.Failed;
 				}
+				riddingNearbyMapper.deleteRiddingNearBy(riddingId);
 				// 在ridding 表中退出
 				if (riddingMapper.updateRiddingStatus(hashMap) > 0) {
 					return RiddingQuitConstant.Success;
@@ -1184,5 +1230,21 @@ public class RiddingServiceImpl implements RiddingService {
 		}
 		logger.info("Success to fix the pictureCount!");
 		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getNearByRiddingList(long,
+	 * double, double, int, int)
+	 */
+	@Override
+	public List<ActivityRidding> getNearByRiddingList(long userId, double latitude, double longitude, int limit, int offset) {
+		List<RiddingNearby> riddingNearbyList = userNearbyService.showRddingNearByList(userId, latitude, longitude, limit, offset);
+		List<Long> riddingIdList = new ArrayList<Long>(riddingNearbyList.size());
+		for (RiddingNearby riddingNearby : riddingNearbyList) {
+			riddingIdList.add(riddingNearby.getRiddingId());
+		}
+		return this.getRiddingListByRiddingId(riddingIdList);
 	}
 }

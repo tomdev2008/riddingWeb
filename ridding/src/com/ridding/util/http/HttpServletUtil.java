@@ -372,6 +372,9 @@ public final class HttpServletUtil {
 	}
 
 	public static Ridding parseToRiddingByLastUpdateTime(String jsonString) throws Exception {
+		if (jsonString.isEmpty()) {
+			return null;
+		}
 		JSONObject jsonObject = JSONObject.fromObject(jsonString);
 		if (jsonObject == null) {
 			throw new RequestBodyIsNullException();

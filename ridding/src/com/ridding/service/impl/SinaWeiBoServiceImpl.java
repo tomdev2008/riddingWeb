@@ -353,8 +353,7 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 					JSONObject jsonObject2 = jsonArray.getJSONObject(i);
 					long weiboId = transactionService.insertRepostMap(weiBo, jsonObject2);
 					if (weiboId > 0) {
-						sourceService.sendObjectCallBack(weiboId, SourceType.SINAWEIBO.getValue(), "您转发的骑行活动已经生成，赶快去看看吧!!! "
-								+ SystemConst.getValue("HOST"));
+						sourceService.sendObjectCallBack(weiboId, SourceType.SINAWEIBO.getValue(), "您转发的骑行活动已经生成，赶快打开应用看看吧!!!");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();

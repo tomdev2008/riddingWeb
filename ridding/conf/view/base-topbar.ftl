@@ -1,7 +1,7 @@
 <section class="base-topbar">
     <article class="topbar-mod">
         <hgroup class="topbar-logo">
-            <h1 class="logo"><a href="/" title="骑去哪儿网" style="color: #CCCCCC;font-size: 22px;text-align: center;font-family:BallparkWeiner;">骑去哪儿网</a></h1>
+            <h1 class="logo"><a href="/" title="骑去哪儿" style="color: #CCCCCC;font-size: 22px;text-align: center;font-family:BallparkWeiner;">骑去哪儿</a></h1>
             <!--<img src="" alt="创建活动步骤"/>-->
         </hgroup>
         <nav class="topbar-nav" style="">

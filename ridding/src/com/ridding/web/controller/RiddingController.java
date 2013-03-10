@@ -1,5 +1,6 @@
 package com.ridding.web.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,11 +31,13 @@ import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingAction;
 import com.ridding.meta.RiddingComment;
+import com.ridding.meta.RiddingNearby;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
 import com.ridding.meta.RiddingAction.RiddingActionResponse;
 import com.ridding.meta.RiddingAction.RiddingActions;
+import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileSourceFeed;
 import com.ridding.meta.vo.UserRelationVO;
 import com.ridding.security.MyUser;
@@ -869,12 +872,20 @@ public class RiddingController extends AbstractBaseController {
 		ModelAndView mv = new ModelAndView("return");
 		JSONObject returnObject = new JSONObject();
 		double latitude = ServletRequestUtils.getDoubleParameter(request, "latitude", -1.0);
-		double longitutde = ServletRequestUtils.getDoubleParameter(request, "longitude", -1.0);
+		double longitude = ServletRequestUtils.getDoubleParameter(request, "longitude", -1.0);
 		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
 		int limit = ServletRequestUtils.getIntParameter(request, "limit", -1);
 		int offset = ServletRequestUtils.getIntParameter(request, "offset", -1);
+		int type = ServletRequestUtils.getIntParameter(request, "type", 0);
+		userNearbyService.asyncUpdateUserNearBy(userId, latitude, longitude);
+		if (type == 1) {
+			// 附近的骑行活动
+			List<ActivityRidding> riddingUserList = riddingService.getNearByRiddingList(userId, latitude, longitude, limit, offset);
+			JSONArray jsonArray = HttpServletUtil2.parseGetRiddingList(riddingUserList);
+			returnObject.put("data", jsonArray.toString());
+		} else {
 
-		userNearbyService.asyncUpdateUserNearBy(userId, latitude, longitutde);
+		}
 
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());

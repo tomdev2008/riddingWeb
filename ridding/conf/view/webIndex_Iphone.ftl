@@ -8,10 +8,10 @@
     <link rel="icon" href="/image/index/icon_29.png" type="image/x-icon" />
     <link rel="shortcut icon" href="/image/index/icon_29.png" type="image/x-icon" />
     <link rel="stylesheet" href="http://c.meituan.net/combo/?f=/www/css/base.v46b2c8b6.css" />
-    <meta name="application-name" content="骑去哪儿网－属于你的骑行网站" />
+    <meta name="application-name" content="骑去哪儿－属于你的骑行网站" />
     <meta name="msapplication-navbutton-color" content="#C3E9F6"/>
     <meta name="msapplication-window" content="width=device-width;height=device-height" />
-    <meta name="msapplication-tooltip" content="骑去哪儿网－属于你的骑行网站。" />
+    <meta name="msapplication-tooltip" content="骑去哪儿－属于你的骑行网站。" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 <meta name="format-detection" content="telephone=no" />

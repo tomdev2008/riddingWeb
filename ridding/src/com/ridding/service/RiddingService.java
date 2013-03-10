@@ -83,6 +83,15 @@ public interface RiddingService {
 	public List<ActivityRidding> getSelfRiddingUserList(long userId, int limit, long createTime, boolean isLarger);
 
 	/**
+	 * 通过riddingId得到活动列表
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param ids
+	 * @return
+	 */
+	public List<ActivityRidding> getRiddingListByRiddingId(List<Long> ids);
+
+	/**
 	 * 通过骑行id得到所有用户信息
 	 * 
 	 * @param riddingId
@@ -375,5 +384,18 @@ public interface RiddingService {
 	 * @return
 	 */
 	public RiddingPicture getRiddingPictureById(long pictureId);
+
+	/**
+	 * 获得附近的路线
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param userId
+	 * @param latitude
+	 * @param longitude
+	 * @param limit
+	 * @param offset
+	 * @return
+	 */
+	public List<ActivityRidding> getNearByRiddingList(long userId, double latitude, double longitude, int limit, int offset);
 
 }

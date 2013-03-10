@@ -33,4 +33,27 @@
 		order by riddingId desc
 		limit #{limit};
 	</select>
+
+	<select id="getRiddingNearbyListByGeo" resultMap="riddingNearbyMap"
+		parameterType="string">
+		select * from
+		TB_Ridding_Nearby
+		where geohash like
+		CONCAT('${geohash}','%') order by riddingId desc 
+	</select>
+
+	<select id="getRiddingNearbyCount" parameterType="string"
+		resultMap="riddingNearbyMap">
+		select count(*) from
+		TB_Ridding_Nearby
+		where geohash like
+		CONCAT('${geohash}','%') ;
+	</select>
+
+	<delete id="deleteRiddingNearBy" parameterType="long"
+		flushCache="true" statementType="PREPARED">
+		delete from TB_Ridding_Nearby
+		where
+		riddingId =#{riddingId};
+	</delete>
 </mapper>

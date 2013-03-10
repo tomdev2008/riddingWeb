@@ -137,6 +137,23 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see com.ridding.service.UserNearbyService#showRddingNearByList(long,
+	 * double, double, int, int)
+	 */
+	public List<RiddingNearby> showRddingNearByList(long userId, double latitude, double longitude, int limit, int offset) {
+		String geohash = GeohashUtil.encode(latitude, longitude);
+		geohash = geohash.substring(0, geohash.length() - 9);
+		List<RiddingNearby> riddingNearBys = riddingNearbyMapper.getRiddingNearbyListByGeo(geohash);
+		if (ListUtils.isEmptyList(riddingNearBys) || riddingNearBys.size() < offset - 1) {
+			return null;
+		}
+		return riddingNearBys.subList(offset, offset + limit);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ridding.service.UserNearbyService#addRiddingNearbyQuartz()
 	 */
 	@Override

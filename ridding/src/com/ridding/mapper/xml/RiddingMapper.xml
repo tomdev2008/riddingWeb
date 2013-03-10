@@ -200,14 +200,14 @@
 	</select>
 
 	<select id="getAllRidding" resultMap="riddingMap">
-		SELECT * from TB_Ridding;
+		SELECT * from TB_Ridding where 30 > riddingStatus;
 	</select>
 
 	<select id="getRiddingListByStartRiddingId" resultMap="riddingMap">
 		SELECT *
 		from TB_Ridding
 		where
-		id >#{riddingId}
+		id >#{riddingId} and 30 > riddingStatus
 		order by createTime desc;
 	</select>
 

@@ -3,6 +3,7 @@ package com.ridding.service;
 import java.util.List;
 
 import com.ridding.meta.Profile;
+import com.ridding.meta.RiddingNearby;
 
 /**
  * @author yunshang_734 E-mail:yunshang_734@163.com
@@ -52,5 +53,18 @@ public interface UserNearbyService {
 	 * @auther zyslovely@gmail.com
 	 */
 	public void addRiddingNearbyQuartz();
+
+	/**
+	 * 附近的骑行活动
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param userId
+	 * @param latitude
+	 * @param longitude
+	 * @param limit
+	 * @param offset
+	 * @return
+	 */
+	public List<RiddingNearby> showRddingNearByList(long userId, double latitude, double longitude, int limit, int offset);
 
 }
