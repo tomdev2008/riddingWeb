@@ -44,8 +44,19 @@ public interface RiddingActionMapper {
 	 * @param type
 	 * @return
 	 */
-	public List<RiddingAction> getRiddingActionsByType( @Param(value = "riddingId") long riddingId,
-			@Param(value = "type") int type);
+	public List<RiddingAction> getRiddingActionsByType(@Param(value = "riddingId") long riddingId, @Param(value = "type") int type);
+
+	/**
+	 * 通过userId得到某个用户的操作记录
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param riddingId
+	 * @param type
+	 * @param userId
+	 * @return
+	 */
+	public List<RiddingAction> getRiddingActionsByTypeUserId(@Param(value = "riddingId") long riddingId, @Param(value = "type") int type,
+			@Param(value = "userId") long userId);
 
 	/**
 	 * 通过riddingId删除操作

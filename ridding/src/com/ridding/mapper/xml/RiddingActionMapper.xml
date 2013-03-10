@@ -45,6 +45,13 @@
 		TB_Ridding_Action where
 		riddingId=#{riddingId} and type=#{type} ;
 	</select>
+	
+	<select id="getRiddingActionsByTypeUserId" resultMap="riddingActionMap">
+		SELECT * from
+		TB_Ridding_Action where
+		userId=#{userId} and riddingId=#{riddingId} and
+		type=#{type};
+	</select>
 
 	<select id="getRiddingActionsByUserId" resultMap="riddingActionMap">
 		SELECT * from

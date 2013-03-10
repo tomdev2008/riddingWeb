@@ -267,6 +267,8 @@ public class RiddingPublicController extends AbstractBaseController {
 	public ModelAndView getuploadedPhotos(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
+		//V1.3及以下版本 没有userId。
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
 		int limit = ServletRequestUtils.getIntParameter(request, "limit", -1);
 		long lastUpdateTime = ServletRequestUtils.getLongParameter(request, "lastupdatetime", -1);
 		if (lastUpdateTime < 0) {
@@ -282,7 +284,7 @@ public class RiddingPublicController extends AbstractBaseController {
 			}
 			List<Profile> profileList = profileService.getProfileList(userids);
 			Map<Long, Profile> profileMap = HashMapMaker.listToMap(profileList, "getUserId", Profile.class);
-			List<RiddingAction> actions = riddingService.getRiddingActionsByType(riddingId, RiddingActions.LikePicture.getValue());
+			List<RiddingAction> actions = riddingService.getRiddingActionsByTypeUserId(riddingId, RiddingActions.LikePicture.getValue(), userId);
 			Map<Long, RiddingAction> riddingActionMap = HashMapMaker.listToMap(actions, "getObjectId", RiddingAction.class);
 			for (RiddingPicture riddingPicture : riddingPictures) {
 				Profile profile = profileMap.get(riddingPicture.getUserId());
@@ -290,16 +292,9 @@ public class RiddingPublicController extends AbstractBaseController {
 					riddingPicture.setProfile(profile);
 				}
 				RiddingAction action = riddingActionMap.get(riddingPicture.getId());
-				try {
-					MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication())
-							.getDetails();
-					if (action != null && myUser.getUserId() != myUser.getUserId()) {
-						riddingPicture.setLiked(true);
-					} else {
-						riddingPicture.setLiked(false);
-					}
-				} catch (Exception e) {
-					logger.error("riddingPublicController getuploadedPhotos userId can not be found");
+				if (action != null) {
+					riddingPicture.setLiked(true);
+				} else {
 					riddingPicture.setLiked(false);
 				}
 			}

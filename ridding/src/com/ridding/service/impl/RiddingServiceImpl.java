@@ -1109,6 +1109,20 @@ public class RiddingServiceImpl implements RiddingService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see
+	 * com.ridding.service.RiddingService#getRiddingActionsByTypeUserId(long,
+	 * int, long)
+	 */
+	public List<RiddingAction> getRiddingActionsByTypeUserId(long riddingId, int type, long userId) {
+		if (userId > 0) {
+			return riddingActionMapper.getRiddingActionsByTypeUserId(riddingId, type, userId);
+		}
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * 
 	 * @see com.ridding.service.RiddingService#removeRiddingPicture(long)
 	 */
