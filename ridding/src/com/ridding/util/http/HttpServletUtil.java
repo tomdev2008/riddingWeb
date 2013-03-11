@@ -362,6 +362,11 @@ public final class HttpServletUtil {
 			if (jsonObject.get("issyncsina") != null) {
 				ridding.setIsSyncSina(jsonObject.getInt("issyncsina"));
 			}
+			if (jsonObject.get("syncwifi") != null) {
+				ridding.setIsSyncWifi(jsonObject.getInt("syncwifi"));
+			} else {
+				ridding.setIsSyncWifi(Ridding.no);
+			}
 
 		} catch (Exception e) {
 			logger.error("info=" + jsonString);

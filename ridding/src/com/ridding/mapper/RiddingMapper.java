@@ -181,6 +181,16 @@ public interface RiddingMapper {
 	public List<Ridding> getRiddingsbyPicture(Map<String, Object> map);
 
 	/**
+	 * 更新同步状态
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param riddingId
+	 * @param isOnlyWifi
+	 * @return
+	 */
+	public int updateRiddingSyncWifi(@Param(value = "riddingId") long riddingId,  @Param(value = "isSyncWifi")int isSyncWifi);
+
+	/**
 	 * 更新照片数量
 	 * 
 	 * @param riddingId

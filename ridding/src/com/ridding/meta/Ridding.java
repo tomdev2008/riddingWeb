@@ -74,6 +74,10 @@ public class Ridding implements Serializable {
 	 * 是否同步到新浪
 	 */
 	private int isSyncSina;
+	/**
+	 * 是否只在wifi下同步
+	 */
+	private int isSyncWifi;
 
 	/**
 	 * 限制，-1表示全部
@@ -91,6 +95,15 @@ public class Ridding implements Serializable {
 	public int isPublic = 0;
 
 	/**
+	 * 否
+	 */
+	public static int no = 0;
+	/**
+	 * 是
+	 */
+	public static int yes = 1;
+
+	/**
 	 * 非公开或者非推荐
 	 */
 	public static int notPublicOrRecom = 0;
@@ -106,10 +119,6 @@ public class Ridding implements Serializable {
 	 * 同步
 	 */
 	public static int sync = 1;
-	// /**
-	// * 第一张图的url
-	// */
-	// public String firstPicUrl;
 	/**
 	 * 距离
 	 */
@@ -383,6 +392,14 @@ public class Ridding implements Serializable {
 
 	public void setaPublic(Public aPublic) {
 		this.aPublic = aPublic;
+	}
+
+	public int getIsSyncWifi() {
+		return isSyncWifi;
+	}
+
+	public void setIsSyncWifi(int isSyncWifi) {
+		this.isSyncWifi = isSyncWifi;
 	}
 
 }

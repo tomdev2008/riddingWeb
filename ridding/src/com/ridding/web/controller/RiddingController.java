@@ -1,6 +1,5 @@
 package com.ridding.web.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +30,6 @@ import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingAction;
 import com.ridding.meta.RiddingComment;
-import com.ridding.meta.RiddingNearby;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
@@ -890,7 +888,7 @@ public class RiddingController extends AbstractBaseController {
 			JSONArray jsonArray = HttpServletUtil2.parseGetRiddingList(riddingUserList);
 			returnObject.put("data", jsonArray.toString());
 		} else {
-			
+
 		}
 
 		returnObject.put("code", returnCodeConstance.SUCCESS);
@@ -929,6 +927,32 @@ public class RiddingController extends AbstractBaseController {
 			return mv;
 		}
 		returnObject.put("code", returnCodeConstance.FAILED);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 更新wifi同步状态
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView updateRiddingWifiSync(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		JSONObject returnObject = new JSONObject();
+		ModelAndView mv = new ModelAndView("return");
+		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
+		int wifiSync = ServletRequestUtils.getIntParameter(request, "wifisync", -1);
+		Ridding ridding = riddingService.getRidding(riddingId);
+		if (ridding == null) {
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		riddingService.updateRiddingSyncWifi(riddingId, wifiSync);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}
