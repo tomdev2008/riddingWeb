@@ -39,7 +39,8 @@ public class ClubServiceImpl implements ClubService {
 	@Resource
 	private ClubMemberApplyMapper clubMemberApplyMapper;
 
-	private static final Logger logger = Logger.getLogger(ClubServiceImpl.class);
+	private static final Logger logger = Logger
+			.getLogger(ClubServiceImpl.class);
 
 	/*
 	 * (non-Javadoc)
@@ -48,7 +49,8 @@ public class ClubServiceImpl implements ClubService {
 	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public boolean applyForCreateClub(long userId, String clubName, String clubLocation, String clubDescription) {
+	public boolean applyForCreateClub(long userId, String clubName,
+			String clubLocation, String clubDescription) {
 		ClubApply clubApply = new ClubApply();
 		clubApply.setUserId(userId);
 		clubApply.setClubName(clubName);
@@ -57,10 +59,13 @@ public class ClubServiceImpl implements ClubService {
 		clubApply.setCreateTime(new Date().getTime());
 		clubApply.setStatus(Club.ApplyStatus.Waiting.getValue());
 
-		ClubApply returnClubApply = clubApplyMapper.getcClubApplyByClubName(clubName);
+		ClubApply returnClubApply = clubApplyMapper
+				.getcClubApplyByClubName(clubName);
 		if (returnClubApply != null) {
-			if (returnClubApply.getStatus() == Club.ApplyStatus.Agree.getValue()
-					|| returnClubApply.getStatus() == Club.ApplyStatus.Waiting.getValue()) {
+			if (returnClubApply.getStatus() == Club.ApplyStatus.Agree
+					.getValue()
+					|| returnClubApply.getStatus() == Club.ApplyStatus.Waiting
+							.getValue()) {
 				return false;
 			}
 			if (clubApplyMapper.updateClubApply(clubApply) > 0) {
@@ -91,11 +96,14 @@ public class ClubServiceImpl implements ClubService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("clubId", clubId);
-		ClubMemberApply returnclubClubMemberApply = clubMemberApplyMapper.getClubMemberApplyByUserIdAndClubId(map);
+		ClubMemberApply returnclubClubMemberApply = clubMemberApplyMapper
+				.getClubMemberApplyByUserIdAndClubId(map);
 
 		if (returnclubClubMemberApply != null) {
-			if (returnclubClubMemberApply.getStatus() == Club.ApplyStatus.Agree.getValue()
-					|| returnclubClubMemberApply.getStatus() == Club.ApplyStatus.Waiting.getValue()) {
+			if (returnclubClubMemberApply.getStatus() == Club.ApplyStatus.Agree
+					.getValue()
+					|| returnclubClubMemberApply.getStatus() == Club.ApplyStatus.Waiting
+							.getValue()) {
 				return false;
 			}
 			if (clubMemberApplyMapper.updateClubMemberApply(clubMemberApply) > 0) {
@@ -123,7 +131,8 @@ public class ClubServiceImpl implements ClubService {
 		clubApply.setLastUpdateTime(new Date().getTime());
 		if (clubApplyMapper.updateClubApply(clubApply) > 0) {
 			if (status == Club.ApplyStatus.Agree.getValue()) {
-				ClubApply returnClubApply = clubApplyMapper.getClubApply(applyId);
+				ClubApply returnClubApply = clubApplyMapper
+						.getClubApply(applyId);
 				if (returnClubApply == null) {
 					return false;
 				}
@@ -143,7 +152,8 @@ public class ClubServiceImpl implements ClubService {
 				if (clubMapper.addClub(club) > 0) {
 					return true;
 				} else {
-					logger.error("Fail to create club with the applyId = " + applyId);
+					logger.error("Fail to create club with the applyId = "
+							+ applyId);
 					return false;
 				}
 			}
@@ -165,11 +175,13 @@ public class ClubServiceImpl implements ClubService {
 		clubMemberApply.setLastUpdateTime(new Date().getTime());
 		if (clubMemberApplyMapper.updateClubMemberApply(clubMemberApply) > 0) {
 			if (status == Club.ApplyStatus.Agree.getValue()) {
-				ClubMemberApply returnClubMemberApply = clubMemberApplyMapper.getClubMemberApply(applyId);
+				ClubMemberApply returnClubMemberApply = clubMemberApplyMapper
+						.getClubMemberApply(applyId);
 				if (returnClubMemberApply == null) {
 					return false;
 				}
-				int memberType = 1;
+				int memberType = ClubMember.ClubMemberRoleType.Member
+						.intValue();
 				ClubMember clubMember = new ClubMember();
 				clubMember.setUserId(returnClubMemberApply.getUserId());
 				clubMember.setClubId(returnClubMemberApply.getClubId());
@@ -180,9 +192,11 @@ public class ClubServiceImpl implements ClubService {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("clubId", returnClubMemberApply.getClubId());
 				map.put("userId", returnClubMemberApply.getUserId());
-				ClubMember returnClubMember = clubMemberMapper.getClubMember(map);
+				ClubMember returnClubMember = clubMemberMapper
+						.getClubMember(map);
 
-				if (clubMapper.getClubByClubId(returnClubMemberApply.getClubId()) == null) {
+				if (clubMapper.getClubByClubId(returnClubMemberApply
+						.getClubId()) == null) {
 					return false;
 				}
 
@@ -191,14 +205,16 @@ public class ClubServiceImpl implements ClubService {
 					if (clubMemberMapper.updateClubMember(clubMember) > 0) {
 						return true;
 					}
-					logger.error("Fail to update club member with applyId = " + applyId);
+					logger.error("Fail to update club member with applyId = "
+							+ applyId);
 					return false;
 				}
 
 				if (clubMemberMapper.addClubMember(clubMember) > 0) {
 					return true;
 				} else {
-					logger.error("Fail to create clubMember with the applyId = " + applyId);
+					logger.error("Fail to create clubMember with the applyId = "
+							+ applyId);
 					return false;
 				}
 			}
@@ -219,12 +235,15 @@ public class ClubServiceImpl implements ClubService {
 		map.put("clubId", clubId);
 		map.put("userId", userId);
 		ClubMember returnClubMember = clubMemberMapper.getClubMember(map);
-		if (returnClubMember != null && returnClubMember.getMemberType() != ClubMemberRoleType.Member.intValue()) {
+		if (returnClubMember != null
+				&& returnClubMember.getMemberType() != ClubMemberRoleType.Member
+						.intValue()) {
 			returnClubMember.setId(returnClubMember.getId());
 			if (clubMemberMapper.updateClubMember(returnClubMember) > 0) {
 				return true;
 			}
-			logger.error("Fail to update club member with userId = " + userId + ",clubId = " + clubId);
+			logger.error("Fail to update club member with userId = " + userId
+					+ ",clubId = " + clubId);
 			return false;
 		}
 
@@ -238,7 +257,8 @@ public class ClubServiceImpl implements ClubService {
 			return true;
 		}
 
-		logger.error("Fail to add club member with userId = " + userId + ",clubId = " + clubId);
+		logger.error("Fail to add club member with userId = " + userId
+				+ ",clubId = " + clubId);
 		return false;
 	}
 
@@ -254,7 +274,7 @@ public class ClubServiceImpl implements ClubService {
 		map.put("userId", userId);
 		ClubMember returnClubMember = clubMemberMapper.getClubMember(map);
 		if (returnClubMember != null) {
-			int memberType = 0;
+			int memberType = ClubMember.ClubMemberRoleType.Nothing.intValue();
 			ClubMember clubMember = new ClubMember();
 			clubMember.setId(returnClubMember.getId());
 			clubMember.setCreateTime(new Date().getTime());
@@ -262,9 +282,11 @@ public class ClubServiceImpl implements ClubService {
 			if (clubMemberMapper.updateClubMember(clubMember) > 0) {
 				return true;
 			}
-			logger.error("Fail to remove club member with userId = " + userId + ",clubId = " + clubId);
+			logger.error("Fail to remove club member with userId = " + userId
+					+ ",clubId = " + clubId);
 		}
-		logger.error("There is no member with userId = " + userId + ",clubId = " + clubId);
+		logger.error("There is no member with userId = " + userId
+				+ ",clubId = " + clubId);
 		return false;
 	}
 
