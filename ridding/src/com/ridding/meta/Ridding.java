@@ -75,9 +75,9 @@ public class Ridding implements Serializable {
 	 */
 	private int isSyncSina;
 	/**
-	 * 是否只在wifi下同步
+	 * 用户只在wifi状态下同步
 	 */
-	private int isSyncWifi;
+	private int userSyncWifi;
 
 	/**
 	 * 限制，-1表示全部
@@ -93,15 +93,6 @@ public class Ridding implements Serializable {
 	 * 是否是公开
 	 */
 	public int isPublic = 0;
-
-	/**
-	 * 否
-	 */
-	public static int no = 0;
-	/**
-	 * 是
-	 */
-	public static int yes = 1;
 
 	/**
 	 * 非公开或者非推荐
@@ -394,12 +385,12 @@ public class Ridding implements Serializable {
 		this.aPublic = aPublic;
 	}
 
-	public int getIsSyncWifi() {
-		return isSyncWifi;
+	public int getUserSyncWifi() {
+		return userSyncWifi;
 	}
 
-	public void setIsSyncWifi(int isSyncWifi) {
-		this.isSyncWifi = isSyncWifi;
+	public void setUserSyncWifi(int userSyncWifi) {
+		this.userSyncWifi = userSyncWifi;
 	}
 
 }

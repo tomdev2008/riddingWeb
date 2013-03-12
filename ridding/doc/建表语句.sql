@@ -17,6 +17,7 @@ useCount  int(11) NOT NULL DEFAULT 0 COMMENT '使用数量',
 careCount  int(11) NOT NULL DEFAULT 0 COMMENT '关注数量',
 isSyncSina tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否同步新浪微博,0表示不同步,1表示同步',
 isSyncWifi tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否只在wifi下同步,0表示不,1表示是',
+pictureCount  int(11) NOT NULL DEFAULT 0 COMMENT '照片数量',
 PRIMARY KEY  (`Id`)
 )   DEFAULT CHARSET=UTF8 COMMENT '骑行主表';
 
@@ -82,6 +83,8 @@ CreateTime bigint(20) NOT NULL default '0' COMMENT '纪录创建时间',
 LastUpdateTime bigint(20) NOT NULL default '0' COMMENT '上次更新时间',
 riddingStatus tinyint(4) NOT NULL DEFAULT '0' COMMENT '用户的单个骑行状态',
 selfName  varchar(64) NOT NULL DEFAULT '' COMMENT '用户的单个骑行名称',
+isSyncSina tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否同步新浪微博,0表示不同步,1表示同步',
+isSyncWifi tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否只在wifi下同步,0表示不,1表示是',
 PRIMARY KEY  (`Id`)
 )   DEFAULT CHARSET=UTF8 COMMENT '骑行用户表';
 
@@ -244,7 +247,7 @@ width int(11) DEFAULT 0  COMMENT '宽度',
 height int(11) DEFAULT 0 COMMENT '高度',
 likeCount int(11) DEFAULT '0' COMMENT '喜欢这张照片的数量',
 breadId bigint(20) NOT NULL DEFAULT '0' COMMENT '面包id',
-pictureCount  int(11) NOT NULL DEFAULT 0 COMMENT '照片数量',
+
 PRIMARY KEY  (`Id`)
 )   DEFAULT CHARSET=UTF8 COMMENT '骑行照片表';
 

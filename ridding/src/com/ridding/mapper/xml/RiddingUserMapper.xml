@@ -11,6 +11,7 @@
 		<result property="lastUpdateTime" column="lastUpdateTime" />
 		<result property="riddingStatus" column="riddingStatus" />
 		<result property="selfName" column="selfName" />
+		<result property="isSyncWifi" column="isSyncWifi" />
 	</resultMap>
 
 
@@ -22,7 +23,8 @@
 		createTime,
 		lastUpdateTime,
 		riddingStatus,
-		selfName
+		selfName,
+		isSyncWifi
 		)VALUES(
 		#{riddingId},
 		#{userId},
@@ -30,7 +32,8 @@
 		#{createTime},
 		#{lastUpdateTime},
 		#{riddingStatus},
-		#{selfName}
+		#{selfName},
+		#{isSyncWifi}
 		)
 		<selectKey keyProperty="id" resultType="long">
 			SELECT
@@ -140,4 +143,12 @@
 		order by
 		lastUpdateTime desc;
 	</select>
+
+	<update id="updateRiddingSyncWifi" flushCache="true"
+		statementType="PREPARED">
+		update TB_Ridding_User set isSyncWifi =
+		#{isSyncWifi}
+		where id
+		= #{riddingId} and userId = #{userId};
+	</update>
 </mapper>

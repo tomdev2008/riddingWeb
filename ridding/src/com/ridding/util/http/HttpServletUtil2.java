@@ -92,10 +92,11 @@ public class HttpServletUtil2 {
 				riddingObject.put("usecount", activityRidding.getRidding().getUseCount());
 				riddingObject.put("likecount", activityRidding.getRidding().getLikeCount());
 				riddingObject.put("issyncsina", activityRidding.getRidding().getIsSyncSina());
-				riddingObject.put("issyncwifi", activityRidding.getRidding().getIsSyncWifi());
+				
 			}
 			if (activityRidding.getRiddingUser() != null) {
 				riddingObject.put("userrole", activityRidding.getRiddingUser().getUserRole());
+				riddingObject.put("issyncwifi", activityRidding.getRiddingUser().getIsSyncWifi());
 			}
 
 			if (activityRidding.getiMap() != null) {
@@ -260,7 +261,6 @@ public class HttpServletUtil2 {
 			riddingObject.put("usecount", ridding.getUseCount());
 			riddingObject.put("likecount", ridding.getLikeCount());
 			riddingObject.put("issyncsina", ridding.getIsSyncSina());
-			riddingObject.put("issyncwifi", ridding.getIsSyncWifi());
 
 			JSONObject leaderUserObject = new JSONObject();
 			leaderUserObject.put("userid", ridding.getLeaderUserId());

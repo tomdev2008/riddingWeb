@@ -363,9 +363,9 @@ public final class HttpServletUtil {
 				ridding.setIsSyncSina(jsonObject.getInt("issyncsina"));
 			}
 			if (jsonObject.get("syncwifi") != null) {
-				ridding.setIsSyncWifi(jsonObject.getInt("syncwifi"));
+				ridding.setUserSyncWifi(jsonObject.getInt("syncwifi"));
 			} else {
-				ridding.setIsSyncWifi(Ridding.no);
+				ridding.setUserSyncWifi(RiddingUser.no);
 			}
 
 		} catch (Exception e) {

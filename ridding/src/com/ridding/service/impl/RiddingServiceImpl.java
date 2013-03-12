@@ -1254,7 +1254,7 @@ public class RiddingServiceImpl implements RiddingService {
 	 * @see com.ridding.service.RiddingService#updateRiddingSyncWifi(long, int)
 	 */
 	@Override
-	public boolean updateRiddingSyncWifi(long riddingId, int isSyncWifi) {
-		return riddingMapper.updateRiddingSyncWifi(riddingId, isSyncWifi) > 0;
+	public boolean updateRiddingSyncWifi(long riddingId, int isSyncWifi, long userId) {
+		return riddingUserMapper.updateRiddingSyncWifi(userId, riddingId, isSyncWifi) > 0;
 	}
 }

@@ -233,11 +233,5 @@
 		= #{riddingId} ;
 	</update>
 
-	<update id="updateRiddingSyncWifi" flushCache="true"
-		statementType="PREPARED">
-		update TB_Ridding set isSyncWifi =
-		#{isSyncWifi}
-		where id
-		= #{riddingId} ;
-	</update>
+
 </mapper>

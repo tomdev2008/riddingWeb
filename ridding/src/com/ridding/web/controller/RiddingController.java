@@ -944,6 +944,7 @@ public class RiddingController extends AbstractBaseController {
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
 		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userid", -1L);
 		int wifiSync = ServletRequestUtils.getIntParameter(request, "wifisync", -1);
 		Ridding ridding = riddingService.getRidding(riddingId);
 		if (ridding == null) {
@@ -951,7 +952,7 @@ public class RiddingController extends AbstractBaseController {
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
-		riddingService.updateRiddingSyncWifi(riddingId, wifiSync);
+		riddingService.updateRiddingSyncWifi(riddingId, wifiSync, userId);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;

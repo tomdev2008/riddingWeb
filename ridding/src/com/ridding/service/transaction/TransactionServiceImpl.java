@@ -216,6 +216,7 @@ public class TransactionServiceImpl implements TransactionService {
 		riddingUser.setLastUpdateTime(nowTime);
 		riddingUser.setRiddingStatus(SelfRiddingStatus.Beginning.getValue());
 		riddingUser.setSelfName(ridding.getName());
+		riddingUser.setIsSyncWifi(ridding.getUserSyncWifi());
 		if (riddingUserMapper.addRiddingUser(riddingUser) < 0) {
 			throw new TransactionException("insertANewRidding iMapMapper error");
 		}

@@ -408,5 +408,5 @@ public interface RiddingService {
 	 * @param isSyncWifi
 	 * @return
 	 */
-	public boolean updateRiddingSyncWifi(long riddingId, int isSyncWifi);
+	public boolean updateRiddingSyncWifi(long riddingId, int isSyncWifi, long userId);
 }
