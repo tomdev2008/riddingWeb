@@ -2,6 +2,8 @@ package com.ridding.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
@@ -398,4 +400,13 @@ public interface RiddingService {
 	 */
 	public List<ActivityRidding> getNearByRiddingList(long userId, double latitude, double longitude, int limit, int offset);
 
+	/**
+	 * 更新骑行wifi同步状态
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param riddingId
+	 * @param isSyncWifi
+	 * @return
+	 */
+	public boolean updateRiddingSyncWifi(long riddingId, int isSyncWifi);
 }
