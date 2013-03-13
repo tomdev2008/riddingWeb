@@ -52,6 +52,16 @@ PRIMARY KEY  (`Id`)
 
 
 //骑行地图表TB_Map
+CREATE TABLE TB_Ridding_GpsMap (
+id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '骑行地图id，自增长',
+userId bigint(20) NOT NULL DEFAULT '0' COMMENT '用户Id',
+riddingId bigint(20) NOT NULL DEFAULT '0' COMMENT '骑行Id',
+MapPoint text NOT NULL DEFAULT '' COMMENT '经过编译后的地址',
+Distance int(11) NOT NULL DEFAULT '0' COMMENT '行程距离',
+CreateTime bigint(20) NOT NULL default '0' COMMENT '纪录创建时间',
+PRIMARY KEY  (`id`)
+)   DEFAULT CHARSET=UTF8 COMMENT '骑行gps地图表';
+
 CREATE TABLE TB_Map (
 Id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '骑行地图id，自增长',
 MapUrl varchar(5000) NOT NULL  DEFAULT '' COMMENT '地图原始url',
@@ -84,8 +94,12 @@ LastUpdateTime bigint(20) NOT NULL default '0' COMMENT '上次更新时间',
 riddingStatus tinyint(4) NOT NULL DEFAULT '0' COMMENT '用户的单个骑行状态',
 selfName  varchar(64) NOT NULL DEFAULT '' COMMENT '用户的单个骑行名称',
 isSyncWifi tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否只在wifi下同步,0表示不,1表示是',
+isGps tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否使用pgs,0表示不,1表示是',
+gpsMapId bigint(20) NOT NULL DEFAULT '0' COMMENT 'gps地图id',
 PRIMARY KEY  (`Id`)
 )   DEFAULT CHARSET=UTF8 COMMENT '骑行用户表';
+
+
 
 //用户信息表TB_Profile
 CREATE TABLE TB_Profile (

@@ -117,4 +117,15 @@ public interface RiddingUserMapper {
 	 */
 	public int updateRiddingSyncWifi(@Param(value = "userId") long userId, @Param(value = "riddingId") long riddingId,
 			@Param(value = "isSyncWifi") int isSyncWifi);
+
+	/**
+	 * 使用gps记录
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param userId
+	 * @param riddingId
+	 * @param isGps
+	 * @return
+	 */
+	public int updateRiddingGps(@Param(value = "userId") long userId, @Param(value = "riddingId") long riddingId, @Param(value = "isGps") int isGps);
 }

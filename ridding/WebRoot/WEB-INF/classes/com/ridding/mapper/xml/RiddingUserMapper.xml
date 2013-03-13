@@ -12,6 +12,7 @@
 		<result property="riddingStatus" column="riddingStatus" />
 		<result property="selfName" column="selfName" />
 		<result property="isSyncWifi" column="isSyncWifi" />
+		<result property="isGps" column="isGps" />
 	</resultMap>
 
 
@@ -24,7 +25,9 @@
 		lastUpdateTime,
 		riddingStatus,
 		selfName,
-		isSyncWifi
+		isSyncWifi,
+		isGps,
+		gpsMapId
 		)VALUES(
 		#{riddingId},
 		#{userId},
@@ -33,7 +36,9 @@
 		#{lastUpdateTime},
 		#{riddingStatus},
 		#{selfName},
-		#{isSyncWifi}
+		#{isSyncWifi},
+		#{isGps},
+		#{gpsMapId}
 		)
 		<selectKey keyProperty="id" resultType="long">
 			SELECT
@@ -148,6 +153,14 @@
 		statementType="PREPARED">
 		update TB_Ridding_User set isSyncWifi =
 		#{isSyncWifi}
+		where id
+		= #{riddingId} and userId = #{userId};
+	</update>
+	
+	<update id="updateRiddingGps" flushCache="true"
+		statementType="PREPARED">
+		update TB_Ridding_User set isGps =
+		#{isGps}
 		where id
 		= #{riddingId} and userId = #{userId};
 	</update>

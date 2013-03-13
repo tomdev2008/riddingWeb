@@ -167,4 +167,8 @@
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 		<property name="mapperInterface" value="com.ridding.mapper.UserPayMapper" />
 	</bean>
+	<bean id="riddingGpsMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.ridding.mapper.RiddingGpsMapper" />
+	</bean>
 </beans>

@@ -183,6 +183,42 @@ public class Ridding implements Serializable {
 		}
 	}
 
+	/**
+	 * 骑行类型
+	 * 
+	 * @author apple
+	 * 
+	 */
+	public enum RiddingType {
+		/**
+		 * 远途
+		 */
+		Farway {
+			@Override
+			public int getValue() {
+				return 0;
+			}
+		},
+		/**
+		 * 短途
+		 */
+		ShortWay {
+			@Override
+			public int getValue() {
+				return 10;
+			}
+		};
+		public abstract int getValue();
+
+		public static RiddingType genRiddingType(int t) {
+			for (RiddingType type : RiddingType.values()) {
+				if (type.getValue() == t)
+					return type;
+			}
+			return null;
+		}
+	}
+
 	public int getRiddingStatus() {
 		return riddingStatus;
 	}

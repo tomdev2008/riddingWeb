@@ -84,6 +84,10 @@ public class RiddingUser implements Serializable {
 	 * 是否只在wifi下同步
 	 */
 	private int isSyncWifi;
+	/**
+	 * 是否使用gps记录轨迹
+	 */
+	private int isGps;
 
 	/**
 	 * 否
@@ -374,6 +378,14 @@ public class RiddingUser implements Serializable {
 
 	public void setIsSyncWifi(int isSyncWifi) {
 		this.isSyncWifi = isSyncWifi;
+	}
+
+	public int getIsGps() {
+		return isGps;
+	}
+
+	public void setIsGps(int isGps) {
+		this.isGps = isGps;
 	}
 
 }

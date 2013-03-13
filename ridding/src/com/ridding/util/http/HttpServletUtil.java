@@ -367,6 +367,9 @@ public final class HttpServletUtil {
 			} else {
 				ridding.setUserSyncWifi(RiddingUser.no);
 			}
+			if (jsonObject.get("riddingtype") != null) {
+				ridding.setRiddingType(jsonObject.getInt("riddingtype"));
+			}
 
 		} catch (Exception e) {
 			logger.error("info=" + jsonString);

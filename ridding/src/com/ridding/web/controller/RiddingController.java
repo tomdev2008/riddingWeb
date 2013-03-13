@@ -939,20 +939,25 @@ public class RiddingController extends AbstractBaseController {
 	 * @param response
 	 * @return
 	 */
-	public ModelAndView updateRiddingWifiSync(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView updateRiddingWifiSyncOrGps(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
 		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1L);
 		long userId = ServletRequestUtils.getLongParameter(request, "userid", -1L);
-		int wifiSync = ServletRequestUtils.getIntParameter(request, "wifisync", -1);
+		int yes = ServletRequestUtils.getIntParameter(request, "yes", -1);
+		int type = ServletRequestUtils.getIntParameter(request, "type", 0);
 		Ridding ridding = riddingService.getRidding(riddingId);
 		if (ridding == null) {
 			returnObject.put("code", returnCodeConstance.FAILED);
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
-		riddingService.updateRiddingSyncWifi(riddingId, wifiSync, userId);
+		if (type == 0) {
+			riddingService.updateRiddingSyncWifi(riddingId, yes, userId);
+		} else if (type == 1) {
+			riddingService.updateRiddingGps(userId, riddingId, yes);
+		}
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
