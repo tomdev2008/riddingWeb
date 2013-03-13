@@ -92,7 +92,8 @@ public class HttpServletUtil2 {
 				riddingObject.put("usecount", activityRidding.getRidding().getUseCount());
 				riddingObject.put("likecount", activityRidding.getRidding().getLikeCount());
 				riddingObject.put("issyncsina", activityRidding.getRidding().getIsSyncSina());
-				
+				riddingObject.put("riddingtype", activityRidding.getRidding().getRiddingType());
+
 			}
 			if (activityRidding.getRiddingUser() != null) {
 				riddingObject.put("userrole", activityRidding.getRiddingUser().getUserRole());
@@ -250,6 +251,7 @@ public class HttpServletUtil2 {
 			JSONObject riddingObject = new JSONObject();
 			riddingObject.put("riddingid", ridding.getId());
 			riddingObject.put("riddingname", ridding.getName());
+			riddingObject.put("riddingtype", ridding.getRiddingType());
 			riddingObject.put("riddingstatus", ridding.getRiddingStatus());
 			riddingObject.put("createtime", ridding.getCreateTime());
 			riddingObject.put("createtimestr", TimeUtil.getFormatTime(ridding.getCreateTime()));
