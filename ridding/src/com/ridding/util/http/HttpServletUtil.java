@@ -14,6 +14,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.ridding.exception.RequestBodyIsNullException;
@@ -323,19 +324,28 @@ public final class HttpServletUtil {
 	public static IMap parseFromMap(String jsonString, Ridding ridding) throws Exception {
 		JSONObject jsonObject = JSONObject.fromObject(jsonString);
 		if (jsonObject == null) {
+			logger.error("JSONObject.fromObject error where json=" + jsonString);
 			throw new RequestBodyIsNullException();
 		}
 		IMap iMap = new IMap();
 		try {
 			String points = jsonObject.getString("points");
-			points = points.substring(1, points.length() - 1);
+			if (!StringUtils.isEmpty(points)) {
+				points = points.substring(1, points.length() - 1);
+			}
 			iMap.setMapPoint(points);
 			String mapTaps = jsonObject.get("mapTaps").toString();
-			mapTaps = mapTaps.substring(1, mapTaps.length() - 1);
+			if (!StringUtils.isEmpty(mapTaps)) {
+				mapTaps = mapTaps.substring(1, mapTaps.length() - 1);
+			}
 			iMap.setMapTaps(mapTaps);
+
 			String midLocations = jsonObject.getString("midlocations");
-			midLocations = midLocations.substring(1, midLocations.length() - 1);
+			if (!StringUtils.isEmpty(midLocations)) {
+				midLocations = midLocations.substring(1, midLocations.length() - 1);
+			}
 			iMap.setMidLocation(midLocations);
+
 			String beginLocation = jsonObject.getString("beginlocation");
 			if (beginLocation.length() > 20) {
 				beginLocation = beginLocation.substring(0, 20);

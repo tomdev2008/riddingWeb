@@ -548,7 +548,6 @@ public class RiddingController extends AbstractBaseController {
 	public ModelAndView addRiddingMap(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
-		logger.info(jsonString);
 		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
