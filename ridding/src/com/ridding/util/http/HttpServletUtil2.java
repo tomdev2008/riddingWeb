@@ -93,11 +93,11 @@ public class HttpServletUtil2 {
 				riddingObject.put("likecount", activityRidding.getRidding().getLikeCount());
 				riddingObject.put("issyncsina", activityRidding.getRidding().getIsSyncSina());
 				riddingObject.put("riddingtype", activityRidding.getRidding().getRiddingType());
-
 			}
 			if (activityRidding.getRiddingUser() != null) {
 				riddingObject.put("userrole", activityRidding.getRiddingUser().getUserRole());
 				riddingObject.put("issyncwifi", activityRidding.getRiddingUser().getIsSyncWifi());
+				riddingObject.put("isgps", activityRidding.getRiddingUser().getIsGps());
 			}
 
 			if (activityRidding.getiMap() != null) {
