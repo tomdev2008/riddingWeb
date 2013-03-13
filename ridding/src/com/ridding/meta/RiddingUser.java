@@ -88,6 +88,10 @@ public class RiddingUser implements Serializable {
 	 * 是否使用gps记录轨迹
 	 */
 	private int isGps;
+	/**
+	 * 
+	 */
+	private long gpsMapId;
 
 	/**
 	 * 否
@@ -386,6 +390,14 @@ public class RiddingUser implements Serializable {
 
 	public void setIsGps(int isGps) {
 		this.isGps = isGps;
+	}
+
+	public long getGpsMapId() {
+		return gpsMapId;
+	}
+
+	public void setGpsMapId(long gpsMapId) {
+		this.gpsMapId = gpsMapId;
 	}
 
 }

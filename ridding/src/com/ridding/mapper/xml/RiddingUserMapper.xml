@@ -13,6 +13,7 @@
 		<result property="selfName" column="selfName" />
 		<result property="isSyncWifi" column="isSyncWifi" />
 		<result property="isGps" column="isGps" />
+		<result property="gpsMapId" column="gpsMapId" />
 	</resultMap>
 
 
