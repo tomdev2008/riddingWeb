@@ -37,10 +37,10 @@ body{font-size:83%;}
 		<tbody>
 			<tr>
 				<td style="text-align: center;" width="10%">
-					<div style="text-align: center;">${feedback.id!0}</div>
+					<div style="text-align: center;" id="reply_id">${feedback.id!0}</div>
 				</td>
 				<td style="text-align: center;" width="10%">
-					<div style="text-align: center;">${feedback.userId!0}</div>
+					<div style="text-align: center;" id="reply_userId">${feedback.userId!0}</div>
 				</td>
 				<td style="text-align: center;" width="10%">
 					<div style="text-align: center;">${feedback.userQQ!0}</div>
@@ -63,14 +63,13 @@ body{font-size:83%;}
 					<div style="text-align: center;">${feedback.replyTime!0}</div>
 				</td>
 				<td style="text-align: center;" width="10%">
-					<div style="text-align: center;">${feedback.reply!""}</div>
+					<div style="text-align: center;" id="reply_text">${feedback.reply!""}</div>
 				</td>
 				<td width="">
 					<input type="text" id="feedback_reply" value=""/>
 				</td>
 				<td style="text-align: center;" width="10%">
-					<a href="">回复</a>
-					<a href="">删除</a>
+					<input type="button" id="reply" value="回复"/>
 				</td>
 			</tr>
 		</tbody>
