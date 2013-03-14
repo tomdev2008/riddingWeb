@@ -80,7 +80,27 @@ public class RiddingUser implements Serializable {
 	 * 是否显示骑行用户，不存数据库
 	 */
 	private boolean showTeamer;
+	/**
+	 * 是否只在wifi下同步
+	 */
+	private int isSyncWifi;
+	/**
+	 * 是否使用gps记录轨迹
+	 */
+	private int isGps;
+	/**
+	 * 
+	 */
+	private long gpsMapId;
 
+	/**
+	 * 否
+	 */
+	public static int no = 0;
+	/**
+	 * 是
+	 */
+	public static int yes = 1;
 
 	/**
 	 * 插入用户当前的骑行状态
@@ -219,6 +239,7 @@ public class RiddingUser implements Serializable {
 			return null;
 		}
 	}
+
 	public long getCacheTime() {
 		return cacheTime;
 	}
@@ -346,7 +367,6 @@ public class RiddingUser implements Serializable {
 	public void setShowTeamer(boolean showTeamer) {
 		this.showTeamer = showTeamer;
 	}
-	
 
 	public int getUserStatus() {
 		return userStatus;
@@ -354,6 +374,30 @@ public class RiddingUser implements Serializable {
 
 	public void setUserStatus(int userStatus) {
 		this.userStatus = userStatus;
+	}
+
+	public int getIsSyncWifi() {
+		return isSyncWifi;
+	}
+
+	public void setIsSyncWifi(int isSyncWifi) {
+		this.isSyncWifi = isSyncWifi;
+	}
+
+	public int getIsGps() {
+		return isGps;
+	}
+
+	public void setIsGps(int isGps) {
+		this.isGps = isGps;
+	}
+
+	public long getGpsMapId() {
+		return gpsMapId;
+	}
+
+	public void setGpsMapId(long gpsMapId) {
+		this.gpsMapId = gpsMapId;
 	}
 
 }

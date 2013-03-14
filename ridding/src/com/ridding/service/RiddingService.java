@@ -408,5 +408,16 @@ public interface RiddingService {
 	 * @param isSyncWifi
 	 * @return
 	 */
-	public boolean updateRiddingSyncWifi(long riddingId, int isSyncWifi);
+	public boolean updateRiddingSyncWifi(long riddingId, int isSyncWifi, long userId);
+
+	/**
+	 * 使用gps同步
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param userId
+	 * @param riddingId
+	 * @param isGps
+	 * @return
+	 */
+	public int updateRiddingGps(long userId, long riddingId, int isGps);
 }

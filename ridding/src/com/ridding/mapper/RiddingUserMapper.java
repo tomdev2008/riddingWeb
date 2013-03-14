@@ -3,6 +3,8 @@ package com.ridding.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.ridding.meta.RiddingUser;
 
 /**
@@ -64,8 +66,7 @@ public interface RiddingUserMapper {
 	 * @param hashMap
 	 * @return
 	 */
-	public List<RiddingUser> getRiddingUserListByRiddingId(
-			Map<String, Object> hashMap);
+	public List<RiddingUser> getRiddingUserListByRiddingId(Map<String, Object> hashMap);
 
 	/**
 	 * 测试删除操作
@@ -105,4 +106,26 @@ public interface RiddingUserMapper {
 	 * @return
 	 */
 	public List<RiddingUser> getRiddingUsersByUserId(Map<String, Object> hashMap);
+
+	/**
+	 * 更新同步状态
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param riddingId
+	 * @param isOnlyWifi
+	 * @return
+	 */
+	public int updateRiddingSyncWifi(@Param(value = "userId") long userId, @Param(value = "riddingId") long riddingId,
+			@Param(value = "isSyncWifi") int isSyncWifi);
+
+	/**
+	 * 使用gps记录
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param userId
+	 * @param riddingId
+	 * @param isGps
+	 * @return
+	 */
+	public int updateRiddingGps(@Param(value = "userId") long userId, @Param(value = "riddingId") long riddingId, @Param(value = "isGps") int isGps);
 }

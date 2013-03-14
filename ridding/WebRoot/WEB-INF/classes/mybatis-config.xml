@@ -29,6 +29,7 @@
 		<typeAlias alias="ClubMemberApply" type="com.ridding.meta.ClubMemberApply" />
 		<typeAlias alias="Feedback" type="com.ridding.meta.Feedback" />
 		<typeAlias alias="UserPay" type="com.ridding.meta.UserPay" />
+		<typeAlias alias="RiddingGps" type="com.ridding.meta.RiddingGps" />
 	</typeAliases>
 	<mappers>
 		<mapper resource="com/ridding/mapper/xml/AccountMapper.xml" />
@@ -59,6 +60,7 @@
 		<mapper resource="com/ridding/mapper/xml/ClubMemberApplyMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/FeedbackMapper.xml" />
 		<mapper resource="com/ridding/mapper/xml/UserPayMapper.xml" />
+		<mapper resource="com/ridding/mapper/xml/RiddingGpsMapper.xml" />
 	</mappers>
 </configuration>
 			

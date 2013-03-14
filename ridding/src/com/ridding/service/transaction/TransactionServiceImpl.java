@@ -43,6 +43,7 @@ import com.ridding.meta.Source;
 import com.ridding.meta.SourceAccount;
 import com.ridding.meta.WeiBo;
 import com.ridding.meta.Ridding.RiddingStatus;
+import com.ridding.meta.Ridding.RiddingType;
 import com.ridding.meta.RiddingUser.RiddingUserRoleType;
 import com.ridding.meta.RiddingUser.SelfRiddingStatus;
 import com.ridding.service.IOSApnsService;
@@ -210,21 +211,27 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		RiddingUser riddingUser = new RiddingUser();
 		riddingUser.setRiddingId(ridding.getId());
+		if (ridding.getRiddingType() == RiddingType.ShortWay.getValue()) {
+			riddingUser.setIsGps(RiddingUser.yes);
+		} else {
+			riddingUser.setIsGps(RiddingUser.no);
+		}
 		riddingUser.setUserId(ridding.getLeaderUserId());
 		riddingUser.setUserRole(RiddingUserRoleType.Leader.intValue());
 		riddingUser.setCreateTime(nowTime);
 		riddingUser.setLastUpdateTime(nowTime);
 		riddingUser.setRiddingStatus(SelfRiddingStatus.Beginning.getValue());
 		riddingUser.setSelfName(ridding.getName());
+		riddingUser.setIsSyncWifi(ridding.getUserSyncWifi());
 		if (riddingUserMapper.addRiddingUser(riddingUser) < 0) {
 			throw new TransactionException("insertANewRidding iMapMapper error");
 		}
-//		List<Profile> profiles = profileMapper.getAllProfile();
-//		for (Profile profile : profiles) {
-//			if (StringUtils.isEmpty(profile.getGraysAvatorUrl())) {
-//				this.asyncgrayAvator(profile);
-//			}
-//		}
+		// List<Profile> profiles = profileMapper.getAllProfile();
+		// for (Profile profile : profiles) {
+		// if (StringUtils.isEmpty(profile.getGraysAvatorUrl())) {
+		// this.asyncgrayAvator(profile);
+		// }
+		// }
 		return true;
 	}
 

@@ -501,6 +501,7 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 				Date createTime = new Date(createTimeString);
 				weiBoToBeSend.setCreateTime(createTime.getTime());
 
+
 				JSONObject user = status.getJSONObject("user");
 				weiBoToBeSend.setAccountId(user.getLong("id"));
 

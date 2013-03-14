@@ -20,7 +20,6 @@
 		<result property="careCount" column="careCount" />
 		<result property="pictureCount" column="pictureCount" />
 		<result property="isSyncSina" column="isSyncSina" />
-		<result property="isSyncWifi" column="isSyncWifi" />
 
 	</resultMap>
 	<insert id="addRidding" parameterType="Ridding">
@@ -40,8 +39,7 @@
 		careCount,
 		useCount,
 		pictureCount,
-		isSyncSina,
-		isSyncWifi
+		isSyncSina
 		)VALUES(
 		#{leaderUserId},
 		#{mapId},
@@ -58,8 +56,7 @@
 		#{careCount},
 		#{useCount},
 		#{pictureCount},
-		#{isSyncSina},
-		#{isSyncWifi}
+		#{isSyncSina}
 		)
 		<selectKey keyProperty="id" resultType="long">
 			SELECT
@@ -233,11 +230,5 @@
 		= #{riddingId} ;
 	</update>
 
-	<update id="updateRiddingSyncWifi" flushCache="true"
-		statementType="PREPARED">
-		update TB_Ridding set isSyncWifi =
-		#{isSyncWifi}
-		where id
-		= #{riddingId} ;
-	</update>
+
 </mapper>
