@@ -148,7 +148,10 @@ public class DwrBackendBean {
 		MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder
 				.getContext().getAuthentication()).getDetails();
 		if (myUser.getUserId() == 54) {
+			
 			iosApnsService.sendApns(text, userId, version);
+		}else{
+			logger.error("dwrbackendbean sendapns error where not admin");
 		}
 	}
 

@@ -96,31 +96,32 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 	 * @return
 	 */
 	public boolean asyncSendOneMessages(final ApnsDevice device, final String messageName, final String message, final String title) {
-		// executorService.execute(new Runnable() {
-		// @Override
-		// public void run() {
-		try {
-			logger.info("asyncSendOneMessages beginSend where device userId=" + device.getUserId() + " message=" + message);
-			PayLoad payLoad = new PayLoad();
-			payLoad.addAlert(message);
-			payLoad.addSound("default");
+		executorService.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					logger.info("asyncSendOneMessages beginSend where device userId=" + device.getUserId() + " message=" + message);
+					PayLoad payLoad = new PayLoad();
+					payLoad.addAlert(message);
+					payLoad.addSound("default");
 
-			PushNotificationManager pushManager = PushNotificationManager.getInstance();
-			pushManager.addDevice("iPhone", device.getToken());
-			File resourceFile = ResourceUtils.getFile("classpath:" + FILENAME);
-			pushManager.initializeConnection(HOST, 2195, resourceFile.getPath(), PASSWORD, SSLConnectionHelper.KEYSTORE_TYPE_PKCS12);
+					PushNotificationManager pushManager = PushNotificationManager.getInstance();
+					pushManager.addDevice("iPhone", device.getToken());
+					File resourceFile = ResourceUtils.getFile("classpath:" + FILENAME);
+					pushManager.initializeConnection(HOST, 2195, resourceFile.getPath(), PASSWORD, SSLConnectionHelper.KEYSTORE_TYPE_PKCS12);
 
-			// Send Push
-			Device client = pushManager.getDevice("iPhone");
-			pushManager.sendNotification(client, payLoad);
-			pushManager.stopConnection();
+					// Send Push
+					Device client = pushManager.getDevice("iPhone");
+					pushManager.sendNotification(client, payLoad);
+					pushManager.stopConnection();
 
-			pushManager.removeDevice("iPhone");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		// }
-		// });
+					pushManager.removeDevice("iPhone");
+					logger.info("asyncSendOneMessages finish where device userId=" + device.getUserId() + " message=" + message);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		return true;
 	}
 
