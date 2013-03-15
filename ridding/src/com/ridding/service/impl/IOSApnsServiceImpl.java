@@ -96,9 +96,9 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 	 * @return
 	 */
 	public boolean asyncSendOneMessages(final ApnsDevice device, final String messageName, final String message, final String title) {
-		executorService.execute(new Runnable() {
-			@Override
-			public void run() {
+//		executorService.execute(new Runnable() {
+//			@Override
+//			public void run() {
 				try {
 					logger.info("asyncSendOneMessages beginSend where device userId=" + device.getUserId() + " message=" + message);
 					PayLoad payLoad = new PayLoad();
@@ -120,8 +120,8 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
-		});
+//			}
+//		});
 		return true;
 	}
 
