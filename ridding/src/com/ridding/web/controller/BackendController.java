@@ -29,7 +29,6 @@ import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.SourceService;
 import com.ridding.service.transaction.TransactionService;
 import com.ridding.util.ListUtils;
-import com.ridding.util.QiNiuUtil;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com

@@ -3,6 +3,8 @@ package com.ridding.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.ridding.meta.RiddingComment;
 
 /**
@@ -25,6 +27,18 @@ public interface RiddingCommentMapper {
 	 * @return
 	 */
 	public List<RiddingComment> getRiddingCommentList(Map<String, Object> map);
+
+	/**
+	 * 获取评论列表
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param createTime
+	 * @param limit
+	 * @param isLarger
+	 * @return
+	 */
+	public List<RiddingComment> getRiddingCommentListByTime(@Param(value = "createTime") long createTime, @Param(value = "limit") int limit,
+			@Param(value = "isLarger") int isLarger);
 
 	/**
 	 * 删除评论

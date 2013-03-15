@@ -95,6 +95,17 @@ public class RiddingCommentServiceImpl implements RiddingCommentService {
 		return riddingCommentList;
 	}
 
+	public List<RiddingComment> getRiddingComments(long createTime, int limit, boolean isLarger) {
+		List<RiddingComment> riddingCommentList = riddingCommentMapper.getRiddingCommentListByTime(createTime, limit, isLarger ? 1 : 0);
+		this.insertProfileInfo(riddingCommentList);
+		return riddingCommentList;
+	}
+
+	/**
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param riddingCommentList
+	 */
 	private void insertProfileInfo(List<RiddingComment> riddingCommentList) {
 		if (ListUtils.isEmptyList(riddingCommentList)) {
 			return;

@@ -25,9 +25,18 @@ public interface RiddingCommentService {
 	 * @param isLarger
 	 * @return
 	 */
-	public List<RiddingComment> getRiddingComments(long riddingId,
-			long createTime, int limit, boolean isLarger);
-	
+	public List<RiddingComment> getRiddingComments(long riddingId, long createTime, int limit, boolean isLarger);
+
+	/**
+	 * 根据时间得到评论列表
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param createTime
+	 * @param limit
+	 * @param isLarger
+	 * @return
+	 */
+	public List<RiddingComment> getRiddingComments(long createTime, int limit, boolean isLarger);
 
 	/**
 	 * 递归删除骑行评论及其子评论
