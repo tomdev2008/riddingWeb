@@ -62,10 +62,10 @@
 	<select id="getRiddingCommentListByTime" resultMap="riddingCommentMap">
 		SELECT * from TB_Ridding_Comment where
 		<if test="isLarger==1">
-			and createTime > #{createTime} 
+		    createTime > #{createTime} 
 		</if>
 		<if test="isLarger==0">
-			and #{createTime} > createTime 
+			 #{createTime} > createTime 
 		</if>
 		order by createTime desc
 		<if test="limit>0">

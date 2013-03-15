@@ -16,12 +16,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ridding.constant.SystemConst;
 import com.ridding.mapper.RiddingPictureMapper;
+import com.ridding.meta.Feedback;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.WeiBo;
 import com.ridding.security.MyUser;
+import com.ridding.service.FeedbackService;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
@@ -50,6 +52,9 @@ public class BackendController extends AbstractBaseController {
 	private RiddingService riddingService;
 
 	@Resource
+	private FeedbackService feedbackService;
+
+	@Resource
 	private RiddingCommentService riddingCommentService;
 
 	@Resource
@@ -75,7 +80,6 @@ public class BackendController extends AbstractBaseController {
 		this.setUD(mv, myUser.getUserId(), myUser.getUserId());
 		return mv;
 	}
-
 
 	/**
 	 * 检查url
@@ -226,7 +230,7 @@ public class BackendController extends AbstractBaseController {
 		int limit = ServletRequestUtils.getIntParameter(request, "limit", 0);
 		long requestTime = new Date().getTime();
 		if (riddingId == 0) {
-			List<RiddingComment> riddingComments = riddingCommentService.getRiddingComments(riddingId, requestTime, 20, false);
+			List<RiddingComment> riddingComments = riddingCommentService.getRiddingComments(requestTime, 20, false);
 			mv.addObject("riddingCommentList", riddingComments);
 			return mv;
 		}
@@ -238,6 +242,23 @@ public class BackendController extends AbstractBaseController {
 	public ModelAndView backendVip(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("backendVip");
 
+		return mv;
+	}
+
+	/**
+	 * 获得反馈列表
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	public ModelAndView showFeedbackView(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ModelAndView mv = new ModelAndView("backendFeedback");
+		List<Feedback> list = feedbackService.getFeedbackList();
+		
+		mv.addObject("feedbackList", list);
 		return mv;
 	}
 

@@ -12,7 +12,7 @@ body{font-size:83%;}
 <h3><a href="/backend/user/#{visitUserId}/huodong/list/">查看活动列表</a></h3>
 <h3><a href="/backend/ridding/0/comment/">查看评论列表</a></h3>
 <h3><a href="/backend/ridding/vip/">查看升级列表</a></h3>
-<h3><a href="/backend/user/#{visitUserId}/feedback">查看反馈列表</a></h3>
+<h3><a href="/backend/user/feedback/">查看反馈列表</a></h3>
 </section>
 
 </body>

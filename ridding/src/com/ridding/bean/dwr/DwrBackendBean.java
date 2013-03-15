@@ -395,14 +395,6 @@ public class DwrBackendBean {
 		return true;
 	}
 
-	/**
-	 * 获取反馈列表
-	 * 
-	 * @return
-	 */
-	public List<Feedback> getFeedbackList() {
-		return feedbackService.getFeedbackList();
-	}
 
 	/**
 	 * 回复反馈

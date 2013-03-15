@@ -1,5 +1,7 @@
 package com.ridding.meta;
 
+import com.ridding.util.TimeUtil;
+
 /**
  * @author yunshang_734@163.com E-mail:yunshang_734@163.com
  * @version CreateTime：2013-3-1 下午10:07:34 Class Description
@@ -57,6 +59,10 @@ public class Feedback {
 	 * 软件版本
 	 */
 	private String appVersion;
+	/**
+	 * 反馈时间
+	 */
+	public String createTimeStr;
 
 	public enum FeedbackStatus {
 		/**
@@ -126,6 +132,7 @@ public class Feedback {
 	}
 
 	public void setCreateTime(long createTime) {
+		this.createTimeStr = TimeUtil.getFormatTime(createTime);
 		this.createTime = createTime;
 	}
 
@@ -184,4 +191,13 @@ public class Feedback {
 	public void setAppVersion(String appVersion) {
 		this.appVersion = appVersion;
 	}
+
+	public String getCreateTimeStr() {
+		return createTimeStr;
+	}
+
+	public void setCreateTimeStr(String createTimeStr) {
+		this.createTimeStr = createTimeStr;
+	}
+
 }

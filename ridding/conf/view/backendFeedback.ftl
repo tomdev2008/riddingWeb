@@ -49,7 +49,7 @@ body{font-size:83%;}
 					<div style="text-align: center;">${feedback.userMail!""}</div>
 				</td>
 				<td style="text-align: center;" width="10%">
-					<div style="text-align: center;">${feedback.createTime!0}</div>
+					<div style="text-align: center;">${feedback.createTimeStr!0}</div>
 				</td>
 				<td style="text-align: center;" width="10%">
 					<div style="text-align: center;">${feedback.description!""}</div>
