@@ -106,16 +106,16 @@ public class IOSApnsServiceImpl implements IOSApnsService {
 					payLoad.addSound("default");
 
 					PushNotificationManager pushManager = PushNotificationManager.getInstance();
-					pushManager.addDevice("iPhone", device.getToken());
+					pushManager.addDevice(String.valueOf(device.getUserId()), device.getToken());
 					File resourceFile = ResourceUtils.getFile("classpath:" + FILENAME);
 					pushManager.initializeConnection(HOST, 2195, resourceFile.getPath(), PASSWORD, SSLConnectionHelper.KEYSTORE_TYPE_PKCS12);
 
 					// Send Push
-					Device client = pushManager.getDevice("iPhone");
+					Device client = pushManager.getDevice(String.valueOf(device.getUserId()));
 					pushManager.sendNotification(client, payLoad);
 					pushManager.stopConnection();
 
-					pushManager.removeDevice("iPhone");
+					pushManager.removeDevice(String.valueOf(device.getUserId()));
 					logger.info("asyncSendOneMessages finish where device userId=" + device.getUserId() + " message=" + message);
 				} catch (Exception e) {
 					e.printStackTrace();
