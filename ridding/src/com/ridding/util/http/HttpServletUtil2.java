@@ -1,5 +1,6 @@
 package com.ridding.util.http;
 
+import java.util.Date;
 import java.util.List;
 
 import net.sf.json.JSONArray;
@@ -543,6 +544,7 @@ public class HttpServletUtil2 {
 			userPayObject.put("begintime", userPay.getBeginTime());
 			userPayObject.put("status", userPay.getStatus());
 			userPayObject.put("daylong", userPay.getDayLong());
+			userPayObject.put("extdatelong", TimeUtil.leftDay(userPay.getBeginTime(), new Date().getTime(), userPay.getDayLong()));
 			JSONObject returnObject = new JSONObject();
 			HttpServletUtil2.returnDataObject(userPayObject, "userpay", returnObject);
 			jsonArray.add(returnObject);

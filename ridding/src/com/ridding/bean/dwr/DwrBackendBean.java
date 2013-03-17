@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -20,8 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ridding.constant.SystemConst;
-
-import com.ridding.meta.Feedback;
 import com.ridding.meta.IMap;
 import com.ridding.meta.ImageInfo;
 import com.ridding.meta.Public;

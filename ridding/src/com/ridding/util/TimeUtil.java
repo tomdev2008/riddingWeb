@@ -117,6 +117,19 @@ public class TimeUtil {
 	}
 
 	/**
+	 * 剩下的天数
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param beginTime
+	 * @param nowTime
+	 * @param dayLong
+	 * @return
+	 */
+	public static int leftDay(long beginTime, long nowTime, int dayLong) {
+		return (int) ((nowTime - beginTime) / DAY_TIME - dayLong);
+	}
+
+	/**
 	 * 得到当天凌晨的时间戳
 	 * 
 	 * @author Herbert
