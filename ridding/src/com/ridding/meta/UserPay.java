@@ -44,7 +44,7 @@ public class UserPay {
 	/**
 	 * 有效状态
 	 */
-	public static int status_valid = 1;
+	public static int status_valid = 2;
 	/**
 	 * 开始日期
 	 */
@@ -147,6 +147,14 @@ public class UserPay {
 		Weather {
 			public int getValue() {
 				return 1;
+			}
+		},
+		/**
+		 * 天气功能
+		 */
+		HelpUs {
+			public int getValue() {
+				return 2;
 			}
 		};
 		public abstract int getValue();

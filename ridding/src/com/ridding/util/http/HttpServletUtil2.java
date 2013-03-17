@@ -17,6 +17,7 @@ import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
+import com.ridding.meta.UserPay;
 import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.meta.vo.UserRelationVO;
@@ -56,6 +57,7 @@ public class HttpServletUtil2 {
 		userObject.put("savatorurl", profile.getsAvatorUrl());
 		userObject.put("totaldistance", profile.getTotalDistance());
 		userObject.put("backgroundurl", SystemConst.returnPhotoUrl(profile.getBackgroundUrl()));
+		userObject.put("taobaocode", profile.getTaobaoCode());
 		if (sourceAccount != null) {
 			userObject.put("sourceid", sourceAccount.getAccessUserId());
 			userObject.put("accesstoken", sourceAccount.getAccessToken());
@@ -523,6 +525,26 @@ public class HttpServletUtil2 {
 
 			JSONObject returnObject = new JSONObject();
 			HttpServletUtil2.returnDataObject(userObject, "user", returnObject);
+			jsonArray.add(returnObject);
+		}
+		return jsonArray;
+	}
+
+	public static JSONArray parseShowUserPay(List<UserPay> userPays) {
+		if (ObjectUtil.isEmptyList(userPays)) {
+			return new JSONArray();
+		}
+		JSONArray jsonArray = new JSONArray();
+		for (UserPay userPay : userPays) {
+			JSONObject userPayObject = new JSONObject();
+			userPayObject.put("userid", userPay.getUserId());
+			userPayObject.put("typeid", userPay.getTypeId());
+			userPayObject.put("createtime", userPay.getUserId());
+			userPayObject.put("begintime", userPay.getBeginTime());
+			userPayObject.put("status", userPay.getStatus());
+			userPayObject.put("daylong", userPay.getDayLong());
+			JSONObject returnObject = new JSONObject();
+			HttpServletUtil2.returnDataObject(userPayObject, "userpay", returnObject);
 			jsonArray.add(returnObject);
 		}
 		return jsonArray;

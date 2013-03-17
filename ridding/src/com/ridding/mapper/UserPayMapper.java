@@ -44,4 +44,14 @@ public interface UserPayMapper {
 	 */
 	public List<UserPay> getUserPaysValid(@Param("userId") long userId);
 
+	/**
+	 * 根据类型和用户id获取用户付费
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param userId
+	 * @param typeId
+	 * @return
+	 */
+	public UserPay getUserPayByUserIdType(@Param("userId") long userId, @Param("typeId") int typeId);
+
 }

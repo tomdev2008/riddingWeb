@@ -25,4 +25,14 @@ public interface UserPayService {
 	 * @return
 	 */
 	public List<UserPay> getUserPaysValid(long userId);
+
+	/**
+	 * 获取userPay
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param userId
+	 * @param type
+	 * @return
+	 */
+	public UserPay getUserPayByUserId(long userId, int type);
 }

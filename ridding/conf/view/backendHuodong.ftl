@@ -29,7 +29,7 @@ div.outset {border-style: none;width: 20%;height: 300px;float:left;clean:both}
     <div>
        <#list riddingPictures as picture>
        		<div class="outset" style="text-align: center;">
-            <img src="${cfg_imageHost}${picture.photoUrl!""}" id="huodong_img_${picture.id!0}"/><br>
+            <img src="${cfg_imageHost}${picture.photoUrl!""}?imageView/1/w/100" id="huodong_img_${picture.id!0}"/><br>
            	<span>${picture.description!""}</span><br>
            	</div>
         </#list>

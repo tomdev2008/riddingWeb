@@ -51,6 +51,12 @@
 	<select id="getUserPaysValid" resultMap="userPayMap">
 		SELECT * from
 		TB_User_Pay where
-		userId=#{userId} and status > 0; 
+		userId=#{userId}; 
+	</select>
+
+	<select id="getUserPayByUserIdType" resultMap="userPayMap">
+		SELECT * from
+		TB_User_Pay where
+		userId=#{userId} and typeId = #{typeId}; 
 	</select>
 </mapper>

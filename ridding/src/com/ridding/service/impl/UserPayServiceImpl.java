@@ -68,4 +68,14 @@ public class UserPayServiceImpl implements UserPayService {
 	public List<UserPay> getUserPaysValid(long userId) {
 		return userPayMapper.getUserPaysValid(userId);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.UserPayService#getUserPayByUserId(long, int)
+	 */
+	@Override
+	public UserPay getUserPayByUserId(long userId, int typeId) {
+		return userPayMapper.getUserPayByUserIdType(userId, typeId);
+	}
 }

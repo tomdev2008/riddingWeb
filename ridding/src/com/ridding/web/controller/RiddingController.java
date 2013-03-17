@@ -1,5 +1,6 @@
 package com.ridding.web.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import com.ridding.meta.RiddingComment;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
+import com.ridding.meta.UserPay;
 import com.ridding.meta.RiddingAction.RiddingActionResponse;
 import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ActivityRidding;
@@ -46,7 +48,9 @@ import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
 import com.ridding.service.UserNearbyService;
+import com.ridding.service.UserPayService;
 import com.ridding.service.UserRelationService;
+import com.ridding.service.impl.UserPayServiceImpl;
 import com.ridding.service.transaction.TransactionService;
 import com.ridding.util.http.HttpJsonUtil;
 import com.ridding.util.http.HttpServletUtil;
@@ -87,6 +91,9 @@ public class RiddingController extends AbstractBaseController {
 
 	@Resource
 	private FeedbackService feedbackService;
+
+	@Resource
+	private UserPayService userPayService;
 
 	/**
 	 * 得到骑行用户信息，返回骑行数据
@@ -957,6 +964,35 @@ public class RiddingController extends AbstractBaseController {
 		} else if (type == 1) {
 			riddingService.updateRiddingGps(userId, riddingId, yes);
 		}
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 显示用户支付信息
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView showUserPay(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		JSONObject returnObject = new JSONObject();
+		ModelAndView mv = new ModelAndView("return");
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		int type = ServletRequestUtils.getIntParameter(request, "typeId", -1);
+		List<UserPay> userPayList;
+		if (type > 0) {
+			userPayList = new ArrayList<UserPay>();
+			UserPay userPay = userPayService.getUserPayByUserId(userId, type);
+			userPayList.add(userPay);
+		} else {
+			userPayList = userPayService.getUserPaysValid(userId);
+		}
+		JSONArray jsonArray = HttpServletUtil2.parseShowUserPay(userPayList);
+		returnObject.put("data", jsonArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
