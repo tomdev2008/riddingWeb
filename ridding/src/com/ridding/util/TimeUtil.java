@@ -126,7 +126,7 @@ public class TimeUtil {
 	 * @return
 	 */
 	public static int leftDay(long beginTime, long nowTime, int dayLong) {
-		return (int) ((nowTime - beginTime) / DAY_TIME - dayLong);
+		return (int) (dayLong - (nowTime - beginTime) / DAY_TIME);
 	}
 
 	/**
