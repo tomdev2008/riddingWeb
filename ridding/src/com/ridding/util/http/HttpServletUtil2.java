@@ -531,7 +531,7 @@ public class HttpServletUtil2 {
 		return jsonArray;
 	}
 
-	public static JSONArray parseShowUserPay(List<UserPay> userPays) {
+	public static JSONArray parseShowUserPays(List<UserPay> userPays) {
 		if (ObjectUtil.isEmptyList(userPays)) {
 			return new JSONArray();
 		}
@@ -550,5 +550,19 @@ public class HttpServletUtil2 {
 			jsonArray.add(returnObject);
 		}
 		return jsonArray;
+	}
+
+	public static JSONObject parseShowUserPay(UserPay userPay) {
+		JSONObject userPayObject = new JSONObject();
+		userPayObject.put("userid", userPay.getUserId());
+		userPayObject.put("typeid", userPay.getTypeId());
+		userPayObject.put("createtime", userPay.getUserId());
+		userPayObject.put("begintime", userPay.getBeginTime());
+		userPayObject.put("status", userPay.getStatus());
+		userPayObject.put("daylong", userPay.getDayLong());
+		userPayObject.put("extdatelong", TimeUtil.leftDay(userPay.getBeginTime(), new Date().getTime(), userPay.getDayLong()));
+		JSONObject returnObject = new JSONObject();
+		HttpServletUtil2.returnDataObject(userPayObject, "userpay", returnObject);
+		return returnObject;
 	}
 }

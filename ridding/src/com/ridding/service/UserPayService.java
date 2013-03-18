@@ -25,6 +25,7 @@ public interface UserPayService {
 	 * @return
 	 */
 	public List<UserPay> getUserPaysValid(long userId);
+	
 
 	/**
 	 * 获取userPay

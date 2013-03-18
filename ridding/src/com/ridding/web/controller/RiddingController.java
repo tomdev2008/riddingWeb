@@ -50,7 +50,6 @@ import com.ridding.service.RiddingService;
 import com.ridding.service.UserNearbyService;
 import com.ridding.service.UserPayService;
 import com.ridding.service.UserRelationService;
-import com.ridding.service.impl.UserPayServiceImpl;
 import com.ridding.service.transaction.TransactionService;
 import com.ridding.util.http.HttpJsonUtil;
 import com.ridding.util.http.HttpServletUtil;
@@ -991,8 +990,42 @@ public class RiddingController extends AbstractBaseController {
 		} else {
 			userPayList = userPayService.getUserPaysValid(userId);
 		}
-		JSONArray jsonArray = HttpServletUtil2.parseShowUserPay(userPayList);
+		JSONArray jsonArray = HttpServletUtil2.parseShowUserPays(userPayList);
 		returnObject.put("data", jsonArray);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	/**
+	 * 试用操作
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ModelAndView tryUserPay(HttpServletRequest request, HttpServletResponse response) {
+
+		response.setContentType("text/html;charset=UTF-8");
+		JSONObject returnObject = new JSONObject();
+		ModelAndView mv = new ModelAndView("return");
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		int type = ServletRequestUtils.getIntParameter(request, "typeId", -1);
+		UserPay userPay = userPayService.getUserPayByUserId(userId, type);
+		if (userPay != null) {
+			returnObject.put("code", returnCodeConstance.UserPayCanNotTry);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		userPay = new UserPay();
+		userPay.setUserId(userId);
+		userPay.setTypeId(type);
+		userPay.setDayLong(15);// 试用15天
+		userPay.setStatus(UserPay.status_trying);
+		userPay = userPayService.addUserPay(userPay);
+		JSONObject jsonObject = HttpServletUtil2.parseShowUserPay(userPay);
+		returnObject.put("data", jsonObject);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;

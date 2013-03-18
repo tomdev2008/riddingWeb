@@ -46,5 +46,9 @@ public class returnCodeConstance {
 	 * 自己的骑行活动不能操作
 	 */
 	public static final int RiddingActionInMyRidding = -311;
-	
+	/**
+	 * 不能试用
+	 */
+	public static final int UserPayCanNotTry = -5001;
+
 }
