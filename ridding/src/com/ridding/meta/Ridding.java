@@ -280,7 +280,7 @@ public class Ridding implements Serializable {
 	}
 
 	public void setCreateTime(long createTime) {
-		this.setCreateTimeStr(TimeUtil.getFormatTime(createTime));
+		this.setCreateTimeStr(TimeUtil.getFormatTimeInMinute(createTime));
 		this.createTime = createTime;
 	}
 
