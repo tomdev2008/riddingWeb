@@ -80,7 +80,7 @@ public class RiddingPublicController extends AbstractBaseController {
 		ModelAndView mv = new ModelAndView("return");
 		Long userId = ServletRequestUtils.getLongParameter(request, "userId");
 		Integer sourceType = ServletRequestUtils.getIntParameter(request, "sourceType");
-
+		int checkRegister = ServletRequestUtils.getIntParameter(request, "register", -1);
 		JSONObject returnObject = new JSONObject();
 		Profile profile = profileService.getProfile(userId);
 		SourceAccount sourceAccount = profileService.getSourceAccountByUserIdsSourceType(userId, sourceType);
@@ -89,33 +89,23 @@ public class RiddingPublicController extends AbstractBaseController {
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
-		try {
-			Weibo weibo = new Weibo();
-			weibo.setToken(sourceAccount.getAccessToken());
-			Account am = new Account();
-			weibo4j.org.json.JSONObject uid = am.getUid();
-		} catch (Exception e) {
-			// 获取其他用户信息是，可能这个用户的token已经失效了
-			// returnObject.put("code", returnCodeConstance.TOKENEXPIRED);
-			// mv.addObject("returnObject", returnObject.toString());
-			// return mv;
-		}
-
-		returnObject.put("userid", profile.getUserId());
-		returnObject.put("username", profile.getUserName());
-		returnObject.put("nickname", profile.getNickName());
-		returnObject.put("bavatorurl", profile.getbAvatorUrl());
-		returnObject.put("savatorurl", profile.getsAvatorUrl());
-		returnObject.put("totalDistance", profile.getTotalDistance());
-		returnObject.put("code", returnCodeConstance.SUCCESS);
-		if (sourceAccount != null) {
-			returnObject.put("sourceid", sourceAccount.getAccessUserId());
-			returnObject.put("accessToken", sourceAccount.getAccessToken());
-		}
+		if (checkRegister < 0) {
+			try {
+				Weibo weibo = new Weibo();
+				weibo.setToken(sourceAccount.getAccessToken());
+				Account am = new Account();
+				weibo4j.org.json.JSONObject uid = am.getUid();
+			} catch (Exception e) {
+				// 获取其他用户信息是，可能这个用户的token已经失效了
+				// returnObject.put("code", returnCodeConstance.TOKENEXPIRED);
+				// mv.addObject("returnObject", returnObject.toString());
+				// return mv;
+			}
+		} 
 		int count = riddingService.getRiddingCount(userId);
-		returnObject.put("riddingCount", count);
 		JSONObject dataObject = HttpServletUtil2.parseGetUserProfile(profile, sourceAccount, count);
 		returnObject.put("data", dataObject);
+		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
 		logger.debug(returnObject);
 		return mv;
@@ -403,7 +393,5 @@ public class RiddingPublicController extends AbstractBaseController {
 		logger.debug(returnObject);
 		return mv;
 	}
-	
-	
 
 }
