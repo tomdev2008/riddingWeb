@@ -93,6 +93,9 @@ public class RiddingController extends AbstractBaseController {
 
 	@Resource
 	private UserPayService userPayService;
+	
+	
+	
 
 	/**
 	 * 得到骑行用户信息，返回骑行数据

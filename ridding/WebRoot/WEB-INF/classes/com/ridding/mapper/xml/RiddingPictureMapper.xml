@@ -99,7 +99,8 @@
 		breadId = #{breadId}
 		;
 		</select>
-	<select id="getRiddingPicturesById" parameterType="long">
+	<select id="getRiddingPicturesById" parameterType="long"
+		resultMap="riddingPictureMap">
 		select * from
 		TB_Ridding_Picture
 		where id=#{pictureId};
