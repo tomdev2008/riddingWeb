@@ -31,6 +31,7 @@ import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingAction;
 import com.ridding.meta.RiddingComment;
+import com.ridding.meta.RiddingGps;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
@@ -1024,6 +1025,36 @@ public class RiddingController extends AbstractBaseController {
 		JSONObject jsonObject = HttpServletUtil2.parseShowUserPay(userPay);
 		returnObject.put("data", jsonObject);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
+		mv.addObject("returnObject", returnObject.toString());
+		return mv;
+	}
+
+	public ModelAndView addRiddingGps(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		JSONObject returnObject = new JSONObject();
+		ModelAndView mv = new ModelAndView("return");
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
+		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1);
+		String mapPoints = ServletRequestUtils.getStringParameter(request, "mapPoints", null);
+		int distance = ServletRequestUtils.getIntParameter(request, "distance", -1);
+		RiddingUser riddingUser = riddingService.getRiddingUser(riddingId, userId);
+		if (riddingUser == null || StringUtils.isEmpty(mapPoints)) {
+			returnObject.put("code", returnCodeConstance.FAILED);
+			mv.addObject("returnObject", returnObject.toString());
+			return mv;
+		}
+		RiddingGps riddingGps = new RiddingGps();
+		riddingGps.setRiddingId(riddingId);
+		riddingGps.setUserId(userId);
+		riddingGps.setMapPoint(mapPoints);
+		riddingGps.setDistance(distance);
+		riddingGps.setCreateTime(new Date().getTime());
+		riddingGps = riddingService.addRiddingGps(riddingGps);
+		if (riddingGps == null) {
+			returnObject.put("code", returnCodeConstance.FAILED);
+		} else {
+			returnObject.put("code", returnCodeConstance.SUCCESS);
+		}
 		mv.addObject("returnObject", returnObject.toString());
 		return mv;
 	}

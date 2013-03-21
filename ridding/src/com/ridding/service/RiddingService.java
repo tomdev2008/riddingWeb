@@ -2,12 +2,11 @@ package com.ridding.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.ridding.constant.RiddingQuitConstant;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingAction;
+import com.ridding.meta.RiddingGps;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.RiddingAction.RiddingActionResponse;
@@ -420,4 +419,13 @@ public interface RiddingService {
 	 * @return
 	 */
 	public int updateRiddingGps(long userId, long riddingId, int isGps);
+
+	/**
+	 * 添加gps信息
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param riddingGps
+	 * @return
+	 */
+	public RiddingGps addRiddingGps(RiddingGps riddingGps);
 }

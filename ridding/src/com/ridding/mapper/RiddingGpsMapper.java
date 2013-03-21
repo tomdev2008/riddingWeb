@@ -31,4 +31,14 @@ public interface RiddingGpsMapper {
 	 */
 	public int updateRiddingGpsPoint(@Param(value = "riddingId") long riddingId, @Param(value = "userId") long userId,
 			@Param(value = "mapPoint") long mapPoint);
+
+	/**
+	 * 获得骑行gps
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param userId
+	 * @param riddingId
+	 * @return
+	 */
+	public RiddingGps getRiddingGps(@Param(value = "userId") long userId, @Param(value = "riddingId") long riddingId);
 }

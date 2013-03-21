@@ -108,7 +108,6 @@ public class HttpServletUtil2 {
 				mapObject.put("distance", activityRidding.getiMap().getDistance());
 				mapObject.put("beginlocation", activityRidding.getiMap().getBeginLocation());
 				mapObject.put("endlocation", activityRidding.getiMap().getEndLocation());
-				mapObject.put("avatorpicurl", SystemConst.returnPhotoUrl(activityRidding.getiMap().getAvatorPicUrl()));
 				mapObject.put("maptaps", activityRidding.getiMap().getMapTaps());
 
 				riddingObject.put("map", mapObject);

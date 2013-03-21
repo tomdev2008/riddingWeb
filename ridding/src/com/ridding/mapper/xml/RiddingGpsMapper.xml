@@ -11,8 +11,8 @@
 		<result property="createTime" column="createTime" />
 
 	</resultMap>
-	
-	
+
+
 	<insert id="addRiddingGps" parameterType="RiddingGps">
 		INSERT INTO TB_Ridding_GpsMap(
 		userId,
@@ -41,4 +41,9 @@
 		= #{riddingId} and userId = #{userId};
 	</update>
 
+	<select id="getRiddingGps" resultMap="riddingGpsMap">
+		SELECT * from
+		TB_Ridding_GpsMap where
+		userId=#{userId} and riddingId = #{riddingId} ;
+	</select>
 </mapper>

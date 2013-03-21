@@ -121,17 +121,17 @@ public class RiddingWebPubController extends AbstractBaseController {
 		ModelAndView mv = new ModelAndView("riddingList");
 		int count = riddingService.getRiddingCount(userId);
 		mv.addObject("riddingCount", count);
-		List<ActivityRidding> riddingUserlList = riddingService.getRiddingListbyUserId(userId, 0, 0);
-		mv.addObject("riddingUserList", riddingUserlList);
-		long visitorUserId = -1L;
-		try {
-			MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
-			visitorUserId = myUser.getUserId();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		this.setUD(mv, userId, visitorUserId);
+//		List<ActivityRidding> riddingUserlList = riddingService.getRiddingListbyUserId(userId, 0, 0);
+//		mv.addObject("riddingUserList", riddingUserlList);
+//		long visitorUserId = -1L;
+//		try {
+//			MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+//			visitorUserId = myUser.getUserId();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		this.setUD(mv, userId, visitorUserId);
 		return mv;
 	}
 
