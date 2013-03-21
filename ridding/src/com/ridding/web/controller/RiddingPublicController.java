@@ -41,7 +41,6 @@ import com.ridding.service.RiddingService;
 import com.ridding.service.UserRelationService;
 import com.ridding.util.HashMapMaker;
 import com.ridding.util.ListUtils;
-import com.ridding.util.http.HttpJsonUtil;
 import com.ridding.util.http.HttpServletUtil;
 import com.ridding.util.http.HttpServletUtil2;
 
@@ -136,8 +135,6 @@ public class RiddingPublicController extends AbstractBaseController {
 		}
 		List<ActivityRidding> riddingUserList = riddingService.getSelfRiddingUserList(userId, ridding.getLimit(), ridding.getCreateTime(), ridding
 				.isLarger());
-		HttpJsonUtil.setRiddingList(returnObject, riddingUserList);
-
 		JSONArray jsonArray = HttpServletUtil2.parseGetRiddingList(riddingUserList);
 		returnObject.put("data", jsonArray.toString());
 		returnObject.put("code", returnCodeConstance.SUCCESS);
@@ -162,7 +159,6 @@ public class RiddingPublicController extends AbstractBaseController {
 			return mv;
 		}
 		IMap iMap = mapService.getMapByRiddingId(ridingId);
-		HttpJsonUtil.setRiddingMapOrTaps(returnObject, iMap);
 		JSONObject dataObject = HttpServletUtil2.parseGetRidingMapOrLocation(iMap);
 		returnObject.put("data", dataObject.toString());
 		returnObject.put("code", returnCodeConstance.SUCCESS);
@@ -224,7 +220,6 @@ public class RiddingPublicController extends AbstractBaseController {
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
 		List<ProfileVO> profileVOs = riddingService.getRiddingUserListToProfile(ridingId, -1, 0);
-		HttpJsonUtil.setProfileList(returnObject, profileVOs);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		JSONArray dataArray = HttpServletUtil2.parseGetRiddingUserList(profileVOs);
 		returnObject.put("data", dataArray);
@@ -286,7 +281,6 @@ public class RiddingPublicController extends AbstractBaseController {
 				}
 			}
 		}
-		HttpJsonUtil.setupLoadedRiddingPicture(returnObject, riddingPictures);
 		JSONArray dataArray = HttpServletUtil2.parseGetuploadedPhotos(riddingPictures);
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
@@ -330,7 +324,6 @@ public class RiddingPublicController extends AbstractBaseController {
 			riddingList = riddingService.getRiddingListByLastUpdateTime(ridding.getLastUpdateTime(), ridding.getLimit(), ridding.isLarger(),
 					ridding.isRecom);
 		}
-		HttpJsonUtil.setRiddingByLastUpdateTime(returnObject, riddingList);
 		JSONArray dataArray = HttpServletUtil2.parseGetGoingRiddings(riddingList);
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);

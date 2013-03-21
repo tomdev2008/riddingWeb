@@ -226,6 +226,8 @@ public class TransactionServiceImpl implements TransactionService {
 		if (riddingUserMapper.addRiddingUser(riddingUser) < 0) {
 			throw new TransactionException("insertANewRidding iMapMapper error");
 		}
+		Profile leaderProfile = profileMapper.getProfile(ridding.getLeaderUserId());
+		ridding.setLeaderProfile(leaderProfile);
 		// List<Profile> profiles = profileMapper.getAllProfile();
 		// for (Profile profile : profiles) {
 		// if (StringUtils.isEmpty(profile.getGraysAvatorUrl())) {

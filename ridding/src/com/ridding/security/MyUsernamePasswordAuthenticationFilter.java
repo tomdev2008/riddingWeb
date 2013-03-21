@@ -159,6 +159,10 @@ public class MyUsernamePasswordAuthenticationFilter extends UsernamePasswordAuth
 	 */
 	private void getSourceAccountFromRequest(HttpServletRequest request) throws Exception {
 		String code = ServletRequestUtils.getStringParameter(request, "code", null);
+		if (StringUtils.isEmpty(code)) {
+			logger.error("MyUsernamePasswordAuthenticationFilter getSourceAccountFromRequest code isempty");
+			return;
+		}
 		Oauth oauth = new Oauth();
 		AccessToken accessToken = oauth.getAccessTokenByCode(code);
 		if (accessToken == null) {

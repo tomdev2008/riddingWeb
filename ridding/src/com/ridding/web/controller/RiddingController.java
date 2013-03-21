@@ -51,7 +51,6 @@ import com.ridding.service.UserNearbyService;
 import com.ridding.service.UserPayService;
 import com.ridding.service.UserRelationService;
 import com.ridding.service.transaction.TransactionService;
-import com.ridding.util.http.HttpJsonUtil;
 import com.ridding.util.http.HttpServletUtil;
 import com.ridding.util.http.HttpServletUtil2;
 
@@ -93,9 +92,6 @@ public class RiddingController extends AbstractBaseController {
 
 	@Resource
 	private UserPayService userPayService;
-	
-	
-	
 
 	/**
 	 * 得到骑行用户信息，返回骑行数据
@@ -131,7 +127,6 @@ public class RiddingController extends AbstractBaseController {
 		riddingUser.setCacheTime(time);
 
 		List<RiddingUser> ridingUserList = riddingService.getAllRiddingUserList(riddingUser);
-		HttpJsonUtil.setShowRiddingView(returnObject, ridingUserList);
 		userNearbyService.asyncUpdateUserNearBy(userId, riddingUser.getLatitude(), riddingUser.getLongtitude());
 		JSONArray dataArray = HttpServletUtil2.parseShowRiddingView(ridingUserList);
 		returnObject.put("data", dataArray);
@@ -417,7 +412,6 @@ public class RiddingController extends AbstractBaseController {
 		}
 		List<SourceAccount> sourceAccounts = profileService.getSourceAccountByUserIdsSourceType(profileSourceFeed.getUserIdList(), profileSourceFeed
 				.getSourceType());
-		HttpJsonUtil.setSourceAccount(returnObject, sourceAccounts);
 		JSONArray dataArray = HttpServletUtil2.parseGetUserPublicMessage(sourceAccounts);
 		returnObject.put("data", dataArray);
 		returnObject.put("code", returnCodeConstance.SUCCESS);

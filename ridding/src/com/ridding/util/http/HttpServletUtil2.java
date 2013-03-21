@@ -357,11 +357,29 @@ public class HttpServletUtil2 {
 
 		JSONObject riddingObject = new JSONObject();
 		riddingObject.put("riddingid", ridding.getId());
-
-		JSONObject mapObject = new JSONObject();
-		mapObject.put("avatorpicurl", url);
-
-		riddingObject.put("map", mapObject);
+		riddingObject.put("riddingname", ridding.getName());
+		riddingObject.put("riddingtype", ridding.getRiddingType());
+		riddingObject.put("riddingstatus", ridding.getRiddingStatus());
+		riddingObject.put("createtime", ridding.getCreateTime());
+		riddingObject.put("createtimestr", TimeUtil.getFormatTime(ridding.getCreateTime()));
+		riddingObject.put("lastupdatetime", ridding.getLastUpdateTime());
+		riddingObject.put("lastupdatetimestr", TimeUtil.getFormatTime(ridding.getLastUpdateTime()));
+		riddingObject.put("usercount", ridding.getUserCount());
+		riddingObject.put("carecount", ridding.getCareCount());
+		riddingObject.put("commentcount", ridding.getCommentCount());
+		riddingObject.put("usecount", ridding.getUseCount());
+		riddingObject.put("likecount", ridding.getLikeCount());
+		riddingObject.put("issyncsina", ridding.getIsSyncSina());
+		
+		JSONObject leaderUserObject = new JSONObject();
+		leaderUserObject.put("userid", ridding.getLeaderUserId());
+		leaderUserObject.put("savatorurl", ridding.getLeaderProfile().getsAvatorUrl());
+		leaderUserObject.put("bavatorurl", ridding.getLeaderProfile().getbAvatorUrl());
+		leaderUserObject.put("username", ridding.getLeaderProfile().getUserName());
+		leaderUserObject.put("nickname", ridding.getLeaderProfile().getNickName());
+		leaderUserObject.put("totaldistance", ridding.getLeaderProfile().getTotalDistance());
+		leaderUserObject.put("backgroundurl", SystemConst.returnPhotoUrl(ridding.getLeaderProfile().getBackgroundUrl()));
+		riddingObject.put("user", leaderUserObject);
 
 		HttpServletUtil2.returnDataObject(riddingObject, "ridding", returnObject);
 

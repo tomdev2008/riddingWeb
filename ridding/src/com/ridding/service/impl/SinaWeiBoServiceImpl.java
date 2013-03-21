@@ -326,7 +326,7 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 	 * @see com.ridding.service.SinaWeiBoService#genMapFromMapWeiBoQuartz()
 	 */
 	public void genMapFromMapWeiBoQuartz() {
-		logger.info("genMapFromMapWeiBoQuartz begin!");
+		logger.debug("genMapFromMapWeiBoQuartz begin!");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("weiboType", WeiBoType.RIDDING.getValue());
 		map.put("sourceType", SourceType.SINAWEIBO.getValue());
@@ -361,7 +361,7 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 			}
 
 		}
-		logger.info("genMapFromMapWeiBoQuartz end deal count=" + weiboList.size());
+		logger.debug("genMapFromMapWeiBoQuartz end deal count=" + weiboList.size());
 	}
 
 	/**
@@ -501,7 +501,6 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 				Date createTime = new Date(createTimeString);
 				weiBoToBeSend.setCreateTime(createTime.getTime());
 
-
 				JSONObject user = status.getJSONObject("user");
 				weiBoToBeSend.setAccountId(user.getLong("id"));
 
@@ -521,7 +520,12 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 		if (!ListUtils.isEmptyList(weiBoToBeSendList)) {
 			for (WeiBoToBeSend weiBoToBeSend : weiBoToBeSendList) {
 				long accountId = weiBoToBeSend.getAccountId();
-				this.sendSinaWeiBoCallBack(accountId, "还在骑行路上么?骑行者V1.3[属于你的骑行应用]新版上线,计划您的骑行路线,记录您的骑行旅程。快去下载吧 @骑行者rider " + SystemConst.getValue("AppHref"));
+				try {
+					this.sendSinaWeiBoCallBack(accountId, "还在骑行路上么?骑行者V1.3[属于你的骑行应用]新版上线,计划您的骑行路线,记录您的骑行旅程。快去下载吧 @骑行者rider "
+							+ SystemConst.getValue("AppHref"));
+				} catch (Exception e) {
+					logger.error("sendWeiBoCommentQuartz sendSinaWeiBoCallBack error where weiboId=" + weiBoToBeSend.getText());
+				}
 				weiBoToBeSend.setSendStatus(WeiBoToBeSend.SendStatus.Sended.getValue());
 				if (weiBoToBeSendMapper.updateWeiBoToBeSend(weiBoToBeSend) > 0) {
 					logger.info("Succeed to send comment to " + accountId + "!");
