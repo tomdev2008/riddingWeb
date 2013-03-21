@@ -1037,12 +1037,12 @@ public class RiddingController extends AbstractBaseController {
 		long riddingId = ServletRequestUtils.getLongParameter(request, "riddingId", -1);
 		String mapPoints = ServletRequestUtils.getStringParameter(request, "mapPoints", null);
 		int distance = ServletRequestUtils.getIntParameter(request, "distance", -1);
-		RiddingUser riddingUser = riddingService.getRiddingUser(riddingId, userId);
-		if (riddingUser == null || StringUtils.isEmpty(mapPoints)) {
-			returnObject.put("code", returnCodeConstance.FAILED);
-			mv.addObject("returnObject", returnObject.toString());
-			return mv;
-		}
+//		RiddingUser riddingUser = riddingService.getRiddingUser(riddingId, userId);
+//		if (riddingUser == null || StringUtils.isEmpty(mapPoints)) {
+//			returnObject.put("code", returnCodeConstance.FAILED);
+//			mv.addObject("returnObject", returnObject.toString());
+//			return mv;
+//		}
 
 		RiddingGps riddingGps = new RiddingGps();
 		riddingGps.setRiddingId(riddingId);

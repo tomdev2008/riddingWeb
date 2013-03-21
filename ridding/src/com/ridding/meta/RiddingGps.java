@@ -1,11 +1,13 @@
 package com.ridding.meta;
 
+import java.io.Serializable;
+
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
  * @version CreateTime：2013-3-13 上午12:08:14
  * @see Class Description
  */
-public class RiddingGps {
+public class RiddingGps implements Serializable {
 
 	private long id;
 	private long userId;
