@@ -1287,9 +1287,25 @@ public class RiddingServiceImpl implements RiddingService {
 	 */
 	@Override
 	public RiddingGps addRiddingGps(RiddingGps riddingGps) {
-		if (riddingGpsMapper.addRiddingGps(riddingGps) > 0) {
-			return riddingGps;
+		RiddingGps dbRiddingGps = riddingGpsMapper.getRiddingGps(riddingGps.getUserId(), riddingGps.getRiddingId());
+		if (dbRiddingGps != null) {
+			dbRiddingGps.setMapPoint(riddingGps.getMapPoint());
+			riddingGpsMapper.updateRiddingGpsPoint(riddingGps.getRiddingId(), riddingGps.getUserId(), riddingGps.getMapPoint());
+		} else {
+			if (riddingGpsMapper.addRiddingGps(riddingGps) > 0) {
+				return riddingGps;
+			}
 		}
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.RiddingService#getRiddingGps(long, long)
+	 */
+	@Override
+	public RiddingGps getRiddingGps(long userId, long riddingId) {
+		return riddingGpsMapper.getRiddingGps(userId, riddingId);
 	}
 }

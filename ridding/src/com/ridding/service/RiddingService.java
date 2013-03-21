@@ -428,4 +428,14 @@ public interface RiddingService {
 	 * @return
 	 */
 	public RiddingGps addRiddingGps(RiddingGps riddingGps);
+
+	/**
+	 * 获得骑行gps
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param userId
+	 * @param riddingId
+	 * @return
+	 */
+	public RiddingGps getRiddingGps(long userId, long riddingId);
 }

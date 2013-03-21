@@ -1043,6 +1043,7 @@ public class RiddingController extends AbstractBaseController {
 			mv.addObject("returnObject", returnObject.toString());
 			return mv;
 		}
+
 		RiddingGps riddingGps = new RiddingGps();
 		riddingGps.setRiddingId(riddingId);
 		riddingGps.setUserId(userId);

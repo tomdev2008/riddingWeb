@@ -30,7 +30,7 @@ public interface RiddingGpsMapper {
 	 * @return
 	 */
 	public int updateRiddingGpsPoint(@Param(value = "riddingId") long riddingId, @Param(value = "userId") long userId,
-			@Param(value = "mapPoint") long mapPoint);
+			@Param(value = "mapPoint") String mapPoint);
 
 	/**
 	 * 获得骑行gps
