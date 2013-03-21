@@ -300,6 +300,13 @@ public class TransactionServiceImpl implements TransactionService {
 	 * (com.ridding.meta.SourceAccount, com.ridding.meta.Profile)
 	 */
 	public Profile insertSourceAccount(SourceAccount sourceAccount, Profile profile) throws TransactionException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("sourceType", sourceAccount.getSourceType());
+		map.put("accessUserId", sourceAccount.getAccessUserId());
+		SourceAccount account = sourceAccountMapper.getSourceAccountByAccessUserId(map);
+		if (account != null) {
+			return profileMapper.getProfile(account.getUserId());
+		}
 		if (sourceAccount == null) {
 			return null;
 		}
