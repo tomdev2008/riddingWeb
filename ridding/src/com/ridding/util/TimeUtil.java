@@ -97,6 +97,20 @@ public class TimeUtil {
 	}
 
 	/**
+	 * 得到时间format精确到分钟
+	 * 
+	 * @param time
+	 * @return
+	 */
+	public static String getFormatTimeInMinute(long time) {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+		Calendar ca = Calendar.getInstance();
+		ca.setTimeInMillis(time);
+		String timeStr = format.format(ca.getTime());
+		return timeStr;
+	}
+
+	/**
 	 * 得到小时区间
 	 * 
 	 * @return
