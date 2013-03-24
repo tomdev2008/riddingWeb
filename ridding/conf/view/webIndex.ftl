@@ -19,7 +19,7 @@ body{font-size:83%;}
          <a style="border: 1px solid rgb(17, 160, 238); display: block; border-radius: 7px 7px 7px 7px;" href="https://itunes.apple.com/cn/app/qi-xing-zhe/id557123754?ls=1&mt=8" class="appimg iosimg1 ios" title="骑行者"></a>
       </div>
       -->
-      <#if showSinaLogin?exist>
+      <#if showSinaLogin?exists>
       <div>
          <a href="/bind/sinabind/" style="background: none repeat scroll 0 0 #1C9FE5;border: 1px solid #11A0EE; border-radius: 7px;color: #FFFFFF;display: inline-block;font-size: 14px;height: 40px;line-height: 40px;opacity: 1;text-align: center;width: 200px;"><span>使用新浪微博登录</span></a>
       </div>
