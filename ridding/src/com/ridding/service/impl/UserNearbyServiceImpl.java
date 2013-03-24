@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 
 import net.sf.json.JSONArray;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -178,12 +179,16 @@ public class UserNearbyServiceImpl implements UserNearbyService {
 				continue;
 			}
 			String mapTaps = iMap.getMapTaps();
+			if (StringUtils.isEmpty(mapTaps)) {
+				continue;
+			}
 			RiddingNearby riddingNearby = new RiddingNearby();
+
 			try {
 				JSONArray jsonArray = JSONArray.fromObject(mapTaps);
 				String mapFirstTap = jsonArray.getString(0);
 				int dividePoint = 0, i = 0;
-				for (i = 0; i < mapFirstTap.length(); i++) {
+				for (i = 0; i < mapFirstTap.length(); i++) { 
 					if (mapFirstTap.charAt(i) == ',') {
 						dividePoint = i;
 					}

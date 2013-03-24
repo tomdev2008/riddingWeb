@@ -52,11 +52,17 @@ public class RiddingWebPubController extends AbstractBaseController {
 
 	public ModelAndView webIndex(HttpServletRequest request, HttpServletResponse response) {
 		String agent = request.getHeader("User-Agent");
-		if (agent.toLowerCase().contains("ipad") ||agent.toLowerCase().contains("iphone") || agent.toLowerCase().contains("android")) {
+		if (agent.toLowerCase().contains("ipad") || agent.toLowerCase().contains("iphone") || agent.toLowerCase().contains("android")) {
 			return new ModelAndView("webIndex_Iphone");
 
 		} else {
-			return new ModelAndView("webIndex");
+			ModelAndView mv = new ModelAndView("webIndex");
+			;
+			int showSinaLogin = ServletRequestUtils.getIntParameter(request, "showSina", -1);
+			if (showSinaLogin > 0) {
+				mv.addObject("showSinaLogin", 1);
+			}
+			return mv;
 		}
 	}
 
@@ -119,19 +125,20 @@ public class RiddingWebPubController extends AbstractBaseController {
 			return null;
 		}
 		ModelAndView mv = new ModelAndView("riddingList");
-		int count = riddingService.getRiddingCount(userId);
-		mv.addObject("riddingCount", count);
-//		List<ActivityRidding> riddingUserlList = riddingService.getRiddingListbyUserId(userId, 0, 0);
-//		mv.addObject("riddingUserList", riddingUserlList);
-//		long visitorUserId = -1L;
-//		try {
-//			MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
-//			visitorUserId = myUser.getUserId();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//
-//		this.setUD(mv, userId, visitorUserId);
+		// int count = riddingService.getRiddingCount(userId);
+		// mv.addObject("riddingCount", count);
+		// List<ActivityRidding> riddingUserlList =
+		// riddingService.getRiddingListbyUserId(userId, 0, 0);
+		// mv.addObject("riddingUserList", riddingUserlList);
+		long visitorUserId = -1L;
+		try {
+			MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+			visitorUserId = myUser.getUserId();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		this.setUD(mv, userId, visitorUserId);
 		return mv;
 	}
 
