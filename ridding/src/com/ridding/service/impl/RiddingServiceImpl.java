@@ -40,6 +40,7 @@ import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
 import com.ridding.meta.Public.PublicType;
 import com.ridding.meta.Ridding.RiddingStatus;
+import com.ridding.meta.Ridding.RiddingType;
 import com.ridding.meta.RiddingAction.RiddingActionResponse;
 import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.RiddingUser.RiddingUserRoleType;
@@ -341,8 +342,8 @@ public class RiddingServiceImpl implements RiddingService {
 			Ridding ridding = riddingMap.get(activityRidding.getRiddingUser().getRiddingId());
 			if (ridding != null) {
 				activityRidding.setRidding(ridding);
-				IMap iMap = iMapMap.get(ridding.getMapId());
-				if (iMap == null) {
+				IMap iMap;
+				if (ridding.getRiddingType() == RiddingType.ShortWay.getValue()) {
 					RiddingGps riddingGps = riddingGpsMapper.getRiddingGps(userId, ridding.getId());
 					if (riddingGps != null) {
 						iMap = new IMap();
@@ -350,7 +351,10 @@ public class RiddingServiceImpl implements RiddingService {
 						activityRidding.setiMap(iMap);
 					}
 				} else {
-					activityRidding.setiMap(iMap);
+					iMap = iMapMap.get(ridding.getMapId());
+					if (iMap != null) {
+						activityRidding.setiMap(iMap);
+					}
 				}
 
 				Profile profile = profileMap.get(ridding.getLeaderUserId());
@@ -1287,15 +1291,18 @@ public class RiddingServiceImpl implements RiddingService {
 	 */
 	@Override
 	public RiddingGps addRiddingGps(RiddingGps riddingGps) {
-//		RiddingGps dbRiddingGps = riddingGpsMapper.getRiddingGps(riddingGps.getUserId(), riddingGps.getRiddingId());
-//		if (dbRiddingGps != null) {
-//			dbRiddingGps.setMapPoint(riddingGps.getMapPoint());
-//			riddingGpsMapper.updateRiddingGpsPoint(riddingGps.getRiddingId(), riddingGps.getUserId(), riddingGps.getMapPoint());
-//		} else {
-			if (riddingGpsMapper.addRiddingGps(riddingGps) > 0) {
-				return riddingGps;
-			}
-	//	}
+		// RiddingGps dbRiddingGps =
+		// riddingGpsMapper.getRiddingGps(riddingGps.getUserId(),
+		// riddingGps.getRiddingId());
+		// if (dbRiddingGps != null) {
+		// dbRiddingGps.setMapPoint(riddingGps.getMapPoint());
+		// riddingGpsMapper.updateRiddingGpsPoint(riddingGps.getRiddingId(),
+		// riddingGps.getUserId(), riddingGps.getMapPoint());
+		// } else {
+		if (riddingGpsMapper.addRiddingGps(riddingGps) > 0) {
+			return riddingGps;
+		}
+		// }
 		return null;
 	}
 
