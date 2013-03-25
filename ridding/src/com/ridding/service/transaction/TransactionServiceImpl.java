@@ -204,7 +204,6 @@ public class TransactionServiceImpl implements TransactionService {
 		long nowTime = new Date().getTime();
 		ridding.setCreateTime(nowTime);
 		ridding.setLastUpdateTime(nowTime);
-		ridding.setRiddingType(0);
 		ridding.setUserCount(1);
 		if (riddingMapper.addRidding(ridding) < 0) {
 			throw new TransactionException("insertANewRidding iMapMapper error");
