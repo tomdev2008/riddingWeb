@@ -124,21 +124,21 @@ public class RiddingWebPubController extends AbstractBaseController {
 			response.sendRedirect(SystemConst.getValue("HOST") + "/");
 			return null;
 		}
-		ModelAndView mv = new ModelAndView("riddingList");
+		ModelAndView mv = new ModelAndView("backendIndex");
 		// int count = riddingService.getRiddingCount(userId);
 		// mv.addObject("riddingCount", count);
 		// List<ActivityRidding> riddingUserlList =
 		// riddingService.getRiddingListbyUserId(userId, 0, 0);
 		// mv.addObject("riddingUserList", riddingUserlList);
-		long visitorUserId = -1L;
-		try {
-			MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
-			visitorUserId = myUser.getUserId();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		long visitorUserId = -1L;
+//		try {
+//			MyUser myUser = (MyUser) ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+//			visitorUserId = myUser.getUserId();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 
-		this.setUD(mv, userId, visitorUserId);
+//		this.setUD(mv, userId, visitorUserId);
 		return mv;
 	}
 

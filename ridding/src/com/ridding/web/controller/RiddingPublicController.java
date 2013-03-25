@@ -100,13 +100,13 @@ public class RiddingPublicController extends AbstractBaseController {
 				// mv.addObject("returnObject", returnObject.toString());
 				// return mv;
 			}
-		} 
+		}
 		int count = riddingService.getRiddingCount(userId);
 		JSONObject dataObject = HttpServletUtil2.parseGetUserProfile(profile, sourceAccount, count);
 		returnObject.put("data", dataObject);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
-		logger.debug(returnObject);
+		logger.info(returnObject);
 		return mv;
 	}
 
