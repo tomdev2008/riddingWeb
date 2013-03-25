@@ -109,7 +109,6 @@ public class HttpServletUtil2 {
 				mapObject.put("beginlocation", activityRidding.getiMap().getBeginLocation());
 				mapObject.put("endlocation", activityRidding.getiMap().getEndLocation());
 				mapObject.put("maptaps", activityRidding.getiMap().getMapTaps());
-
 				riddingObject.put("map", mapObject);
 			}
 
@@ -369,7 +368,7 @@ public class HttpServletUtil2 {
 		riddingObject.put("usecount", ridding.getUseCount());
 		riddingObject.put("likecount", ridding.getLikeCount());
 		riddingObject.put("issyncsina", ridding.getIsSyncSina());
-		
+
 		JSONObject leaderUserObject = new JSONObject();
 		leaderUserObject.put("userid", ridding.getLeaderUserId());
 		leaderUserObject.put("savatorurl", ridding.getLeaderProfile().getsAvatorUrl());

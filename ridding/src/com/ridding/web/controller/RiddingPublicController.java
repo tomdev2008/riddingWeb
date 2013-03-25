@@ -28,8 +28,10 @@ import com.ridding.meta.Profile;
 import com.ridding.meta.Ridding;
 import com.ridding.meta.RiddingAction;
 import com.ridding.meta.RiddingComment;
+import com.ridding.meta.RiddingGps;
 import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.SourceAccount;
+import com.ridding.meta.Ridding.RiddingType;
 import com.ridding.meta.RiddingAction.RiddingActions;
 import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
@@ -151,6 +153,7 @@ public class RiddingPublicController extends AbstractBaseController {
 	public ModelAndView getRidingMapOrLocation(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		long ridingId = ServletRequestUtils.getLongParameter(request, "ridingId", -1L);
+		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
 		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
 		Ridding ridding = riddingService.getRidding(ridingId);
@@ -158,7 +161,15 @@ public class RiddingPublicController extends AbstractBaseController {
 			returnObject.put("code", returnCodeConstance.NOTRIDINGUSER);
 			return mv;
 		}
-		IMap iMap = mapService.getMapByRiddingId(ridingId);
+		IMap iMap;
+		if (ridding.getRiddingType() == RiddingType.Farway.getValue()) {
+			iMap = mapService.getMapByRiddingId(ridingId);
+		} else {
+			RiddingGps riddingGps = riddingService.getRiddingGps(userId, ridingId);
+			iMap = new IMap();
+			iMap.setMapPoint(riddingGps.getMapPoint());
+		}
+
 		JSONObject dataObject = HttpServletUtil2.parseGetRidingMapOrLocation(iMap);
 		returnObject.put("data", dataObject.toString());
 		returnObject.put("code", returnCodeConstance.SUCCESS);
