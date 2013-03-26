@@ -160,14 +160,18 @@ public class BackendController extends AbstractBaseController {
 		if (userId > 0) {
 			riddings = riddingService.getRiddingsbyUserId(userId);
 		} else if (orderByLike > 0) {
+			mv.addObject("type", "orderByLike");
 			riddings = riddingService.getRiddingsbyLike(limit, offset);
 
 		} else if (orderByComment > 0) {
+			mv.addObject("type", "orderByComment");
 			riddings = riddingService.getRiddingsbyComment(limit, offset);
 
 		} else if (orderByUse > 0) {
+			mv.addObject("type", "orderByUse");
 			riddings = riddingService.getRiddingsbyUse(limit, offset);
 		} else if (orderByPicture > 0) {
+			mv.addObject("type", "orderByPicture");
 			riddings = riddingService.getRiddingsbyPicture(limit, offset);
 		} else {
 			riddings = riddingService.getRiddingListByLastUpdateTime(requestTime, limit, isLarge, Ridding.notPublicOrRecom);
@@ -185,6 +189,7 @@ public class BackendController extends AbstractBaseController {
 				ridding.setRiddingPictureList(riddingPictures);
 			}
 		}
+		mv.addObject("offset", limit+offset);
 		mv.addObject("riddingList", riddings);
 		mv.addObject("topUpdateTime", riddings.get(0).getLastUpdateTime());
 		mv.addObject("bottomUpdateTime", riddings.get(riddings.size() - 1).getLastUpdateTime());
