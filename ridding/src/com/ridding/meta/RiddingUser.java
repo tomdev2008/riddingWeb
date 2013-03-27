@@ -92,6 +92,10 @@ public class RiddingUser implements Serializable {
 	 * 
 	 */
 	private long gpsMapId;
+	/**
+	 * gps地图
+	 */
+	private RiddingGps riddingGps;
 
 	/**
 	 * 否
@@ -398,6 +402,14 @@ public class RiddingUser implements Serializable {
 
 	public void setGpsMapId(long gpsMapId) {
 		this.gpsMapId = gpsMapId;
+	}
+
+	public RiddingGps getRiddingGps() {
+		return riddingGps;
+	}
+
+	public void setRiddingGps(RiddingGps riddingGps) {
+		this.riddingGps = riddingGps;
 	}
 
 }

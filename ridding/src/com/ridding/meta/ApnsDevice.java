@@ -34,6 +34,8 @@ public class ApnsDevice implements Device {
 	 * 最新的版本号
 	 */
 	private String version;
+
+	private int isPro;
 	/**
 	 * 有效的
 	 */
@@ -120,6 +122,14 @@ public class ApnsDevice implements Device {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public int getIsPro() {
+		return isPro;
+	}
+
+	public void setIsPro(int isPro) {
+		this.isPro = isPro;
 	}
 
 }

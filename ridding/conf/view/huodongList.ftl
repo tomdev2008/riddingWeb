@@ -29,7 +29,7 @@ body{font-size:83%;}
 </div>
 
 <div>
-   <h3><#if topUpdateTime == -1><#else><a href="/Ridding/backend.do?action=huodongList&requestTime=${topUpdateTime!"-1"}&nextOrBefore=1&nextOrBefore=0&${type!"haha"}=1&offset=${offset!0}">上一页</a></#if></h3>
+   <h3><#if topUpdateTime == -1><#else><a href="/Ridding/backend.do?action=huodongList&requestTime=${topUpdateTime!"-1"}&nextOrBefore=1&nextOrBefore=0&${type!"haha"}=1">上一页</a></#if></h3>
    <h3><a href="/Ridding/backend.do?action=huodongList&requestTime=${bottomUpdateTime!"-1"}&nextOrBefore=0&${type!"haha"}=1&offset=${offset!0}">下一页</a></h3>
 </div>
 

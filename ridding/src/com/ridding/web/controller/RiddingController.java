@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,6 +39,7 @@ import com.ridding.meta.SourceAccount;
 import com.ridding.meta.UserPay;
 import com.ridding.meta.RiddingAction.RiddingActionResponse;
 import com.ridding.meta.RiddingAction.RiddingActions;
+import com.ridding.meta.UserPay.UserPayType;
 import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileSourceFeed;
 import com.ridding.meta.vo.UserRelationVO;
@@ -48,6 +50,7 @@ import com.ridding.service.MapService;
 import com.ridding.service.ProfileService;
 import com.ridding.service.RiddingCommentService;
 import com.ridding.service.RiddingService;
+import com.ridding.service.SinaWeiBoService;
 import com.ridding.service.UserNearbyService;
 import com.ridding.service.UserPayService;
 import com.ridding.service.UserRelationService;
@@ -93,6 +96,9 @@ public class RiddingController extends AbstractBaseController {
 
 	@Resource
 	private UserPayService userPayService;
+
+	@Resource
+	private SinaWeiBoService sinaWeiBoService;
 
 	/**
 	 * 得到骑行用户信息，返回骑行数据
@@ -488,15 +494,16 @@ public class RiddingController extends AbstractBaseController {
 		long userId = ServletRequestUtils.getLongParameter(request, "userId", -1L);
 		String token = ServletRequestUtils.getStringParameter(request, "token", null);
 		String version = ServletRequestUtils.getStringParameter(request, "version", null);
+		int isPro = ServletRequestUtils.getIntParameter(request, "ispro", 0);
 		ApnsDevice apnsDevice = new ApnsDevice();
 		apnsDevice.setUserId(userId);
 		apnsDevice.setToken(token);
 		apnsDevice.setVersion(version);
+		apnsDevice.setIsPro(isPro);
 		long time = new Date().getTime();
 		apnsDevice.setCreateTime(time);
 		apnsDevice.setLastUpdateTime(time);
 		apnsDevice.setStatus(ApnsDevice.VALID);
-
 		if (iosApnsService.addIosApns(apnsDevice)) {
 			returnObject.put("code", returnCodeConstance.SUCCESS);
 		} else {
@@ -1023,6 +1030,11 @@ public class RiddingController extends AbstractBaseController {
 		userPay.setStatus(UserPay.status_trying);
 		userPay = userPayService.addUserPay(userPay);
 		JSONObject jsonObject = HttpServletUtil2.parseShowUserPay(userPay);
+		if (type == UserPayType.Weather.getValue()) {
+			SourceAccount sourceAccount = profileService.getSourceAccountByUserIdsSourceType(userId, SourceType.SINAWEIBO.getValue());
+			sinaWeiBoService.sendSinaWeiBo("我正在使用 骑行者的天气服务，非常好用，推荐给大家。快速了解骑行路线天气状况，动态调整出行。@骑行者rider 下载地址【 http://t.cn/zj79l1z 】", sourceAccount
+					.getAccessToken(), "local/weibo/weather_20130327.jpg");
+		}
 		returnObject.put("data", jsonObject);
 		returnObject.put("code", returnCodeConstance.SUCCESS);
 		mv.addObject("returnObject", returnObject.toString());
@@ -1050,7 +1062,7 @@ public class RiddingController extends AbstractBaseController {
 		riddingGps.setMapPoint(mapPoints);
 		riddingGps.setDistance(distance);
 		riddingGps.setCreateTime(new Date().getTime());
-		
+
 		riddingGps = riddingService.addRiddingGps(riddingGps);
 		if (riddingGps == null) {
 			returnObject.put("code", returnCodeConstance.FAILED);

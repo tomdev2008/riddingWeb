@@ -25,9 +25,8 @@ public interface SinaWeiBoService {
 	 * @param count
 	 * @param page
 	 */
-	public void getAtMeSinaWeiBo(long userId, String accessToken,
-			long since_id, int filter_by_author, int filter_by_source,
-			int filter_by_type, int count, int page);
+	public void getAtMeSinaWeiBo(long userId, String accessToken, long since_id, int filter_by_author, int filter_by_source, int filter_by_type,
+			int count, int page);
 
 	/**
 	 * 添加地图成功后回复评论
@@ -65,6 +64,17 @@ public interface SinaWeiBoService {
 	 * 发送新浪微博定时任务
 	 */
 	public void sendWeiBoQuartz();
+
+	/**
+	 * 发送新浪微博，带图片
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param text
+	 * @param accessToken
+	 * @param imageUrl
+	 * @return
+	 */
+	public String sendSinaWeiBo(String text, String accessToken, String imageUrl);
 
 	/**
 	 * 将转发地图微博生成地图

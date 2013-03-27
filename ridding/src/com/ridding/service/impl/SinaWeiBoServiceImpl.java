@@ -286,8 +286,27 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 		if (weiBo == null) {
 			return;
 		}
+		String response = this.sendSinaWeiBo(weiBo.getText(), sourceAccount.getAccessToken(), SystemConst.returnPhotoUrl(weiBo.getPhotoUrl()));
+		if (!StringUtils.isEmpty(response)) {
+			JSONObject jsonObject = JSONObject.fromObject(response);
+			weiBo.setStatus(WeiBo.Dealed);
+			map.put("status", WeiBo.Dealed);
+			map.put("id", weiBo.getId());
+			map.put("weiboId", jsonObject.get("id"));
+			weiBoMapper.updateWeiBoStatus(map);
+		}
+		logger.info("sendWeiBoQuartz end!");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ridding.service.SinaWeiBoService#sendSinaWeiBo(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	public String sendSinaWeiBo(String text, String accessToken, String imageUrl) {
 		StringBuilder sb = new StringBuilder("https://api.weibo.com/2/statuses/upload_url_text.json");
-		sb.append("?access_token=" + sourceAccount.getAccessToken());
+		sb.append("?access_token=" + accessToken);
 		sb.append("&source=" + SystemConst.getValue("WEBAPPKEY"));
 		int result = -1;
 		String response = null;
@@ -296,28 +315,22 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 			PostMethod post = new PostMethod();
 			post.setURI(new URI(sb.toString(), true));
 			post.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "utf-8");
-			post.setParameter("status", weiBo.getText());
-			post.setParameter("access_token", sourceAccount.getAccessToken());
-			post.setParameter("url", SystemConst.returnPhotoUrl(weiBo.getPhotoUrl()));
+			post.setParameter("status", text);
+			post.setParameter("access_token", accessToken);
+			post.setParameter("url", imageUrl);
 			result = httpclient.executeMethod(post);
 			response = post.getResponseBodyAsString();
-			logger.info("sb=" + sb.toString() + " status=" + weiBo.getText() + " access_Token=" + sourceAccount.getAccessToken() + " url="
-					+ SystemConst.getValue("IMAGEHOST") + weiBo.getPhotoUrl());
+			logger.info("sb=" + sb.toString() + " status=" + text + " access_Token=" + accessToken + " url=" + SystemConst.getValue("IMAGEHOST")
+					+ imageUrl);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return;
+			return null;
 		}
-		if (result == 200 && !StringUtils.isEmpty(response)) {
-			JSONObject jsonObject = JSONObject.fromObject(response);
-			weiBo.setStatus(WeiBo.Dealed);
-			map.put("status", WeiBo.Dealed);
-			map.put("id", weiBo.getId());
-			map.put("weiboId", jsonObject.get("id"));
-			weiBoMapper.updateWeiBoStatus(map);
-		} else {
+		if (result == 200) {
 			logger.error("sendWeiBoQuartz return code error and code=" + result + " and result=" + response);
+			return null;
 		}
-		logger.info("sendWeiBoQuartz end!");
+		return response;
 	}
 
 	/*

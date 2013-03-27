@@ -19,6 +19,7 @@ import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
 import com.ridding.meta.UserPay;
+import com.ridding.meta.Ridding.RiddingType;
 import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.meta.vo.UserRelationVO;
@@ -97,10 +98,22 @@ public class HttpServletUtil2 {
 				riddingObject.put("issyncsina", activityRidding.getRidding().getIsSyncSina());
 				riddingObject.put("riddingtype", activityRidding.getRidding().getRiddingType());
 			}
+			// 如果是短途旅行
+			if (activityRidding.getRiddingUser() != null) {
+				JSONObject riddingUserObject = new JSONObject();
+				//取列表不需要返回
+//				if (activityRidding.getRidding().getRiddingType() == RiddingType.ShortWay.getValue()) {
+//					if(activityRidding.getRiddingUser().getRiddingGps()!=null){
+//						JSONObject userGpsObject = new JSONObject();
+//						userGpsObject.put("mappoint", activityRidding.getRiddingUser().getRiddingGps().getMapPoint());
+//						riddingUserObject.put("gpsmap", userGpsObject);
+//					}
+//				}
+				riddingUserObject.put("userrole", activityRidding.getRiddingUser().getUserRole());
+				riddingObject.put("riddinguser", riddingUserObject);
+			}
 			if (activityRidding.getRiddingUser() != null) {
 				riddingObject.put("userrole", activityRidding.getRiddingUser().getUserRole());
-				riddingObject.put("issyncwifi", activityRidding.getRiddingUser().getIsSyncWifi());
-				riddingObject.put("isgps", activityRidding.getRiddingUser().getIsGps());
 			}
 
 			if (activityRidding.getiMap() != null) {
@@ -109,6 +122,7 @@ public class HttpServletUtil2 {
 				mapObject.put("beginlocation", activityRidding.getiMap().getBeginLocation());
 				mapObject.put("endlocation", activityRidding.getiMap().getEndLocation());
 				mapObject.put("maptaps", activityRidding.getiMap().getMapTaps());
+				//mapObject.put("mappoint", activityRidding.getiMap().getMapPoint());
 				riddingObject.put("map", mapObject);
 			}
 

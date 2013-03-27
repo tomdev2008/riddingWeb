@@ -226,6 +226,7 @@ CreateTime bigint(20) NOT NULL default '0' COMMENT '创建时间',
 LastUpdateTime bigint(20) NOT NULL default '0' COMMENT '上次更新时间',
 Status tinyint(4) NOT NULL DEFAULT '0' COMMENT '0不在使用中,1使用中',
 Version varchar(63) NOT NULL DEFAULT '' COMMENT '版本号',
+isPro tinyint(4) NOT NULL DEFAULT '0' COMMENT '0普通版,1使专业版',
 PRIMARY KEY  (`userId`)
 )DEFAULT CHARSET=UTF8 COMMENT  'Ios Apns记录表';
 

@@ -305,12 +305,22 @@ public class RiddingServiceImpl implements RiddingService {
 		Map<Long, IMap> iMapMap = HashMapMaker.listToMap(iMapList, "getId", IMap.class);
 		Map<Long, Profile> profileMap = HashMapMaker.listToMap(leaderProfileList, "getUserId", Profile.class);
 		for (ActivityRidding activityRidding : activityList) {
+			Ridding ridding = new Ridding();
 			IMap iMap = iMapMap.get(activityRidding.getRidding().getMapId());
 			if (iMap != null) {
-				if (StringUtils.isEmpty(iMap.getAvatorPicUrl())) {
-					iMap.setAvatorPicUrl(iMap.getStaticImgSrc());
-				}
 				activityRidding.setiMap(iMap);
+			}
+			if (activityRidding.getRidding().getRiddingType() == RiddingType.ShortWay.getValue()) {
+//				Map<String, Object> hashMap = new HashMap<String, Object>();
+//				hashMap.put("userId", ridding.getLeaderUserId());
+//				hashMap.put("riddingId", ridding.getId());
+//				hashMap.put("userRole", RiddingUserRoleType.User.intValue());
+//				RiddingUser riddingUser = riddingUserMapper.getRiddingUser(hashMap);
+//				if (riddingUser != null) {
+//					RiddingGps riddingGps = riddingGpsMapper.getRiddingGps(riddingUser.getUserId(), riddingUser.getRiddingId());
+//					riddingUser.setRiddingGps(riddingGps);
+//					activityRidding.setRiddingUser(riddingUser);
+//				}
 			}
 			Profile profile = profileMap.get(activityRidding.getRidding().getLeaderUserId());
 			if (profile != null) {
@@ -342,16 +352,14 @@ public class RiddingServiceImpl implements RiddingService {
 			Ridding ridding = riddingMap.get(activityRidding.getRiddingUser().getRiddingId());
 			if (ridding != null) {
 				activityRidding.setRidding(ridding);
-				IMap iMap;
-				if (ridding.getRiddingType() == RiddingType.ShortWay.getValue()) {
-					RiddingGps riddingGps = riddingGpsMapper.getRiddingGps(userId, ridding.getId());
-					if (riddingGps != null) {
-						iMap = new IMap();
-						iMap.setMapPoint(riddingGps.getMapPoint());
-						activityRidding.setiMap(iMap);
-					}
+				if (ridding.getRiddingType() == RiddingType.ShortWay.getValue() && activityRidding.getRiddingUser() != null) {
+					//取列表不需要返回
+//					RiddingGps riddingGps = riddingGpsMapper.getRiddingGps(userId, ridding.getId());
+//					if (riddingGps != null) {
+//						activityRidding.getRiddingUser().setRiddingGps(riddingGps);
+//					}
 				} else {
-					iMap = iMapMap.get(ridding.getMapId());
+					IMap iMap = iMapMap.get(ridding.getMapId());
 					if (iMap != null) {
 						activityRidding.setiMap(iMap);
 					}
