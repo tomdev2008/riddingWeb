@@ -334,8 +334,7 @@ public class MapServiceImpl implements MapService {
 		Map<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("latitude", MapFix.getLatPrefix(latitude));
 		hashMap.put("longtitude", MapFix.getLngPrefix(longtitude));
-		logger.info(latitude + "   " + MapFix.getLatPrefix(latitude));
-		logger.info(longtitude + "   " + MapFix.getLngPrefix(longtitude));
+
 		MapFix mapFix = mapFixMapper.getMapFixByLatLng(hashMap);
 		if (mapFix != null) {
 			mapFix.setLatitude(latitude);
@@ -343,6 +342,8 @@ public class MapServiceImpl implements MapService {
 			mapFix.setRealLat(latitude);
 			mapFix.setRealLng(longtitude);
 		}
+		logger.info(mapFix.getRealLatitude() + "   " + MapFix.getLatPrefix(latitude));
+		logger.info(mapFix.getRealLongitude() + "   " + MapFix.getLngPrefix(longtitude));
 		return mapFix;
 	}
 
