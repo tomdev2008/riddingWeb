@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -185,18 +186,38 @@ public class RiddingPublicController extends AbstractBaseController {
 	 */
 	public ModelAndView getFixedCoordinate(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
-		JSONObject returnObject = new JSONObject();
 		ModelAndView mv = new ModelAndView("return");
-		double latitude = ServletRequestUtils.getDoubleParameter(request, "latitude", -1);
-		double longtitude = ServletRequestUtils.getDoubleParameter(request, "longtitude", -1);
-		MapFix mapFix = mapService.getMapFix(latitude, longtitude);
-		returnObject.put("code", returnCodeConstance.SUCCESS);
-		returnObject.put("realLatitude", mapFix.getLatitude());
-		returnObject.put("realLongtitude", mapFix.getLongtitude());
-		JSONObject dataObject = HttpServletUtil2.parseGetFixedCoordinate(mapFix, latitude, longtitude);
-		returnObject.put("data", dataObject.toString());
-		mv.addObject("returnObject", returnObject.toString());
-		logger.debug(returnObject);
+		double latitude = ServletRequestUtils.getDoubleParameter(request, "latitude", -999999);
+		double longtitude = ServletRequestUtils.getDoubleParameter(request, "longtitude", -999999);
+		JSONObject returnObject = new JSONObject();
+		if (latitude != -999999 && longtitude != -999999) {
+			MapFix mapFix = mapService.getMapFix(latitude, longtitude);
+			returnObject.put("code", returnCodeConstance.SUCCESS);
+			JSONObject dataObject = HttpServletUtil2.parseGetFixedCoordinate(mapFix, latitude, longtitude);
+			returnObject.put("data", dataObject.toString());
+			mv.addObject("returnObject", returnObject.toString());
+		} else {
+			String jsonString = HttpServletUtil.parseRequestAsString(request, "utf-8");
+			try {
+
+				List<MapFix> list = HttpServletUtil.parseMapFixs(jsonString);
+				List<MapFix> returnList = new ArrayList<MapFix>(list.size());
+				for (MapFix mapFix : list) {
+					MapFix returnMapFix = mapService.getMapFix(mapFix.getLatitude(), mapFix.getLongtitude());
+					returnList.add(returnMapFix);
+				}
+				JSONArray dataArray = HttpServletUtil2.parseMapFixList(returnList);
+				returnObject.put("data", dataArray);
+				returnObject.put("code", returnCodeConstance.SUCCESS);
+				mv.addObject("returnObject", returnObject.toString());
+			} catch (Exception e) {
+				logger.error(jsonString);
+				returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
+				e.printStackTrace();
+				return mv;
+			}
+		}
+
 		return mv;
 	}
 

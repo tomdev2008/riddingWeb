@@ -19,7 +19,6 @@ import com.ridding.meta.RiddingPicture;
 import com.ridding.meta.RiddingUser;
 import com.ridding.meta.SourceAccount;
 import com.ridding.meta.UserPay;
-import com.ridding.meta.Ridding.RiddingType;
 import com.ridding.meta.vo.ActivityRidding;
 import com.ridding.meta.vo.ProfileVO;
 import com.ridding.meta.vo.UserRelationVO;
@@ -101,14 +100,16 @@ public class HttpServletUtil2 {
 			// 如果是短途旅行
 			if (activityRidding.getRiddingUser() != null) {
 				JSONObject riddingUserObject = new JSONObject();
-				//取列表不需要返回
-//				if (activityRidding.getRidding().getRiddingType() == RiddingType.ShortWay.getValue()) {
-//					if(activityRidding.getRiddingUser().getRiddingGps()!=null){
-//						JSONObject userGpsObject = new JSONObject();
-//						userGpsObject.put("mappoint", activityRidding.getRiddingUser().getRiddingGps().getMapPoint());
-//						riddingUserObject.put("gpsmap", userGpsObject);
-//					}
-//				}
+				// 取列表不需要返回
+				// if (activityRidding.getRidding().getRiddingType() ==
+				// RiddingType.ShortWay.getValue()) {
+				// if(activityRidding.getRiddingUser().getRiddingGps()!=null){
+				// JSONObject userGpsObject = new JSONObject();
+				// userGpsObject.put("mappoint",
+				// activityRidding.getRiddingUser().getRiddingGps().getMapPoint());
+				// riddingUserObject.put("gpsmap", userGpsObject);
+				// }
+				// }
 				riddingUserObject.put("userrole", activityRidding.getRiddingUser().getUserRole());
 				riddingObject.put("riddinguser", riddingUserObject);
 			}
@@ -122,7 +123,8 @@ public class HttpServletUtil2 {
 				mapObject.put("beginlocation", activityRidding.getiMap().getBeginLocation());
 				mapObject.put("endlocation", activityRidding.getiMap().getEndLocation());
 				mapObject.put("maptaps", activityRidding.getiMap().getMapTaps());
-				//mapObject.put("mappoint", activityRidding.getiMap().getMapPoint());
+				// mapObject.put("mappoint",
+				// activityRidding.getiMap().getMapPoint());
 				riddingObject.put("map", mapObject);
 			}
 
@@ -594,5 +596,23 @@ public class HttpServletUtil2 {
 		JSONObject returnObject = new JSONObject();
 		HttpServletUtil2.returnDataObject(userPayObject, "userpay", returnObject);
 		return returnObject;
+	}
+
+	public static JSONArray parseMapFixList(List<MapFix> mapFixList) {
+		if (ObjectUtil.isEmptyList(mapFixList)) {
+			return new JSONArray();
+		}
+		JSONArray jsonArray = new JSONArray();
+		for (MapFix mapfix : mapFixList) {
+			JSONObject mapFixObject = new JSONObject();
+			mapFixObject.put("latitude", mapfix.getLatitude());
+			mapFixObject.put("longtitude", mapfix.getLongtitude());
+			mapFixObject.put("reallatitude", mapfix.getToLatitude());
+			mapFixObject.put("reallongtitude", mapfix.getToLongtitude());
+			JSONObject returnObject = new JSONObject();
+			HttpServletUtil2.returnDataObject(mapFixObject, "mapfix", returnObject);
+			jsonArray.add(returnObject);
+		}
+		return jsonArray;
 	}
 }

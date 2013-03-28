@@ -9,10 +9,19 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import sun.net.www.content.text.plain;
+
 import com.ridding.mapper.PublicMapper;
+import com.ridding.mapper.RiddingMapper;
+import com.ridding.mapper.RiddingUserMapper;
 import com.ridding.meta.Public;
+import com.ridding.meta.Ridding;
+import com.ridding.meta.RiddingUser;
 import com.ridding.meta.Public.PublicType;
+import com.ridding.meta.RiddingUser.RiddingUserRoleType;
 import com.ridding.service.PublicService;
+import com.ridding.service.RiddingService;
+import com.ridding.util.ListUtils;
 
 /**
  * @author zhengyisheng E-mail:zhengyisheng@gmail.com
@@ -22,6 +31,12 @@ import com.ridding.service.PublicService;
 public class PublicServiceImpl implements PublicService {
 	@Resource
 	private PublicMapper publicMapper;
+	@Resource
+	private IOSApnsServiceImpl iosApnsServiceImpl;
+	@Resource
+	private RiddingUserMapper riddingUserMapper;
+	@Resource
+	private RiddingMapper riddingMapper;
 
 	/*
 	 * (non-Javadoc)
@@ -48,7 +63,34 @@ public class PublicServiceImpl implements PublicService {
 	 */
 	@Override
 	public boolean addPublic(Public aPublic) {
+		this.sendPublicApns(aPublic);
 		return publicMapper.addPublic(aPublic) > 0;
+	}
+
+	/**
+	 * 发送public推荐消息
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param aPublic
+	 */
+	private void sendPublicApns(Public aPublic) {
+		if (aPublic.getType() == PublicType.PublicRecom.getValue()) {
+			Map<String, Object> hashMap = new HashMap<String, Object>();
+			hashMap.put("riddingId", aPublic.getRiddingId());
+			hashMap.put("userRole", RiddingUserRoleType.User.intValue());
+			hashMap.put("createTime", new Date().getTime());
+			hashMap.put("limit", -1);
+			Ridding ridding = riddingMapper.getRidding(aPublic.getRiddingId());
+			if (ridding == null) {
+				return;
+			}
+			List<RiddingUser> riddingUsers = riddingUserMapper.getRiddingUserListByRiddingId(hashMap);
+			if (!ListUtils.isEmptyList(riddingUsers)) {
+				for (RiddingUser riddingUser : riddingUsers) {
+					iosApnsServiceImpl.sendApns("您的骑行活动:" + ridding.getName() + "已经被推荐到骑行者首页啦~快去看看吧", riddingUser.getUserId(), "");
+				}
+			}
+		}
 	}
 
 	/*

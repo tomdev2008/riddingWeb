@@ -178,6 +178,7 @@ public class DwrBackendBean {
 		public1.genJson();
 		public1.setWeight(weight);
 		public1.setType(PublicType.PublicRecom.getValue());
+		
 		return publicService.addPublic(public1);
 	}
 

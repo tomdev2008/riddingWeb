@@ -336,6 +336,8 @@ public class MapServiceImpl implements MapService {
 		hashMap.put("longtitude", MapFix.getLngPrefix(longtitude));
 		MapFix mapFix = mapFixMapper.getMapFixByLatLng(hashMap);
 		if (mapFix != null) {
+			mapFix.setLatitude(latitude);
+			mapFix.setLongtitude(longtitude);
 			mapFix.setRealLat(latitude);
 			mapFix.setRealLng(longtitude);
 		}

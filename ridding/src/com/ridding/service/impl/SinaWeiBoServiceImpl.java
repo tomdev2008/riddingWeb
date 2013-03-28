@@ -326,7 +326,7 @@ public class SinaWeiBoServiceImpl implements SinaWeiBoService {
 			e.printStackTrace();
 			return null;
 		}
-		if (result == 200) {
+		if (result != 200) {
 			logger.error("sendWeiBoQuartz return code error and code=" + result + " and result=" + response);
 			return null;
 		}

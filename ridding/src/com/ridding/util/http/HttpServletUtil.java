@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import com.ridding.exception.RequestBodyIsNullException;
 import com.ridding.meta.Account;
 import com.ridding.meta.IMap;
+import com.ridding.meta.MapFix;
 import com.ridding.meta.Profile;
 import com.ridding.meta.Public;
 import com.ridding.meta.Ridding;
@@ -518,5 +519,30 @@ public final class HttpServletUtil {
 		userRelation.setToUserId(jsonObject.getLong("touserid"));
 		userRelation.setStatus(jsonObject.getInt("status"));
 		return userRelation;
+	}
+
+	/**
+	 * 
+	 * @auther zyslovely@gmail.com
+	 * @param jsonString
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<MapFix> parseMapFixs(String jsonString) throws Exception {
+		JSONObject jsonObject = JSONObject.fromObject(jsonString);
+		if (jsonObject == null) {
+			throw new RequestBodyIsNullException();
+		}
+
+		JSONArray array = jsonObject.getJSONArray("mapfixs");
+		List<MapFix> mapFixs = new ArrayList<MapFix>(array.size());
+		for (Object object : array.toArray()) {
+			JSONObject jObject = JSONObject.fromObject(object);
+			MapFix mapFix = new MapFix();
+			mapFix.setLatitude(jObject.getDouble("latitude"));
+			mapFix.setLongtitude(jObject.getDouble("longitude"));
+			mapFixs.add(mapFix);
+		}
+		return mapFixs;
 	}
 }
