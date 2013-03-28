@@ -32,6 +32,10 @@ public class MapFix {
 	 */
 	private double toLongtitude;
 
+	private double realLatitude;
+
+	private double realLongitude;
+
 	public long getId() {
 		return id;
 	}
@@ -107,10 +111,27 @@ public class MapFix {
 	}
 
 	public void setRealLat(double latitude) {
-		this.latitude = (float) (latitude + this.toLatitude);
+		this.realLatitude = (float) (latitude + this.toLatitude);
 	}
 
 	public void setRealLng(double longtitude) {
-		this.longtitude = (float) (longtitude + this.toLongtitude);
+		this.realLongitude = (float) (longtitude + this.toLongtitude);
 	}
+
+	public double getRealLatitude() {
+		return realLatitude;
+	}
+
+	public void setRealLatitude(double realLatitude) {
+		this.realLatitude = realLatitude;
+	}
+
+	public double getRealLongitude() {
+		return realLongitude;
+	}
+
+	public void setRealLongitude(double realLongitude) {
+		this.realLongitude = realLongitude;
+	}
+
 }

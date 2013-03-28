@@ -181,8 +181,8 @@ public class HttpServletUtil2 {
 		JSONObject mapFixObject = new JSONObject();
 		mapFixObject.put("latitude", latitude);
 		mapFixObject.put("longtitude", longtitude);
-		mapFixObject.put("reallatitude", mapFix.getLatitude());
-		mapFixObject.put("reallongtitude", mapFix.getLongtitude());
+		mapFixObject.put("reallatitude", mapFix.getRealLatitude());
+		mapFixObject.put("reallongtitude", mapFix.getRealLongitude());
 		JSONObject returnObject = new JSONObject();
 		HttpServletUtil2.returnDataObject(mapFixObject, "mapfix", returnObject);
 		return returnObject;
@@ -607,8 +607,8 @@ public class HttpServletUtil2 {
 			JSONObject mapFixObject = new JSONObject();
 			mapFixObject.put("latitude", mapfix.getLatitude());
 			mapFixObject.put("longtitude", mapfix.getLongtitude());
-			mapFixObject.put("reallatitude", mapfix.getToLatitude());
-			mapFixObject.put("reallongtitude", mapfix.getToLongtitude());
+			mapFixObject.put("reallatitude", mapfix.getRealLatitude());
+			mapFixObject.put("reallongtitude", mapfix.getRealLongitude());
 			JSONObject returnObject = new JSONObject();
 			HttpServletUtil2.returnDataObject(mapFixObject, "mapfix", returnObject);
 			jsonArray.add(returnObject);
