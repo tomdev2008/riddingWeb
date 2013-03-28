@@ -210,6 +210,7 @@ public class RiddingPublicController extends AbstractBaseController {
 				returnObject.put("data", dataArray);
 				returnObject.put("code", returnCodeConstance.SUCCESS);
 				mv.addObject("returnObject", returnObject.toString());
+				logger.info(returnObject.toString());
 			} catch (Exception e) {
 				logger.error(jsonString);
 				returnObject.put("code", returnCodeConstance.INNEREXCEPTION);
